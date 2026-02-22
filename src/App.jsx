@@ -259,6 +259,30 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
     load();
   }, []);
 
+  const handleAddClient = async () => {
+    const brandName = prompt("Nom de l'entreprise du nouveau client :");
+    if (!brandName || !brandName.trim()) return;
+
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const userId = sessionData?.session?.user?.id;
+      if (!userId) throw new Error("Utilisateur non authentifié.");
+
+      const { data, error } = await supabase
+        .from('clients')
+        .insert([{ brand_name: brandName.trim(), owner_user_id: userId }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setClients(prev => [data, ...prev]);
+    } catch (err) {
+      console.error(err);
+      alert("Erreur lors de l'ajout du client : " + err.message);
+    }
+  };
+
   const Sidebar = () => (
     <div className="w-full md:w-64 bg-white border-r border-zinc-200 flex flex-col h-full">
       <div className="h-16 flex items-center px-6 border-b border-zinc-200 justify-between md:justify-start">
@@ -350,7 +374,7 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
                   <Search className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
                   <input type="text" placeholder="Rechercher un client..." className="pl-10 pr-4 py-2.5 bg-white border border-zinc-200 rounded-xl text-sm w-full sm:w-80 focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 outline-none transition-all shadow-sm" />
                 </div>
-                <button className="bg-zinc-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-zinc-800 transition-colors shadow-sm w-full sm:w-auto justify-center">
+                <button onClick={handleAddClient} className="bg-zinc-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-zinc-800 transition-colors shadow-sm w-full sm:w-auto justify-center">
                   <Plus className="w-4 h-4" /> Nouveau client
                 </button>
               </div>
@@ -361,6 +385,17 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
                 </div>
               ) : dataError ? (
                 <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-center gap-2"><AlertCircle className="w-5 h-5 flex-shrink-0" />{dataError}</div>
+              ) : clients.length === 0 ? (
+                <div className="bg-white border border-zinc-200 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
+                  <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center mb-6 border border-zinc-100">
+                    <Users className="w-10 h-10 text-zinc-300" />
+                  </div>
+                  <h3 className="text-xl font-bold text-zinc-900 mb-2">Aucun client pour le moment</h3>
+                  <p className="text-zinc-500 font-medium mb-6">Ajoutez votre premier client pour commencer à monitorer son infrastructure.</p>
+                  <button onClick={handleAddClient} className="bg-zinc-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-zinc-800 transition-colors shadow-sm">
+                    <Plus className="w-4 h-4" /> Ajouter un client
+                  </button>
+                </div>
               ) : (
                 <div className="bg-white border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto">
                   <table className="w-full text-left border-collapse min-w-[800px]">
@@ -377,16 +412,16 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
                     <tbody className="divide-y divide-zinc-100">
                       {clients.map(client => (
                         <tr key={client.id} className="hover:bg-zinc-50/50 transition-colors">
-                          <td className="px-6 py-5 font-bold text-zinc-900">{client.name}</td>
-                          <td className="px-6 py-5 text-sm font-medium text-zinc-500">{client.contact}</td>
-                          <td className="px-6 py-5 text-sm"><span className="bg-zinc-100 text-zinc-800 px-3 py-1.5 rounded-lg font-bold border border-zinc-200">{client.plan}</span></td>
+                          <td className="px-6 py-5 font-bold text-zinc-900">{client.brand_name}</td>
+                          <td className="px-6 py-5 text-sm font-medium text-zinc-500">—</td>
+                          <td className="px-6 py-5 text-sm"><span className="bg-zinc-100 text-zinc-800 px-3 py-1.5 rounded-lg font-bold border border-zinc-200">—</span></td>
                           <td className="px-6 py-5">
-                            <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold border ${client.status === 'Actif' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-zinc-50 text-zinc-600 border-zinc-200'}`}>
-                              <span className={`w-1.5 h-1.5 rounded-full ${client.status === 'Actif' ? 'bg-emerald-500' : 'bg-zinc-400'}`}></span>
-                              {client.status}
+                            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold border bg-zinc-50 text-zinc-600 border-zinc-200 opacity-50 cursor-not-allowed" title="Non disponible avec les données actuelles">
+                              <span className="w-1.5 h-1.5 rounded-full bg-zinc-400"></span>
+                              —
                             </span>
                           </td>
-                          <td className="px-6 py-5 text-sm font-mono font-bold text-zinc-900">{client.revenue}</td>
+                          <td className="px-6 py-5 text-sm font-mono font-bold text-zinc-900">—</td>
                           <td className="px-6 py-5 text-right">
                             <button className="text-zinc-400 hover:text-zinc-900 p-2 hover:bg-zinc-100 rounded-lg transition-colors"><MoreVertical className="w-5 h-5" /></button>
                           </td>
