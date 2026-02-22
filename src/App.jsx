@@ -245,7 +245,7 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
         // 2) Requests
         const { data: requestsRows, error: requestsErr } = await supabase
           .from("requests")
-          .select("*")
+          .select("id, client_id, title, description, stack, priority, status, created_at, clients(brand_name)")
           .order("created_at", { ascending: false });
 
         if (requestsErr) throw requestsErr;
@@ -522,47 +522,55 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
                   <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center mb-6 border border-zinc-100">
                     <Sparkles className="w-10 h-10 text-zinc-300" />
                   </div>
-                  <h3 className="text-xl font-bold text-zinc-900 mb-2">Aucune demande en attente</h3>
-                  <p className="text-zinc-500 font-medium">Les projets générés par vos visiteurs apparaîtront ici.</p>
+                  <h3 className="text-xl font-bold text-zinc-900 mb-2">Aucune demande pour le moment</h3>
+                  <p className="text-zinc-500 font-medium">Les projets soumis par vos clients apparaîtront ici.</p>
                 </div>
               ) : (
-                <div className="space-y-6">
-                  {requestsData.map((req) => (
-                    <div key={req.id} className="bg-white border border-zinc-200 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden flex flex-col md:flex-row">
-                      <div className="p-8 md:w-1/3 border-b md:border-b-0 md:border-r border-zinc-100 bg-[#FAFAFA]">
-                        <div className="flex items-center justify-between mb-6">
-                          <span className="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-lg border border-amber-200">{req.status || "Nouveau lead"}</span>
-                          <span className="text-xs text-zinc-400 font-bold">{req.date}</span>
-                        </div>
-                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Prospect :</p>
-                        <p className="text-base font-bold text-zinc-900 mb-6 break-all">{req.client}</p>
-                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Impact estimé :</p>
-                        <p className="text-base text-emerald-600 font-bold mb-8 flex items-center gap-1"><Clock className="w-4 h-4" /> ~{req.timeSaved}</p>
-                        <a href={`mailto:${req.client}`} className="w-full bg-zinc-900 text-white px-4 py-3 rounded-xl text-sm font-bold hover:bg-zinc-800 transition-colors flex justify-center items-center gap-2">
-                          <Mail className="w-4 h-4" /> Contacter le prospect
-                        </a>
-                      </div>
-                      <div className="p-8 md:w-2/3">
-                        <h3 className="text-2xl font-bold text-zinc-900 mb-4 tracking-tight">Diagnostic Automatisé</h3>
-                        <p className="text-base font-medium text-zinc-600 mb-6 pb-6 border-b border-zinc-100 leading-relaxed">{req.diagnosis}</p>
-
-                        <div className="mb-6">
-                          <p className="text-sm font-bold text-zinc-900 mb-3">Flux d'architecture suggéré :</p>
-                          <div className="bg-zinc-50 border border-zinc-100 p-5 rounded-xl">
-                            <p className="text-sm font-medium text-zinc-600 leading-relaxed flex items-start gap-3">
-                              <Zap className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                              {req.solution}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div>
-                          <p className="text-sm font-bold text-zinc-900 mb-2">Impact Métier Estimé :</p>
-                          <p className="text-sm font-medium text-blue-600 bg-blue-50 border border-blue-100 px-4 py-2 rounded-lg inline-block">{req.revenueImpact}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="bg-white border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto">
+                  <table className="w-full text-left border-collapse min-w-[1000px]">
+                    <thead>
+                      <tr className="border-b border-zinc-100 bg-[#FAFAFA]">
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest w-1/4">Projet</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest w-1/5">Client</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest w-1/6">Stack</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest w-1/6">Statut & Priorité</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest w-1/6">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-100">
+                      {requestsData.map(req => (
+                        <tr key={req.id} className="hover:bg-zinc-50/50 transition-colors">
+                          <td className="px-6 py-5">
+                            <p className="font-bold text-zinc-900 mb-1 leading-snug">{req.title || "Projet IA"}</p>
+                            <p className="text-xs text-zinc-500 font-medium line-clamp-2" title={req.description}>{req.description}</p>
+                          </td>
+                          <td className="px-6 py-5 text-sm font-bold text-zinc-700">
+                            {req.clients?.brand_name || "Client inconnu"}
+                          </td>
+                          <td className="px-6 py-5">
+                            {req.stack ? (
+                              <span className="bg-zinc-100 text-zinc-600 px-3 py-1.5 rounded-lg text-xs font-bold border border-zinc-200">{req.stack}</span>
+                            ) : (
+                              <span className="text-zinc-400 font-bold">—</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-5">
+                            <div className="flex flex-col gap-2 items-start">
+                              <span className="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-lg border border-amber-200">{req.status || "En attente"}</span>
+                              {req.priority && <span className="bg-purple-50 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded border border-purple-200 uppercase tracking-wider">{req.priority}</span>}
+                            </div>
+                          </td>
+                          <td className="px-6 py-5 text-sm font-semibold text-zinc-500">
+                            {new Date(req.created_at).toLocaleDateString('fr-FR', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            })}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>
