@@ -1006,6 +1006,48 @@ const LandingPage = ({ onNavigate }) => {
   const [aiResult, setAiResult] = useState(null);
   const [aiError, setAiError] = useState("");
 
+  // --- Modal AI Lead ---
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [brandName, setBrandName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleModalSubmit = async (e) => {
+    e.preventDefault();
+    if (brandName.trim().length < 2 || !/^\S+@\S+\.\S+$/.test(contactEmail)) {
+      return;
+    }
+    setIsSubmitting(true);
+
+    // Option retenue : Créer une table `leads` (brand_name, email, created_at, source)
+    // Nous tentons l'insertion silencieusement pour ne pas bloquer l'UX si la table n'est pas encore prête
+    try {
+      if (isSupabaseConfigured && supabase) {
+        await supabase.from('leads').insert({
+          brand_name: brandName.trim(),
+          email: contactEmail.trim(),
+          source: 'landing_architecture'
+        });
+      }
+    } catch (err) {
+      console.error("Erreur d'insertion lead", err);
+    }
+
+    setIsSubmitting(false);
+    setIsModalOpen(false);
+
+    // Déclenchement de l'IA une fois le lead capturé
+    generateAIAudit();
+  };
+
   const generateAIAudit = async () => {
     if (!aiInput.trim()) return;
     setAiLoading(true);
@@ -1161,7 +1203,7 @@ const LandingPage = ({ onNavigate }) => {
                     className="w-full h-40 p-5 bg-[#FAFAFA] border border-zinc-200 rounded-2xl text-base text-zinc-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none mb-6 transition-all shadow-inner"
                   />
                   <button
-                    onClick={generateAIAudit}
+                    onClick={handleOpenModal}
                     disabled={aiLoading || !aiInput.trim()}
                     className="mt-auto w-full bg-white text-zinc-900 border border-zinc-200 shadow-sm px-6 py-4 rounded-xl font-bold text-lg hover:bg-zinc-50 transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-3 hover:border-zinc-300"
                   >
@@ -1441,6 +1483,61 @@ const LandingPage = ({ onNavigate }) => {
             <p className="mt-10 text-sm font-bold text-zinc-400 uppercase tracking-widest">Places limitées à 3 onboardings par mois pour garantir l'excellence technique.</p>
           </div>
         </section>
+
+        {/* Modal Lead IA */}
+        {isModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <div className="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm transition-opacity" onClick={!isSubmitting ? closeModal : undefined}></div>
+            <div className="relative bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-fade-in-up z-10 border border-zinc-100">
+              <button onClick={closeModal} disabled={isSubmitting} className="absolute top-6 right-6 text-zinc-400 hover:text-zinc-600 transition-colors disabled:opacity-50 bg-zinc-50 p-1.5 rounded-full">
+                <X className="w-5 h-5" />
+              </button>
+              <h3 className="text-2xl font-bold text-zinc-900 mb-2 tracking-tight">Dernière étape</h3>
+              <p className="text-zinc-500 font-medium mb-6">Laissez-nous vos coordonnées pour générer votre architecture cible personnalisée.</p>
+
+              <form onSubmit={handleModalSubmit} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-bold text-zinc-900 mb-2">Nom de l'entreprise <span className="text-emerald-500">*</span></label>
+                  <input
+                    required
+                    minLength={2}
+                    value={brandName}
+                    onChange={e => setBrandName(e.target.value)}
+                    disabled={isSubmitting}
+                    type="text"
+                    className="w-full bg-[#FAFAFA] border border-zinc-200 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 transition-all font-medium text-zinc-900 placeholder:text-zinc-400"
+                    placeholder="Ex: Actero"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-zinc-900 mb-2">Email professionnel <span className="text-emerald-500">*</span></label>
+                  <input
+                    required
+                    pattern="^\S+@\S+\.\S+$"
+                    value={contactEmail}
+                    onChange={e => setContactEmail(e.target.value)}
+                    disabled={isSubmitting}
+                    type="email"
+                    className="w-full bg-[#FAFAFA] border border-zinc-200 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 transition-all font-medium text-zinc-900 placeholder:text-zinc-400"
+                    placeholder="nom@entreprise.com"
+                  />
+                </div>
+                <div className="pt-2 flex items-center justify-end gap-3">
+                  <button type="button" onClick={closeModal} disabled={isSubmitting} className="px-5 py-3 rounded-xl font-bold text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-colors disabled:opacity-50">
+                    Annuler
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || brandName.trim().length < 2 || !/^\S+@\S+\.\S+$/.test(contactEmail)}
+                    className="bg-zinc-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-zinc-800 disabled:opacity-50 transition-colors shadow-sm inline-flex items-center justify-center gap-2 min-w-[140px]"
+                  >
+                    {isSubmitting ? <><span className="animate-spin w-4 h-4 border-2 border-white/20 border-t-white rounded-full"></span> Génération...</> : "Continuer"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
       </main>
 
