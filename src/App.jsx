@@ -1123,6 +1123,93 @@ const LoginPage = ({ onNavigate, onLogin }) => {
   // ==========================================
   // 5. APPLICATION MAIN ROUTER
   // ==========================================
+  function ResetPasswordPage({ onNavigate }) {
+    const [password, setPassword] = useState("");
+    const [confirm, setConfirm] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+
+    const handleUpdate = async (e) => {
+      e.preventDefault();
+      setError("");
+      setSuccess("");
+
+      if (password.length < 8) return setError("Mot de passe trop court (8 caractères min).");
+      if (password !== confirm) return setError("Les mots de passe ne correspondent pas.");
+
+      try {
+        setLoading(true);
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw error;
+
+        setSuccess("✅ Mot de passe mis à jour. Tu peux te connecter.");
+        setTimeout(() => onNavigate("/login"), 800);
+      } catch (e) {
+        setError("Erreur pendant la mise à jour. Réessaie via le lien du mail.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-zinc-900">Nouveau mot de passe</h2>
+          <p className="mt-2 text-sm text-zinc-500 font-medium">Choisis un nouveau mot de passe.</p>
+        </div>
+
+        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="bg-white py-8 px-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-zinc-200 sm:rounded-3xl sm:px-10">
+            <form className="space-y-6" onSubmit={handleUpdate}>
+              {error && <div className="p-4 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100">{error}</div>}
+              {success && <div className="p-4 bg-emerald-50 text-emerald-600 text-sm font-medium rounded-xl border border-emerald-100">{success}</div>}
+
+              <div>
+                <label className="block text-sm font-bold text-zinc-900 mb-2">Nouveau mot de passe</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="block w-full px-4 py-3 bg-[#FAFAFA] border border-zinc-200 rounded-xl focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 sm:text-sm outline-none transition-all"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-zinc-900 mb-2">Confirmer</label>
+                <input
+                  type="password"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  className="block w-full px-4 py-3 bg-[#FAFAFA] border border-zinc-200 rounded-xl focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 sm:text-sm outline-none transition-all"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex justify-center py-3.5 px-4 rounded-xl shadow-sm text-sm font-bold text-white bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 transition-colors"
+              >
+                {loading ? "Mise à jour..." : "Changer le mot de passe"}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onNavigate("/login")}
+                className="w-full text-center text-sm text-zinc-500 hover:text-zinc-900 font-medium mt-2"
+              >
+                Retour à la connexion
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
   function MainRouter() {
     const [currentRoute, setCurrentRoute] = useState('/');
     const [userRole, setUserRole] = useState(null);
@@ -1145,6 +1232,7 @@ const LoginPage = ({ onNavigate, onLogin }) => {
         };
         fetchRequests();
 
+
         supabase.auth.getSession().then(({ data: { session } }) => {
           if (session) {
             supabase.from('profiles').select('role').eq('id', session.user.id).single()
@@ -1156,6 +1244,15 @@ const LoginPage = ({ onNavigate, onLogin }) => {
               });
           }
         });
+      }
+    }, []);
+
+    useEffect(() => {
+      const hash = window.location.hash;
+
+      // Supabase met souvent le token dans le hash avec type=recovery
+      if (hash.includes("type=recovery")) {
+        setCurrentRoute("/reset-password");
       }
     }, []);
 
@@ -1180,6 +1277,10 @@ const LoginPage = ({ onNavigate, onLogin }) => {
       return <LoginPage onNavigate={setCurrentRoute} onLogin={handleLogin} />;
     }
 
+    if (currentRoute === '/reset-password') {
+      return <ResetPasswordPage onNavigate={setCurrentRoute} />;
+    }
+
     if (currentRoute === '/admin' && userRole === 'admin') {
       return <AdminDashboard onNavigate={setCurrentRoute} onLogout={handleLogout} requests={projectRequests} />;
     }
@@ -1199,55 +1300,50 @@ const LoginPage = ({ onNavigate, onLogin }) => {
       </div>
     );
   }
+}
 
-  // ==========================================
-  // LOAD SUPABASE DYNAMICALLY
-  // ==========================================
-  export default function App() {
-    const [isReady, setIsReady] = useState(false);
+// ==========================================
+// LOAD SUPABASE DYNAMICALLY
+// ==========================================
+export default function App() {
+  const [isReady, setIsReady] = useState(false);
 
-    useEffect(() => {
-      if (!isSupabaseConfigured) {
-        setIsReady(true);
-        return;
-      }
-
-      if (window.supabase) {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        setIsReady(true);
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-      script.onload = () => {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        setIsReady(true);
-      };
-      script.onerror = () => {
-        console.error("Impossible de charger le script Supabase.");
-        setIsReady(true);
-      };
-      document.head.appendChild(script);
-    }, []);
-
-    if (!isReady) {
-      return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 gap-4 font-sans">
-          <svg className="animate-spin h-8 w-8 text-zinc-900" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <p className="text-zinc-500 font-bold">Connexion sécurisée en cours...</p>
-        </div>
-      );
+  useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setIsReady(true);
+      return;
     }
-    useEffect(() => {
-      const hash = window.location.hash;
 
-      if (hash.includes("type=recovery")) {
-        onNavigate("/reset-password");
-      }
-    }, []);
-    return <MainRouter />;
+    if (window.supabase) {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      setIsReady(true);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+    script.onload = () => {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      setIsReady(true);
+    };
+    script.onerror = () => {
+      console.error("Impossible de charger le script Supabase.");
+      setIsReady(true);
+    };
+    document.head.appendChild(script);
+  }, []);
+
+  if (!isReady) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 gap-4 font-sans">
+        <svg className="animate-spin h-8 w-8 text-zinc-900" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p className="text-zinc-500 font-bold">Connexion sécurisée en cours...</p>
+      </div>
+    );
   }
+
+  return <MainRouter />;
+}
