@@ -219,6 +219,7 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
   // ✅ DATA FROM SUPABASE (instead of mocks)
   const [clients, setClients] = useState([]);
   const [requestsData, setRequestsData] = useState([]);
+  const [leads, setLeads] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
   const [dataError, setDataError] = useState("");
 
@@ -249,6 +250,15 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
 
         if (requestsErr) throw requestsErr;
         setRequestsData(requestsRows || []);
+
+        // 3) Leads
+        const { data: leadsRows, error: leadsErr } = await supabase
+          .from("leads")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (leadsErr) throw leadsErr;
+        setLeads(leadsRows || []);
       } catch (e) {
         setDataError(e?.message || "Erreur de chargement des données.");
       } finally {
@@ -299,6 +309,10 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
         <button onClick={() => { setActiveTab('requests'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'requests' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}>
           <div className="flex items-center gap-3"><Sparkles className="w-4 h-4" /> Demandes IA</div>
           {requestsData.length > 0 && <span className="bg-emerald-100 text-emerald-700 py-0.5 px-2 rounded-full text-xs font-bold">{requestsData.length}</span>}
+        </button>
+        <button onClick={() => { setActiveTab('leads'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'leads' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}>
+          <div className="flex items-center gap-3"><Users className="w-4 h-4" /> Leads AI</div>
+          {leads.length > 0 && <span className="bg-blue-100 text-blue-700 py-0.5 px-2 rounded-full text-xs font-bold">{leads.length}</span>}
         </button>
       </div>
       <div className="p-4 border-t border-zinc-200">
@@ -424,6 +438,62 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
                           <td className="px-6 py-5 text-sm font-mono font-bold text-zinc-900">—</td>
                           <td className="px-6 py-5 text-right">
                             <button className="text-zinc-400 hover:text-zinc-900 p-2 hover:bg-zinc-100 rounded-lg transition-colors"><MoreVertical className="w-5 h-5" /></button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'leads' && (
+            <div className="max-w-6xl mx-auto animate-fade-in-up">
+              <div className="mb-8">
+                <h2 className="text-3xl font-bold text-zinc-900 mb-2 tracking-tight">Leads Capturés</h2>
+                <p className="text-zinc-500 font-medium">Contacts intéressés depuis le simulateur d'Architecture IA sur la landing page.</p>
+              </div>
+
+              {dataLoading ? (
+                <div className="flex justify-center items-center py-20">
+                  <svg className="animate-spin h-8 w-8 text-zinc-900" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </div>
+              ) : dataError ? (
+                <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-center gap-2"><AlertCircle className="w-5 h-5 flex-shrink-0" />{dataError}</div>
+              ) : leads.length === 0 ? (
+                <div className="bg-white border border-zinc-200 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
+                  <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center mb-6 border border-zinc-100">
+                    <Users className="w-10 h-10 text-zinc-300" />
+                  </div>
+                  <h3 className="text-xl font-bold text-zinc-900 mb-2">Aucun lead pour le moment</h3>
+                  <p className="text-zinc-500 font-medium mb-6">Patientez jusqu'à ce que de nouveaux prospects soumettent une demande d'Architecture Cible.</p>
+                </div>
+              ) : (
+                <div className="bg-white border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto">
+                  <table className="w-full text-left border-collapse min-w-[800px]">
+                    <thead>
+                      <tr className="border-b border-zinc-100 bg-[#FAFAFA]">
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Entreprise</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Email</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Source</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-100">
+                      {leads.map(lead => (
+                        <tr key={lead.id} className="hover:bg-zinc-50/50 transition-colors">
+                          <td className="px-6 py-5 font-bold text-zinc-900">{lead.brand_name}</td>
+                          <td className="px-6 py-5 text-sm font-medium text-blue-600"><a href={`mailto:${lead.email}`} className="hover:underline">{lead.email}</a></td>
+                          <td className="px-6 py-5 text-sm"><span className="bg-zinc-100 text-zinc-600 px-3 py-1.5 rounded-lg font-bold border border-zinc-200 text-xs">{lead.source === 'landing_architecture' ? 'Simulateur IA' : lead.source}</span></td>
+                          <td className="px-6 py-5 text-sm font-semibold text-zinc-500">
+                            {new Date(lead.created_at).toLocaleDateString('fr-FR', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
                           </td>
                         </tr>
                       ))}
