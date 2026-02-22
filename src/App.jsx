@@ -17,7 +17,7 @@ const isSupabaseConfigured = SUPABASE_URL && SUPABASE_URL.includes('supabase.co'
 let supabase = null;
 
 // --- API Gemini ---
-const apiKey = ""; // La clé API est gérée par l'environnement
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
 // --- Utilitaires ---
 function useInView(options) {
