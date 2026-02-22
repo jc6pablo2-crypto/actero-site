@@ -5,7 +5,7 @@ import {
   Plus, Minus, Menu, X, LayoutDashboard, Users, Settings, LogOut, FileText,
   LifeBuoy, Search, Filter, MoreVertical, Lock, Mail, AlertCircle, TerminalSquare,
   ArrowUpRight, Download, Sparkles, Bot, Zap, ShoppingCart, MessageSquare,
-  Repeat, Target, ShieldCheck, ZapOff, ArrowRightCircle
+  Repeat, Target, ShieldCheck, ZapOff, ArrowRightCircle, Copy, RefreshCw
 } from 'lucide-react';
 
 // --- Configuration Supabase ---
@@ -659,6 +659,252 @@ const AnimatedCounter = ({ value, duration = 1.2, suffix = '', className = '' })
 };
 
 // ==========================================
+// ACTIVITY FEATURE (DASHBOARD)
+// ==========================================
+const ActivityModal = ({ log, onClose }) => {
+  if (!log) return null;
+  const copyId = () => navigator.clipboard.writeText(log.id);
+  const timeSavedStr = log.time_saved_seconds ? `${Math.round(log.time_saved_seconds / 60)} min` : '-';
+  const revStr = log.revenue_amount ? `${Number(log.revenue_amount).toLocaleString('fr-FR')} €` : '-';
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="bg-white rounded-3xl w-full max-w-lg relative z-10 shadow-2xl overflow-hidden animate-fade-in-up">
+        <div className="p-6 md:p-8 flex items-center justify-between border-b border-zinc-100 bg-[#FAFAFA]">
+          <h3 className="text-xl font-bold text-zinc-900">Détail de l'événement</h3>
+          <button onClick={onClose} className="p-2 bg-white rounded-full border border-zinc-200 text-zinc-500 hover:text-zinc-900 shadow-sm transition-colors"><X className="w-4 h-4" /></button>
+        </div>
+        <div className="p-6 md:p-8 space-y-6">
+          <div>
+            <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">ID Événement</p>
+            <div className="flex items-center gap-3">
+              <code className="bg-zinc-100 text-zinc-600 px-3 py-1.5 rounded-lg text-sm font-mono flex-1 truncate">{log.id}</code>
+              <button onClick={copyId} className="p-2 border border-zinc-200 rounded-lg hover:bg-zinc-50 text-zinc-500 transition-colors" title="Copier l'ID"><Copy className="w-4 h-4" /></button>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Date d'exécution</p>
+              <p className="font-bold text-zinc-900">{new Date(log.created_at).toLocaleString('fr-FR')}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Catégorie</p>
+              <span className="bg-zinc-100 text-zinc-700 px-3 py-1 text-sm font-bold rounded-lg border border-zinc-200 inline-block">{log.event_category || 'N/A'}</span>
+            </div>
+            <div className="col-span-2">
+              <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Type de ticket / Source</p>
+              <p className="font-bold text-zinc-900">{log.ticket_type || 'Standard'}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Temps économisé</p>
+              <p className="font-bold text-zinc-900 text-emerald-600">{timeSavedStr}</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Impact (Revenu)</p>
+              <p className="font-bold text-zinc-900">{revStr}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ActivityView = ({ supabase }) => {
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState('');
+  const [hasMore, setHasMore] = useState(true);
+  const [lastCreatedAt, setLastCreatedAt] = useState(null);
+
+  const [period, setPeriod] = useState('30d');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
+  const [selectedLog, setSelectedLog] = useState(null);
+
+  // Derive unique categories and types
+  const uniqueCategories = [...new Set(logs.map(l => l.event_category).filter(Boolean))];
+  const uniqueTypes = [...new Set(logs.map(l => l.ticket_type).filter(Boolean))];
+
+  const fetchActivity = async (isLoadMore = false) => {
+    if (!supabase) return;
+    setError('');
+    if (isLoadMore) setLoadingMore(true);
+    else setLoading(true);
+
+    try {
+      let query = supabase
+        .from('automation_events')
+        .select('id, event_category, ticket_type, time_saved_seconds, revenue_amount, created_at')
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      // Period filter
+      if (period !== 'all') {
+        const date = new Date();
+        if (period === '24h') date.setDate(date.getDate() - 1);
+        if (period === '7d') date.setDate(date.getDate() - 7);
+        if (period === '30d') date.setDate(date.getDate() - 30);
+        query = query.gte('created_at', date.toISOString());
+      }
+
+      // Categories and types
+      if (categoryFilter !== 'all') query = query.eq('event_category', categoryFilter);
+      if (typeFilter !== 'all') query = query.eq('ticket_type', typeFilter);
+
+      // Pagination
+      if (isLoadMore && lastCreatedAt) {
+        query = query.lt('created_at', lastCreatedAt);
+      }
+
+      const { data, error: fetchErr } = await query;
+      if (fetchErr) throw fetchErr;
+
+      const newLogs = data || [];
+      if (isLoadMore) {
+        setLogs(prev => [...prev, ...newLogs]);
+      } else {
+        setLogs(newLogs);
+      }
+
+      if (newLogs.length === 50) {
+        setHasMore(true);
+        setLastCreatedAt(newLogs[49].created_at);
+      } else {
+        setHasMore(false);
+      }
+
+    } catch (err) {
+      setError(err.message || 'Erreur lors de la récupération des logs.');
+    } finally {
+      if (isLoadMore) setLoadingMore(false);
+      else setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setLastCreatedAt(null);
+    setHasMore(true);
+    fetchActivity(false);
+  }, [period, categoryFilter, typeFilter]);
+
+  return (
+    <div className="bg-white border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden flex flex-col">
+      <div className="p-6 md:p-8 border-b border-zinc-100 bg-[#FAFAFA] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h3 className="text-xl font-bold text-zinc-900 tracking-tight">Flux de données récent</h3>
+          <p className="text-sm text-zinc-500 font-medium mt-1">Historique des actions exécutées par l'infrastructure.</p>
+        </div>
+        <button onClick={() => fetchActivity(false)} className="text-sm font-bold text-zinc-500 hover:text-zinc-900 flex items-center gap-2 bg-white border border-zinc-200 px-4 py-2 rounded-lg shadow-sm transition-colors text-nowrap disabled:opacity-50" disabled={loading}>
+          <RefreshCw className={`w-4 h-4 ${loading && !loadingMore ? 'animate-spin' : ''}`} /> Rafraîchir
+        </button>
+      </div>
+
+      {/* Filters */}
+      <div className="px-6 py-4 bg-white border-b border-zinc-100 flex flex-wrap gap-4 items-center">
+        <div className="flex items-center gap-2">
+          <Filter className="w-4 h-4 text-zinc-400" />
+          <span className="text-sm font-bold text-zinc-600">Filtres :</span>
+        </div>
+        <select value={period} onChange={e => setPeriod(e.target.value)} className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-900 outline-none">
+          <option value="24h">Dernières 24h</option>
+          <option value="7d">7 derniers jours</option>
+          <option value="30d">30 derniers jours</option>
+          <option value="all">Tout l'historique</option>
+        </select>
+
+        <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)} className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-900 outline-none max-w-[200px] truncate">
+          <option value="all">Toutes les catégories</option>
+          {uniqueCategories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+        </select>
+
+        <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-900 outline-none max-w-[200px] truncate">
+          <option value="all">Tous les types</option>
+          {uniqueTypes.map(t => <option key={t} value={t}>{t}</option>)}
+        </select>
+      </div>
+
+      <div className="divide-y divide-zinc-100 relative min-h-[300px]">
+        {error ? (
+          <div className="p-10 flex flex-col items-center justify-center text-center">
+            <AlertCircle className="w-10 h-10 text-red-400 mb-4" />
+            <p className="text-red-600 font-bold mb-1">Erreur de connexion</p>
+            <p className="text-sm text-red-500">{error}</p>
+          </div>
+        ) : loading && logs.length === 0 ? (
+          <div className="p-6 space-y-6">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex gap-4 animate-pulse">
+                <div className="w-10 h-10 rounded-full bg-zinc-100 flex-shrink-0"></div>
+                <div className="flex-1 space-y-3 py-1">
+                  <div className="h-4 bg-zinc-100 rounded w-1/4"></div>
+                  <div className="h-3 bg-zinc-100 rounded w-3/4"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : logs.length === 0 ? (
+          <div className="p-16 flex flex-col items-center justify-center text-center">
+            <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center mb-6">
+              <Activity className="w-10 h-10 text-zinc-300" />
+            </div>
+            <p className="text-zinc-900 font-bold text-lg mb-2">Aucune activité trouvée</p>
+            <p className="text-zinc-500 font-medium">Réessayez en modifiant vos filtres.</p>
+          </div>
+        ) : (
+          <>
+            {logs.map((log) => {
+              const savedTime = log.time_saved_seconds ? `${Math.round(log.time_saved_seconds / 60)}m` : '';
+              const revenue = log.revenue_amount ? `${Number(log.revenue_amount).toLocaleString('fr-FR')}€` : '';
+
+              return (
+                <div key={log.id} onClick={() => setSelectedLog(log)} className="p-6 md:p-8 flex items-start gap-4 hover:bg-zinc-50 cursor-pointer transition-colors group">
+                  <div className="mt-1 p-2 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 flex-shrink-0 shadow-sm">
+                    <Activity className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      {log.event_category && <span className="text-[10px] font-bold bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded border border-zinc-200 uppercase tracking-wider">{log.event_category}</span>}
+                      <span className="text-xs font-bold text-zinc-400">{new Date(log.created_at).toLocaleString('fr-FR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                    <p className="text-base font-bold text-zinc-900 truncate mb-1">
+                      {log.ticket_type || "Exécution standard du flux"}
+                    </p>
+                    <div className="flex items-center gap-4 text-xs font-bold text-zinc-500">
+                      {savedTime && <span className="flex items-center gap-1 text-emerald-600"><Clock className="w-3 h-3" /> <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-500">Gagnées:</span> {savedTime}</span>}
+                      {revenue && <span className="flex items-center gap-1 text-amber-600"><DollarSign className="w-3 h-3" /> <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500">Impact:</span> {revenue}</span>}
+                    </div>
+                  </div>
+                  <div className="flex-shrink-0 text-zinc-300 group-hover:text-zinc-500 transition-colors">
+                    <ArrowRight className="w-5 h-5" />
+                  </div>
+                </div>
+              );
+            })}
+
+            {hasMore && (
+              <div className="p-6 md:p-8 flex justify-center border-t border-zinc-100">
+                <button
+                  onClick={() => fetchActivity(true)}
+                  disabled={loadingMore}
+                  className="bg-white border border-zinc-200 text-zinc-600 font-bold px-6 py-3 rounded-xl hover:text-zinc-900 hover:border-zinc-300 transition-colors shadow-sm disabled:opacity-50 flex items-center gap-2"
+                >
+                  {loadingMore ? <span className="animate-spin w-4 h-4 border-2 border-zinc-400 border-t-transparent rounded-full"></span> : "Charger les événements précédents"}
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {selectedLog && <ActivityModal log={selectedLog} onClose={() => setSelectedLog(null)} />}
+    </div>
+  );
+};
+
+// ==========================================
 // 3. DASHBOARD USER (CLIENT)
 // ==========================================
 const ClientDashboard = ({ onNavigate, onLogout }) => {
@@ -1128,36 +1374,7 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
           {activeTab === 'activity' && (
             <div className="max-w-4xl mx-auto animate-fade-in-up">
               {!isSupabaseConfigured ? (
-                <div className="bg-white border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
-                  <div className="p-6 md:p-8 border-b border-zinc-100 bg-[#FAFAFA] flex justify-between items-center">
-                    <div>
-                      <h3 className="text-xl font-bold text-zinc-900 tracking-tight">Flux de données récent</h3>
-                      <p className="text-sm text-zinc-500 font-medium">Historique des actions exécutées par l'infrastructure.</p>
-                    </div>
-                    <button className="text-sm font-bold text-zinc-500 hover:text-zinc-900 flex items-center gap-2 bg-white border border-zinc-200 px-4 py-2 rounded-lg shadow-sm transition-colors hidden sm:flex"><Download className="w-4 h-4" /> Exporter CSV</button>
-                  </div>
-                  <div className="divide-y divide-zinc-100">
-                    {[
-                      { time: "Aujourd'hui, 14:32", status: "success", tool: "Hubspot", text: "Nouveau lead qualifié et ajouté au CRM" },
-                      { time: "Aujourd'hui, 11:15", status: "success", tool: "Shopify", text: "Panier abandonné relancé via Email & SMS" },
-                      { time: "Aujourd'hui, 09:40", status: "success", tool: "Stripe", text: "Facture #8492 traitée et envoyée en comptabilité" },
-                      { time: "Hier, 18:20", status: "warning", tool: "Typeform", text: "API Typeform injoignable (Nouvelle tentative réussie)" },
-                      { time: "Hier, 14:05", status: "success", tool: "Gorgias", text: "Ticket support analysé par IA et résolu" },
-                    ].map((log, i) => (
-                      <div key={i} className="p-6 md:p-8 flex items-start gap-4 hover:bg-zinc-50/50 transition-colors">
-                        <div className={`mt-1 flex-shrink-0 w-2.5 h-2.5 rounded-full shadow-sm ${log.status === 'success' ? 'bg-emerald-500 shadow-emerald-500/50' : 'bg-amber-500 shadow-amber-500/50'}`}></div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs font-bold bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded border border-zinc-200">{log.tool}</span>
-                            <span className="text-xs font-bold text-zinc-400">{log.time}</span>
-                          </div>
-                          <p className="text-base font-bold text-zinc-900">{log.text}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
+                // Keep minimal fallback if no Supabase
                 <div className="bg-white border border-zinc-200 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
                   <div className="w-16 h-16 bg-zinc-50 rounded-full flex items-center justify-center mb-6 border border-zinc-100">
                     <Activity className="w-8 h-8 text-zinc-300" />
@@ -1165,6 +1382,8 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
                   <h3 className="text-xl font-bold text-zinc-900 mb-2">Flux de synchronisation</h3>
                   <p className="text-zinc-500 font-medium">Les logs de vos automatisations apparaîtront ici prochainement.</p>
                 </div>
+              ) : (
+                <ActivityView supabase={supabase} />
               )}
             </div>
           )}
