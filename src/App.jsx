@@ -1305,6 +1305,7 @@ const LoginPage = ({ onNavigate, onLogin }) => {
 // ==========================================
 // LOAD SUPABASE DYNAMICALLY
 // ==========================================
+
 export default function App() {
   const [isReady, setIsReady] = useState(false);
 
