@@ -18,6 +18,7 @@ let supabase = null;
 
 // --- API Gemini ---
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+console.log("GEMINI KEY length:", apiKey?.length, "starts:", apiKey?.slice(0, 4));
 
 // --- Utilitaires ---
 function useInView(options) {
@@ -666,7 +667,7 @@ const LandingPage = ({ onNavigate }) => {
 
     try {
       const result = await fetchWithRetry(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
