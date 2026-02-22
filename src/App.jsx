@@ -590,6 +590,75 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
 };
 
 // ==========================================
+// Animated Counter Component
+// ==========================================
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+const AnimatedCounter = ({ value, duration = 1.2, suffix = '', className = '' }) => {
+  const [displayValue, setDisplayValue] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const previousValueRef = useRef(0);
+  const startTimeRef = useRef(null);
+  const requestRef = useRef(null);
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !elementRef.current) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setHasAnimated(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.1 });
+    observer.observe(elementRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!hasAnimated) return;
+    if (value === 0 && previousValueRef.current === 0) {
+      setDisplayValue(0);
+      return;
+    }
+    const startValue = previousValueRef.current;
+    const endValue = value;
+    const durationMs = duration * 1000;
+    const animate = (time) => {
+      if (startTimeRef.current === null) startTimeRef.current = time;
+      const progressMs = time - startTimeRef.current;
+      const progressRatio = Math.min(progressMs / durationMs, 1);
+      const easedProgress = easeOutCubic(progressRatio);
+      const currentValue = startValue + (endValue - startValue) * easedProgress;
+      setDisplayValue(currentValue);
+      if (progressRatio < 1) {
+        requestRef.current = requestAnimationFrame(animate);
+      } else {
+        setDisplayValue(endValue);
+        previousValueRef.current = endValue;
+        startTimeRef.current = null;
+      }
+    };
+    if (startValue !== endValue) {
+      startTimeRef.current = null;
+      requestRef.current = requestAnimationFrame(animate);
+    }
+    return () => {
+      if (requestRef.current !== null) cancelAnimationFrame(requestRef.current);
+    };
+  }, [value, duration, hasAnimated]);
+
+  const formattedValue = Math.round(displayValue).toLocaleString('fr-FR');
+  return (
+    <span ref={elementRef} className={className}>
+      {formattedValue}
+      {suffix && <span className="text-[0.6em] font-medium text-inherit ml-1 opacity-60 align-baseline">{suffix}</span>}
+    </span>
+  );
+};
+
+// ==========================================
 // 3. DASHBOARD USER (CLIENT)
 // ==========================================
 const ClientDashboard = ({ onNavigate, onLogout }) => {
@@ -652,12 +721,10 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
           if (reqErr) throw reqErr;
           setRequests(requestsData || []);
 
-          // Fetch Metrics
+          // Fetch Metrics via RPC
           setMetricsLoading(true);
           const { data: metricsData, error: metricsErr } = await supabase
-            .from('client_metrics_latest')
-            .select('*')
-            .single();
+            .rpc('recompute_client_metrics', { p_client_id: clientRecord.id });
 
           if (metricsErr && metricsErr.code !== 'PGRST116') {
             console.error(metricsErr);
@@ -678,6 +745,25 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
     };
     fetchClientData();
   }, [onNavigate]);
+
+  // Polling metrics every 30s using RPC
+  useEffect(() => {
+    if (!currentClient || !isSupabaseConfigured) return;
+
+    const intervalId = setInterval(async () => {
+      try {
+        const { data: metricsData, error: metricsErr } = await supabase
+          .rpc('recompute_client_metrics', { p_client_id: currentClient.id });
+        if (!metricsErr && metricsData) {
+          setMetrics(metricsData);
+        }
+      } catch (err) {
+        console.error("Polling error", err);
+      }
+    }, 30000);
+
+    return () => clearInterval(intervalId);
+  }, [currentClient, isSupabaseConfigured]);
 
   const handleSubmitProject = async (e) => {
     e.preventDefault();
@@ -870,45 +956,66 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col relative overflow-hidden group">
+
+                  {/* Temps économisé */}
+                  <div
+                    className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col relative overflow-hidden group animate-fade-in-up [animation-fill-mode:backwards] transition-all duration-200 ease-out transform hover:-translate-y-1 hover:shadow-xl"
+                    style={{ animationDelay: '0ms' }}
+                  >
                     <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-colors"></div>
                     <div className="flex items-center gap-3 mb-6 relative z-10">
                       <div className="p-2.5 bg-zinc-100 border border-zinc-200 text-zinc-700 rounded-xl"><Clock className="w-5 h-5" /></div>
                       <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Temps économisé</p>
                     </div>
-                    <p className="text-5xl font-bold text-emerald-600 font-mono tracking-tighter mb-2 relative z-10">
-                      {Math.round(metrics.time_saved_minutes / 60)} <span className="text-3xl text-emerald-400">h</span>
+                    <p className="text-5xl font-bold text-emerald-600 font-mono tracking-tighter mb-2 relative z-10 min-h-[60px] flex items-end">
+                      <AnimatedCounter value={Math.round(metrics.time_saved_minutes / 60)} suffix="h" />
                     </p>
                     <p className="text-sm font-medium text-zinc-500 mt-auto relative z-10">Équivalent en temps humain de travail ce mois-ci.</p>
                   </div>
 
-                  <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col relative overflow-hidden group">
+                  {/* ROI */}
+                  <div
+                    className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col relative overflow-hidden group animate-fade-in-up [animation-fill-mode:backwards] transition-all duration-200 ease-out transform hover:-translate-y-1 hover:shadow-xl"
+                    style={{ animationDelay: '100ms' }}
+                  >
                     <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-colors"></div>
                     <div className="flex items-center gap-3 mb-6 relative z-10">
                       <div className="p-2.5 bg-amber-50 border border-amber-100 text-amber-600 rounded-xl"><DollarSign className="w-5 h-5" /></div>
                       <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">ROI Généré</p>
                     </div>
-                    <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2 relative z-10">
-                      {metrics.estimated_roi.toLocaleString('fr-FR')} <span className="text-3xl text-zinc-400">€</span>
+                    <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2 relative z-10 min-h-[60px] flex items-end">
+                      <AnimatedCounter value={metrics.estimated_roi} suffix="€" />
                     </p>
                     <p className="text-sm font-medium text-zinc-500 mt-auto relative z-10">Valeur métier estimée générée par les flux.</p>
                   </div>
 
-                  <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
+                  {/* Automatisations actives */}
+                  <div
+                    className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col animate-fade-in-up [animation-fill-mode:backwards] transition-all duration-200 ease-out transform hover:-translate-y-1 hover:shadow-xl"
+                    style={{ animationDelay: '200ms' }}
+                  >
                     <div className="flex items-center gap-3 mb-6">
                       <div className="p-2.5 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl"><Activity className="w-5 h-5" /></div>
                       <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Automatisations actives</p>
                     </div>
-                    <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2">{metrics.active_automations}</p>
+                    <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2 min-h-[60px] flex items-end">
+                      <AnimatedCounter value={metrics.active_automations} />
+                    </p>
                     <p className="text-sm font-medium text-zinc-500 mt-auto">Workflows surveillés 24/7</p>
                   </div>
 
-                  <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
+                  {/* Tâches automatisées */}
+                  <div
+                    className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col animate-fade-in-up [animation-fill-mode:backwards] transition-all duration-200 ease-out transform hover:-translate-y-1 hover:shadow-xl"
+                    style={{ animationDelay: '300ms' }}
+                  >
                     <div className="flex items-center gap-3 mb-6">
                       <div className="p-2.5 bg-blue-50 border border-blue-100 text-blue-600 rounded-xl"><TerminalSquare className="w-5 h-5" /></div>
                       <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Tâches automatisées</p>
                     </div>
-                    <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2">{metrics.tasks_executed.toLocaleString('fr-FR')}</p>
+                    <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2 min-h-[60px] flex items-end">
+                      <AnimatedCounter value={metrics.tasks_executed} />
+                    </p>
                     <p className="text-sm font-medium text-zinc-500 mt-auto">Actions réalisées avec succès ce mois-ci</p>
                   </div>
                 </div>
