@@ -1296,7 +1296,17 @@ function MainRouter() {
             .then(({ data }) => {
               if (data) {
                 setUserRole(data.role);
-                setCurrentRoute(data.role === 'admin' ? '/admin' : '/client');
+                setCurrentRoute((prevRoute) => {
+                  const isAuthPage =
+                    prevRoute === "/login" ||
+                    prevRoute === "/admin" ||
+                    prevRoute === "/client";
+
+                  if (isAuthPage) {
+                    return data.role === "admin" ? "/admin" : "/client";
+                  }
+                  return prevRoute;
+                });
               }
             });
         }
