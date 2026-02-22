@@ -518,6 +518,149 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const [currentClient, setCurrentClient] = useState(null);
+  const [requests, setRequests] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Project submission state
+  const [projectTitle, setProjectTitle] = useState('');
+  const [projectDesc, setProjectDesc] = useState('');
+  const [projectStack, setProjectStack] = useState('');
+  const [projectPriority, setProjectPriority] = useState('normal');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  useEffect(() => {
+    const fetchClientData = async () => {
+      if (!isSupabaseConfigured || !supabase) {
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      setError('');
+      try {
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        const session = sessionData?.session;
+        if (sessionError || !session) {
+          onNavigate('/login');
+          return;
+        }
+
+        const { data: clientRecord, error: clientErr } = await supabase
+          .from('clients')
+          .select('id, brand_name, owner_user_id, created_at')
+          .eq('owner_user_id', session.user.id)
+          .single();
+
+        if (clientErr && clientErr.code !== 'PGRST116') {
+          throw clientErr;
+        }
+
+        if (clientRecord) {
+          setCurrentClient(clientRecord);
+          // Fetch requests
+          const { data: requestsData, error: reqErr } = await supabase
+            .from('requests')
+            .select('*')
+            .eq('client_id', clientRecord.id)
+            .order('created_at', { ascending: false });
+
+          if (reqErr) throw reqErr;
+          setRequests(requestsData || []);
+        } else {
+          setCurrentClient(null);
+        }
+      } catch (err) {
+        setError(err.message || 'Erreur lors du chargement des données.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchClientData();
+  }, [onNavigate]);
+
+  const handleSubmitProject = async (e) => {
+    e.preventDefault();
+    if (!currentClient || !projectTitle || !projectDesc) return;
+
+    setIsSubmitting(true);
+    setSubmitError('');
+    setSubmitSuccess(false);
+
+    try {
+      const { error: insertErr } = await supabase.from('requests').insert({
+        client_id: currentClient.id,
+        title: projectTitle,
+        description: projectDesc,
+        stack: projectStack,
+        priority: projectPriority,
+        status: 'en_attente'
+      });
+
+      if (insertErr) throw insertErr;
+
+      setSubmitSuccess(true);
+      setProjectTitle('');
+      setProjectDesc('');
+      setProjectStack('');
+      setProjectPriority('normal');
+
+      // Refresh requests
+      const { data: requestsData, error: reqErr } = await supabase
+        .from('requests')
+        .select('*')
+        .eq('client_id', currentClient.id)
+        .order('created_at', { ascending: false });
+
+      if (!reqErr && requestsData) {
+        setRequests(requestsData);
+      }
+
+      setTimeout(() => {
+        setActiveTab('requests');
+        setSubmitSuccess(false);
+      }, 2000);
+
+    } catch (err) {
+      setSubmitError(err.message || 'Erreur lors de la soumission du projet.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isSupabaseConfigured && isLoading) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
+        <svg className="animate-spin h-10 w-10 text-zinc-900" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+      </div>
+    );
+  }
+
+  if (isSupabaseConfigured && !currentClient) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center justify-center p-4">
+        <div className="bg-white border border-zinc-200 p-12 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-center max-w-lg">
+          <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-zinc-100">
+            <Lock className="w-10 h-10 text-zinc-300" />
+          </div>
+          <h2 className="text-2xl font-bold text-zinc-900 mb-4 tracking-tight">Aucun client associé</h2>
+          <p className="text-zinc-500 font-medium mb-8">Votre compte n'est pas encore lié à une infrastructure client. Veuillez contacter votre administrateur pour configurer votre espace.</p>
+          <div className="flex flex-col gap-3">
+            <a href="mailto:support@actero.io" className="bg-zinc-900 text-white px-6 py-3.5 rounded-xl font-bold hover:bg-zinc-800 transition-colors shadow-sm">
+              Contacter Actero
+            </a>
+            <button onClick={onLogout} className="text-zinc-500 hover:text-zinc-900 font-bold py-3 transition-colors">
+              Déconnexion
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const Sidebar = () => (
     <div className="w-full md:w-64 bg-white border-r border-zinc-200 flex flex-col h-full">
       <div className="h-16 flex items-center px-6 border-b border-zinc-200 justify-between md:justify-start">
@@ -530,11 +673,16 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
       <div className="flex-1 py-6 px-4 space-y-1.5 overflow-y-auto">
         <p className="px-3 text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 mt-2">Pilotage</p>
         <button onClick={() => { setActiveTab('overview'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'overview' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><LayoutDashboard className="w-4 h-4" /> Vue d'ensemble</button>
-        <button onClick={() => { setActiveTab('activity'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'activity' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><Activity className="w-4 h-4" /> Activité en direct</button>
+        <button onClick={() => { setActiveTab('requests'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'requests' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}>
+          <div className="flex items-center gap-3"><FileText className="w-4 h-4" /> Mes demandes</div>
+          {requests.length > 0 && <span className="bg-emerald-100 text-emerald-700 py-0.5 px-2 rounded-full text-xs font-bold">{requests.length}</span>}
+        </button>
+        <button onClick={() => { setActiveTab('architect'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'architect' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><BrainCircuit className="w-4 h-4" /> Architecte IA</button>
 
         <p className="px-3 text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 mt-6">Infrastructure</p>
         <button onClick={() => { setActiveTab('systems'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'systems' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><Database className="w-4 h-4" /> Mes Systèmes</button>
-        <button onClick={() => { setActiveTab('reports'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'reports' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><FileText className="w-4 h-4" /> Rapports</button>
+        <button onClick={() => { setActiveTab('activity'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'activity' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><Activity className="w-4 h-4" /> Activité en direct</button>
+        <button onClick={() => { setActiveTab('reports'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'reports' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><Download className="w-4 h-4" /> Rapports</button>
       </div>
       <div className="p-4 border-t border-zinc-200">
         <button onClick={onLogout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 transition-colors"><LogOut className="w-4 h-4" /> Déconnexion</button>
@@ -571,6 +719,8 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
         <header className="hidden md:flex h-16 bg-white border-b border-zinc-200 items-center justify-between px-8">
           <h1 className="text-xl font-bold text-zinc-900 tracking-tight">
             {activeTab === 'overview' && "Vue d'ensemble"}
+            {activeTab === 'requests' && "Mes demandes"}
+            {activeTab === 'architect' && "Architecte IA"}
             {activeTab === 'activity' && "Activité temps réel"}
             {activeTab === 'systems' && "Mes Systèmes"}
             {activeTab === 'reports' && "Rapports & Exports"}
@@ -589,49 +739,56 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
           {activeTab === 'overview' && (
             <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
               <div>
-                <h2 className="text-3xl font-bold text-zinc-900 mb-2 tracking-tight">Bonjour, voici vos performances.</h2>
+                <h2 className="text-3xl font-bold text-zinc-900 mb-2 tracking-tight">Bonjour{currentClient ? ` ${currentClient.brand_name}` : ""}, voici vos performances.</h2>
                 <p className="text-zinc-500 font-medium text-lg">Données de l'infrastructure calculées sur les 30 derniers jours.</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2.5 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl"><Activity className="w-5 h-5" /></div>
-                    <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Automatisations actives</p>
+              {!isSupabaseConfigured ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-2.5 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-xl"><Activity className="w-5 h-5" /></div>
+                      <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Automatisations actives</p>
+                    </div>
+                    <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2">12</p>
+                    <p className="text-sm font-medium text-zinc-500 mt-auto">Workflows surveillés 24/7</p>
                   </div>
-                  <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2">12</p>
-                  <p className="text-sm font-medium text-zinc-500 mt-auto">Workflows surveillés 24/7</p>
-                </div>
-
-                <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2.5 bg-blue-50 border border-blue-100 text-blue-600 rounded-xl"><TerminalSquare className="w-5 h-5" /></div>
-                    <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Tâches exécutées</p>
+                  <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-2.5 bg-blue-50 border border-blue-100 text-blue-600 rounded-xl"><TerminalSquare className="w-5 h-5" /></div>
+                      <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Tâches exécutées</p>
+                    </div>
+                    <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2">4,532</p>
+                    <p className="text-sm font-medium text-zinc-500 mt-auto">Actions réalisées avec succès ce mois-ci</p>
                   </div>
-                  <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2">4,532</p>
-                  <p className="text-sm font-medium text-zinc-500 mt-auto">Actions réalisées avec succès ce mois-ci</p>
-                </div>
-
-                <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-colors"></div>
-                  <div className="flex items-center gap-3 mb-6 relative z-10">
-                    <div className="p-2.5 bg-zinc-100 border border-zinc-200 text-zinc-700 rounded-xl"><Clock className="w-5 h-5" /></div>
-                    <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Temps humain économisé</p>
+                  <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition-colors"></div>
+                    <div className="flex items-center gap-3 mb-6 relative z-10">
+                      <div className="p-2.5 bg-zinc-100 border border-zinc-200 text-zinc-700 rounded-xl"><Clock className="w-5 h-5" /></div>
+                      <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Temps humain économisé</p>
+                    </div>
+                    <p className="text-5xl font-bold text-emerald-600 font-mono tracking-tighter mb-2 relative z-10">142 h</p>
+                    <p className="text-sm font-medium text-zinc-500 mt-auto relative z-10">Équivalent à 17 jours de travail à temps plein.</p>
                   </div>
-                  <p className="text-5xl font-bold text-emerald-600 font-mono tracking-tighter mb-2 relative z-10">142 h</p>
-                  <p className="text-sm font-medium text-zinc-500 mt-auto relative z-10">Équivalent à 17 jours de travail à temps plein.</p>
-                </div>
-
-                <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-colors"></div>
-                  <div className="flex items-center gap-3 mb-6 relative z-10">
-                    <div className="p-2.5 bg-amber-50 border border-amber-100 text-amber-600 rounded-xl"><DollarSign className="w-5 h-5" /></div>
-                    <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Impact Business (ROI)</p>
+                  <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-colors"></div>
+                    <div className="flex items-center gap-3 mb-6 relative z-10">
+                      <div className="p-2.5 bg-amber-50 border border-amber-100 text-amber-600 rounded-xl"><DollarSign className="w-5 h-5" /></div>
+                      <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Impact Business (ROI)</p>
+                    </div>
+                    <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2 relative z-10">5,680 €</p>
+                    <p className="text-sm font-medium text-zinc-500 mt-auto relative z-10">Valeur estimée basée sur votre coût horaire moyen (40€/h).</p>
                   </div>
-                  <p className="text-5xl font-bold text-zinc-900 font-mono tracking-tighter mb-2 relative z-10">5,680 €</p>
-                  <p className="text-sm font-medium text-zinc-500 mt-auto relative z-10">Valeur estimée basée sur votre coût horaire moyen (40€/h).</p>
                 </div>
-              </div>
+              ) : (
+                <div className="bg-white border border-zinc-200 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
+                  <div className="w-16 h-16 bg-zinc-50 rounded-full flex items-center justify-center mb-6 border border-zinc-100">
+                    <Activity className="w-8 h-8 text-zinc-300" />
+                  </div>
+                  <h3 className="text-xl font-bold text-zinc-900 mb-2">Metrics à venir</h3>
+                  <p className="text-zinc-500 font-medium">Vos métriques réelles apparaîtront ici dès que vos workflows seront pleinement opérationnels.</p>
+                </div>
+              )}
 
               {/* Support CTA */}
               <div className="bg-zinc-900 rounded-3xl p-8 md:p-10 mt-12 flex flex-col md:flex-row items-center justify-between shadow-xl">
@@ -639,81 +796,194 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
                   <h3 className="text-2xl font-bold text-white mb-2">Un besoin d'évolution ?</h3>
                   <p className="text-zinc-400 font-medium">Vous souhaitez ajouter un nouveau processus à votre infrastructure ?</p>
                 </div>
-                <a href="mailto:support@actero.io" className="bg-white text-black px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors shadow-sm w-full md:w-auto">
-                  Contacter votre ingénieur <ArrowUpRight className="w-5 h-5" />
-                </a>
+                <button onClick={() => setActiveTab('architect')} className="bg-white text-black px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors shadow-sm w-full md:w-auto">
+                  Consulter l'Architecte IA <ArrowUpRight className="w-5 h-5" />
+                </button>
               </div>
+            </div>
+          )}
+
+          {activeTab === 'requests' && (
+            <div className="max-w-4xl mx-auto animate-fade-in-up">
+              <div className="mb-8">
+                <h2 className="text-3xl font-bold text-zinc-900 mb-2 tracking-tight">Mes demandes d'architecture</h2>
+                <p className="text-zinc-500 font-medium">Suivez l'état d'avancement de vos projets d'automatisation.</p>
+              </div>
+
+              {error ? (
+                <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-center gap-2"><AlertCircle className="w-5 h-5 flex-shrink-0" />{error}</div>
+              ) : requests.length === 0 ? (
+                <div className="bg-white border border-zinc-200 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
+                  <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center mb-6 border border-zinc-100">
+                    <FileText className="w-10 h-10 text-zinc-300" />
+                  </div>
+                  <h3 className="text-xl font-bold text-zinc-900 mb-2">Aucune demande pour l'instant</h3>
+                  <p className="text-zinc-500 font-medium mb-6">Soumettez votre premier projet à notre équipe d'architectes IA.</p>
+                  <button onClick={() => setActiveTab('architect')} className="bg-zinc-900 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-zinc-800 transition-colors shadow-sm">
+                    <Plus className="w-4 h-4" /> Soumettre un projet
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {requests.map(req => (
+                    <div key={req.id} className="bg-white border border-zinc-200 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden flex flex-col md:flex-row">
+                      <div className="p-8 md:w-1/3 border-b md:border-b-0 md:border-r border-zinc-100 bg-[#FAFAFA]">
+                        <div className="flex items-center justify-between mb-6">
+                          <span className="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-lg border border-amber-200">{req.status || "En attente"}</span>
+                          <span className="text-xs text-zinc-400 font-bold">{new Date(req.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Impact estimé :</p>
+                        <p className="text-base text-emerald-600 font-bold flex items-center gap-1"><Clock className="w-4 h-4" /> ~{req.timeSaved || "N/A"}</p>
+                      </div>
+                      <div className="p-8 md:w-2/3">
+                        <h3 className="text-2xl font-bold text-zinc-900 mb-4 tracking-tight">{req.title || "Projet IA"}</h3>
+                        <p className="text-base font-medium text-zinc-600 mb-6 pb-6 border-b border-zinc-100 leading-relaxed">{req.description || req.diagnosis}</p>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          {req.stack && <span className="bg-zinc-100 text-zinc-700 text-xs font-bold px-3 py-1 rounded-lg border border-zinc-200">Stack : {req.stack}</span>}
+                          {req.priority && <span className="bg-purple-50 text-purple-700 text-xs font-bold px-3 py-1 rounded-lg border border-purple-200">Priorité : {req.priority}</span>}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'architect' && (
+            <div className="max-w-3xl mx-auto animate-fade-in-up">
+              <div className="mb-8">
+                <h2 className="text-3xl font-bold text-zinc-900 mb-2 tracking-tight">Architecte IA</h2>
+                <p className="text-zinc-500 font-medium tracking-tight leading-relaxed">Décrivez votre besoin d'automatisation. Nos experts concevront une architecture sur mesure pour vous faire gagner de la bande passante.</p>
+              </div>
+
+              <form onSubmit={handleSubmitProject} className="bg-white border border-zinc-200 p-8 md:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-6">
+                {submitSuccess && <div className="p-4 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 flex items-center gap-2"><CheckCircle2 className="w-5 h-5 flex-shrink-0" /> Projet soumis avec succès ! Vous serez contacté très prochainement.</div>}
+                {submitError && <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-center gap-2"><AlertCircle className="w-5 h-5 flex-shrink-0" /> {submitError}</div>}
+
+                <div>
+                  <label className="block text-sm font-bold text-zinc-900 mb-2">Titre du projet <span className="text-emerald-500">*</span></label>
+                  <input required value={projectTitle} onChange={e => setProjectTitle(e.target.value)} type="text" className="w-full bg-[#FAFAFA] border border-zinc-200 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 transition-all font-medium" placeholder="Ex: Relance automatique des factures impayées" />
+                </div>
+                <div>
+                  <label className="block text-sm font-bold text-zinc-900 mb-2">Objectif & Contexte <span className="text-emerald-500">*</span></label>
+                  <textarea required value={projectDesc} onChange={e => setProjectDesc(e.target.value)} rows="5" className="w-full bg-[#FAFAFA] border border-zinc-200 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 transition-all font-medium leading-relaxed" placeholder="Décrivez le processus chronophage que vous souhaitez automatiser. Indiquez la perte de temps ou d'argent pour nous aider à évaluer le ROI potentiel..."></textarea>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-bold text-zinc-900 mb-2">Outils existants (Stack) <span className="text-zinc-400 font-normal">(Optionnel)</span></label>
+                    <input value={projectStack} onChange={e => setProjectStack(e.target.value)} type="text" className="w-full bg-[#FAFAFA] border border-zinc-200 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 transition-all font-medium" placeholder="Ex: Shopify, Klaviyo, Stripe..." />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-zinc-900 mb-2">Priorité <span className="text-emerald-500">*</span></label>
+                    <div className="relative">
+                      <select value={projectPriority} onChange={e => setProjectPriority(e.target.value)} className="w-full bg-[#FAFAFA] border border-zinc-200 rounded-xl py-3 px-4 appearance-none outline-none focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 transition-all font-medium text-zinc-700">
+                        <option value="low">Basse (Pas d'urgence)</option>
+                        <option value="normal">Normale (D'ici quelques semaines)</option>
+                        <option value="high">Haute (Impact immédiat attendu)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="pt-2 border-t border-zinc-100 flex justify-end">
+                  <button disabled={isSubmitting || submitSuccess} type="submit" className="w-full md:w-auto mt-4 px-8 bg-zinc-900 text-white rounded-xl py-4 font-bold hover:bg-zinc-800 disabled:opacity-50 transition-colors shadow-sm inline-flex items-center justify-center gap-2">
+                    {isSubmitting ? <><span className="animate-spin w-4 h-4 border-2 border-white/20 border-t-white rounded-full"></span> Soumission...</> : "Soumettre le projet"}
+                  </button>
+                </div>
+              </form>
             </div>
           )}
 
           {activeTab === 'activity' && (
             <div className="max-w-4xl mx-auto animate-fade-in-up">
-              <div className="bg-white border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
-                <div className="p-6 md:p-8 border-b border-zinc-100 bg-[#FAFAFA] flex justify-between items-center">
-                  <div>
-                    <h3 className="text-xl font-bold text-zinc-900 tracking-tight">Flux de données récent</h3>
-                    <p className="text-sm text-zinc-500 font-medium">Historique des actions exécutées par l'infrastructure.</p>
-                  </div>
-                  <button className="text-sm font-bold text-zinc-500 hover:text-zinc-900 flex items-center gap-2 bg-white border border-zinc-200 px-4 py-2 rounded-lg shadow-sm transition-colors hidden sm:flex"><Download className="w-4 h-4" /> Exporter CSV</button>
-                </div>
-                <div className="divide-y divide-zinc-100">
-                  {[
-                    { time: "Aujourd'hui, 14:32", status: "success", tool: "Hubspot", text: "Nouveau lead qualifié et ajouté au CRM" },
-                    { time: "Aujourd'hui, 11:15", status: "success", tool: "Shopify", text: "Panier abandonné relancé via Email & SMS" },
-                    { time: "Aujourd'hui, 09:40", status: "success", tool: "Stripe", text: "Facture #8492 traitée et envoyée en comptabilité" },
-                    { time: "Hier, 18:20", status: "warning", tool: "Typeform", text: "API Typeform injoignable (Nouvelle tentative réussie)" },
-                    { time: "Hier, 14:05", status: "success", tool: "Gorgias", text: "Ticket support analysé par IA et résolu" },
-                  ].map((log, i) => (
-                    <div key={i} className="p-6 md:p-8 flex items-start gap-4 hover:bg-zinc-50/50 transition-colors">
-                      <div className={`mt-1 flex-shrink-0 w-2.5 h-2.5 rounded-full shadow-sm ${log.status === 'success' ? 'bg-emerald-500 shadow-emerald-500/50' : 'bg-amber-500 shadow-amber-500/50'}`}></div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-bold bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded border border-zinc-200">{log.tool}</span>
-                          <span className="text-xs font-bold text-zinc-400">{log.time}</span>
-                        </div>
-                        <p className="text-base font-bold text-zinc-900">{log.text}</p>
-                      </div>
+              {!isSupabaseConfigured ? (
+                <div className="bg-white border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+                  <div className="p-6 md:p-8 border-b border-zinc-100 bg-[#FAFAFA] flex justify-between items-center">
+                    <div>
+                      <h3 className="text-xl font-bold text-zinc-900 tracking-tight">Flux de données récent</h3>
+                      <p className="text-sm text-zinc-500 font-medium">Historique des actions exécutées par l'infrastructure.</p>
                     </div>
-                  ))}
+                    <button className="text-sm font-bold text-zinc-500 hover:text-zinc-900 flex items-center gap-2 bg-white border border-zinc-200 px-4 py-2 rounded-lg shadow-sm transition-colors hidden sm:flex"><Download className="w-4 h-4" /> Exporter CSV</button>
+                  </div>
+                  <div className="divide-y divide-zinc-100">
+                    {[
+                      { time: "Aujourd'hui, 14:32", status: "success", tool: "Hubspot", text: "Nouveau lead qualifié et ajouté au CRM" },
+                      { time: "Aujourd'hui, 11:15", status: "success", tool: "Shopify", text: "Panier abandonné relancé via Email & SMS" },
+                      { time: "Aujourd'hui, 09:40", status: "success", tool: "Stripe", text: "Facture #8492 traitée et envoyée en comptabilité" },
+                      { time: "Hier, 18:20", status: "warning", tool: "Typeform", text: "API Typeform injoignable (Nouvelle tentative réussie)" },
+                      { time: "Hier, 14:05", status: "success", tool: "Gorgias", text: "Ticket support analysé par IA et résolu" },
+                    ].map((log, i) => (
+                      <div key={i} className="p-6 md:p-8 flex items-start gap-4 hover:bg-zinc-50/50 transition-colors">
+                        <div className={`mt-1 flex-shrink-0 w-2.5 h-2.5 rounded-full shadow-sm ${log.status === 'success' ? 'bg-emerald-500 shadow-emerald-500/50' : 'bg-amber-500 shadow-amber-500/50'}`}></div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-bold bg-zinc-100 text-zinc-600 px-2 py-0.5 rounded border border-zinc-200">{log.tool}</span>
+                            <span className="text-xs font-bold text-zinc-400">{log.time}</span>
+                          </div>
+                          <p className="text-base font-bold text-zinc-900">{log.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="bg-white border border-zinc-200 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
+                  <div className="w-16 h-16 bg-zinc-50 rounded-full flex items-center justify-center mb-6 border border-zinc-100">
+                    <Activity className="w-8 h-8 text-zinc-300" />
+                  </div>
+                  <h3 className="text-xl font-bold text-zinc-900 mb-2">Flux de synchronisation</h3>
+                  <p className="text-zinc-500 font-medium">Les logs de vos automatisations apparaîtront ici prochainement.</p>
+                </div>
+              )}
             </div>
           )}
 
           {activeTab === 'systems' && (
             <div className="max-w-5xl mx-auto animate-fade-in-up">
               <h2 className="text-3xl font-bold text-zinc-900 mb-8 tracking-tight">Vos infrastructures actives</h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                {[
-                  { name: "Récupération Paniers Abandonnés", desc: "Séquence dynamique Shopify -> Klaviyo", status: "Actif", runs: "1,240 exécutions" },
-                  { name: "Support IA Niveau 1", desc: "Analyse des emails SAV et réponse automatique", status: "Actif", runs: "3,102 exécutions" },
-                  { name: "Synchronisation Comptable", desc: "Stripe -> Quickbooks (Quotidien)", status: "Actif", runs: "30 exécutions" },
-                ].map((sys, idx) => (
-                  <div key={idx} className="bg-white border border-zinc-200 rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative">
-                    <div className="flex justify-between items-start mb-6">
-                      <div className="p-3 bg-zinc-50 border border-zinc-100 rounded-xl">
-                        <Database className="w-6 h-6 text-zinc-700" />
+              {!isSupabaseConfigured ? (
+                <div className="grid md:grid-cols-2 gap-6">
+                  {[
+                    { name: "Récupération Paniers Abandonnés", desc: "Séquence dynamique Shopify -> Klaviyo", status: "Actif", runs: "1,240 exécutions" },
+                    { name: "Support IA Niveau 1", desc: "Analyse des emails SAV et réponse automatique", status: "Actif", runs: "3,102 exécutions" },
+                    { name: "Synchronisation Comptable", desc: "Stripe -> Quickbooks (Quotidien)", status: "Actif", runs: "30 exécutions" },
+                  ].map((sys, idx) => (
+                    <div key={idx} className="bg-white border border-zinc-200 rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative">
+                      <div className="flex justify-between items-start mb-6">
+                        <div className="p-3 bg-zinc-50 border border-zinc-100 rounded-xl">
+                          <Database className="w-6 h-6 text-zinc-700" />
+                        </div>
+                        <span className="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-lg border border-emerald-200">{sys.status}</span>
                       </div>
-                      <span className="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-lg border border-emerald-200">{sys.status}</span>
+                      <h3 className="text-xl font-bold text-zinc-900 mb-2">{sys.name}</h3>
+                      <p className="text-sm text-zinc-500 font-medium mb-6">{sys.desc}</p>
+                      <div className="pt-4 border-t border-zinc-100 text-sm font-bold text-zinc-400">
+                        {sys.runs} ce mois
+                      </div>
                     </div>
-                    <h3 className="text-xl font-bold text-zinc-900 mb-2">{sys.name}</h3>
-                    <p className="text-sm text-zinc-500 font-medium mb-6">{sys.desc}</p>
-                    <div className="pt-4 border-t border-zinc-100 text-sm font-bold text-zinc-400">
-                      {sys.runs} ce mois
-                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-white border border-zinc-200 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
+                  <div className="w-16 h-16 bg-zinc-50 rounded-full flex items-center justify-center mb-6 border border-zinc-100">
+                    <Database className="w-8 h-8 text-zinc-300" />
                   </div>
-                ))}
-              </div>
+                  <h3 className="text-xl font-bold text-zinc-900 mb-2">Connecteurs et intégrations</h3>
+                  <p className="text-zinc-500 font-medium">L'intégration native de vos systèmes avec Actero OS est en cours de création.</p>
+                </div>
+              )}
             </div>
           )}
 
           {activeTab === 'reports' && (
             <div className="max-w-4xl mx-auto text-center py-20 animate-fade-in-up">
-              <FileText className="w-16 h-16 text-zinc-200 mx-auto mb-6" />
+              <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-zinc-100">
+                <FileText className="w-10 h-10 text-zinc-300" />
+              </div>
               <h3 className="text-2xl font-bold text-zinc-900 mb-3 tracking-tight">Centre de rapports (Bêta)</h3>
               <p className="text-zinc-500 font-medium max-w-md mx-auto mb-8 leading-relaxed">Générez des rapports PDF mensuels détaillant le ROI exact de chaque workflow déployé.</p>
-              <button className="bg-white text-zinc-900 border border-zinc-200 shadow-sm px-6 py-3 rounded-xl font-bold hover:bg-zinc-50 transition-colors inline-flex items-center gap-2">
-                <Download className="w-5 h-5" /> Télécharger l'historique
+              <button disabled className="opacity-50 cursor-not-allowed bg-zinc-100 text-zinc-500 border border-zinc-200 shadow-sm px-6 py-3 rounded-xl font-bold inline-flex items-center gap-2">
+                <Download className="w-5 h-5" /> Bientôt disponible
               </button>
             </div>
           )}
