@@ -667,7 +667,7 @@ const LandingPage = ({ onNavigate }) => {
 
     try {
       const result = await fetchWithRetry(
-        ``https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}``,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}``,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
