@@ -212,15 +212,52 @@ const LoginPage = ({ onNavigate, onLogin }) => {
 // ==========================================
 // 2. DASHBOARD ADMIN
 // ==========================================
-const AdminDashboard = ({ onNavigate, onLogout, requests = [] }) => {
+const AdminDashboard = ({ onNavigate, onLogout }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const mockClients = [
-    { id: 1, name: "E-com Plus", contact: "jean@ecomplus.fr", plan: "Premium", status: "Actif", revenue: "5 680 €" },
-    { id: 2, name: "SaaS Flow", contact: "marc@saasflow.io", plan: "Enterprise", status: "Actif", revenue: "12 400 €" },
-    { id: 3, name: "DataSync", contact: "sophie@datasync.com", plan: "Basic", status: "Inactif", revenue: "0 €" },
-  ];
+  // ✅ DATA FROM SUPABASE (instead of mocks)
+  const [clients, setClients] = useState([]);
+  const [requestsData, setRequestsData] = useState([]);
+  const [dataLoading, setDataLoading] = useState(true);
+  const [dataError, setDataError] = useState("");
+
+  useEffect(() => {
+    const load = async () => {
+      setDataLoading(true);
+      setDataError("");
+
+      try {
+        if (!isSupabaseConfigured || !supabase) {
+          throw new Error("Supabase non configuré.");
+        }
+
+        // 1) Clients
+        const { data: clientsRows, error: clientsErr } = await supabase
+          .from("clients")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (clientsErr) throw clientsErr;
+        setClients(clientsRows || []);
+
+        // 2) Requests
+        const { data: requestsRows, error: requestsErr } = await supabase
+          .from("requests")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (requestsErr) throw requestsErr;
+        setRequestsData(requestsRows || []);
+      } catch (e) {
+        setDataError(e?.message || "Erreur de chargement des données.");
+      } finally {
+        setDataLoading(false);
+      }
+    };
+
+    load();
+  }, []);
 
   const Sidebar = () => (
     <div className="w-full md:w-64 bg-white border-r border-zinc-200 flex flex-col h-full">
@@ -237,7 +274,7 @@ const AdminDashboard = ({ onNavigate, onLogout, requests = [] }) => {
         <button onClick={() => { setActiveTab('automations'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'automations' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><TerminalSquare className="w-4 h-4" /> Infrastructures</button>
         <button onClick={() => { setActiveTab('requests'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'requests' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}>
           <div className="flex items-center gap-3"><Sparkles className="w-4 h-4" /> Demandes IA</div>
-          {requests.length > 0 && <span className="bg-emerald-100 text-emerald-700 py-0.5 px-2 rounded-full text-xs font-bold">{requests.length}</span>}
+          {requestsData.length > 0 && <span className="bg-emerald-100 text-emerald-700 py-0.5 px-2 rounded-full text-xs font-bold">{requestsData.length}</span>}
         </button>
       </div>
       <div className="p-4 border-t border-zinc-200">
@@ -318,39 +355,47 @@ const AdminDashboard = ({ onNavigate, onLogout, requests = [] }) => {
                 </button>
               </div>
 
-              <div className="bg-white border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto">
-                <table className="w-full text-left border-collapse min-w-[800px]">
-                  <thead>
-                    <tr className="border-b border-zinc-100 bg-[#FAFAFA]">
-                      <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Entreprise</th>
-                      <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Contact</th>
-                      <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Plan</th>
-                      <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Statut</th>
-                      <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">CA Généré</th>
-                      <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-100">
-                    {mockClients.map(client => (
-                      <tr key={client.id} className="hover:bg-zinc-50/50 transition-colors">
-                        <td className="px-6 py-5 font-bold text-zinc-900">{client.name}</td>
-                        <td className="px-6 py-5 text-sm font-medium text-zinc-500">{client.contact}</td>
-                        <td className="px-6 py-5 text-sm"><span className="bg-zinc-100 text-zinc-800 px-3 py-1.5 rounded-lg font-bold border border-zinc-200">{client.plan}</span></td>
-                        <td className="px-6 py-5">
-                          <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold border ${client.status === 'Actif' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-zinc-50 text-zinc-600 border-zinc-200'}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${client.status === 'Actif' ? 'bg-emerald-500' : 'bg-zinc-400'}`}></span>
-                            {client.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-5 text-sm font-mono font-bold text-zinc-900">{client.revenue}</td>
-                        <td className="px-6 py-5 text-right">
-                          <button className="text-zinc-400 hover:text-zinc-900 p-2 hover:bg-zinc-100 rounded-lg transition-colors"><MoreVertical className="w-5 h-5" /></button>
-                        </td>
+              {dataLoading ? (
+                <div className="flex justify-center items-center py-20">
+                  <svg className="animate-spin h-8 w-8 text-zinc-900" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </div>
+              ) : dataError ? (
+                <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-center gap-2"><AlertCircle className="w-5 h-5 flex-shrink-0" />{dataError}</div>
+              ) : (
+                <div className="bg-white border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto">
+                  <table className="w-full text-left border-collapse min-w-[800px]">
+                    <thead>
+                      <tr className="border-b border-zinc-100 bg-[#FAFAFA]">
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Entreprise</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Contact</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Plan</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">Statut</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest">CA Généré</th>
+                        <th className="px-6 py-5 text-xs font-bold text-zinc-400 uppercase tracking-widest text-right">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-100">
+                      {clients.map(client => (
+                        <tr key={client.id} className="hover:bg-zinc-50/50 transition-colors">
+                          <td className="px-6 py-5 font-bold text-zinc-900">{client.name}</td>
+                          <td className="px-6 py-5 text-sm font-medium text-zinc-500">{client.contact}</td>
+                          <td className="px-6 py-5 text-sm"><span className="bg-zinc-100 text-zinc-800 px-3 py-1.5 rounded-lg font-bold border border-zinc-200">{client.plan}</span></td>
+                          <td className="px-6 py-5">
+                            <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold border ${client.status === 'Actif' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-zinc-50 text-zinc-600 border-zinc-200'}`}>
+                              <span className={`w-1.5 h-1.5 rounded-full ${client.status === 'Actif' ? 'bg-emerald-500' : 'bg-zinc-400'}`}></span>
+                              {client.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-5 text-sm font-mono font-bold text-zinc-900">{client.revenue}</td>
+                          <td className="px-6 py-5 text-right">
+                            <button className="text-zinc-400 hover:text-zinc-900 p-2 hover:bg-zinc-100 rounded-lg transition-colors"><MoreVertical className="w-5 h-5" /></button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
 
@@ -361,7 +406,13 @@ const AdminDashboard = ({ onNavigate, onLogout, requests = [] }) => {
                 <p className="text-zinc-500 font-medium">Projets soumis par vos prospects via le widget de la landing page.</p>
               </div>
 
-              {requests.length === 0 ? (
+              {dataLoading ? (
+                <div className="flex justify-center items-center py-20">
+                  <svg className="animate-spin h-8 w-8 text-zinc-900" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </div>
+              ) : dataError ? (
+                <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-center gap-2"><AlertCircle className="w-5 h-5 flex-shrink-0" />{dataError}</div>
+              ) : requestsData.length === 0 ? (
                 <div className="bg-white border border-zinc-200 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
                   <div className="w-20 h-20 bg-zinc-50 rounded-full flex items-center justify-center mb-6 border border-zinc-100">
                     <Sparkles className="w-10 h-10 text-zinc-300" />
@@ -371,7 +422,7 @@ const AdminDashboard = ({ onNavigate, onLogout, requests = [] }) => {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  {requests.map((req) => (
+                  {requestsData.map((req) => (
                     <div key={req.id} className="bg-white border border-zinc-200 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden flex flex-col md:flex-row">
                       <div className="p-8 md:w-1/3 border-b md:border-b-0 md:border-r border-zinc-100 bg-[#FAFAFA]">
                         <div className="flex items-center justify-between mb-6">
@@ -1201,26 +1252,9 @@ function ResetPasswordPage({ onNavigate }) {
 function MainRouter() {
   const [currentRoute, setCurrentRoute] = useState('/');
   const [userRole, setUserRole] = useState(null);
-  const [projectRequests, setProjectRequests] = useState([]);
-
-  // Mock initial requests for preview purposes
-  useEffect(() => {
-    if (!isSupabaseConfigured) {
-      setProjectRequests([
-        { id: 1, workflowName: "Sync Hubspot <> Stripe", client: "Client Démo", timeSaved: "12h/mois", diagnosis: "Erreurs manuelles dans la facturation", solution: "Webhook n8n vers CRM", revenueImpact: "Baisse de 100% des erreurs", date: "Aujourd'hui" }
-      ]);
-    }
-  }, []);
 
   useEffect(() => {
     if (isSupabaseConfigured && supabase) {
-      const fetchRequests = async () => {
-        const { data } = await supabase.from('requests').select('*').order('created_at', { ascending: false });
-        if (data) setProjectRequests(data);
-      };
-      fetchRequests();
-
-
       supabase.auth.getSession().then(({ data: { session } }) => {
         if (session) {
           supabase.from('profiles').select('role').eq('id', session.user.id).single()
@@ -1270,7 +1304,7 @@ function MainRouter() {
   }
 
   if (currentRoute === '/admin' && userRole === 'admin') {
-    return <AdminDashboard onNavigate={setCurrentRoute} onLogout={handleLogout} requests={projectRequests} />;
+    return <AdminDashboard onNavigate={setCurrentRoute} onLogout={handleLogout} />;
   }
 
   if (currentRoute === '/client' && userRole === 'client') {
