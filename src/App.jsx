@@ -5,7 +5,8 @@ import {
   Plus, Minus, Menu, X, LayoutDashboard, Users, Settings, LogOut, FileText,
   LifeBuoy, Search, Filter, MoreVertical, Lock, Mail, AlertCircle, TerminalSquare,
   ArrowUpRight, Download, Sparkles, Bot, Zap, ShoppingCart, MessageSquare,
-  Repeat, Target, ShieldCheck, ZapOff, ArrowRightCircle, Copy, RefreshCw
+  Repeat, Target, ShieldCheck, ZapOff, ArrowRightCircle, Copy, RefreshCw,
+  Lightbulb, TrendingUp, XCircle, CheckCircle
 } from 'lucide-react';
 
 // --- Configuration Supabase ---
@@ -905,6 +906,273 @@ const ActivityView = ({ supabase }) => {
 };
 
 // ==========================================
+// INTELLIGENCE FEATURE START
+// ==========================================
+const RecommendationCard = ({ reco, onAction }) => {
+  const [loadingAction, setLoadingAction] = useState(false);
+
+  const handleAction = async (status) => {
+    setLoadingAction(true);
+    await onAction(reco.id, status);
+    setLoadingAction(false);
+  };
+
+  const priorityColors = {
+    high: 'bg-red-50 text-red-700 border-red-200',
+    medium: 'bg-amber-50 text-amber-700 border-amber-200',
+    low: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+  };
+
+  const categoryLabels = {
+    growth: 'Croissance',
+    efficiency: 'Efficacité',
+    risk: 'Risque',
+    automation: 'Automatisation',
+    all: 'Toutes les catégories'
+  };
+
+  const impactColor = reco.impact_score >= 80 ? 'bg-emerald-500' : reco.impact_score >= 50 ? 'bg-amber-500' : 'bg-zinc-400';
+
+  return (
+    <div className="bg-white border border-zinc-200 rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col gap-6 transition-all hover:shadow-xl relative overflow-hidden group">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+        <div className="flex-1">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-lg border ${priorityColors[reco.priority_level] || priorityColors.medium}`}>
+              Priorité {reco.priority_level === 'high' ? 'Haute' : reco.priority_level === 'medium' ? 'Moyenne' : 'Basse'}
+            </span>
+            {reco.category && (
+              <span className="text-xs font-bold bg-zinc-100 text-zinc-600 px-2.5 py-1 rounded-lg border border-zinc-200">
+                {categoryLabels[reco.category] || reco.category}
+              </span>
+            )}
+            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest ml-auto md:ml-0">
+              {new Date(reco.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+            </span>
+          </div>
+          <h4 className="text-xl font-bold text-zinc-900 mb-2 leading-tight">{reco.title}</h4>
+          <p className="text-sm font-medium text-zinc-500 line-clamp-2 md:line-clamp-none leading-relaxed mb-4">{reco.description}</p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-2">
+            <div>
+              <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Impact Score</p>
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-bold text-zinc-900">{reco.impact_score}/100</span>
+                <div className="h-1.5 w-16 bg-zinc-100 rounded-full overflow-hidden flex-shrink-0">
+                  <div className={`h-full rounded-full ${impactColor}`} style={{ width: `${Math.min(100, reco.impact_score)}%` }}></div>
+                </div>
+              </div>
+            </div>
+            {reco.estimated_time_gain_minutes > 0 && (
+              <div>
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Gain de temps</p>
+                <p className="text-lg font-bold text-emerald-600 flex items-center gap-1">
+                  <Clock className="w-4 h-4" /> +{Math.round(reco.estimated_time_gain_minutes / 60)}h/mois
+                </p>
+              </div>
+            )}
+            {reco.estimated_revenue_gain > 0 && (
+              <div>
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Impact CA estimé</p>
+                <p className="text-lg font-bold text-amber-600 flex items-center gap-1">
+                  <TrendingUp className="w-4 h-4" /> +{Number(reco.estimated_revenue_gain).toLocaleString('fr-FR')}€
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {reco.status === 'active' && (
+        <div className="pt-5 border-t border-zinc-100 flex flex-wrap items-center gap-3">
+          <button
+            disabled={loadingAction}
+            onClick={() => handleAction('implemented')}
+            className="flex-1 sm:flex-none text-sm font-bold bg-zinc-900 text-white px-5 py-2.5 rounded-xl hover:bg-zinc-800 transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {loadingAction ? <span className="animate-spin w-4 h-4 border-2 border-white/20 border-t-white rounded-full"></span> : <CheckCircle className="w-4 h-4" />} Implémenter
+          </button>
+          <button
+            disabled={loadingAction}
+            onClick={() => handleAction('dismissed')}
+            className="flex-1 sm:flex-none text-sm font-bold bg-white text-zinc-600 border border-zinc-200 px-5 py-2.5 rounded-xl hover:text-zinc-900 hover:border-zinc-300 transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {loadingAction ? <span className="animate-spin w-4 h-4 border-2 border-zinc-400 border-t-transparent rounded-full"></span> : <XCircle className="w-4 h-4" />} Ignorer
+          </button>
+        </div>
+      )}
+      {reco.status !== 'active' && (
+        <div className="pt-5 border-t border-zinc-100 flex items-center gap-2 text-sm font-bold text-zinc-400">
+          <CheckCircle className="w-4 h-4" /> {reco.status === 'implemented' ? 'Marqué comme implémenté' : 'Recommandation ignorée'}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const IntelligenceView = ({ supabase }) => {
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const [statusFilter, setStatusFilter] = useState('active');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [sortBy, setSortBy] = useState('impact'); // impact or recent
+  const [actionError, setActionError] = useState('');
+
+  const fetchRecommendations = async () => {
+    if (!supabase) return;
+    setLoading(true);
+    setError('');
+    setActionError('');
+    try {
+      let query = supabase
+        .from('ai_recommendations')
+        .select('id, client_id, title, description, category, priority_level, impact_score, estimated_time_gain_minutes, estimated_revenue_gain, status, created_at, updated_at, expires_at')
+        .eq('status', statusFilter)
+        .limit(50);
+
+      if (categoryFilter !== 'all') {
+        query = query.eq('category', categoryFilter);
+      }
+
+      if (sortBy === 'impact') {
+        query = query.order('impact_score', { ascending: false });
+      } else {
+        query = query.order('created_at', { ascending: false });
+      }
+
+      const { data, error: fetchErr } = await query;
+      if (fetchErr) throw fetchErr;
+
+      setRecommendations(data || []);
+    } catch (err) {
+      setError(err.message || 'Erreur lors de la récupération des recommandations.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecommendations();
+  }, [statusFilter, categoryFilter, sortBy]);
+
+  const handleAction = async (id, newStatus) => {
+    try {
+      setActionError('');
+      // Call RPC only (no fallback to update the table directly)
+      const { error: rpcErr } = await supabase.rpc('mark_ai_recommendation', { p_id: id, p_status: newStatus });
+
+      if (rpcErr) {
+        throw rpcErr;
+      }
+
+      // Success, remove from active list if filter is active
+      if (statusFilter === 'active') {
+        setRecommendations(prev => prev.filter(r => r.id !== id));
+      } else {
+        // Just refresh list
+        await fetchRecommendations();
+      }
+    } catch (err) {
+      setActionError(err.message || 'Une erreur est survenue lors de la mise à jour.');
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="bg-white border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+        <div className="p-6 md:p-8 border-b border-zinc-100 bg-gradient-to-r from-zinc-900 to-zinc-800 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 bg-white/10 rounded-xl backdrop-blur-md border border-white/10 shadow-sm">
+                <Lightbulb className="w-5 h-5 text-amber-300" />
+              </div>
+              <h3 className="text-xl font-bold tracking-tight">Intelligence & Recommandations</h3>
+            </div>
+            <p className="text-sm text-zinc-300 font-medium max-w-xl">L'IA analyse vos flux de données en continu pour identifier des optimisations de croissance, d'efficacité et des correctifs applicatifs.</p>
+          </div>
+          <button onClick={() => fetchRecommendations()} disabled={loading} className="text-sm font-bold text-zinc-900 bg-white hover:bg-zinc-100 px-4 py-2 rounded-xl shadow-sm transition-colors flex items-center gap-2 disabled:opacity-50">
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /> Rafraîchir
+          </button>
+        </div>
+
+        <div className="px-6 py-4 bg-white border-b border-zinc-100 flex flex-wrap gap-4 items-center">
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-zinc-400" />
+            <span className="text-sm font-bold text-zinc-600">Filtrer par :</span>
+          </div>
+          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-900 outline-none">
+            <option value="active">À traiter</option>
+            <option value="implemented">Implémentées</option>
+            <option value="dismissed">Ignorées</option>
+          </select>
+
+          <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)} className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-900 outline-none">
+            <option value="all">Toutes les catégories</option>
+            <option value="growth">Croissance</option>
+            <option value="efficiency">Efficacité</option>
+            <option value="risk">Risque</option>
+            <option value="automation">Automatisation</option>
+          </select>
+
+          <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-900 outline-none ml-auto">
+            <option value="impact">Trier par: Impact (Haut &rarr; Bas)</option>
+            <option value="recent">Trier par: Plus récentes</option>
+          </select>
+        </div>
+      </div>
+
+      {actionError && (
+        <div className="p-4 bg-red-50 text-red-600 rounded-2xl border border-red-100 flex items-start gap-3 animate-pulse">
+          <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+          <p className="text-sm font-medium">{actionError}</p>
+        </div>
+      )}
+
+      {error ? (
+        <div className="p-10 bg-white border border-red-100 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm">
+          <AlertCircle className="w-10 h-10 text-red-400 mb-4" />
+          <p className="text-red-900 font-bold mb-1">Erreur de connexion</p>
+          <p className="text-sm text-red-600">{error}</p>
+        </div>
+      ) : loading && recommendations.length === 0 ? (
+        <div className="space-y-6">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm animate-pulse h-48 flex flex-col gap-4">
+              <div className="h-6 bg-zinc-100 rounded w-1/4"></div>
+              <div className="h-4 bg-zinc-100 rounded w-3/4 mt-2"></div>
+              <div className="h-4 bg-zinc-100 rounded w-1/2"></div>
+              <div className="mt-auto flex gap-4">
+                <div className="h-10 bg-zinc-100 rounded w-32"></div>
+                <div className="h-10 bg-zinc-100 rounded w-32"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : recommendations.length === 0 ? (
+        <div className="bg-white border border-zinc-200 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
+          <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-6 border border-emerald-100">
+            <Lightbulb className="w-10 h-10 text-emerald-400" />
+          </div>
+          <p className="text-zinc-900 font-bold text-xl mb-2">Tout est optimisé</p>
+          <p className="text-zinc-500 font-medium max-w-md">L'IA n'a pas de nouvelle recommandation à proposer pour le moment avec ces critères de recherche.</p>
+        </div>
+      ) : (
+        <div className="space-y-6 animate-fade-in-up">
+          {recommendations.map((reco) => (
+            <RecommendationCard key={reco.id} reco={reco} onAction={handleAction} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+// ==========================================
+// INTELLIGENCE FEATURE END
+// ==========================================
+
+// ==========================================
 // 3. DASHBOARD USER (CLIENT)
 // ==========================================
 const ClientDashboard = ({ onNavigate, onLogout }) => {
@@ -1111,6 +1379,7 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
         <p className="px-3 text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3 mt-6">Infrastructure</p>
         <button onClick={() => { setActiveTab('systems'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'systems' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><Database className="w-4 h-4" /> Mes Systèmes</button>
         <button onClick={() => { setActiveTab('activity'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'activity' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><Activity className="w-4 h-4" /> Activité en direct</button>
+        <button onClick={() => { setActiveTab('intelligence'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'intelligence' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><Lightbulb className="w-4 h-4" /> Intelligence</button>
         <button onClick={() => { setActiveTab('reports'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'reports' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900'}`}><Download className="w-4 h-4" /> Rapports</button>
       </div>
       <div className="p-4 border-t border-zinc-200">
@@ -1384,6 +1653,22 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
                 </div>
               ) : (
                 <ActivityView supabase={supabase} />
+              )}
+            </div>
+          )}
+
+          {activeTab === 'intelligence' && (
+            <div className="max-w-4xl mx-auto animate-fade-in-up">
+              {!isSupabaseConfigured ? (
+                <div className="bg-white border border-zinc-200 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
+                  <div className="w-16 h-16 bg-zinc-50 rounded-full flex items-center justify-center mb-6 border border-zinc-100">
+                    <Lightbulb className="w-8 h-8 text-zinc-300" />
+                  </div>
+                  <h3 className="text-xl font-bold text-zinc-900 mb-2">Intelligence Actero</h3>
+                  <p className="text-zinc-500 font-medium">L'IA est en cours d'analyse de vos processus.</p>
+                </div>
+              ) : (
+                <IntelligenceView supabase={supabase} />
               )}
             </div>
           )}
