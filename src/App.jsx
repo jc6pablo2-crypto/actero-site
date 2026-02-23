@@ -6,7 +6,7 @@ import {
   LifeBuoy, Search, Filter, MoreVertical, Lock, Mail, AlertCircle, TerminalSquare,
   ArrowUpRight, Download, Sparkles, Bot, Zap, ShoppingCart, MessageSquare,
   Repeat, Target, ShieldCheck, ZapOff, ArrowRightCircle, Copy, RefreshCw,
-  Lightbulb, TrendingUp, XCircle, CheckCircle, BarChart2, UserRoundX, Loader2
+  Lightbulb, TrendingUp, XCircle, CheckCircle, BarChart2, UserRoundX, Loader2, UserPlus
 } from 'lucide-react';
 
 // --- Configuration Supabase ---
@@ -275,6 +275,207 @@ const LoginPage = ({ onNavigate, onLogin }) => {
 };
 
 // ==========================================
+// ADMIN ONBOARDING VIEW
+// ==========================================
+const AdminOnboardingView = () => {
+  const [brandName, setBrandName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [successData, setSuccessData] = useState(null);
+
+  const handleCreateAndInvite = async (e) => {
+    e.preventDefault();
+    setErrorMsg('');
+    setSuccessData(null);
+    setLoading(true);
+
+    try {
+      if (!brandName.trim() || !email.trim()) {
+        throw new Error("Le nom de l'entreprise et l'email sont requis.");
+      }
+
+      if (!isSupabaseConfigured || !supabase) {
+        throw new Error("Backend required: Instance Supabase manquante.");
+      }
+
+      const { data, error } = await supabase.rpc('admin_onboard_client', {
+        p_brand_name: brandName.trim(),
+        p_email: email.trim()
+      });
+
+      if (error) throw error;
+      if (!data?.ok) throw new Error(data?.message || "Erreur indéterminée via RPC.");
+
+      setSuccessData(data);
+      setBrandName('');
+      setEmail('');
+    } catch (err) {
+      console.error("[ONBOARDING ERROR]", err);
+      // Fallback for missing RPC
+      if (err.message?.includes('Could not find the function') || err.code === 'PGRST202' || err.code === 'PGRST200' || err.code === '42883') {
+        setErrorMsg("Backend required: La RPC 'admin_onboard_client' est manquante ou inaccessible. Demander à Claude de l'ajouter.");
+      } else {
+        setErrorMsg(err.message || "Une erreur est survenue lors de l'onboarding.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendMagicLink = async (targetEmail) => {
+    try {
+      const { data, error } = await supabase.rpc('admin_resend_magic_link', { p_email: targetEmail });
+      if (error) throw error;
+      if (!data?.ok) throw new Error(data?.message || "Erreur lors du renvoi.");
+      alert("Magic Link renvoyé avec succès !");
+    } catch (err) {
+      console.error(err);
+      if (err.message?.includes('Could not find the function') || err.code === 'PGRST202' || err.code === '42883') {
+        alert("Backend required: RPC 'admin_resend_magic_link' manquante.");
+      } else {
+        alert("Erreur: " + err.message);
+      }
+    }
+  };
+
+  const handleCheckStatus = async (targetEmail) => {
+    try {
+      const { data, error } = await supabase.rpc('admin_get_onboarding_status', { p_email: targetEmail });
+      if (error) throw error;
+      if (!data?.ok) throw new Error(data?.message || "Erreur de vérification.");
+      alert(`Statut: ${data.status}\nLié: ${data.linked ? 'Oui' : 'Non'}`);
+    } catch (err) {
+      console.error(err);
+      if (err.message?.includes('Could not find the function') || err.code === 'PGRST202' || err.code === '42883') {
+        alert("Backend required: RPC 'admin_get_onboarding_status' manquante.");
+      } else {
+        alert("Erreur: " + err.message);
+      }
+    }
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto animate-fade-in-up">
+      <div className="mb-8">
+        <h2 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">Onboarding Client</h2>
+        <p className="text-gray-500 font-normal mt-1 flex items-center gap-2">
+          <UserPlus className="w-5 h-5 text-indigo-500" />
+          Créez un profil client et envoyez-lui un accès immédiat (SaaS fermé).
+        </p>
+      </div>
+
+      <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm mb-8">
+        <form onSubmit={handleCreateAndInvite} className="space-y-6">
+          {errorMsg && (
+            <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-start gap-3 text-sm font-medium">
+              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              <span>{errorMsg}</span>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-900 mb-2">Nom de l'entreprise (Brand)</label>
+              <input
+                type="text"
+                value={brandName}
+                onChange={(e) => setBrandName(e.target.value)}
+                placeholder="Ex: Koma"
+                className="w-full px-4 py-3 bg-[#FAFAFA] border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-900 mb-2">Email du client</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Ex: contact@koma.com"
+                className="w-full px-4 py-3 bg-[#FAFAFA] border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full sm:w-auto flex justify-center items-center gap-2 py-3 px-6 rounded-xl shadow-sm text-sm font-bold text-white bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 transition-colors"
+            >
+              {loading ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Création en cours...</>
+              ) : (
+                <><CheckCircle className="w-4 h-4" /> Créer & envoyer l'accès</>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {successData && (
+        <div className="bg-emerald-50 border border-emerald-100 p-8 rounded-2xl shadow-sm animate-fade-in-up">
+          <div className="flex items-start gap-4 mb-6">
+            <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <CheckCircle className="w-6 h-6 text-emerald-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-emerald-900 mt-1">Client onboardé avec succès !</h3>
+              <p className="text-emerald-700 text-sm font-medium mt-1">Le profil a été créé et l'invitation a été envoyée.</p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border border-emerald-100 p-4 space-y-3 text-sm mb-6">
+            <div className="flex justify-between border-b border-gray-50 pb-2 flex-wrap gap-2">
+              <span className="text-gray-500 font-medium whitespace-nowrap">Client ID</span>
+              <span className="font-mono font-bold text-gray-900 truncate max-w-xs">{successData.client_id}</span>
+            </div>
+            <div className="flex justify-between border-b border-gray-50 pb-2 flex-wrap gap-2">
+              <span className="text-gray-500 font-medium whitespace-nowrap">Email invité</span>
+              <span className="font-bold text-gray-900 truncate max-w-xs">{successData.email}</span>
+            </div>
+            <div className="flex justify-between flex-wrap gap-2">
+              <span className="text-gray-500 font-medium whitespace-nowrap">Statut liaison</span>
+              <span className="font-bold text-gray-900">
+                {successData.linked ? (
+                  <span className="text-emerald-600 flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Lié ({successData.user_id})</span>
+                ) : (
+                  <span className="text-amber-600 flex items-center gap-1"><Clock className="w-4 h-4" /> En attente de connexion du client</span>
+                )}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={() => handleResendMagicLink(successData.email)}
+              className="bg-white text-emerald-700 hover:bg-emerald-50 border border-emerald-200 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" /> Renvoyer magic link
+            </button>
+            <button
+              onClick={() => handleCheckStatus(successData.email)}
+              className="bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2"
+            >
+              <Activity className="w-4 h-4" /> Vérifier statut
+            </button>
+            <button
+              onClick={() => { navigator.clipboard.writeText(successData.client_id); alert('ID copié !'); }}
+              className="bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2"
+            >
+              <Copy className="w-4 h-4" /> Copier ID
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ==========================================
 // 2. DASHBOARD ADMIN
 // ==========================================
 const AdminDashboard = ({ onNavigate, onLogout }) => {
@@ -379,6 +580,9 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
           <div className="flex items-center gap-3"><Users className="w-4 h-4" /> Leads AI</div>
           {leads.length > 0 && <span className="bg-blue-100 text-blue-700 py-0.5 px-2 rounded-full text-xs font-bold">{leads.length}</span>}
         </button>
+        <button onClick={() => { setActiveTab('onboarding'); setIsMobileMenuOpen(false); }} className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === 'onboarding' ? 'bg-gray-100 text-gray-900' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
+          <div className="flex items-center gap-3"><UserPlus className="w-4 h-4" /> Onboarding</div>
+        </button>
       </div>
       <div className="p-4 border-t border-gray-200">
         <button onClick={onLogout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors"><LogOut className="w-4 h-4" /> Déconnexion</button>
@@ -417,6 +621,10 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
           <h1 className="text-xl font-bold text-gray-900 capitalize tracking-tight">{activeTab.replace('-', ' ')}</h1>
         </header>
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
+
+          {activeTab === 'onboarding' && (
+            <AdminOnboardingView />
+          )}
 
           {activeTab === 'overview' && (
             <div className="max-w-6xl mx-auto space-y-8 animate-fade-in-up">
