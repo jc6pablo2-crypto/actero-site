@@ -1647,27 +1647,7 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
     );
   }
 
-  if (isSupabaseConfigured && !currentClient) {
-    return (
-      <div className="min-h-screen bg-[#FAFAFA] flex flex-col items-center justify-center p-4">
-        <div className="bg-white border border-gray-200 p-12 rounded-3xl shadow-sm text-center max-w-lg">
-          <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-gray-100">
-            <Lock className="w-10 h-10 text-gray-300" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4 tracking-tight">Aucun client associé</h2>
-          <p className="text-gray-500 font-normal mb-8 leading-relaxed">Votre compte n'est pas encore lié à une infrastructure client. Veuillez contacter votre administrateur pour configurer votre espace.</p>
-          <div className="flex flex-col gap-3">
-            <a href="mailto:support@actero.io" className="bg-indigo-600 text-white px-6 py-3.5 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-sm">
-              Contacter Actero
-            </a>
-            <button onClick={onLogout} className="text-gray-500 hover:text-gray-900 font-bold py-3 transition-colors">
-              Déconnexion
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+
 
   const Sidebar = () => (
     <div className="w-full md:w-64 bg-white border-r border-zinc-200 flex flex-col h-full">
