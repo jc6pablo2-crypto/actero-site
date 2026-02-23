@@ -6,7 +6,7 @@ import {
   LifeBuoy, Search, Filter, MoreVertical, Lock, Mail, AlertCircle, TerminalSquare,
   ArrowUpRight, Download, Sparkles, Bot, Zap, ShoppingCart, MessageSquare,
   Repeat, Target, ShieldCheck, ZapOff, ArrowRightCircle, Copy, RefreshCw,
-  Lightbulb, TrendingUp, XCircle, CheckCircle
+  Lightbulb, TrendingUp, XCircle, CheckCircle, BarChart2
 } from 'lucide-react';
 
 // --- Configuration Supabase ---
