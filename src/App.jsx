@@ -908,7 +908,223 @@ const ActivityView = ({ supabase }) => {
 // ==========================================
 // INTELLIGENCE FEATURE START
 // ==========================================
-const RecommendationCard = ({ reco, onAction }) => {
+// === EXECUTION PLAN DRAWER START ===
+const ExecutionPlanDrawer = ({ reco, onClose, onImplement, supabase, onNavigateToActivity }) => {
+  const [loading, setLoading] = useState(false);
+  const [startedAt, setStartedAt] = useState(null);
+  const [recentEvents, setRecentEvents] = useState([]);
+
+  // Fetch contextual events only if implementation has started
+  useEffect(() => {
+    let interval;
+    if (startedAt) {
+      const fetchRecentEvents = async () => {
+        const { data } = await supabase
+          .from('automation_events')
+          .select('id, event_category, ticket_type, created_at, time_saved_seconds')
+          .gte('created_at', startedAt)
+          .order('created_at', { ascending: false })
+          .limit(10);
+        if (data) setRecentEvents(data);
+      };
+
+      fetchRecentEvents();
+      interval = setInterval(fetchRecentEvents, 5000);
+    }
+    return () => clearInterval(interval);
+  }, [startedAt, supabase]);
+
+  const handleImplementClick = async () => {
+    setLoading(true);
+    await onImplement(reco.id, 'implemented');
+    setStartedAt(new Date().toISOString());
+    setLoading(false);
+  };
+
+  if (!reco) return null;
+
+  // Generate copy steps based on category (pure UI copy, no mocked business data)
+  const steps = {
+    growth: [
+      { title: "Acquisition", desc: "Configuration des nouveaux canaux d'acquisition ciblés." },
+      { title: "Conversion", desc: "Déploiement des stratégies d'optimisation du taux de conversion." },
+      { title: "Analyse", desc: "Mise en place des trackers de performance de croissance." }
+    ],
+    efficiency: [
+      { title: "Analyse des processus", desc: "Identification des goulots d'étranglement actuels." },
+      { title: "Automatisation", desc: "Connexion et automatisation des flux de travail chronophages." },
+      { title: "Monitoring", desc: "Surveillance continue des gains d'efficacité." }
+    ],
+    risk: [
+      { title: "Audit de sécurité", desc: "Identification des failles et vulnérabilités potentielles." },
+      { title: "Mise en place de garde-fous", desc: "Déploiement des règles de mitigation des risques." },
+      { title: "Alerting", desc: "Configuration des notifications d'anomalies en temps réel." }
+    ],
+    automation: [
+      { title: "Cartographie du workflow", desc: "Définition des déclencheurs et actions automatisées." },
+      { title: "Intégrations requises", desc: "Connexion sécurisée aux outils tiers." },
+      { title: "Assurance Qualité (QA)", desc: "Tests approfondis des scénarios d'automatisation." }
+    ],
+    all: [
+      { title: "Initialisation", desc: "Préparation de l'environnement d'exécution." },
+      { title: "Déploiement", desc: "Mise en oeuvre des recommandations de l'IA." },
+      { title: "Surveillance", desc: "Suivi des impacts post-déploiement." }
+    ]
+  };
+
+  const planSteps = steps[reco.category] || steps.all;
+  const isStarted = !!startedAt;
+
+  return (
+    <>
+      {/* Backdrop overlay */}
+      <div className="fixed inset-0 z-50 bg-zinc-900/40 backdrop-blur-sm animate-fade-in" onClick={onClose} />
+
+      {/* Drawer Panel */}
+      <div className="fixed inset-y-0 right-0 z-50 w-full md:w-[540px] bg-white shadow-2xl flex flex-col transform transition-transform duration-300 translate-x-0 overflow-y-auto">
+
+        {/* Header */}
+        <div className="p-6 md:p-8 border-b border-zinc-100 flex items-center justify-between sticky top-0 bg-white/90 backdrop-blur z-10">
+          <div className="flex items-center gap-3 text-zinc-900 font-bold">
+            <Sparkles className="w-5 h-5 text-indigo-500" />
+            <h2 className="text-xl tracking-tight">Plan d'exécution IA</h2>
+          </div>
+          <button onClick={onClose} className="p-2 bg-zinc-50 border border-zinc-200 rounded-full text-zinc-500 hover:text-zinc-900 transition-colors shadow-sm">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 md:p-8 flex-1 flex flex-col gap-8 animate-fade-in-up">
+
+          {/* Section A: Résumé */}
+          <section>
+            <span className="text-xs font-bold px-3 py-1 rounded-full bg-zinc-100 text-zinc-600 border border-zinc-200 mb-4 inline-block uppercase tracking-widest">
+              Contexte de l'action
+            </span>
+            <h3 className="text-2xl font-bold text-zinc-900 mb-2 leading-tight">{reco.title}</h3>
+            <p className="text-sm font-medium text-zinc-500 leading-relaxed mb-6">{reco.description}</p>
+
+            <div className="flex gap-4 p-4 rounded-2xl bg-[#FAFAFA] border border-zinc-100 h-full">
+              <div className="flex-1">
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">Score d'impact IA</p>
+                <span className="text-2xl font-black text-zinc-900">{reco.impact_score}<span className="text-sm font-bold text-zinc-400">/100</span></span>
+              </div>
+              <div className="w-px bg-zinc-200"></div>
+              <div className="flex-1">
+                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">Catégorie</p>
+                <span className="text-sm font-bold text-zinc-900 capitalize">{reco.category}</span>
+              </div>
+            </div>
+          </section>
+
+          {/* Section B: Gains */}
+          {((reco.estimated_time_gain_minutes > 0) || (reco.estimated_revenue_gain > 0)) && (
+            <section>
+              <h4 className="text-sm font-bold text-zinc-900 mb-4 uppercase tracking-widest">Gains Stratégiques Estimés</h4>
+              <div className="grid grid-cols-2 gap-4">
+                {reco.estimated_time_gain_minutes > 0 && (
+                  <div className="bg-emerald-50/50 border border-emerald-100 p-4 rounded-2xl flex flex-col">
+                    <Clock className="w-5 h-5 text-emerald-500 mb-2" />
+                    <span className="text-xl font-bold text-emerald-700">+{Math.round(reco.estimated_time_gain_minutes / 60)}h<span className="text-sm font-medium">/mois</span></span>
+                  </div>
+                )}
+                {reco.estimated_revenue_gain > 0 && (
+                  <div className="bg-amber-50/50 border border-amber-100 p-4 rounded-2xl flex flex-col">
+                    <TrendingUp className="w-5 h-5 text-amber-500 mb-2" />
+                    <span className="text-xl font-bold text-amber-700">+{Number(reco.estimated_revenue_gain).toLocaleString('fr-FR')}€</span>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* Section D: Étapes Copy UI */}
+          <section className="relative">
+            <h4 className="text-sm font-bold text-zinc-900 mb-6 uppercase tracking-widest">Protocoles d'implémentation</h4>
+            <div className="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-zinc-200 before:to-transparent">
+              {planSteps.map((step, idx) => (
+                <div key={idx} className="relative flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-full bg-white border-2 border-zinc-200 flex items-center justify-center flex-shrink-0 z-10 text-zinc-400 font-bold text-sm shadow-sm">
+                    {idx + 1}
+                  </div>
+                  <div className="bg-white border border-zinc-100 p-4 rounded-2xl flex-1 shadow-sm mt-1">
+                    <h5 className="font-bold text-zinc-900 mb-1">{step.title}</h5>
+                    <p className="text-sm font-medium text-zinc-500 leading-relaxed">{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Section: Timeline Contextuelle (Après clic implémenter) */}
+          {isStarted && (
+            <section className="mt-4 bg-zinc-900 rounded-3xl p-6 text-white overflow-hidden relative">
+              <div className="absolute top-0 right-0 p-4">
+                <span className="flex items-center gap-2 text-xs font-bold text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-full border border-emerald-400/20">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Realtime
+                </span>
+              </div>
+              <h4 className="text-lg font-bold mb-2">Exécution en cours</h4>
+              <p className="text-sm text-zinc-400 font-medium mb-6">Les agents parcourent l'infrastructure actuellement.</p>
+
+              {recentEvents.length === 0 ? (
+                <div className="py-8 text-center flex flex-col items-center">
+                  <RefreshCw className="w-6 h-6 text-zinc-500 animate-spin mb-3" />
+                  <p className="text-sm font-bold text-zinc-500">En attente des premiers signaux n8n...</p>
+                </div>
+              ) : (
+                <div className="space-y-3 mb-6">
+                  {recentEvents.map((evt, i) => (
+                    <div key={i} className="bg-white/5 border border-white/10 p-3 rounded-xl flex items-center justify-between text-sm animate-fade-in-up">
+                      <div className="flex items-center gap-3">
+                        <Activity className="w-4 h-4 text-emerald-400" />
+                        <span className="font-bold text-zinc-200">{evt.event_category} / {evt.ticket_type}</span>
+                      </div>
+                      <span className="text-xs text-zinc-500 font-medium">Il y a quelques secondes</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <button
+                onClick={() => { onClose(); onNavigateToActivity(); }}
+                className="w-full bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-200 transition-colors"
+              >
+                Voir l'activité en direct <ArrowRight className="w-4 h-4" />
+              </button>
+            </section>
+          )}
+
+        </div>
+
+        {/* Footer actions */}
+        {!isStarted && (
+          <div className="p-6 md:p-8 border-t border-zinc-100 bg-[#FAFAFA] flex flex-col sm:flex-row gap-3 sticky bottom-0 z-10">
+            <button
+              disabled={loading}
+              onClick={handleImplementClick}
+              className="flex-1 bg-zinc-900 text-white font-bold py-3.5 px-6 rounded-xl hover:bg-zinc-800 transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              {loading ? <span className="animate-spin w-5 h-5 border-2 border-white/20 border-t-white rounded-full"></span> : <Bot className="w-5 h-5" />}
+              Implémenter maintenant
+            </button>
+            <button
+              disabled={loading}
+              onClick={onClose}
+              className="flex-1 sm:flex-none bg-white text-zinc-600 font-bold py-3.5 px-6 rounded-xl border border-zinc-200 hover:text-zinc-900 hover:bg-zinc-50 transition-colors disabled:opacity-50"
+            >
+              Annuler
+            </button>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+// === EXECUTION PLAN DRAWER END ===
+
+const RecommendationCard = ({ reco, onAction, onOpenPlan }) => {
   const [loadingAction, setLoadingAction] = useState(false);
 
   const handleAction = async (status) => {
@@ -1010,7 +1226,7 @@ const RecommendationCard = ({ reco, onAction }) => {
   );
 };
 
-const IntelligenceView = ({ supabase }) => {
+const IntelligenceView = ({ supabase, setActiveTab }) => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -1019,6 +1235,9 @@ const IntelligenceView = ({ supabase }) => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortBy, setSortBy] = useState('impact'); // impact or recent
   const [actionError, setActionError] = useState('');
+
+  // Execution Plan Drawer state
+  const [selectedPlanReco, setSelectedPlanReco] = useState(null);
 
   const fetchRecommendations = async () => {
     if (!supabase) return;
@@ -1161,9 +1380,24 @@ const IntelligenceView = ({ supabase }) => {
       ) : (
         <div className="space-y-6 animate-fade-in-up">
           {recommendations.map((reco) => (
-            <RecommendationCard key={reco.id} reco={reco} onAction={handleAction} />
+            <RecommendationCard
+              key={reco.id}
+              reco={reco}
+              onAction={handleAction}
+              onOpenPlan={setSelectedPlanReco}
+            />
           ))}
         </div>
+      )}
+
+      {selectedPlanReco && (
+        <ExecutionPlanDrawer
+          reco={selectedPlanReco}
+          supabase={supabase}
+          onClose={() => setSelectedPlanReco(null)}
+          onImplement={handleAction}
+          onNavigateToActivity={() => setActiveTab('activity')}
+        />
       )}
     </div>
   );
@@ -1668,7 +1902,7 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
                   <p className="text-zinc-500 font-medium">L'IA est en cours d'analyse de vos processus.</p>
                 </div>
               ) : (
-                <IntelligenceView supabase={supabase} />
+                <IntelligenceView supabase={supabase} setActiveTab={setActiveTab} />
               )}
             </div>
           )}
