@@ -3073,28 +3073,6 @@ const DashboardGate = ({ onNavigate, onLogout }) => {
     );
   }
 
-  if (!clientId) {
-    return (
-      <div className="min-h-screen bg-[#FAFAFA] flex flex-col justify-center items-center py-12 px-6 font-sans text-center">
-        <div className="w-24 h-24 bg-white rounded-3xl border border-gray-100 shadow-sm flex items-center justify-center mb-8">
-          <UserRoundX className="w-10 h-10 text-gray-400" />
-        </div>
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-3">Compte non provisionné</h2>
-        <p className="text-gray-500 font-medium max-w-md mb-10 leading-relaxed">
-          Votre compte n'est lié à aucune infrastructure active. L'installation de votre environnement Done-For-You est peut-être en cours.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <a href="mailto:support@actero.fr" className="bg-indigo-600 text-white px-8 py-3.5 rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-colors">
-            Contacter support@actero.fr
-          </a>
-          <button onClick={onLogout} className="bg-white border border-gray-200 text-gray-700 px-8 py-3.5 rounded-xl font-bold shadow-sm hover:bg-gray-50 transition-colors">
-            Se déconnecter
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <TenantContext.Provider value={{ session, user, clientId, role, loadingTenant }}>
       {role === 'admin' ? (
