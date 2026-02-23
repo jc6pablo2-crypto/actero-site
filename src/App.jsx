@@ -2181,16 +2181,18 @@ const LandingPage = ({ onNavigate }) => {
 
       <main className="pt-20 md:pt-24">
         {/* 1. HERO SECTION */}
-        <section className="relative pt-16 pb-20 lg:pt-28 lg:pb-32 overflow-hidden flex flex-col items-center px-6">
+        <section className="relative pt-24 pb-20 lg:pt-36 lg:pb-32 overflow-hidden flex flex-col items-center px-6">
+          {/* Subtle Keynote Background */}
           <div className="absolute inset-0 bg-[#FAFAFA] -z-10">
-            <div className="absolute top-0 -left-1/4 w-[150%] h-[150%] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-100/40 via-transparent to-transparent opacity-60"></div>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-[120%] bg-[radial-gradient(ellipse_at_top,_#F3F4F6,_transparent)] opacity-80"></div>
           </div>
 
-          <div className="max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+          <div className="max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
 
             {/* Left Column (Text & CTAs) */}
-            <div className="flex-1 text-center lg:text-left flex flex-col items-center lg:items-start animate-fade-in-up z-10 w-full">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm text-xs font-bold text-indigo-600 mb-8 uppercase tracking-widest backdrop-blur-md">
+            <div className="flex-1 text-center lg:text-left flex flex-col items-center lg:items-start z-10 w-full animate-fade-in-up">
+
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 border border-gray-200/60 shadow-[0_2px_8px_rgba(0,0,0,0.04)] text-xs font-bold text-gray-600 mb-10 uppercase tracking-widest backdrop-blur-xl transition-transform hover:scale-105 duration-300">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
@@ -2198,26 +2200,26 @@ const LandingPage = ({ onNavigate }) => {
                 Infrastructure E-commerce Autonome
               </div>
 
-              <h1 className="text-[2.75rem] md:text-6xl lg:text-[4rem] font-bold tracking-tighter text-gray-900 mb-6 leading-[1.05]">
-                Automatisez votre <br className="hidden md:block" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500">e-commerce.</span><br />
-                Gagnez du temps.
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-gray-900 mb-8 leading-[1.1] animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+                Votre e-commerce<br />
+                devrait travailler<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-500">pour vous.</span>
               </h1>
 
-              <p className="text-lg md:text-xl text-gray-500 max-w-lg mb-10 leading-relaxed font-medium">
-                Actero détecte, recommande et exécute automatiquement les optimisations à fort impact pour votre boutique.
+              <p className="text-xl text-gray-500 max-w-lg mb-12 leading-relaxed font-medium animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+                Actero détecte, optimise et exécute automatiquement les actions qui augmentent vos marges.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto animate-fade-in-up" style={{ animationDelay: '300ms' }}>
                 <button
                   onClick={() => scrollToId('calendly')}
-                  className="bg-indigo-600 text-white px-8 py-4 rounded-full font-semibold text-base hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 w-full sm:w-auto"
+                  className="bg-indigo-600 text-white px-8 py-5 rounded-full font-bold text-base hover:bg-indigo-700 transition-all shadow-[0_8px_30px_rgb(79,70,229,0.3)] hover:shadow-[0_8px_30px_rgb(79,70,229,0.4)] hover:-translate-y-1 flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
-                  Demander un audit gratuit
+                  Recevoir mon plan d'automatisation
                 </button>
                 <button
                   onClick={() => scrollToId('comment-ca-marche')}
-                  className="bg-white/50 backdrop-blur-sm border border-gray-200 text-gray-900 px-8 py-4 rounded-full font-semibold text-base hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto"
+                  className="bg-transparent text-gray-600 px-8 py-5 rounded-full font-bold text-base hover:text-gray-900 hover:bg-gray-100/50 transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   Voir comment ça fonctionne
                 </button>
@@ -2225,67 +2227,62 @@ const LandingPage = ({ onNavigate }) => {
             </div>
 
             {/* Right Column (Mockup Desktop - iOS Card Stack) */}
-            <div className="flex-1 w-full max-w-[480px] lg:max-w-none relative animate-fade-in-up z-10 mt-8 lg:mt-0" style={{ animationDelay: '200ms' }}>
+            <div className="flex-1 w-full max-w-[480px] lg:max-w-none relative animate-fade-in-up z-10 mt-12 lg:mt-0" style={{ animationDelay: '400ms' }}>
               <div className="relative w-full aspect-square md:aspect-[4/3] lg:aspect-square flex items-center justify-center">
 
                 {/* Back card */}
-                <div className="absolute top-[5%] left-[15%] w-[70%] h-[70%] bg-white/40 border border-gray-200/50 rounded-[32px] backdrop-blur-lg transform -rotate-6 scale-95 shadow-xl transition-transform hover:-rotate-12 duration-500"></div>
+                <div className="absolute top-[8%] left-[12%] w-[76%] h-[76%] bg-[#FAFAFA] border border-gray-200/60 rounded-[3xl] transform -rotate-6 shadow-[0_10px_40px_rgba(0,0,0,0.03)] transition-transform hover:-rotate-12 duration-700 ease-out"></div>
 
                 {/* Middle card */}
-                <div className="absolute top-[10%] left-[10%] w-[80%] h-[80%] bg-white/80 border border-gray-200 rounded-[32px] backdrop-blur-xl transform -rotate-3 scale-100 shadow-2xl transition-transform hover:-rotate-6 duration-500 p-6 flex flex-col justify-end">
-                  <div className="w-full h-32 bg-indigo-50 rounded-xl mb-4 border border-indigo-100/50"></div>
-                  <div className="w-2/3 h-4 bg-gray-100 rounded-full mb-2"></div>
-                  <div className="w-1/3 h-4 bg-gray-100 rounded-full"></div>
+                <div className="absolute top-[12%] left-[8%] w-[84%] h-[84%] bg-white border border-gray-100 rounded-[3xl] transform -rotate-3 shadow-[0_20px_50px_rgba(0,0,0,0.05)] transition-transform hover:-rotate-6 duration-700 ease-out p-6 flex flex-col justify-end">
+                  <div className="w-full h-32 bg-indigo-50/50 rounded-2xl mb-4 border border-indigo-100/30"></div>
+                  <div className="w-2/3 h-4 bg-gray-50 rounded-full mb-3"></div>
+                  <div className="w-1/3 h-4 bg-gray-50 rounded-full"></div>
                 </div>
 
                 {/* Front Main Card */}
-                <div className="absolute inset-0 m-auto w-[90%] h-[90%] bg-white border border-gray-200 rounded-[32px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col hover:-translate-y-2 transition-transform duration-500">
-                  <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-[#FAFAFA]/50 backdrop-blur-md">
-                    <div className="flex gap-2.5">
-                      <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                      <div className="w-3 h-3 rounded-full bg-amber-400"></div>
-                      <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
+                <div className="absolute inset-0 m-auto w-[92%] h-[92%] bg-white/95 backdrop-blur-3xl border border-gray-200/80 rounded-[32px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col hover:-translate-y-3 transition-transform duration-700 ease-out">
+                  <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100/60 bg-white/50">
+                    <div className="flex gap-2">
+                      <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>
+                      <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>
+                      <div className="w-2.5 h-2.5 rounded-full bg-gray-200"></div>
                     </div>
-                    <div className="flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 rounded-md shadow-sm">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-[#FAFAFA] border border-gray-100 rounded-lg">
                       <Lock className="w-3 h-3 text-gray-400" />
-                      <span className="text-[10px] font-semibold text-gray-500 font-mono">app.actero.io</span>
+                      <span className="text-[11px] font-bold text-gray-500 tracking-wide">app.actero.io</span>
                     </div>
                   </div>
 
-                  <div className="p-6 md:p-8 flex-1 flex flex-col bg-gradient-to-b from-white to-[#FAFAFA]/50">
-                    <div className="mb-8">
-                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Impact Automatisations</p>
-                      <p className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tighter">+14 280 €</p>
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 mt-3">
+                  <div className="p-8 flex-1 flex flex-col bg-gradient-to-b from-white to-[#FAFAFA]/30">
+                    <div className="mb-10 text-center">
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Revenus générés par l'IA</p>
+                      <p className="text-5xl md:text-6xl font-bold text-gray-900 tracking-tighter mb-4">+14 280 €</p>
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-100 mx-auto">
                         <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
-                        <p className="text-xs font-bold text-emerald-700">Générés ce mois-ci via relances</p>
+                        <p className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Ce mois-ci</p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 flex-1">
-                      <div className="p-5 bg-white border border-gray-100 shadow-sm rounded-2xl flex flex-col justify-center relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150"></div>
-                        <ShoppingCart className="w-6 h-6 text-indigo-500 mb-3 relative z-10" />
-                        <p className="text-xs text-gray-500 font-semibold mb-1 relative z-10">Paniers sauvés</p>
-                        <p className="text-2xl font-bold text-gray-900 relative z-10">184</p>
+                      <div className="p-6 bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] rounded-[24px] flex flex-col justify-center text-center">
+                        <ShoppingCart className="w-6 h-6 text-indigo-500 mb-3 mx-auto" />
+                        <p className="text-3xl font-bold text-gray-900 mb-1">184</p>
+                        <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest">Paniers sauvés</p>
                       </div>
-                      <div className="p-5 bg-white border border-gray-100 shadow-sm rounded-2xl flex flex-col justify-center relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150"></div>
-                        <Clock className="w-6 h-6 text-emerald-500 mb-3 relative z-10" />
-                        <p className="text-xs text-gray-500 font-semibold mb-1 relative z-10">Heures gagnées</p>
-                        <p className="text-2xl font-bold text-gray-900 relative z-10">42h</p>
+                      <div className="p-6 bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] rounded-[24px] flex flex-col justify-center text-center">
+                        <Clock className="w-6 h-6 text-emerald-500 mb-3 mx-auto" />
+                        <p className="text-3xl font-bold text-gray-900 mb-1">42h</p>
+                        <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest">Temps gagné</p>
                       </div>
                     </div>
 
-                    <div className="mt-6 pt-5 border-t border-gray-100 flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
-                        <span className="relative flex h-2.5 w-2.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                        </span>
-                        <span className="text-xs font-semibold text-gray-600">3 workflows actifs 24/7</span>
-                      </div>
-                      <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded">En direct</span>
+                    <div className="mt-8 flex items-center justify-center gap-3">
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                      </span>
+                      <span className="text-[11px] font-bold text-gray-600 uppercase tracking-widest">Système Actif</span>
                     </div>
                   </div>
                 </div>
@@ -2308,159 +2305,171 @@ const LandingPage = ({ onNavigate }) => {
           </div>
         </section>
 
-        {/* 2. COMMENT ÇA MARCHE */}
-        <section id="comment-ca-marche" className="py-24 bg-white px-6">
+        {/* 2. SECTION STORYTELLING - LE PROBLÈME */}
+        <section className="py-24 md:py-32 bg-white px-6">
+          <div className="max-w-5xl mx-auto text-center">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-gray-900 mb-6">Vous perdez déjà de l'argent.</h2>
+            <p className="text-xl md:text-2xl text-gray-500 font-medium max-w-3xl mx-auto leading-relaxed mb-20">
+              Panier abandonné. Support saturé. Données inexploitées.<br className="hidden md:block" />
+              Chaque jour sans automatisation vous coûte.
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-12 lg:gap-16 text-center">
+              {[
+                { icon: <TrendingDown className="w-8 h-8 text-gray-400" />, title: "Perte de conversion", desc: "Des relances génériques qui ne convertissent plus." },
+                { icon: <Clock className="w-8 h-8 text-gray-400" />, title: "Temps humain gaspillé", desc: "Des heures perdues sur des tâches répétitives." },
+                { icon: <BarChart2 className="w-8 h-8 text-gray-400" />, title: "Décisions sans data", desc: "Navigation à vue au lieu d'itérer sur la data." }
+              ].map((block, i) => (
+                <div key={i} className="flex flex-col items-center group">
+                  <div className="mb-6 opacity-60 group-hover:opacity-100 group-hover:-translate-y-1 transition-all duration-300">
+                    {block.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{block.title}</h3>
+                  <p className="text-base text-gray-500 font-medium leading-relaxed">{block.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 3. SECTION TRANSITION - LE SHIFT */}
+        <section id="comment-ca-marche" className="py-32 bg-[#F6F7FB] px-6 relative overflow-hidden">
+          {/* Subtle decoration */}
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-white rounded-full blur-3xl opacity-50 -mr-40 -mt-40 pointer-events-none"></div>
+
+          <div className="max-w-4xl mx-auto relative z-10">
+            <div className="text-center mb-24">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-gray-900 mb-6">Et si votre boutique devenait autonome ?</h2>
+            </div>
+
+            <div className="flex flex-col gap-12 relative">
+              {/* Connecting vertical line */}
+              <div className="absolute top-10 bottom-10 left-8 md:left-[50%] md:-ml-px w-0.5 bg-gradient-to-b from-transparent via-gray-300 to-transparent hidden md:block"></div>
+
+              {[
+                { step: "01", title: "Analyse en continu", desc: "Actero se connecte à Shopify et surveille chaque interaction en temps réel.", align: "left" },
+                { step: "02", title: "Recommandation IA", desc: "L'intelligence artificielle identifie le workflow exact qui augmentera vos marges.", align: "right" },
+                { step: "03", title: "Exécution instantanée", desc: "Validez en un clic. L'architecture technique se déploie sans aucun code.", align: "left" }
+              ].map((item, i) => (
+                <div key={i} className={`flex flex-col md:flex-row items-center gap-8 ${item.align === 'right' ? 'md:flex-row-reverse' : ''} animate-fade-in-up`} style={{ animationDelay: `${i * 200}ms` }}>
+                  <div className={`flex-1 w-full flex ${item.align === 'right' ? 'md:justify-start' : 'md:justify-end'}`}>
+                    <div className="bg-white rounded-[32px] p-8 md:p-10 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.03)] w-full max-w-sm hover:-translate-y-1 transition-transform duration-500 ease-out">
+                      <p className="text-sm font-bold text-indigo-500 mb-4 tracking-widest uppercase">Étape {item.step}</p>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-4">{item.title}</h3>
+                      <p className="text-gray-500 font-medium leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+
+                  {/* Center Node */}
+                  <div className="hidden md:flex flex-shrink-0 w-16 h-16 rounded-full bg-white border-4 border-[#F6F7FB] shadow-sm items-center justify-center z-10">
+                    <div className="w-3 h-3 rounded-full bg-indigo-600"></div>
+                  </div>
+
+                  <div className="flex-1 w-full"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 4. SECTION IMPACT MASSIF - PROOF */}
+        <section id="proof" className="py-24 bg-white px-6">
           <div className="max-w-6xl mx-auto">
+
+            {/* XXL Metrics */}
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-6">Un système autonome en 3 étapes.</h2>
-              <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto">Vous connectez vos outils, Actero fait le reste. De la détection de l'anomalie à son exécution en production.</p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6 lg:gap-8 relative">
-              {/* Connecting line for desktop */}
-              <div className="hidden md:block absolute top-[60px] left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent z-0"></div>
-
-              {[
-                {
-                  icon: <Search className="w-5 h-5 text-indigo-600" />,
-                  title: "1. Scan & Détection",
-                  desc: "Analyse continue de Shopify et de vos flux pour repérer les fuites de revenus.",
-                  visual: <div className="h-24 w-full bg-[#FAFAFA] rounded-xl border border-gray-100 flex items-center justify-center p-4">
-                    <div className="w-full space-y-2">
-                      <div className="h-2 w-[80%] bg-gray-200 rounded-full animate-pulse"></div>
-                      <div className="h-2 w-[40%] bg-gray-200 rounded-full animate-pulse delay-75"></div>
-                      <div className="h-2 w-[60%] bg-indigo-200 rounded-full"></div>
-                    </div>
-                  </div>
-                },
-                {
-                  icon: <BrainCircuit className="w-5 h-5 text-indigo-600" />,
-                  title: "2. Recommandation IA",
-                  desc: "Génération de stratégies concrètes, calquées sur vos données, pour combler ces pertes.",
-                  visual: <div className="h-24 w-full bg-[#FAFAFA] rounded-xl border border-gray-100 flex items-center justify-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center"><Database className="w-3 h-3 text-gray-400" /></div>
-                    <div className="flex-1 border-t border-dashed border-indigo-200 relative"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-indigo-100 rounded-full flex items-center justify-center"><Zap className="w-2.5 h-2.5 text-indigo-600" /></div></div>
-                    <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center shadow-sm"><Bot className="w-3 h-3 text-white" /></div>
-                  </div>
-                },
-                {
-                  icon: <Zap className="w-5 h-5 text-indigo-600" />,
-                  title: "3. Exécution Directe",
-                  desc: "Déploiement en 1 clic de l'automatisation sans coder. Modifiez vos flux au besoin.",
-                  visual: <div className="h-24 w-full bg-[#FAFAFA] rounded-xl border border-gray-100 flex items-center justify-center">
-                    <div className="px-4 py-2 bg-emerald-50 border border-emerald-100 rounded-lg flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></div>
-                      <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Déployé avec succès</span>
-                    </div>
-                  </div>
-                }
-              ].map((step, i) => (
-                <div key={i} className="bg-white rounded-[24px] border border-gray-200 p-6 md:p-8 hover:shadow-xl transition-all duration-300 relative z-10 hover:-translate-y-1 group flex flex-col h-full">
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    {step.icon}
-                  </div>
-                  <h3 className="text-xl font-bold tracking-tight text-gray-900 mb-3">{step.title}</h3>
-                  <p className="text-[15px] text-gray-500 font-medium leading-relaxed flex-1 mb-8">{step.desc}</p>
-                  {step.visual}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 max-w-4xl mx-auto">
+                <div className="flex flex-col items-center justify-center py-6 md:border-r border-gray-100">
+                  <span className="text-6xl lg:text-[5rem] font-bold tracking-tighter text-gray-900 mb-2 leading-none">+120h</span>
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Temps gagné / mois</span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 3. CAS D'USAGE */}
-        <section id="cas-usage" className="py-24 bg-[#FAFAFA] border-y border-gray-200 px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-              <div>
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-4">6 leviers de croissance.</h2>
-                <p className="text-lg text-gray-500 font-medium max-w-xl">Des automatisations prêtes à l'emploi conçues spécifiquement pour adresser les goulots d'étranglement de l'e-commerce moderne.</p>
-              </div>
-              <button onClick={() => scrollToId('calendly')} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 group">
-                Voir toutes les templates <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { title: "Récupération de paniers", icon: <ShoppingCart className="w-5 h-5" />, desc: "Séquences multi-canales (Email + SMS) intelligentes basées sur la valeur du panier.", tag: "+15% Conversion" },
-                { title: "Service Client IA", icon: <Bot className="w-5 h-5" />, desc: "Résolution automatique des tickets 'Où est ma commande' (WISMO) et retours.", tag: "-40% Tickets" },
-                { title: "Upsell Post-Achat", icon: <TrendingUp className="w-5 h-5" />, desc: "Recommandations dynamiques injectées dans le mail de confirmation de commande.", tag: "+AOV" },
-                { title: "Gestion Logistique", icon: <Server className="w-5 h-5" />, desc: "Alerte automatique au fournisseur en cas de rupture de stock critique.", tag: "Gain de temps" },
-                { title: "Programme Fidélité", icon: <Zap className="w-5 h-5" />, desc: "Scoring client dynamique & attribution automatique de tags VIP dans Shopify.", tag: "Rétention" },
-                { title: "Contrôle Qualité", icon: <AlertCircle className="w-5 h-5" />, desc: "Notification Slack/Discord instantanée lors d'un avis client négatif (1-2 étoiles).", tag: "Réactivité" }
-              ].map((useCase, i) => (
-                <div key={i} className="bg-white rounded-[20px] p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all group flex flex-col">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-[#FAFAFA] text-gray-600 flex items-center justify-center border border-gray-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                      {useCase.icon}
-                    </div>
-                    <span className="text-[10px] uppercase font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded border border-indigo-100">{useCase.tag}</span>
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{useCase.title}</h3>
-                  <p className="text-sm text-gray-500 font-medium leading-relaxed flex-1">{useCase.desc}</p>
+                <div className="flex flex-col items-center justify-center py-6 md:border-r border-gray-100">
+                  <span className="text-6xl lg:text-[5rem] font-bold tracking-tighter text-indigo-600 mb-2 leading-none">+18%</span>
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Hausse Conversion</span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 4. PRODUIT (COMMAND CENTER) */}
-        <section id="produit" className="py-24 bg-white px-6 overflow-hidden">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
-              <div className="order-2 lg:order-1 relative">
-                <div className="absolute -inset-4 bg-gray-50 rounded-[40px] -z-10 transform -rotate-2"></div>
-                <div className="bg-[#FAFAFA] rounded-[32px] border border-gray-200 shadow-2xl overflow-hidden p-2">
-                  <div className="bg-white rounded-[24px] border border-gray-100 p-6">
-                    <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
-                      <h4 className="text-xl font-bold tracking-tight text-gray-900">Vue Globale</h4>
-                      <div className="flex gap-2">
-                        <div className="w-6 h-6 rounded bg-gray-100"></div>
-                        <div className="w-6 h-6 rounded bg-gray-100"></div>
-                      </div>
-                    </div>
-                    <div className="space-y-4">
-                      {/* Fake skeleton rows to look exactly like a dashboard */}
-                      <div className="h-24 w-full bg-[#FAFAFA] rounded-xl border border-gray-100 p-4 flex gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 shadow-sm"></div>
-                        <div className="space-y-2 flex-1 pt-2">
-                          <div className="h-2 w-1/3 bg-gray-200 rounded-full"></div>
-                          <div className="h-2 w-1/4 bg-gray-100 rounded-full"></div>
-                        </div>
-                      </div>
-                      <div className="h-24 w-full bg-[#FAFAFA] rounded-xl border border-gray-100 p-4 flex gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 shadow-sm"></div>
-                        <div className="space-y-2 flex-1 pt-2">
-                          <div className="h-2 w-1/2 bg-gray-200 rounded-full"></div>
-                          <div className="h-2 w-1/5 bg-gray-100 rounded-full"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div className="flex flex-col items-center justify-center py-6">
+                  <span className="text-6xl lg:text-[5rem] font-bold tracking-tighter text-gray-900 mb-2 leading-none">100%</span>
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Autonome</span>
                 </div>
               </div>
-              <div className="order-1 lg:order-2">
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-6">Le centre de contrôle de votre croissance.</h2>
-                <p className="text-lg text-gray-500 font-medium mb-10">Pilotez toutes vos automatisations depuis une interface claire. Oubliez la complexité de Make ou Zapier, nous avons extrait uniquement ce qui compte pour augmenter vos marges.</p>
+              <p className="text-sm font-semibold text-gray-400 mt-12 uppercase tracking-wide">Résultats moyens observés chez nos clients E-commerce.</p>
+            </div>
 
-                <div className="space-y-8">
-                  {[
-                    { title: "Intelligence Proactive", desc: "Le système vous notifie lorsqu'une automatisation devient obsolète ou peu performante." },
-                    { title: "Monitoring des Erreurs", desc: "Relance automatique des flux en cas d'échec de l'API externe sans bloquer vos commandes." },
-                    { title: "Rapports Financiers", desc: "Mesurez chaque euro généré spécifiquement par nos workflows, indépendamment de vos ads." }
-                  ].map((feat, i) => (
-                    <div key={i} className="flex gap-4">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center border border-indigo-100 mt-1">
-                        <span className="text-xs font-bold text-indigo-600">{i + 1}</span>
-                      </div>
+            {/* Premium Case Study Card */}
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-[#FAFAFA] rounded-[32px] p-8 md:p-12 border border-gray-200 shadow-xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-50 rounded-full blur-3xl opacity-50 -mr-40 -mt-40 transition-transform duration-700 group-hover:scale-110"></div>
+
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-10">
+                    <div className="px-3 py-1 bg-white border border-gray-100 rounded-full text-xs font-bold uppercase tracking-widest text-indigo-600 shadow-sm">Étude de Cas</div>
+                    <span className="text-gray-900 font-bold">Marque DNVB (Beauté)</span>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-12 items-center">
+                    <div className="space-y-8">
                       <div>
-                        <h4 className="text-lg font-bold text-gray-900 mb-1">{feat.title}</h4>
-                        <p className="text-[15px] text-gray-500 font-medium leading-relaxed">{feat.desc}</p>
+                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Architecture déployée</p>
+                        <p className="text-xl font-bold text-gray-900 leading-tight">Moteur de recommandation post-achat avec SMS dynamiques (Klaviyo + Shopify).</p>
+                      </div>
+                      <div className="flex gap-12">
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">AOV Avant</p>
+                          <p className="text-2xl font-bold text-gray-500 line-through">65 €</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold uppercase tracking-widest text-indigo-500 mb-1">AOV Après</p>
+                          <p className="text-3xl font-bold text-gray-900 tracking-tight">82 €</p>
+                        </div>
                       </div>
                     </div>
-                  ))}
+
+                    <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.04)] text-center">
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Revenus nets générés en 30 jours</p>
+                      <p className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-emerald-500 to-emerald-700 tracking-tighter mb-6">+ 12 400 €</p>
+                      <button onClick={() => scrollToId('calendly')} className="text-sm font-bold text-gray-900 border-b-2 border-transparent hover:border-gray-900 transition-colors pb-0.5 inline-flex items-center gap-1">Je veux le même plan <ArrowRight className="w-3 h-3" /></button>
+                    </div>
+                  </div>
                 </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* 5. SECTION COMPARAISON (POSITIONNEMENT) */}
+        <section className="py-24 bg-[#FAFAFA] border-t border-gray-200 px-6">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-6 leading-tight">Ce n'est pas un outil.<br />C'est une <span className="text-indigo-600">infrastructure.</span></h2>
+            </div>
+
+            <div className="bg-white rounded-[32px] border border-gray-200 overflow-hidden shadow-sm">
+              <div className="grid grid-cols-2 md:grid-cols-2 border-b border-gray-100 bg-gray-50/50">
+                <div className="p-6 md:p-8 border-r border-gray-100">
+                  <p className="text-lg font-bold tracking-tight text-gray-400 line-through decoration-gray-300">Make / Zapier</p>
+                </div>
+                <div className="p-6 md:p-8">
+                  <p className="text-xl font-bold tracking-tight text-indigo-600 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>Actero</p>
+                </div>
+              </div>
+
+              <div className="divide-y divide-gray-100">
+                {[
+                  { old: "Création manuelle des flux", new: "Déploiement Autonome piloté par l'IA" },
+                  { old: "Focalisé sur la technique (API, Webhooks)", new: "Focalisé sur le Business (Marges, AOV, LTV)" },
+                  { old: "Maintenance constante en cas de bug", new: "Monitoring intelligent et auto-réparation" },
+                  { old: "Aucun suivi du ROI chiffré", new: "Impact financier mesuré sur chaque workflow" },
+                ].map((row, i) => (
+                  <div key={i} className="grid grid-cols-2 group hover:bg-gray-50/30 transition-colors">
+                    <div className="p-6 md:p-8 border-r border-gray-100 flex items-center">
+                      <p className="text-[15px] font-medium text-gray-500">{row.old}</p>
+                    </div>
+                    <div className="p-6 md:p-8 flex items-center">
+                      <p className="text-[15px] font-bold text-gray-900">{row.new}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -2602,54 +2611,39 @@ const LandingPage = ({ onNavigate }) => {
         </section>
         {/* === AI ROI SIMULATOR (RESTORED) END === */}
 
-        {/* 6. PROOFS & TESTIMONIALS */}
+        {/* 7. PREUVE SOCIALE ELEGANTE */}
         <section className="py-24 bg-white px-6 border-b border-gray-100">
           <div className="max-w-6xl mx-auto">
-            {/* Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-100 mb-20 bg-[#FAFAFA] rounded-[32px] p-10 border border-gray-200/60 shadow-sm">
-              <div className="py-6 md:py-0 transition-transform duration-300">
-                <p className="text-5xl md:text-6xl font-bold text-gray-900 tracking-tighter mb-4">+120h</p>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Temps gagné / mois en moyenne</p>
-              </div>
-              <div className="py-6 md:py-0 transition-transform duration-300">
-                <p className="text-5xl md:text-6xl font-bold text-indigo-600 tracking-tighter mb-4">+18%</p>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Augmentation moy. conversion</p>
-              </div>
-              <div className="py-6 md:py-0 transition-transform duration-300">
-                <p className="text-5xl md:text-6xl font-bold text-gray-900 tracking-tighter mb-4">100%</p>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Recommandations exécutables</p>
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-6">Ils ont transformé leur croissance.</h2>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-indigo-50 border border-indigo-100 shadow-sm text-xs font-bold text-indigo-700 uppercase tracking-widest">
+                <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                27 e-commerces automatisés ce mois-ci
               </div>
             </div>
 
-            {/* Testimonials */}
-            <div>
-              <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold tracking-tighter text-gray-900 mb-4">Ils ont automatisé leur croissance.</h2>
-              </div>
-              <div className="grid md:grid-cols-3 gap-6">
-                {[
-                  { quote: "Actero a identifié une faille dans notre système de relance panier qui nous coûtait 3000€ par mois. L'automatisation a été déployée en 2 clics.", name: "Julien M.", role: "CEO, DNVB Mode" },
-                  { quote: "Le fait de ne pas avoir à coder ni à comprendre Zapier a tout changé. Actero s'occupe de la technique, on regarde juste les métriques monter.", name: "Sarah L.", role: "CMO, Beauté Naturelle" },
-                  { quote: "Notre support client était sous l'eau. Le module IA traite maintenant plus de 40% de nos tickets WISMO automatiquement. Un soulagement.", name: "Marc D.", role: "Head of E-commerce" }
-                ].map((t, i) => (
-                  <div key={i} className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm hover:shadow-lg transition-shadow">
-                    <div className="flex gap-1 mb-6 text-amber-400">
-                      <Zap className="w-5 h-5 fill-current" />
-                      <Zap className="w-5 h-5 fill-current" />
-                      <Zap className="w-5 h-5 fill-current" />
-                      <Zap className="w-5 h-5 fill-current" />
-                      <Zap className="w-5 h-5 fill-current" />
-                    </div>
-                    <p className="text-gray-900 font-medium mb-8 leading-relaxed">"{t.quote}"</p>
-                    <div className="flex items-center justify-between border-t border-gray-100 pt-6">
-                      <div>
-                        <p className="font-bold text-gray-900">{t.name}</p>
-                        <p className="text-xs font-medium text-gray-500">{t.role}</p>
-                      </div>
-                    </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                { quote: "Actero a identifié une faille dans notre système de relance panier. L'automatisation a été déployée en 2 clics. Le ROI est colossal.", name: "Julien M.", role: "CEO, DNVB Mode" },
+                { quote: "Le fait de ne pas avoir à coder ni à comprendre Zapier a tout changé. Actero s'occupe de la technique, on regarde juste les métriques monter.", name: "Sarah L.", role: "CMO, Beauté Naturelle" },
+                { quote: "Notre support client était saturé. L'agent IA s'occupe maintenant de 40% de nos tickets automatiquement. Indispensable.", name: "Marc D.", role: "Head of E-commerce" }
+              ].map((t, i) => (
+                <div key={i} className="bg-[#FAFAFA] rounded-3xl border border-gray-200 p-8 shadow-sm hover:-translate-y-1 transition-transform duration-300">
+                  <div className="flex gap-1 mb-6 text-gray-300">
+                    {/* Minimalist stars */}
+                    <svg className="w-4 h-4 text-indigo-500 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                    <svg className="w-4 h-4 text-indigo-500 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                    <svg className="w-4 h-4 text-indigo-500 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                    <svg className="w-4 h-4 text-indigo-500 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+                    <svg className="w-4 h-4 text-indigo-500 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
                   </div>
-                ))}
-              </div>
+                  <p className="text-gray-900 font-medium text-[15px] mb-8 leading-relaxed">"{t.quote}"</p>
+                  <div>
+                    <p className="font-bold text-gray-900">{t.name}</p>
+                    <p className="text-xs font-bold tracking-widest uppercase text-gray-400 mt-1">{t.role}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -2686,38 +2680,84 @@ const LandingPage = ({ onNavigate }) => {
           </div>
         </section>
 
-        {/* 9. CALENDLY EMBED */}
-        <section id="calendly" className="py-24 bg-indigo-50 px-6 relative overflow-hidden border-t border-indigo-100">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-100/50 via-transparent to-transparent pointer-events-none"></div>
-          <div className="max-w-4xl mx-auto relative z-10">
-            <div className="bg-white rounded-[32px] border border-gray-200 shadow-2xl overflow-hidden flex flex-col items-center">
-              <div className="text-center pt-12 pb-6 px-6 relative w-full">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 blur-3xl rounded-full pointer-events-none"></div>
-                <div className="absolute top-0 left-0 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full pointer-events-none"></div>
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-4">Planifiez un audit.</h2>
-                <p className="text-lg text-gray-500 font-medium max-w-xl mx-auto">Choisissez un créneau ci-dessous pour discuter de votre infrastructure avec un expert Actero.</p>
-              </div>
+        {/* 9. APPEL STRATEGIQUE (CALENDLY) */}
+        <section id="calendly" className="py-24 bg-[#FAFAFA] px-6 relative overflow-hidden border-t border-gray-200">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-              <div className="w-full relative min-h-[700px]">
-                {/* Calendly Inline Widget */}
-                <iframe
-                  src="https://calendly.com/jc6pablo2/30min?embed_domain=actero.io&embed_type=Inline"
-                  width="100%"
-                  height="700"
-                  frameBorder="0"
-                  title="Calendly Scheduling"
-                  className="bg-white"
-                ></iframe>
+              {/* Left Context */}
+              <div className="space-y-10">
+                <div>
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-gray-900 mb-6 leading-[1.1]">Audit stratégique offert.</h2>
+                  <p className="text-xl text-gray-500 font-medium leading-relaxed">15 minutes pour identifier précisément où vous perdez de la marge, sans aucun engagement.</p>
+                </div>
 
-                {/* Fallback button just in case iframe gets blocked by browser extensions */}
-                <div className="absolute inset-x-0 bottom-4 flex justify-center pb-8 opacity-0 pointer-events-none">
-                  <a href="https://calendly.com/jc6pablo2/30min" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md">Ouvrir Calendly <ArrowRight className="w-4 h-4" /></a>
+                <div className="bg-white rounded-[24px] border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] p-8">
+                  <p className="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-6">Pendant cet appel vous recevrez :</p>
+                  <ul className="space-y-4">
+                    {[
+                      "Estimation ROI personnalisée",
+                      "3 workflows prioritaires à activer",
+                      "Plan d'architecture technique recommandé",
+                      "Projection de croissance sur 90 jours"
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-center gap-3">
+                        <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 flex-shrink-0"><Zap className="w-3 h-3" /></div>
+                        <span className="text-gray-700 font-medium">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-50 border border-red-100 text-xs font-bold text-red-600">
+                  <Clock className="w-3.5 h-3.5" />
+                  3 créneaux restants cette semaine
                 </div>
               </div>
+
+              {/* Right Calendly */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-indigo-500/5 blur-3xl transform scale-110 rounded-full"></div>
+                <div className="bg-white rounded-[32px] border border-gray-200 shadow-2xl relative overflow-hidden h-[700px] flex justify-center w-full">
+                  <iframe
+                    src="https://calendly.com/jc6pablo2/30min?embed_domain=actero.io&embed_type=Inline"
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    title="Calendly Scheduling"
+                    className="bg-white absolute inset-0 w-full h-full"
+                  ></iframe>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
       </main>
+
+      {/* STICKY CTA */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 z-50 pointer-events-none flex justify-center md:hidden">
+        <div className="bg-white/90 backdrop-blur-xl border border-gray-200/80 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] p-2 rounded-2xl w-full max-w-md pointer-events-auto flex items-center justify-between gap-4">
+          <span className="text-[13px] font-bold text-gray-900 ml-2">Prêt à automatiser<br />votre croissance ?</span>
+          <button
+            onClick={() => scrollToId('calendly')}
+            className="bg-indigo-600 text-white px-5 py-3 rounded-xl font-bold text-xs shadow-md shadow-indigo-500/20 whitespace-nowrap active:scale-95 transition-transform"
+          >
+            Réserver un audit
+          </button>
+        </div>
+      </div>
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none hidden md:flex">
+        <div className="bg-white/95 backdrop-blur-2xl border border-gray-200/50 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] rounded-full px-4 py-3 pointer-events-auto flex items-center gap-6 hover:-translate-y-1 transition-transform duration-300">
+          <span className="text-sm font-bold text-gray-900 pl-2">Prêt à automatiser votre croissance ?</span>
+          <button
+            onClick={() => scrollToId('calendly')}
+            className="bg-indigo-600 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 hover:scale-105 transition-all"
+          >
+            Réserver mon audit stratégique
+          </button>
+        </div>
+      </div>
 
       {/* Modal Lead IA */}
       {isModalOpen && (
