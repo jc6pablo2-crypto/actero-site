@@ -2948,11 +2948,31 @@ const DashboardGate = ({ onNavigate, onLogout }) => {
   const [loadingTenant, setLoadingTenant] = useState(true);
   const [tenantError, setTenantError] = useState(null);
 
+  // Debug mode: accessible via "?debug=1" in the URL or the DEBUG_AUTH flag below.
+  const isDebug = window.location.search.includes('debug=1') || DEBUG_AUTH;
+  const dLog = (...args) => { if (isDebug) console.log("[DASHBOARD_GATE]", ...args); };
+
   useEffect(() => {
     let mounted = true;
 
+    // Helper: Retry execution wrapper
+    const fetchWithRetry = async (fn, maxRetries = 3, delayMs = 1500) => {
+      let attempts = 0;
+      while (attempts < maxRetries) {
+        try {
+          return await fn();
+        } catch (error) {
+          attempts++;
+          dLog(`Attempt ${attempts} failed:`, error.message);
+          if (attempts >= maxRetries) throw error;
+          await new Promise(r => setTimeout(r, delayMs * attempts)); // Backoff
+        }
+      }
+    };
+
     const checkTenant = async () => {
       try {
+        dLog("Initiating Tenant Check...");
         if (!isSupabaseConfigured || !supabase) {
           throw new Error("Base de données non configurée.");
         }
@@ -2962,34 +2982,52 @@ const DashboardGate = ({ onNavigate, onLogout }) => {
         if (authError) throw authError;
 
         if (!activeSession) {
+          dLog("Session status: Unauthenticated, redirecting to login.");
           if (mounted) onNavigate('/login');
           return;
         }
+
+        dLog("Session status: Authenticated", { userId: activeSession.user.id });
+        dLog("Supabase target:", SUPABASE_URL); // Scrubbed via variable reference
 
         if (mounted) {
           setSession(activeSession);
           setUser(activeSession.user);
         }
 
-        // Fetch client mapping
-        const { data: mapping, error: mapError } = await supabase
-          .from('client_users')
-          .select('client_id, role')
-          .eq('user_id', activeSession.user.id)
-          .maybeSingle();
+        // Fetch client mapping with Retry wrapper
+        dLog(`Fetching 'client_users' for user_id: ${activeSession.user.id}`);
+        const mappingResult = await fetchWithRetry(async () => {
+          const { data, error, status } = await supabase
+            .from('client_users')
+            .select('client_id, role')
+            .eq('user_id', activeSession.user.id)
+            .maybeSingle();
 
-        if (mapError) throw mapError;
+          dLog("Query resolve:", { status, data, error });
 
+          if (error) {
+            // Hard errors shouldn't be cast as "no tenant"
+            throw error;
+          }
+          return data;
+        });
+
+        // Resolve state
         if (mounted) {
-          if (mapping) {
-            setClientId(mapping.client_id);
-            setRole(mapping.role || 'client');
+          if (mappingResult) {
+            dLog("Tenant Mapping successful:", mappingResult);
+            setClientId(mappingResult.client_id);
+            setRole(mappingResult.role || 'client');
           } else {
+            dLog("No mapping found (data is null). Explicitly setting NO TENANT block.");
+            // Data is purely null, this genuinely means no provisioning line exists.
             setClientId(null);
           }
         }
       } catch (err) {
-        if (mounted) setTenantError(err.message);
+        dLog("FATAL Gate Error:", err);
+        if (mounted) setTenantError("Nous n'avons pas pu valider votre environnement (Erreur DB). Veuillez réessayer ou contacter le support.");
       } finally {
         if (mounted) setLoadingTenant(false);
       }
