@@ -2159,7 +2159,6 @@ const LandingPage = ({ onNavigate }) => {
             <button onClick={() => scrollToId('produit')} className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Produit</button>
             <button onClick={() => scrollToId('cas-usage')} className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cas d'usage</button>
             <button onClick={() => scrollToId('roi')} className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">ROI</button>
-            <button onClick={() => scrollToId('pricing')} className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Pricing</button>
             <button onClick={() => scrollToId('faq')} className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">FAQ</button>
           </div>
 
@@ -2655,78 +2654,7 @@ const LandingPage = ({ onNavigate }) => {
           </div>
         </section>
 
-        {/* 7. PRICING */}
-        <section id="pricing" className="py-24 bg-[#FAFAFA] border-y border-gray-200 px-6">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-6">Investissement dérisoire, impact massif.</h2>
-              <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto">Rentabilisez votre abonnement dès la récupération de vos 2 premiers paniers abandonnés.</p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-4xl mx-auto lg:max-w-none">
-
-              {/* Starter */}
-              <div className="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm hover:shadow-lg transition-all flex flex-col">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Starter</h3>
-                <p className="text-sm text-gray-500 font-medium h-10 mb-4">L'essentiel pour automatiser la relance et le support.</p>
-                <div className="mb-8">
-                  <span className="text-4xl font-bold tracking-tighter text-gray-900">49€</span>
-                  <span className="text-gray-500 font-medium">/mois</span>
-                </div>
-                <button onClick={() => scrollToId('calendly')} className="w-full py-3 px-4 bg-gray-50 hover:bg-gray-100 text-gray-900 font-bold rounded-xl transition-colors mb-8 border border-gray-200">Commencer</button>
-                <ul className="space-y-4 flex-1">
-                  {["3 Workflows actifs", "Support Mail", "Relance panier (Email)", "Intégration Shopify stricte"].map((feature, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-gray-600">
-                      <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100"><Zap className="w-3 h-3" /></div>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Growth - Highlighted */}
-              <div className="bg-gray-900 rounded-3xl border border-gray-800 p-8 shadow-xl hover:-translate-y-2 transition-transform flex flex-col relative transform lg:-translate-y-4 lg:hover:-translate-y-6">
-                <div className="absolute top-0 right-8 -translate-y-1/2 bg-indigo-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Recommandé</div>
-                <h3 className="text-xl font-bold text-white mb-2">Growth</h3>
-                <p className="text-sm text-gray-400 font-medium h-10 mb-4">L'infrastructure complète pour les E-commerçants voulant scaler.</p>
-                <div className="mb-8">
-                  <span className="text-4xl font-bold tracking-tighter text-white">199€</span>
-                  <span className="text-gray-400 font-medium">/mois</span>
-                </div>
-                <button onClick={() => scrollToId('calendly')} className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-indigo-500/25 mb-8">Passer à la vitesse supérieure</button>
-                <ul className="space-y-4 flex-1">
-                  {["Workflows illimités", "Support Slack dédié", "Séquences Email + SMS", "Intégration Shopify, Klaviyo, Meta", "Agent IA au Support client"].map((feature, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-gray-300">
-                      <div className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30"><Zap className="w-3 h-3" /></div>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Enterprise */}
-              <div className="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm hover:shadow-lg transition-all flex flex-col hidden lg:flex">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Scale</h3>
-                <p className="text-sm text-gray-500 font-medium h-10 mb-4">Solutions d'ingénierie sur-mesure pour les gros volumes.</p>
-                <div className="mb-8">
-                  <span className="text-4xl font-bold tracking-tighter text-gray-900">Sur devis</span>
-                </div>
-                <button onClick={() => scrollToId('calendly')} className="w-full py-3 px-4 bg-gray-50 hover:bg-gray-100 text-gray-900 font-bold rounded-xl transition-colors mb-8 border border-gray-200">Parler à un expert</button>
-                <ul className="space-y-4 flex-1">
-                  {["Architecture Cloud VIP", "Audits de sécurité", "Ingénieur data dédié", "Intégrations ERP & WMS persos"].map((feature, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-gray-600">
-                      <div className="w-5 h-5 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center border border-gray-200"><Server className="w-3 h-3" /></div>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* 8. FAQ */}
+        {/* 7. FAQ */}
         <section id="faq" className="py-24 bg-white px-6">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-16">
