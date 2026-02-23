@@ -2920,7 +2920,7 @@ export const useTenant = () => {
   return context;
 };
 
-const DashboardGate = ({ onNavigate, onLogout }) => {
+const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
   const [clientId, setClientId] = useState(null);
@@ -2952,7 +2952,7 @@ const DashboardGate = ({ onNavigate, onLogout }) => {
 
     const checkTenant = async () => {
       try {
-        dLog("Initiating Tenant Check...");
+        dLog(`Initiating Tenant Check... (Current Route: ${currentRoute})`);
         if (!isSupabaseConfigured || !supabase) {
           throw new Error("Base de données non configurée.");
         }
@@ -2975,34 +2975,65 @@ const DashboardGate = ({ onNavigate, onLogout }) => {
           setUser(activeSession.user);
         }
 
-        // Fetch client mapping with Retry wrapper
-        dLog(`Fetching 'client_users' for user_id: ${activeSession.user.id}`);
-        const mappingResult = await fetchWithRetry(async () => {
-          const { data, error, status } = await supabase
-            .from('client_users')
-            .select('client_id, role')
+        // 1. ADMIN CHECK
+        dLog(`Checking 'admin_users' for user_id: ${activeSession.user.id}`);
+        const isAdminCheck = await fetchWithRetry(async () => {
+          const { data, error } = await supabase
+            .from('admin_users')
+            .select('user_id')
             .eq('user_id', activeSession.user.id)
             .maybeSingle();
 
-          dLog("Query resolve:", { status, data, error });
-
-          if (error) {
-            // Hard errors shouldn't be cast as "no tenant"
-            throw error;
-          }
-          return data;
+          if (error) throw error;
+          return !!data;
         });
 
-        // Resolve state
-        if (mounted) {
-          if (mappingResult) {
-            dLog("Tenant Mapping successful:", mappingResult);
-            setClientId(mappingResult.client_id);
-            setRole(mappingResult.role || 'client');
-          } else {
-            dLog("No mapping found (data is null). Explicitly setting NO TENANT block.");
-            // Data is purely null, this genuinely means no provisioning line exists.
-            setClientId(null);
+        dLog(`Admin Status: ${isAdminCheck ? "TRUE" : "FALSE"}`);
+
+        if (isAdminCheck) {
+          if (mounted) {
+            setRole('admin');
+            setClientId('ADMIN_BYPASS'); // Admins don't strictly bind to one tenant visually right now.
+            if (currentRoute !== '/admin') {
+              dLog(`Admin User found on ${currentRoute}, redirecting to /admin`);
+              onNavigate('/admin');
+            }
+          }
+        } else {
+          // 2. CLIENT CHECK
+          if (currentRoute === '/admin') {
+            dLog(`Non-Admin User attempting to access /admin, redirecting to /app`);
+            if (mounted) onNavigate('/app');
+            // Allow state check to fall through seamlessly since we just issued a navigation order (it will re-render)
+          }
+
+          dLog(`Fetching 'client_users' for user_id: ${activeSession.user.id}`);
+          const mappingResult = await fetchWithRetry(async () => {
+            const { data, error, status } = await supabase
+              .from('client_users')
+              .select('client_id, role')
+              .eq('user_id', activeSession.user.id)
+              .maybeSingle();
+
+            dLog("Query resolve:", { status, data, error });
+
+            if (error) {
+              // Hard errors shouldn't be cast as "no tenant"
+              throw error;
+            }
+            return data;
+          });
+
+          // Resolve state
+          if (mounted) {
+            if (mappingResult) {
+              dLog("Tenant Mapping successful:", mappingResult);
+              setClientId(mappingResult.client_id);
+              setRole(mappingResult.role || 'client');
+            } else {
+              dLog("No mapping found (data is null). Explicitly setting NO TENANT block.");
+              setClientId(null);
+            }
           }
         }
       } catch (err) {
@@ -3031,16 +3062,7 @@ const DashboardGate = ({ onNavigate, onLogout }) => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [onNavigate]);
-
-  if (loadingTenant) {
-    return (
-      <div className="min-h-screen bg-[#FAFAFA] flex flex-col justify-center items-center py-12 font-sans">
-        <Loader2 className="w-10 h-10 text-indigo-600 animate-spin mb-4" />
-        <p className="text-sm font-semibold text-gray-500 uppercase tracking-widest animate-pulse">Configuration de l'espace...</p>
-      </div>
-    );
-  }
+  }, [onNavigate, currentRoute]);
 
   if (tenantError) {
     return (
@@ -3211,8 +3233,8 @@ function MainRouter() {
     return <AuthCallbackPage onNavigate={setCurrentRoute} />;
   }
 
-  if (currentRoute === '/app') {
-    return <DashboardGate onNavigate={setCurrentRoute} onLogout={handleLogout} />;
+  if (currentRoute === '/app' || currentRoute === '/admin') {
+    return <DashboardGate currentRoute={currentRoute} onNavigate={setCurrentRoute} onLogout={handleLogout} />;
   }
 
   return (
