@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import {
   ChevronRight, Play, UserX, Database, TrendingDown, ArrowRight, Activity,
   Clock, DollarSign, CheckCircle2, Cpu, BrainCircuit, Server, CreditCard,
@@ -6,7 +6,7 @@ import {
   LifeBuoy, Search, Filter, MoreVertical, Lock, Mail, AlertCircle, TerminalSquare,
   ArrowUpRight, Download, Sparkles, Bot, Zap, ShoppingCart, MessageSquare,
   Repeat, Target, ShieldCheck, ZapOff, ArrowRightCircle, Copy, RefreshCw,
-  Lightbulb, TrendingUp, XCircle, CheckCircle, BarChart2
+  Lightbulb, TrendingUp, XCircle, CheckCircle, BarChart2, UserRoundX, Loader2
 } from 'lucide-react';
 
 // --- Configuration Supabase ---
@@ -186,15 +186,8 @@ const LoginPage = ({ onNavigate, onLogin }) => {
       });
       if (authError) throw authError;
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', data.user.id)
-        .single();
-
-      const role = profile?.role || 'client';
-      onLogin(role);
-      onNavigate(role === 'admin' ? '/admin' : '/client');
+      // Delegate role/tenant check to the DashboardGate
+      onNavigate('/app');
 
     } catch (err) {
       setError(isForgot
@@ -2933,35 +2926,150 @@ function ResetPasswordPage({ onNavigate }) {
     </div>
   );
 }
-function MainRouter() {
-  const [currentRoute, setCurrentRoute] = useState('/');
-  const [userRole, setUserRole] = useState(null);
+
+// ==========================================
+// TENANT BINDING (DFY) - CONTEXT & GATE
+// ==========================================
+export const TenantContext = createContext(null);
+
+export const useTenant = () => {
+  const context = useContext(TenantContext);
+  if (!context) {
+    throw new Error("useTenant must be used within a TenantContext.Provider");
+  }
+  return context;
+};
+
+const DashboardGate = ({ onNavigate, onLogout }) => {
+  const [session, setSession] = useState(null);
+  const [user, setUser] = useState(null);
+  const [clientId, setClientId] = useState(null);
+  const [role, setRole] = useState(null);
+  const [loadingTenant, setLoadingTenant] = useState(true);
+  const [tenantError, setTenantError] = useState(null);
 
   useEffect(() => {
-    if (isSupabaseConfigured && supabase) {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) {
-          supabase.from('profiles').select('role').eq('id', session.user.id).single()
-            .then(({ data }) => {
-              if (data) {
-                setUserRole(data.role);
-                setCurrentRoute((prevRoute) => {
-                  const isAuthPage =
-                    prevRoute === "/login" ||
-                    prevRoute === "/admin" ||
-                    prevRoute === "/client";
+    let mounted = true;
 
-                  if (isAuthPage) {
-                    return data.role === "admin" ? "/admin" : "/client";
-                  }
-                  return prevRoute;
-                });
-              }
-            });
+    const checkTenant = async () => {
+      try {
+        if (!isSupabaseConfigured || !supabase) {
+          throw new Error("Base de données non configurée.");
         }
-      });
-    }
-  }, []);
+
+        const { data: { session: activeSession }, error: authError } = await supabase.auth.getSession();
+
+        if (authError) throw authError;
+
+        if (!activeSession) {
+          if (mounted) onNavigate('/login');
+          return;
+        }
+
+        if (mounted) {
+          setSession(activeSession);
+          setUser(activeSession.user);
+        }
+
+        // Fetch client mapping
+        const { data: mapping, error: mapError } = await supabase
+          .from('client_users')
+          .select('client_id, role')
+          .eq('user_id', activeSession.user.id)
+          .maybeSingle();
+
+        if (mapError) throw mapError;
+
+        if (mounted) {
+          if (mapping) {
+            setClientId(mapping.client_id);
+            setRole(mapping.role || 'client');
+          } else {
+            setClientId(null);
+          }
+        }
+      } catch (err) {
+        if (mounted) setTenantError(err.message);
+      } finally {
+        if (mounted) setLoadingTenant(false);
+      }
+    };
+
+    checkTenant();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+      if (!currentSession) {
+        if (mounted) {
+          setSession(null);
+          setUser(null);
+          setClientId(null);
+          setRole(null);
+          onNavigate('/login');
+        }
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, [onNavigate]);
+
+  if (loadingTenant) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col justify-center items-center py-12 font-sans">
+        <Loader2 className="w-10 h-10 text-indigo-600 animate-spin mb-4" />
+        <p className="text-sm font-semibold text-gray-500 uppercase tracking-widest animate-pulse">Configuration de l'espace...</p>
+      </div>
+    );
+  }
+
+  if (tenantError) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col justify-center items-center py-12 px-6 font-sans text-center">
+        <AlertCircle className="w-16 h-16 text-red-500 mb-6" />
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">Erreur de connexion</h2>
+        <p className="text-gray-500 font-medium max-w-sm mb-8">{tenantError}</p>
+        <button onClick={() => window.location.reload()} className="bg-white border border-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold text-sm shadow-sm hover:bg-gray-50 transition-colors">Réessayer</button>
+      </div>
+    );
+  }
+
+  if (!clientId) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col justify-center items-center py-12 px-6 font-sans text-center">
+        <div className="w-24 h-24 bg-white rounded-3xl border border-gray-100 shadow-sm flex items-center justify-center mb-8">
+          <UserRoundX className="w-10 h-10 text-gray-400" />
+        </div>
+        <h2 className="text-3xl font-bold tracking-tight text-gray-900 mb-3">Compte non provisionné</h2>
+        <p className="text-gray-500 font-medium max-w-md mb-10 leading-relaxed">
+          Votre compte n'est lié à aucune infrastructure active. L'installation de votre environnement Done-For-You est peut-être en cours.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <a href="mailto:support@actero.fr" className="bg-indigo-600 text-white px-8 py-3.5 rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-colors">
+            Contacter support@actero.fr
+          </a>
+          <button onClick={onLogout} className="bg-white border border-gray-200 text-gray-700 px-8 py-3.5 rounded-xl font-bold shadow-sm hover:bg-gray-50 transition-colors">
+            Se déconnecter
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <TenantContext.Provider value={{ session, user, clientId, role, loadingTenant }}>
+      {role === 'admin' ? (
+        <AdminDashboard onNavigate={onNavigate} onLogout={onLogout} />
+      ) : (
+        <ClientDashboard onNavigate={onNavigate} onLogout={onLogout} />
+      )}
+    </TenantContext.Provider>
+  );
+};
+
+function MainRouter() {
+  const [currentRoute, setCurrentRoute] = useState('/');
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -2972,16 +3080,10 @@ function MainRouter() {
     }
   }, []);
 
-  // Démo Login Logic (so you can preview the dashboards in this editor without real DB keys)
-  const handleLogin = (role) => {
-    setUserRole(role);
-  };
-
   const handleLogout = async () => {
     if (isSupabaseConfigured && supabase) {
       await supabase.auth.signOut();
     }
-    setUserRole(null);
     setCurrentRoute('/');
   };
 
@@ -2990,28 +3092,23 @@ function MainRouter() {
   }
 
   if (currentRoute === '/login') {
-    return <LoginPage onNavigate={setCurrentRoute} onLogin={handleLogin} />;
+    return <LoginPage onNavigate={setCurrentRoute} />;
   }
 
   if (currentRoute === '/reset-password') {
     return <ResetPasswordPage onNavigate={setCurrentRoute} />;
   }
 
-  if (currentRoute === '/admin' && userRole === 'admin') {
-    return <AdminDashboard onNavigate={setCurrentRoute} onLogout={handleLogout} />;
-  }
-
-  if (currentRoute === '/client' && userRole === 'client') {
-    return <ClientDashboard onNavigate={setCurrentRoute} onLogout={handleLogout} />;
+  if (currentRoute === '/app') {
+    return <DashboardGate onNavigate={setCurrentRoute} onLogout={handleLogout} />;
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50 font-sans">
       <div className="text-center p-8 bg-white border border-zinc-200 rounded-3xl shadow-sm">
         <AlertCircle className="w-12 h-12 text-zinc-300 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-zinc-900 mb-2">Accès restreint</h2>
-        <p className="text-zinc-500 font-medium mb-6">Votre session a expiré ou vous n'avez pas les droits.</p>
-        <button onClick={() => setCurrentRoute('/login')} className="bg-zinc-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-zinc-800 transition-colors">Retourner à la connexion</button>
+        <h2 className="text-2xl font-bold text-zinc-900 mb-2">Page introuvable</h2>
+        <button onClick={() => setCurrentRoute('/')} className="bg-zinc-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-zinc-800 transition-colors mt-6">Retour à l'accueil</button>
       </div>
     </div>
   );
