@@ -2040,8 +2040,16 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
   );
 };
 
-// === LANDING V2 START ===
+// === LANDING IOS26 START ===
 const LandingPage = ({ onNavigate }) => {
+  // --- Helpers ---
+  const scrollToId = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   // --- États pour l'interaction IA ---
   const [aiInput, setAiInput] = useState("");
   const [platform, setPlatform] = useState("Shopify");
@@ -2055,6 +2063,9 @@ const LandingPage = ({ onNavigate }) => {
   const [brandName, setBrandName] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // --- États UI (FAQ) ---
+  const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -2135,22 +2146,33 @@ const LandingPage = ({ onNavigate }) => {
   return (
     <div className="min-h-screen bg-[#FAFAFA] font-sans text-gray-900 selection:bg-emerald-500/20 selection:text-gray-900">
       {/* NAVBAR */}
-      <nav className="fixed top-0 w-full z-50 bg-[#FAFAFA]/80 backdrop-blur-xl border-b border-gray-200">
-        <div className="max-w-5xl mx-auto px-6 h-20 flex justify-between items-center">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
-            <Logo light={false} className="w-8 h-8" />
+      <nav className="fixed top-0 w-full z-50 bg-[#FAFAFA]/70 backdrop-blur-2xl border-b border-gray-200/50 shadow-sm transition-all duration-300">
+        <div className="max-w-6xl mx-auto px-6 h-16 md:h-20 flex justify-between items-center">
+          <div className="flex items-center gap-2 cursor-pointer group" onClick={() => window.scrollTo(0, 0)}>
+            <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+              <Logo light={true} className="w-5 h-5 text-white" />
+            </div>
             <span className="font-bold text-xl tracking-tight text-gray-900">Actero</span>
           </div>
-          <div className="flex items-center gap-6">
+
+          <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+            <button onClick={() => scrollToId('produit')} className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Produit</button>
+            <button onClick={() => scrollToId('cas-usage')} className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Cas d'usage</button>
+            <button onClick={() => scrollToId('roi')} className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">ROI</button>
+            <button onClick={() => scrollToId('pricing')} className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">Pricing</button>
+            <button onClick={() => scrollToId('faq')} className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">FAQ</button>
+          </div>
+
+          <div className="flex items-center gap-4 md:gap-6">
             <button
               onClick={() => onNavigate('/login')}
-              className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors"
+              className="hidden md:block text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors"
             >
               Connexion
             </button>
             <button
-              onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-              className="text-sm bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-indigo-700 transition-colors shadow-sm"
+              onClick={() => scrollToId('calendly')}
+              className="text-sm bg-indigo-600 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-full font-semibold hover:bg-indigo-700 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
             >
               Demander un audit
             </button>
@@ -2158,88 +2180,113 @@ const LandingPage = ({ onNavigate }) => {
         </div>
       </nav>
 
-      <main className="pt-20">
+      <main className="pt-20 md:pt-24">
         {/* 1. HERO SECTION */}
-        <section className="relative pt-24 pb-20 lg:pt-32 lg:pb-32 overflow-hidden flex flex-col items-center px-6">
-          <div className="max-w-5xl mx-auto w-full flex flex-col lg:flex-row items-center gap-16">
+        <section className="relative pt-16 pb-20 lg:pt-28 lg:pb-32 overflow-hidden flex flex-col items-center px-6">
+          <div className="absolute inset-0 bg-[#FAFAFA] -z-10">
+            <div className="absolute top-0 -left-1/4 w-[150%] h-[150%] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-100/40 via-transparent to-transparent opacity-60"></div>
+          </div>
+
+          <div className="max-w-6xl mx-auto w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
             {/* Left Column (Text & CTAs) */}
-            <div className="flex-1 text-center lg:text-left flex flex-col items-center lg:items-start animate-fade-in-up">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm text-xs font-semibold text-gray-600 mb-8">
+            <div className="flex-1 text-center lg:text-left flex flex-col items-center lg:items-start animate-fade-in-up z-10 w-full">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm text-xs font-bold text-indigo-600 mb-8 uppercase tracking-widest backdrop-blur-md">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
                 </span>
                 Infrastructure E-commerce Autonome
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-gray-900 mb-6 leading-[1.1]">
-                Automatisez votre e-commerce.<br />
-                Gagnez du temps.<br />
-                Augmentez votre ROI.
+              <h1 className="text-[2.75rem] md:text-6xl lg:text-[4rem] font-bold tracking-tighter text-gray-900 mb-6 leading-[1.05]">
+                Automatisez votre <br className="hidden md:block" />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-500">e-commerce.</span><br />
+                Gagnez du temps.
               </h1>
 
-              <p className="text-base md:text-lg text-gray-500 max-w-lg mb-10 leading-relaxed">
+              <p className="text-lg md:text-xl text-gray-500 max-w-lg mb-10 leading-relaxed font-medium">
                 Actero détecte, recommande et exécute automatiquement les optimisations à fort impact pour votre boutique.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                 <button
-                  onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-                  className="bg-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-base hover:bg-indigo-700 transition-all shadow-sm flex items-center justify-center gap-2 group w-full sm:w-auto"
+                  onClick={() => scrollToId('calendly')}
+                  className="bg-indigo-600 text-white px-8 py-4 rounded-full font-semibold text-base hover:bg-indigo-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   Demander un audit gratuit
                 </button>
-                <a
-                  href="#comment-ca-marche"
-                  className="bg-white border border-gray-200 text-gray-900 px-8 py-4 rounded-xl font-semibold text-base hover:bg-gray-50 transition-all shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto"
+                <button
+                  onClick={() => scrollToId('comment-ca-marche')}
+                  className="bg-white/50 backdrop-blur-sm border border-gray-200 text-gray-900 px-8 py-4 rounded-full font-semibold text-base hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
                   Voir comment ça fonctionne
-                </a>
+                </button>
               </div>
             </div>
 
-            {/* Right Column (Mockup Desktop) */}
-            <div className="hidden lg:flex flex-1 w-full max-w-md relative animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-              <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 blur-3xl rounded-full pointer-events-none"></div>
+            {/* Right Column (Mockup Desktop - iOS Card Stack) */}
+            <div className="flex-1 w-full max-w-[480px] lg:max-w-none relative animate-fade-in-up z-10 mt-8 lg:mt-0" style={{ animationDelay: '200ms' }}>
+              <div className="relative w-full aspect-square md:aspect-[4/3] lg:aspect-square flex items-center justify-center">
 
-              <div className="w-full bg-white border border-gray-200 rounded-2xl shadow-xl p-6 relative z-10 hover:shadow-2xl transition-shadow duration-500">
-                <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-100">
-                  <div className="flex gap-2.5">
-                    <div className="w-3 h-3 rounded-full bg-gray-200"></div>
-                    <div className="w-3 h-3 rounded-full bg-gray-200"></div>
-                    <div className="w-3 h-3 rounded-full bg-gray-200"></div>
-                  </div>
-                  <div className="text-xs font-semibold text-gray-400">app.actero.io/dashboard</div>
+                {/* Back card */}
+                <div className="absolute top-[5%] left-[15%] w-[70%] h-[70%] bg-white/40 border border-gray-200/50 rounded-[32px] backdrop-blur-lg transform -rotate-6 scale-95 shadow-xl transition-transform hover:-rotate-12 duration-500"></div>
+
+                {/* Middle card */}
+                <div className="absolute top-[10%] left-[10%] w-[80%] h-[80%] bg-white/80 border border-gray-200 rounded-[32px] backdrop-blur-xl transform -rotate-3 scale-100 shadow-2xl transition-transform hover:-rotate-6 duration-500 p-6 flex flex-col justify-end">
+                  <div className="w-full h-32 bg-indigo-50 rounded-xl mb-4 border border-indigo-100/50"></div>
+                  <div className="w-2/3 h-4 bg-gray-100 rounded-full mb-2"></div>
+                  <div className="w-1/3 h-4 bg-gray-100 rounded-full"></div>
                 </div>
 
-                <div className="space-y-6">
-                  <div>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Impact Automatisations</p>
-                    <p className="text-3xl font-bold text-gray-900 tracking-tight">+14 280 €</p>
-                    <p className="text-xs font-medium text-emerald-500 mt-1">Générés ce mois-ci via relances</p>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 bg-gray-50 border border-gray-100 rounded-xl hover:bg-indigo-50/50 transition-colors">
-                      <ShoppingCart className="w-5 h-5 text-indigo-400 mb-2" />
-                      <p className="text-xs text-gray-500 font-medium">Paniers sauvés</p>
-                      <p className="text-lg font-bold text-gray-900">184</p>
+                {/* Front Main Card */}
+                <div className="absolute inset-0 m-auto w-[90%] h-[90%] bg-white border border-gray-200 rounded-[32px] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col hover:-translate-y-2 transition-transform duration-500">
+                  <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-[#FAFAFA]/50 backdrop-blur-md">
+                    <div className="flex gap-2.5">
+                      <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                      <div className="w-3 h-3 rounded-full bg-amber-400"></div>
+                      <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
                     </div>
-                    <div className="p-4 bg-gray-50 border border-gray-100 rounded-xl hover:bg-emerald-50/50 transition-colors">
-                      <Clock className="w-5 h-5 text-emerald-400 mb-2" />
-                      <p className="text-xs text-gray-500 font-medium">Heures gagnées</p>
-                      <p className="text-lg font-bold text-gray-900">42h</p>
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 rounded-md shadow-sm">
+                      <Lock className="w-3 h-3 text-gray-400" />
+                      <span className="text-[10px] font-semibold text-gray-500 font-mono">app.actero.io</span>
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-gray-100">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-[pulse_2s_ease-in-out_infinite]"></div>
-                        <span className="text-xs font-semibold text-gray-600">3 workflows actifs</span>
+                  <div className="p-6 md:p-8 flex-1 flex flex-col bg-gradient-to-b from-white to-[#FAFAFA]/50">
+                    <div className="mb-8">
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Impact Automatisations</p>
+                      <p className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tighter">+14 280 €</p>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-100 mt-3">
+                        <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
+                        <p className="text-xs font-bold text-emerald-700">Générés ce mois-ci via relances</p>
                       </div>
-                      <span className="text-xs font-semibold text-indigo-600">En direct</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 flex-1">
+                      <div className="p-5 bg-white border border-gray-100 shadow-sm rounded-2xl flex flex-col justify-center relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150"></div>
+                        <ShoppingCart className="w-6 h-6 text-indigo-500 mb-3 relative z-10" />
+                        <p className="text-xs text-gray-500 font-semibold mb-1 relative z-10">Paniers sauvés</p>
+                        <p className="text-2xl font-bold text-gray-900 relative z-10">184</p>
+                      </div>
+                      <div className="p-5 bg-white border border-gray-100 shadow-sm rounded-2xl flex flex-col justify-center relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150"></div>
+                        <Clock className="w-6 h-6 text-emerald-500 mb-3 relative z-10" />
+                        <p className="text-xs text-gray-500 font-semibold mb-1 relative z-10">Heures gagnées</p>
+                        <p className="text-2xl font-bold text-gray-900 relative z-10">42h</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 pt-5 border-t border-gray-100 flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <span className="relative flex h-2.5 w-2.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                        </span>
+                        <span className="text-xs font-semibold text-gray-600">3 workflows actifs 24/7</span>
+                      </div>
+                      <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded">En direct</span>
                     </div>
                   </div>
                 </div>
@@ -2247,146 +2294,304 @@ const LandingPage = ({ onNavigate }) => {
             </div>
 
           </div>
+
+          {/* Compatible integrations row */}
+          <div className="w-full max-w-5xl mx-auto mt-20 pt-10 border-t border-gray-200/50">
+            <p className="text-center text-sm font-semibold text-gray-400 uppercase tracking-widest mb-6">Compatible avec votre stack existante</p>
+            <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+              {/* Faked Partner Logos using Typography/Icons for zero dependencies */}
+              <div className="text-xl font-bold tracking-tighter text-gray-800 flex items-center gap-1"><span className="w-6 h-6 rounded bg-[#95BF47] text-white flex items-center justify-center text-sm">s</span>Shopify</div>
+              <div className="text-xl font-bold tracking-tighter text-gray-800 flex items-center gap-1"><span className="w-6 h-6 rounded bg-[#20B038] text-white flex items-center justify-center text-[10px]">kla</span>Klaviyo</div>
+              <div className="text-xl font-bold tracking-tighter text-gray-800 flex items-center gap-1"><span className="w-6 h-6 rounded bg-[#635BFF] text-white flex items-center justify-center text-sm">st</span>Stripe</div>
+              <div className="text-xl font-bold tracking-tighter text-gray-800 flex items-center gap-1"><span className="w-6 h-6 rounded bg-black text-white flex items-center justify-center text-[10px]">go</span>Gorgias</div>
+              <div className="text-xl font-bold tracking-tighter text-gray-800 flex items-center gap-1"><span className="w-6 h-6 rounded bg-[#F89820] text-white flex items-center justify-center text-[10px]">GA</span>GA4</div>
+            </div>
+          </div>
         </section>
 
-        {/* 2. SECTION "Comment ça fonctionne" */}
-        <section id="comment-ca-marche" className="py-24 bg-white border-y border-gray-200 px-6">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-semibold text-center text-gray-900 mb-16 tracking-tight">Comment ça fonctionne</h2>
+        {/* 2. COMMENT ÇA MARCHE */}
+        <section id="comment-ca-marche" className="py-24 bg-white px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-6">Un système autonome en 3 étapes.</h2>
+              <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto">Vous connectez vos outils, Actero fait le reste. De la détection de l'anomalie à son exécution en production.</p>
+            </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-6 lg:gap-8 relative">
+              {/* Connecting line for desktop */}
+              <div className="hidden md:block absolute top-[60px] left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent z-0"></div>
+
               {[
                 {
-                  icon: <Search className="w-6 h-6 text-gray-600 group-hover:text-indigo-600 transition-colors" />,
-                  title: "1. Analyse automatique",
-                  desc: "Connectez vos outils. Actero scanne vos flux en continu pour identifier les pertes de chiffre d'affaires (paniers, rétention)."
+                  icon: <Search className="w-5 h-5 text-indigo-600" />,
+                  title: "1. Scan & Détection",
+                  desc: "Analyse continue de Shopify et de vos flux pour repérer les fuites de revenus.",
+                  visual: <div className="h-24 w-full bg-[#FAFAFA] rounded-xl border border-gray-100 flex items-center justify-center p-4">
+                    <div className="w-full space-y-2">
+                      <div className="h-2 w-[80%] bg-gray-200 rounded-full animate-pulse"></div>
+                      <div className="h-2 w-[40%] bg-gray-200 rounded-full animate-pulse delay-75"></div>
+                      <div className="h-2 w-[60%] bg-indigo-200 rounded-full"></div>
+                    </div>
+                  </div>
                 },
                 {
-                  icon: <BrainCircuit className="w-6 h-6 text-gray-600 group-hover:text-indigo-600 transition-colors" />,
-                  title: "2. Recommandations IA",
-                  desc: "Notre moteur génère des stratégies concrètes, calquées sur vos données, pour combler ces pertes."
+                  icon: <BrainCircuit className="w-5 h-5 text-indigo-600" />,
+                  title: "2. Recommandation IA",
+                  desc: "Génération de stratégies concrètes, calquées sur vos données, pour combler ces pertes.",
+                  visual: <div className="h-24 w-full bg-[#FAFAFA] rounded-xl border border-gray-100 flex items-center justify-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center"><Database className="w-3 h-3 text-gray-400" /></div>
+                    <div className="flex-1 border-t border-dashed border-indigo-200 relative"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-indigo-100 rounded-full flex items-center justify-center"><Zap className="w-2.5 h-2.5 text-indigo-600" /></div></div>
+                    <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center shadow-sm"><Bot className="w-3 h-3 text-white" /></div>
+                  </div>
                 },
                 {
-                  icon: <Zap className="w-6 h-6 text-gray-600 group-hover:text-amber-500 transition-colors" />,
-                  title: "3. Exécution temps réel",
-                  desc: "Un clic suffit pour déployer les automatisations. Actero s'occupe de la technique en arrière-plan."
+                  icon: <Zap className="w-5 h-5 text-indigo-600" />,
+                  title: "3. Exécution Directe",
+                  desc: "Déploiement en 1 clic de l'automatisation sans coder. Modifiez vos flux au besoin.",
+                  visual: <div className="h-24 w-full bg-[#FAFAFA] rounded-xl border border-gray-100 flex items-center justify-center">
+                    <div className="px-4 py-2 bg-emerald-50 border border-emerald-100 rounded-lg flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></div>
+                      <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Déployé avec succès</span>
+                    </div>
+                  </div>
                 }
               ].map((step, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-gray-200 p-8 hover:shadow-lg transition-all duration-300 relative group -translate-y-0 hover:-translate-y-1">
-                  <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center mb-6 group-hover:border-indigo-100 group-hover:bg-indigo-50/30 transition-colors">
+                <div key={i} className="bg-white rounded-[24px] border border-gray-200 p-6 md:p-8 hover:shadow-xl transition-all duration-300 relative z-10 hover:-translate-y-1 group flex flex-col h-full">
+                  <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     {step.icon}
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">{step.title}</h3>
-                  <p className="text-base text-gray-600 leading-relaxed font-medium">{step.desc}</p>
+                  <h3 className="text-xl font-bold tracking-tight text-gray-900 mb-3">{step.title}</h3>
+                  <p className="text-[15px] text-gray-500 font-medium leading-relaxed flex-1 mb-8">{step.desc}</p>
+                  {step.visual}
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* === AI ROI SIMULATOR (RESTORED) START === */}
-        <section className="py-16 bg-white px-6">
-          <div className="max-w-5xl mx-auto">
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 md:p-10 shadow-sm hover:shadow-md transition-shadow">
-              <div className="mb-8 text-center md:text-left">
-                <h2 className="text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
-                  Simulez votre ROI en 30 secondes
-                </h2>
-                <p className="text-gray-500 font-medium">
-                  Décrivez votre boutique et recevez un plan d’automatisation + estimation ROI.
-                </p>
+        {/* 3. CAS D'USAGE */}
+        <section id="cas-usage" className="py-24 bg-[#FAFAFA] border-y border-gray-200 px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+              <div>
+                <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-4">6 leviers de croissance.</h2>
+                <p className="text-lg text-gray-500 font-medium max-w-xl">Des automatisations prêtes à l'emploi conçues spécifiquement pour adresser les goulots d'étranglement de l'e-commerce moderne.</p>
               </div>
+              <button onClick={() => scrollToId('calendly')} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 group">
+                Voir toutes les templates <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
 
-              <div className="grid md:grid-cols-2 gap-10">
-                {/* Form */}
-                <div className="space-y-5">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">Plateforme</label>
-                      <select
-                        value={platform}
-                        onChange={(e) => setPlatform(e.target.value)}
-                        className="w-full bg-[#FAFAFA] border border-gray-200 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-all text-sm font-medium text-gray-900"
-                      >
-                        <option>Shopify</option>
-                        <option>WooCommerce</option>
-                        <option>Prestashop</option>
-                        <option>Autre</option>
-                      </select>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { title: "Récupération de paniers", icon: <ShoppingCart className="w-5 h-5" />, desc: "Séquences multi-canales (Email + SMS) intelligentes basées sur la valeur du panier.", tag: "+15% Conversion" },
+                { title: "Service Client IA", icon: <Bot className="w-5 h-5" />, desc: "Résolution automatique des tickets 'Où est ma commande' (WISMO) et retours.", tag: "-40% Tickets" },
+                { title: "Upsell Post-Achat", icon: <TrendingUp className="w-5 h-5" />, desc: "Recommandations dynamiques injectées dans le mail de confirmation de commande.", tag: "+AOV" },
+                { title: "Gestion Logistique", icon: <Server className="w-5 h-5" />, desc: "Alerte automatique au fournisseur en cas de rupture de stock critique.", tag: "Gain de temps" },
+                { title: "Programme Fidélité", icon: <Zap className="w-5 h-5" />, desc: "Scoring client dynamique & attribution automatique de tags VIP dans Shopify.", tag: "Rétention" },
+                { title: "Contrôle Qualité", icon: <AlertCircle className="w-5 h-5" />, desc: "Notification Slack/Discord instantanée lors d'un avis client négatif (1-2 étoiles).", tag: "Réactivité" }
+              ].map((useCase, i) => (
+                <div key={i} className="bg-white rounded-[20px] p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all group flex flex-col">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-[#FAFAFA] text-gray-600 flex items-center justify-center border border-gray-100 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                      {useCase.icon}
                     </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">Objectif principal</label>
-                      <select
-                        value={objective}
-                        onChange={(e) => setObjective(e.target.value)}
-                        className="w-full bg-[#FAFAFA] border border-gray-200 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-all text-sm font-medium text-gray-900"
-                      >
-                        <option>Conversion</option>
-                        <option>Support Client</option>
-                        <option>Opérations</option>
-                        <option>Acquisition</option>
-                      </select>
+                    <span className="text-[10px] uppercase font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded border border-indigo-100">{useCase.tag}</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{useCase.title}</h3>
+                  <p className="text-sm text-gray-500 font-medium leading-relaxed flex-1">{useCase.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 4. PRODUIT (COMMAND CENTER) */}
+        <section id="produit" className="py-24 bg-white px-6 overflow-hidden">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="order-2 lg:order-1 relative">
+                <div className="absolute -inset-4 bg-gray-50 rounded-[40px] -z-10 transform -rotate-2"></div>
+                <div className="bg-[#FAFAFA] rounded-[32px] border border-gray-200 shadow-2xl overflow-hidden p-2">
+                  <div className="bg-white rounded-[24px] border border-gray-100 p-6">
+                    <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+                      <h4 className="text-xl font-bold tracking-tight text-gray-900">Vue Globale</h4>
+                      <div className="flex gap-2">
+                        <div className="w-6 h-6 rounded bg-gray-100"></div>
+                        <div className="w-6 h-6 rounded bg-gray-100"></div>
+                      </div>
                     </div>
+                    <div className="space-y-4">
+                      {/* Fake skeleton rows to look exactly like a dashboard */}
+                      <div className="h-24 w-full bg-[#FAFAFA] rounded-xl border border-gray-100 p-4 flex gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 shadow-sm"></div>
+                        <div className="space-y-2 flex-1 pt-2">
+                          <div className="h-2 w-1/3 bg-gray-200 rounded-full"></div>
+                          <div className="h-2 w-1/4 bg-gray-100 rounded-full"></div>
+                        </div>
+                      </div>
+                      <div className="h-24 w-full bg-[#FAFAFA] rounded-xl border border-gray-100 p-4 flex gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 shadow-sm"></div>
+                        <div className="space-y-2 flex-1 pt-2">
+                          <div className="h-2 w-1/2 bg-gray-200 rounded-full"></div>
+                          <div className="h-2 w-1/5 bg-gray-100 rounded-full"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="order-1 lg:order-2">
+                <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-6">Le centre de contrôle de votre croissance.</h2>
+                <p className="text-lg text-gray-500 font-medium mb-10">Pilotez toutes vos automatisations depuis une interface claire. Oubliez la complexité de Make ou Zapier, nous avons extrait uniquement ce qui compte pour augmenter vos marges.</p>
+
+                <div className="space-y-8">
+                  {[
+                    { title: "Intelligence Proactive", desc: "Le système vous notifie lorsqu'une automatisation devient obsolète ou peu performante." },
+                    { title: "Monitoring des Erreurs", desc: "Relance automatique des flux en cas d'échec de l'API externe sans bloquer vos commandes." },
+                    { title: "Rapports Financiers", desc: "Mesurez chaque euro généré spécifiquement par nos workflows, indépendamment de vos ads." }
+                  ].map((feat, i) => (
+                    <div key={i} className="flex gap-4">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center border border-indigo-100 mt-1">
+                        <span className="text-xs font-bold text-indigo-600">{i + 1}</span>
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-bold text-gray-900 mb-1">{feat.title}</h4>
+                        <p className="text-[15px] text-gray-500 font-medium leading-relaxed">{feat.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* 5. SIMULATEUR ROI IA */}
+        {/* === AI ROI SIMULATOR (RESTORED) START === */}
+        <section id="roi" className="py-24 bg-[#FAFAFA] border-y border-gray-200 px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-6">Calculez votre ROI en temps réel.</h2>
+              <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto">Notre intelligence artificielle analyse votre cas d'usage et génère instantanément l'architecture cible et l'impact estimé.</p>
+            </div>
+
+            <div className="bg-white rounded-[32px] border border-gray-200 shadow-2xl p-6 md:p-10">
+              <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
+
+                {/* Form Elements */}
+                <div className="space-y-8">
+                  {/* Visual Stepper */}
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">1</div>
+                    <div className="h-px bg-gray-200 flex-1"></div>
+                    <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-400 border border-gray-200 flex items-center justify-center font-bold text-sm">2</div>
+                    <div className="h-px bg-gray-200 flex-1"></div>
+                    <div className="w-8 h-8 rounded-full bg-gray-100 text-gray-400 border border-gray-200 flex items-center justify-center font-bold text-sm">3</div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">Problème ou goulot d'étranglement</label>
-                    <textarea
-                      value={aiInput}
-                      onChange={(e) => setAiInput(e.target.value)}
-                      placeholder="Ex: Mon équipe support perd 10h par semaine à chercher le statut des commandes..."
-                      className="w-full h-32 bg-[#FAFAFA] border border-gray-200 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-all text-sm font-medium text-gray-900 resize-none"
-                    />
+                    <h3 className="text-xl font-bold tracking-tight text-gray-900 mb-6">Paramétrez votre environnement</h3>
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">Plateforme</label>
+                        <select
+                          value={platform}
+                          onChange={(e) => setPlatform(e.target.value)}
+                          className="w-full bg-[#FAFAFA] border border-gray-200 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-all font-medium text-gray-900"
+                        >
+                          <option>Shopify</option>
+                          <option>WooCommerce</option>
+                          <option>Prestashop</option>
+                          <option>Autre</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-900 mb-2">Objectif principal</label>
+                        <select
+                          value={objective}
+                          onChange={(e) => setObjective(e.target.value)}
+                          className="w-full bg-[#FAFAFA] border border-gray-200 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-all font-medium text-gray-900"
+                        >
+                          <option>Conversion</option>
+                          <option>Support Client</option>
+                          <option>Opérations</option>
+                          <option>Acquisition</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-900 mb-2">Problème ou goulot d'étranglement</label>
+                      <textarea
+                        value={aiInput}
+                        onChange={(e) => setAiInput(e.target.value)}
+                        placeholder="Ex: Mon équipe perd du temps à mettre à jour les statuts de commande dans notre ERP..."
+                        className="w-full h-32 bg-[#FAFAFA] border border-gray-200 rounded-xl py-4 px-4 outline-none focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 transition-all font-medium text-gray-900 resize-none leading-relaxed"
+                      />
+                    </div>
                   </div>
 
                   <button
                     onClick={handleOpenModal}
                     disabled={aiLoading || !aiInput.trim()}
-                    className="w-full bg-indigo-600 text-white px-6 py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-all shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="w-full bg-indigo-600 text-white px-6 py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50 group hover:-translate-y-0.5"
                   >
                     {aiLoading ? (
-                      <><svg className="animate-spin h-5 w-5 text-white/70" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Analyse en cours...</>
+                      <><svg className="animate-spin h-5 w-5 text-white/70" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Génération de l'architecture...</>
                     ) : (
-                      <><Bot className="w-5 h-5" /> Générer mon audit</>
+                      <><Bot className="w-5 h-5 group-hover:scale-110 transition-transform" /> Analyser mon flux avec l'IA</>
                     )}
                   </button>
-                  {aiError && <p className="text-red-500 text-sm mt-2 flex items-center gap-2 font-semibold"><AlertCircle className="w-4 h-4" />{aiError}</p>}
+                  {aiError && <p className="text-red-500 text-sm mt-3 flex items-center gap-2 font-semibold"><AlertCircle className="w-4 h-4" />{aiError}</p>}
                 </div>
 
-                {/* Result area */}
-                <div className="h-full min-h-[300px]">
+                {/* Result Block */}
+                <div className="h-full min-h-[350px]">
                   {!aiResult && !aiLoading ? (
-                    <div className="h-full bg-[#FAFAFA] border border-gray-200 border-dashed rounded-xl p-8 flex flex-col items-center justify-center text-center">
-                      <Database className="w-10 h-10 text-gray-300 mb-4" />
-                      <p className="text-gray-500 font-semibold text-sm">Le plan d'automatisation sur-mesure<br />s'affichera ici.</p>
+                    <div className="h-full bg-gray-50 border border-gray-200 border-dashed rounded-2xl p-10 flex flex-col items-center justify-center text-center">
+                      <div className="w-16 h-16 rounded-2xl bg-white border border-gray-100 shadow-sm flex items-center justify-center mb-6">
+                        <Database className="w-8 h-8 text-gray-400" />
+                      </div>
+                      <p className="text-gray-900 font-bold text-lg mb-2">Prêt pour l'analyse</p>
+                      <p className="text-gray-500 font-medium max-w-xs">Remplissez les informations à gauche pour découvrir votre plan d'action.</p>
                     </div>
                   ) : aiLoading ? (
-                    <div className="h-full bg-indigo-50/50 border border-indigo-100 rounded-xl p-8 flex flex-col items-center justify-center text-center">
-                      <Cpu className="w-12 h-12 text-indigo-500 mb-6 animate-pulse" />
-                      <p className="text-indigo-700 font-semibold text-sm">Déduction des workflows et calcul du ROI...</p>
+                    <div className="h-full bg-indigo-50 border border-indigo-100 rounded-2xl p-10 flex flex-col items-center justify-center text-center relative overflow-hidden">
+                      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                      <Cpu className="w-16 h-16 text-indigo-500 mb-6 animate-[bounce_2s_infinite]" />
+                      <p className="text-indigo-900 font-bold text-lg relative z-10 mb-2">Modélisation en cours</p>
+                      <p className="text-indigo-600 font-medium max-w-xs relative z-10">Gemini analyse vos goulots d'étranglement pour concevoir le flux optimal...</p>
                     </div>
                   ) : aiResult ? (
-                    <div className="h-full bg-[#FAFAFA] border border-gray-200 rounded-xl p-6 md:p-8 flex flex-col animate-fade-in-up">
-                      <div className="mb-5">
-                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-2">Diagnostic</h4>
-                        <p className="text-gray-900 font-semibold text-sm leading-snug">{aiResult.diagnosis}</p>
+                    <div className="h-full bg-[#FAFAFA] border border-gray-200 rounded-2xl p-6 md:p-8 flex flex-col animate-fade-in-up shadow-inner relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 blur-3xl rounded-full pointer-events-none"></div>
+
+                      <div className="flex items-center gap-2 mb-8">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Audit Généré</span>
                       </div>
 
-                      <div className="mb-6">
-                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-2"><Zap className="w-3.5 h-3.5 text-amber-500" /> Flux Recommandé</h4>
-                        <div className="bg-white border border-gray-100 p-4 rounded-lg shadow-sm">
+                      <div className="mb-6 relative z-10">
+                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-2">Diagnostic</h4>
+                        <p className="text-gray-900 font-bold text-lg leading-snug">{aiResult.diagnosis}</p>
+                      </div>
+
+                      <div className="mb-8 relative z-10">
+                        <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-2"><Zap className="w-3.5 h-3.5 text-amber-500" /> Architecture Recommandée</h4>
+                        <div className="bg-white border border-gray-200 p-5 rounded-xl shadow-sm">
                           <p className="text-gray-600 text-sm font-medium leading-relaxed">{aiResult.solution}</p>
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-3 mt-auto">
-                        <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-3">
-                          <p className="text-[9px] font-bold text-emerald-600 uppercase mb-1">Gain de temps</p>
-                          <p className="text-emerald-700 font-bold text-lg">{aiResult.timeSaved}</p>
+                      <div className="grid grid-cols-2 gap-4 mt-auto relative z-10">
+                        <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 transition-transform hover:scale-105 duration-300">
+                          <p className="text-[10px] font-bold text-emerald-600 uppercase mb-2">Gain de temps estimé</p>
+                          <p className="text-emerald-700 font-bold text-2xl tracking-tighter">{aiResult.timeSaved}</p>
                         </div>
-                        <div className="bg-indigo-50 border border-indigo-100 rounded-lg p-3">
-                          <p className="text-[9px] font-bold text-indigo-600 uppercase mb-1">Impact ROI</p>
-                          <p className="text-indigo-700 font-bold text-lg">{aiResult.revenueImpact}</p>
+                        <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 transition-transform hover:scale-105 duration-300">
+                          <p className="text-[10px] font-bold text-indigo-600 uppercase mb-2">Impact ROI</p>
+                          <p className="text-indigo-700 font-bold text-2xl tracking-tighter">{aiResult.revenueImpact}</p>
                         </div>
                       </div>
                     </div>
@@ -2398,69 +2603,190 @@ const LandingPage = ({ onNavigate }) => {
         </section>
         {/* === AI ROI SIMULATOR (RESTORED) END === */}
 
-        {/* 3. SECTION ROI / METRICS */}
-        <section className="py-24 bg-white px-6">
-          <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-100">
-              <div className="py-6 md:py-0 hover:scale-105 transition-transform duration-300">
-                <p className="text-5xl font-bold text-gray-900 tracking-tighter mb-2">+120h</p>
-                <p className="text-sm font-semibold text-gray-500 uppercase tracking-widest">Temps gagné / mois</p>
+        {/* 6. PROOFS & TESTIMONIALS */}
+        <section className="py-24 bg-white px-6 border-b border-gray-100">
+          <div className="max-w-6xl mx-auto">
+            {/* Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-100 mb-20 bg-[#FAFAFA] rounded-[32px] p-10 border border-gray-200/60 shadow-sm">
+              <div className="py-6 md:py-0 transition-transform duration-300">
+                <p className="text-5xl md:text-6xl font-bold text-gray-900 tracking-tighter mb-4">+120h</p>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Temps gagné / mois en moyenne</p>
               </div>
-              <div className="py-6 md:py-0 hover:scale-105 transition-transform duration-300">
-                <p className="text-5xl font-bold text-gray-900 tracking-tighter mb-2">+18%</p>
-                <p className="text-sm font-semibold text-gray-500 uppercase tracking-widest">Augmentation moy. conversion</p>
+              <div className="py-6 md:py-0 transition-transform duration-300">
+                <p className="text-5xl md:text-6xl font-bold text-indigo-600 tracking-tighter mb-4">+18%</p>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Augmentation moy. conversion</p>
               </div>
-              <div className="py-6 md:py-0 hover:scale-105 transition-transform duration-300">
-                <p className="text-5xl font-bold text-gray-900 tracking-tighter mb-2">100%</p>
-                <p className="text-sm font-semibold text-gray-500 uppercase tracking-widest">Recommandations exécutables</p>
+              <div className="py-6 md:py-0 transition-transform duration-300">
+                <p className="text-5xl md:text-6xl font-bold text-gray-900 tracking-tighter mb-4">100%</p>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Recommandations exécutables</p>
+              </div>
+            </div>
+
+            {/* Testimonials */}
+            <div>
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold tracking-tighter text-gray-900 mb-4">Ils ont automatisé leur croissance.</h2>
+              </div>
+              <div className="grid md:grid-cols-3 gap-6">
+                {[
+                  { quote: "Actero a identifié une faille dans notre système de relance panier qui nous coûtait 3000€ par mois. L'automatisation a été déployée en 2 clics.", name: "Julien M.", role: "CEO, DNVB Mode" },
+                  { quote: "Le fait de ne pas avoir à coder ni à comprendre Zapier a tout changé. Actero s'occupe de la technique, on regarde juste les métriques monter.", name: "Sarah L.", role: "CMO, Beauté Naturelle" },
+                  { quote: "Notre support client était sous l'eau. Le module IA traite maintenant plus de 40% de nos tickets WISMO automatiquement. Un soulagement.", name: "Marc D.", role: "Head of E-commerce" }
+                ].map((t, i) => (
+                  <div key={i} className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm hover:shadow-lg transition-shadow">
+                    <div className="flex gap-1 mb-6 text-amber-400">
+                      <Zap className="w-5 h-5 fill-current" />
+                      <Zap className="w-5 h-5 fill-current" />
+                      <Zap className="w-5 h-5 fill-current" />
+                      <Zap className="w-5 h-5 fill-current" />
+                      <Zap className="w-5 h-5 fill-current" />
+                    </div>
+                    <p className="text-gray-900 font-medium mb-8 leading-relaxed">"{t.quote}"</p>
+                    <div className="flex items-center justify-between border-t border-gray-100 pt-6">
+                      <div>
+                        <p className="font-bold text-gray-900">{t.name}</p>
+                        <p className="text-xs font-medium text-gray-500">{t.role}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* 4. SECTION PREUVE / POSITIONNEMENT */}
-        <section className="py-24 bg-[#FAFAFA] border-y border-gray-200 px-6">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-12 tracking-tight">
-              Une plateforme pensée pour les e-commerçants ambitieux
-            </h2>
+        {/* 7. PRICING */}
+        <section id="pricing" className="py-24 bg-[#FAFAFA] border-y border-gray-200 px-6">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-6">Investissement dérisoire, impact massif.</h2>
+              <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto">Rentabilisez votre abonnement dès la récupération de vos 2 premiers paniers abandonnés.</p>
+            </div>
 
-            <div className="space-y-6 text-left max-w-xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-4xl mx-auto lg:max-w-none">
+
+              {/* Starter */}
+              <div className="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm hover:shadow-lg transition-all flex flex-col">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Starter</h3>
+                <p className="text-sm text-gray-500 font-medium h-10 mb-4">L'essentiel pour automatiser la relance et le support.</p>
+                <div className="mb-8">
+                  <span className="text-4xl font-bold tracking-tighter text-gray-900">49€</span>
+                  <span className="text-gray-500 font-medium">/mois</span>
+                </div>
+                <button onClick={() => scrollToId('calendly')} className="w-full py-3 px-4 bg-gray-50 hover:bg-gray-100 text-gray-900 font-bold rounded-xl transition-colors mb-8 border border-gray-200">Commencer</button>
+                <ul className="space-y-4 flex-1">
+                  {["3 Workflows actifs", "Support Mail", "Relance panier (Email)", "Intégration Shopify stricte"].map((feature, i) => (
+                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-gray-600">
+                      <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100"><Zap className="w-3 h-3" /></div>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Growth - Highlighted */}
+              <div className="bg-gray-900 rounded-3xl border border-gray-800 p-8 shadow-xl hover:-translate-y-2 transition-transform flex flex-col relative transform lg:-translate-y-4 lg:hover:-translate-y-6">
+                <div className="absolute top-0 right-8 -translate-y-1/2 bg-indigo-500 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Recommandé</div>
+                <h3 className="text-xl font-bold text-white mb-2">Growth</h3>
+                <p className="text-sm text-gray-400 font-medium h-10 mb-4">L'infrastructure complète pour les E-commerçants voulant scaler.</p>
+                <div className="mb-8">
+                  <span className="text-4xl font-bold tracking-tighter text-white">199€</span>
+                  <span className="text-gray-400 font-medium">/mois</span>
+                </div>
+                <button onClick={() => scrollToId('calendly')} className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-colors shadow-lg shadow-indigo-500/25 mb-8">Passer à la vitesse supérieure</button>
+                <ul className="space-y-4 flex-1">
+                  {["Workflows illimités", "Support Slack dédié", "Séquences Email + SMS", "Intégration Shopify, Klaviyo, Meta", "Agent IA au Support client"].map((feature, i) => (
+                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-gray-300">
+                      <div className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30"><Zap className="w-3 h-3" /></div>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Enterprise */}
+              <div className="bg-white rounded-3xl border border-gray-200 p-8 shadow-sm hover:shadow-lg transition-all flex flex-col hidden lg:flex">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Scale</h3>
+                <p className="text-sm text-gray-500 font-medium h-10 mb-4">Solutions d'ingénierie sur-mesure pour les gros volumes.</p>
+                <div className="mb-8">
+                  <span className="text-4xl font-bold tracking-tighter text-gray-900">Sur devis</span>
+                </div>
+                <button onClick={() => scrollToId('calendly')} className="w-full py-3 px-4 bg-gray-50 hover:bg-gray-100 text-gray-900 font-bold rounded-xl transition-colors mb-8 border border-gray-200">Parler à un expert</button>
+                <ul className="space-y-4 flex-1">
+                  {["Architecture Cloud VIP", "Audits de sécurité", "Ingénieur data dédié", "Intégrations ERP & WMS persos"].map((feature, i) => (
+                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-gray-600">
+                      <div className="w-5 h-5 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center border border-gray-200"><Server className="w-3 h-3" /></div>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        {/* 8. FAQ */}
+        <section id="faq" className="py-24 bg-white px-6">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-6">Questions fréquentes.</h2>
+            </div>
+            <div className="space-y-4">
               {[
-                { icon: <Database />, text: "Automatisations basées sur vos données réelles." },
-                { icon: <TrendingUp />, text: "Mesure du ROI en temps réel." },
-                { icon: <Server />, text: "Exécution sécurisée via infrastructure robuste." }
-              ].map((bullet, i) => (
-                <div key={i} className="flex items-center gap-4 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center flex-shrink-0 text-indigo-600">
-                    {bullet.icon}
+                { q: "Est-ce que je dois savoir coder pour utiliser Actero ?", a: "Absolument pas. Actero est une plateforme 'Done-for-you' en arrière-plan. Vous validez simplement les recommandations de notre IA depuis votre interface, et nos ingénieurs (ou nos scripts) s'occupent du déploiement technique." },
+                { q: "Combien de temps prend l'intégration avec ma boutique ?", a: "Moins de 5 minutes. Une fois votre compte créé, il suffit d'accorder les permissions Shopify/Klaviyo. Le premier audit de vos flux prend environ 24 heures." },
+                { q: "Et si ça casse mon site existant ?", a: "Impossible. Nous opérons en aval via API. Nos automatisations ne modifient pas le code frontal de votre site (Liquid/React), mais optimisent le traitement des données dans vos outils marketing et logistiques." },
+                { q: "Puis-je annuler à tout moment ?", a: "Oui, nos plans Starter et Growth sont sans engagement. Vous pouvez annuler d'un simple clic depuis vos paramètres." }
+              ].map((faq, i) => (
+                <div key={i} className="border border-gray-200 rounded-2xl bg-[#FAFAFA] overflow-hidden transition-all duration-300">
+                  <button
+                    onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
+                    className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
+                  >
+                    <span className="font-bold text-gray-900 text-lg">{faq.q}</span>
+                    <div className={`w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 transition-transform duration-300 ${openFaqIndex === i ? 'bg-indigo-600 border-indigo-600 text-white rotate-180' : 'bg-white border-gray-200 text-gray-500'}`}>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                  </button>
+                  <div className={`px-6 overflow-hidden transition-all duration-500 ease-in-out ${openFaqIndex === i ? 'max-h-96 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}>
+                    <p className="text-gray-500 font-medium leading-relaxed">{faq.a}</p>
                   </div>
-                  <p className="text-lg font-medium text-gray-900">{bullet.text}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* 5. SECTION CTA FINAL */}
-        <section className="py-32 px-6 bg-indigo-50 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-40 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-100 via-transparent to-transparent"></div>
-          <div className="max-w-2xl mx-auto text-center relative z-10">
-            <h2 className="text-4xl font-semibold text-gray-900 mb-6 tracking-tight">
-              Prêt à accélérer votre croissance ?
-            </h2>
-            <p className="text-lg font-medium text-gray-600 mb-10">
-              Planifiez un appel stratégique pour échanger sur vos objectifs et voir si l'automatisation est faite pour vous.
-            </p>
-            <a
-              href="https://calendly.com/jc6pablo2/30min"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-xl font-semibold text-base hover:bg-indigo-700 transition-all shadow-md hover:shadow-lg group scale-100 hover:scale-105 duration-300"
-            >
-              Planifier un appel stratégique
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </a>
+        {/* 9. CALENDLY EMBED */}
+        <section id="calendly" className="py-24 bg-indigo-50 px-6 relative overflow-hidden border-t border-indigo-100">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-100/50 via-transparent to-transparent pointer-events-none"></div>
+          <div className="max-w-4xl mx-auto relative z-10">
+            <div className="bg-white rounded-[32px] border border-gray-200 shadow-2xl overflow-hidden flex flex-col items-center">
+              <div className="text-center pt-12 pb-6 px-6 relative w-full">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 blur-3xl rounded-full pointer-events-none"></div>
+                <div className="absolute top-0 left-0 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full pointer-events-none"></div>
+                <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-4">Planifiez un audit.</h2>
+                <p className="text-lg text-gray-500 font-medium max-w-xl mx-auto">Choisissez un créneau ci-dessous pour discuter de votre infrastructure avec un expert Actero.</p>
+              </div>
+
+              <div className="w-full relative min-h-[700px]">
+                {/* Calendly Inline Widget */}
+                <iframe
+                  src="https://calendly.com/jc6pablo2/30min?embed_domain=actero.io&embed_type=Inline"
+                  width="100%"
+                  height="700"
+                  frameBorder="0"
+                  title="Calendly Scheduling"
+                  className="bg-white"
+                ></iframe>
+
+                {/* Fallback button just in case iframe gets blocked by browser extensions */}
+                <div className="absolute inset-x-0 bottom-4 flex justify-center pb-8 opacity-0 pointer-events-none">
+                  <a href="https://calendly.com/jc6pablo2/30min" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md">Ouvrir Calendly <ArrowRight className="w-4 h-4" /></a>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </main>
@@ -2521,25 +2847,33 @@ const LandingPage = ({ onNavigate }) => {
       )}
 
       {/* FOOTER */}
-      <footer className="bg-white border-t border-gray-200 py-12 px-6">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2">
-            <Logo light={false} className="w-6 h-6" />
-            <span className="font-bold tracking-tight text-gray-900">Actero</span>
+      <footer className="bg-white border-t border-gray-100 py-16 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <div className="flex items-center gap-2">
+              <Logo light={false} className="w-6 h-6" />
+              <span className="font-bold tracking-tight text-gray-900 text-lg">Actero</span>
+            </div>
+            <p className="text-sm font-medium text-gray-400">L'infrastructure autopilotée des E-commerçants.</p>
           </div>
-          <p className="text-sm font-medium text-gray-500">
-            © {new Date().getFullYear()} Actero. Tous droits réservés.
-          </p>
-          <div className="flex gap-6 text-sm font-medium text-gray-500">
+
+          <div className="flex flex-wrap justify-center gap-8 text-sm font-bold text-gray-500">
+            <button className="hover:text-gray-900 transition-colors">Contact</button>
             <button className="hover:text-gray-900 transition-colors">Mentions légales</button>
             <button className="hover:text-gray-900 transition-colors">Confidentialité</button>
+          </div>
+
+          <div className="text-center md:text-right">
+            <p className="text-xs font-semibold text-gray-400">
+              © {new Date().getFullYear()} Actero. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
     </div>
   );
 };
-// === LANDING V2 END ===
+// === LANDING IOS26 END ===
 
 // ==========================================
 // 5. APPLICATION MAIN ROUTER
