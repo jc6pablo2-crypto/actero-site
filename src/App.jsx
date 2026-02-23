@@ -3068,16 +3068,124 @@ const DashboardGate = ({ onNavigate, onLogout }) => {
   );
 };
 
-function MainRouter() {
-  const [currentRoute, setCurrentRoute] = useState('/');
+// ==========================================
+// SUPABASE AUTH CALLBACK ROUTE
+// ==========================================
+// This route is hit when clicking an invite email or magic link.
+// It gives Supabase time to decode the URL hash and exchange it for a session.
+
+const DEBUG_AUTH = false;
+const logger = (...args) => { if (DEBUG_AUTH) console.log("[AUTH CALLBACK]", ...args); };
+
+function AuthCallbackPage({ onNavigate }) {
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
+    logger("Mounted. Checking for session...");
+
+    let mounted = true;
+
+    const checkSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        logger("Initial getSession result:", session ? "Session Found" : "No Session", error);
+
+        if (error) throw error;
+        if (session && mounted) {
+          logger("Session existante ! Routing to /app");
+          onNavigate('/app');
+        }
+      } catch (err) {
+        if (mounted) setErrorMsg(err.message || "Erreur lors de la récupération de la session.");
+      }
+    };
+
+    // First check
+    checkSession();
+
+    // Listen for the hash resolution
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      logger("onAuthStateChange emitted:", event, session ? "Session Active" : "No Session");
+      if (session && mounted) {
+        logger("Session caught via listener. Routing to /app");
+        onNavigate('/app');
+      }
+    });
+
+    // 8s timeout fallback if something gets stuck
+    const timeout = setTimeout(() => {
+      if (mounted) {
+        logger("Timeout reached. No session resolved.");
+        setErrorMsg("Le lien a expiré ou est invalide. Veuillez réessayer.");
+      }
+    }, 8000);
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
+  }, [onNavigate]);
+
+  if (errorMsg) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex flex-col justify-center items-center py-12 px-6 font-sans text-center">
+        <div className="w-20 h-20 bg-white rounded-3xl border border-gray-100 shadow-sm flex items-center justify-center mb-6">
+          <AlertCircle className="w-8 h-8 text-red-500" />
+        </div>
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-2">Lien invalide</h2>
+        <p className="text-gray-500 font-medium max-w-sm mb-10 leading-relaxed">{errorMsg}</p>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <button onClick={() => onNavigate('/login')} className="bg-indigo-600 text-white px-8 py-3.5 rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-colors">
+            Revenir à la connexion
+          </button>
+          <button onClick={() => window.location.replace('/')} className="bg-white border border-gray-200 text-gray-700 px-8 py-3.5 rounded-xl font-bold shadow-sm hover:bg-gray-50 transition-colors">
+            Retour accueil
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#FAFAFA] flex flex-col justify-center items-center py-12 font-sans">
+      <div className="relative mb-8">
+        <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full"></div>
+        <div className="w-20 h-20 bg-white rounded-3xl border border-gray-100 shadow-xl flex items-center justify-center relative z-10">
+          <ShieldCheck className="w-8 h-8 text-indigo-600" />
+        </div>
+      </div>
+      <Loader2 className="w-6 h-6 text-indigo-400 animate-spin mb-4" />
+      <h2 className="text-xl font-bold tracking-tight text-gray-900 mb-1">Authentification sécurisée</h2>
+      <p className="text-sm font-semibold text-gray-500 uppercase tracking-widest animate-pulse">Validation du lien en cours...</p>
+    </div>
+  );
+}
+
+function MainRouter() {
+  const [currentRoute, setCurrentRoute] = useState('/');
+  const [isRouting, setIsRouting] = useState(true);
+
+  useEffect(() => {
+    const path = window.location.pathname;
     const hash = window.location.hash;
 
-    // Supabase met souvent le token dans le hash avec type=recovery
+    logger("MainRouter Mounted. Path:", path, "Hash:", hash);
+
     if (hash.includes("type=recovery")) {
+      logger("Recovery hash found, routing to /reset-password");
       setCurrentRoute("/reset-password");
+    } else if (path === '/auth/callback' || hash.includes("access_token=")) {
+      // Catch Supabase magic links or invite links that drop tokens in the hash
+      logger("Auth hash or callback path found, routing to /auth/callback");
+      setCurrentRoute("/auth/callback");
+    } else if (path !== '/') {
+      // Very basic sync for manual URL entry if needed (optional, just safety)
+      logger("Manual path entry:", path);
+      setCurrentRoute(path);
     }
+
+    setIsRouting(false);
   }, []);
 
   const handleLogout = async () => {
@@ -3085,7 +3193,11 @@ function MainRouter() {
       await supabase.auth.signOut();
     }
     setCurrentRoute('/');
+    // Clear hash and path visually
+    window.history.replaceState({}, document.title, "/");
   };
+
+  if (isRouting) return null; // Prevent flash of wrong content
 
   if (currentRoute === '/') {
     return <LandingPage onNavigate={setCurrentRoute} />;
@@ -3097,6 +3209,10 @@ function MainRouter() {
 
   if (currentRoute === '/reset-password') {
     return <ResetPasswordPage onNavigate={setCurrentRoute} />;
+  }
+
+  if (currentRoute === '/auth/callback') {
+    return <AuthCallbackPage onNavigate={setCurrentRoute} />;
   }
 
   if (currentRoute === '/app') {
