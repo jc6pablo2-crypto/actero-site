@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 
 import { Logos3Demo } from '@/components/blocks/demo';
+import { HeroScrollDemo } from '@/components/hero-scroll-demo';
 
 // --- Configuration Supabase ---
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
@@ -2477,6 +2478,11 @@ const LandingPage = ({ onNavigate }) => {
           {/* Compatible integrations row (Replaced with Carousel) */}
           <div className="w-full mt-10">
             <Logos3Demo />
+          </div>
+
+          {/* Scroll Animation Demo */}
+          <div className="w-full relative z-20 -mt-20">
+            <HeroScrollDemo />
           </div>
         </section>
 
