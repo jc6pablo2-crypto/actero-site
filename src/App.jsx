@@ -9,8 +9,6 @@ import {
   Lightbulb, TrendingUp, XCircle, CheckCircle, BarChart2, UserRoundX, Loader2, UserPlus
 } from 'lucide-react';
 
-import { Logos3Demo } from '@/components/blocks/demo';
-
 // --- Configuration Supabase ---
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -2474,9 +2472,17 @@ const LandingPage = ({ onNavigate }) => {
 
           </div>
 
-          {/* Compatible integrations row (Replaced with Carousel) */}
-          <div className="w-full mt-10">
-            <Logos3Demo />
+          {/* Compatible integrations row */}
+          <div className="w-full max-w-5xl mx-auto mt-20 pt-10 border-t border-gray-200/50">
+            <p className="text-center text-sm font-semibold text-gray-400 uppercase tracking-widest mb-6">Compatible avec votre stack existante</p>
+            <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+              {/* Faked Partner Logos using Typography/Icons for zero dependencies */}
+              <div className="text-xl font-bold tracking-tighter text-gray-800 flex items-center gap-1"><span className="w-6 h-6 rounded bg-[#95BF47] text-white flex items-center justify-center text-sm">s</span>Shopify</div>
+              <div className="text-xl font-bold tracking-tighter text-gray-800 flex items-center gap-1"><span className="w-6 h-6 rounded bg-[#20B038] text-white flex items-center justify-center text-[10px]">kla</span>Klaviyo</div>
+              <div className="text-xl font-bold tracking-tighter text-gray-800 flex items-center gap-1"><span className="w-6 h-6 rounded bg-[#635BFF] text-white flex items-center justify-center text-sm">st</span>Stripe</div>
+              <div className="text-xl font-bold tracking-tighter text-gray-800 flex items-center gap-1"><span className="w-6 h-6 rounded bg-black text-white flex items-center justify-center text-[10px]">go</span>Gorgias</div>
+              <div className="text-xl font-bold tracking-tighter text-gray-800 flex items-center gap-1"><span className="w-6 h-6 rounded bg-[#F89820] text-white flex items-center justify-center text-[10px]">GA</span>GA4</div>
+            </div>
           </div>
         </section>
 
