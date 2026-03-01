@@ -229,7 +229,7 @@ const LoginPage = ({ onNavigate, onLogin }) => {
                   <Mail className="h-5 w-5 text-zinc-500" />
                 </div>
                 <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-11 pr-4 py-3 bg-[#030303] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 sm:text-sm outline-none transition-all"
+                  className="block w-full pl-11 pr-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm outline-none transition-all text-white placeholder:text-gray-500"
                   placeholder="prenom@entreprise.com" />
               </div>
             </div>
@@ -242,7 +242,7 @@ const LoginPage = ({ onNavigate, onLogin }) => {
                     <Lock className="h-5 w-5 text-zinc-500" />
                   </div>
                   <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-11 pr-4 py-3 bg-[#030303] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 sm:text-sm outline-none transition-all"
+                    className="block w-full pl-11 pr-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm outline-none transition-all text-white placeholder:text-gray-500"
                     placeholder="••••••••••••" />
                 </div>
                 <div className="flex items-center justify-end mt-3">
@@ -254,9 +254,9 @@ const LoginPage = ({ onNavigate, onLogin }) => {
             )}
 
             <button type="submit" disabled={loading}
-              className="w-full flex justify-center py-3.5 px-4 rounded-xl shadow-sm text-sm font-bold text-white bg-zinc-900 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 disabled:opacity-50 transition-colors">
+              className="w-full flex justify-center py-3.5 px-4 rounded-xl shadow-sm text-sm font-bold text-black bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0a0a0a] focus:ring-white disabled:opacity-50 transition-colors">
               {loading ? (
-                <span className="flex items-center gap-2"><svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> {isForgot ? 'Envoi...' : 'Connexion en cours...'}</span>
+                <span className="flex items-center gap-2"><svg className="animate-spin h-5 w-5 text-black" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> {isForgot ? 'Envoi...' : 'Connexion en cours...'}</span>
               ) : (isForgot ? 'Envoyer le lien' : 'Accéder au dashboard')}
             </button>
 
@@ -2957,7 +2957,7 @@ function ResetPasswordPage({ onNavigate }) {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full px-4 py-3 bg-[#030303] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 sm:text-sm outline-none transition-all"
+                className="block w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm outline-none transition-all text-white placeholder:text-gray-500"
                 placeholder="••••••••"
                 required
               />
@@ -2969,7 +2969,7 @@ function ResetPasswordPage({ onNavigate }) {
                 type="password"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
-                className="block w-full px-4 py-3 bg-[#030303] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 sm:text-sm outline-none transition-all"
+                className="block w-full px-4 py-3 bg-[#0a0a0a] border border-white/10 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm outline-none transition-all text-white placeholder:text-gray-500"
                 placeholder="••••••••"
                 required
               />
@@ -2978,7 +2978,7 @@ function ResetPasswordPage({ onNavigate }) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center py-3.5 px-4 rounded-xl shadow-sm text-sm font-bold text-white bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 transition-colors"
+              className="w-full flex justify-center py-3.5 px-4 rounded-xl shadow-sm text-sm font-bold text-black bg-white hover:bg-gray-100 disabled:opacity-50 transition-colors"
             >
               {loading ? "Mise à jour..." : "Changer le mot de passe"}
             </button>
