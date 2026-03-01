@@ -42,10 +42,13 @@ function ElegantShape({
         >
             <motion.div
                 animate={{
-                    y: [0, 15, 0],
+                    y: [0, 15, -15, 0],
+                    x: [0, 10, -10, 0],
+                    rotate: [0, 5, -5, 0],
+                    scale: [1, 1.05, 0.95, 1],
                 }}
                 transition={{
-                    duration: 12,
+                    duration: 15,
                     repeat: Number.POSITIVE_INFINITY,
                     ease: "easeInOut",
                 }}
@@ -53,7 +56,7 @@ function ElegantShape({
                     width,
                     height,
                 }}
-                className="relative"
+                className="relative flex items-center justify-center"
             >
                 <div
                     className={cn(
@@ -74,7 +77,11 @@ function ElegantShape({
 export function HeroBackground() {
     return (
         <div className="fixed inset-0 z-0 pointer-events-none bg-[#030303]">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
+            <motion.div
+                animate={{ opacity: [0.4, 0.8, 0.4] }}
+                transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+                className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.08] via-transparent to-rose-500/[0.08] blur-3xl"
+            />
 
             <div className="absolute inset-0 overflow-hidden">
                 <ElegantShape
