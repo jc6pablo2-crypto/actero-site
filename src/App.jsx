@@ -204,8 +204,10 @@ const LoginPage = ({ onNavigate, onLogin }) => {
   return (
     <div className="min-h-screen bg-[#030303] flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md flex flex-col items-center">
-        <div onClick={() => onNavigate('/')} className="cursor-pointer flex items-center gap-2 mb-8 hover:opacity-80 transition-opacity">
-          <Logo className="w-10 h-10 text-white" />
+        <div onClick={() => onNavigate('/')} className="cursor-pointer flex items-center gap-3 mb-8 group hover:opacity-80 transition-opacity">
+          <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+            <Logo light={true} className="w-6 h-6 text-white" />
+          </div>
           <span className="text-white font-bold text-2xl tracking-tight">Actero</span>
         </div>
         <h2 className="text-center text-3xl font-bold tracking-tight text-white">
