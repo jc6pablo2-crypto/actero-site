@@ -12,6 +12,7 @@ import {
 // --- Configuration Supabase ---
 import { DemoHeroGeometric } from '../components/blocks/demo-hero';
 import { HeroBackground } from '../components/ui/shape-landing-hero';
+import { ButtonColorful } from '../components/ui/button-colorful';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -2355,12 +2356,9 @@ const LandingPage = ({ onNavigate }) => {
             >
               Connexion
             </button>
-            <button
-              onClick={() => scrollToId('calendly')}
-              className="text-sm bg-indigo-600 text-white px-4 py-2 md:px-5 md:py-2.5 rounded-full font-semibold hover:bg-indigo-700 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
-            >
+            <ButtonColorful onClick={() => scrollToId('calendly')}>
               Demander un audit
-            </button>
+            </ButtonColorful>
           </div>
         </div>
       </nav>
@@ -2606,17 +2604,17 @@ const LandingPage = ({ onNavigate }) => {
                     </div>
                   </div>
 
-                  <button
+                  <ButtonColorful
                     onClick={handleOpenModal}
                     disabled={aiLoading || !aiInput.trim()}
-                    className="w-full bg-indigo-600 text-white px-6 py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50 group hover:-translate-y-0.5"
+                    className="w-full flex items-center justify-center gap-2"
                   >
                     {aiLoading ? (
-                      <><svg className="animate-spin h-5 w-5 text-white/70" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Génération de l'architecture...</>
+                      <><svg className="animate-spin h-5 w-5 text-zinc-600" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Génération de l'architecture...</>
                     ) : (
                       <><Bot className="w-5 h-5 group-hover:scale-110 transition-transform" /> Analyser mon flux avec l'IA</>
                     )}
-                  </button>
+                  </ButtonColorful>
                   {aiError && <p className="text-red-500 text-sm mt-3 flex items-center gap-2 font-semibold"><AlertCircle className="w-4 h-4" />{aiError}</p>}
                 </div>
 
@@ -2805,23 +2803,17 @@ const LandingPage = ({ onNavigate }) => {
       <div className="fixed bottom-0 left-0 right-0 p-4 z-50 pointer-events-none flex justify-center md:hidden">
         <div className="bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10/80 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] p-2 rounded-2xl w-full max-w-md pointer-events-auto flex items-center justify-between gap-4">
           <span className="text-[13px] font-bold text-white ml-2">Prêt à automatiser<br />votre croissance ?</span>
-          <button
-            onClick={() => scrollToId('calendly')}
-            className="bg-indigo-600 text-white px-5 py-3 rounded-xl font-bold text-xs shadow-md shadow-indigo-500/20 whitespace-nowrap active:scale-95 transition-transform"
-          >
+          <ButtonColorful onClick={() => scrollToId('calendly')}>
             Réserver un audit
-          </button>
+          </ButtonColorful>
         </div>
       </div>
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none hidden md:flex">
         <div className="bg-[#0a0a0a]/95 backdrop-blur-2xl border border-white/10/50 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] rounded-full px-4 py-3 pointer-events-auto flex items-center gap-6 hover:-translate-y-1 transition-transform duration-300">
           <span className="text-sm font-bold text-white pl-2">Prêt à automatiser votre croissance ?</span>
-          <button
-            onClick={() => scrollToId('calendly')}
-            className="bg-indigo-600 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-lg shadow-indigo-500/25 hover:bg-indigo-700 hover:scale-105 transition-all"
-          >
+          <ButtonColorful onClick={() => scrollToId('calendly')}>
             Réserver mon audit stratégique
-          </button>
+          </ButtonColorful>
         </div>
       </div>
 
