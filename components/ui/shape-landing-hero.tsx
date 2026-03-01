@@ -187,8 +187,8 @@ function HeroGeometric({
                         animate="visible"
                     >
                         <p className="text-base sm:text-lg md:text-xl text-white/40 mb-8 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4">
-                            Crafting exceptional digital experiences through
-                            innovative design and cutting-edge technology.
+                            Transformez vos processus e-commerce chronophages en
+                            infrastructures autonomes fluides et rentables.
                         </p>
                     </motion.div>
                 </div>
