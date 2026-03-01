@@ -71,30 +71,9 @@ function ElegantShape({
     );
 }
 
-function HeroGeometric({
-    badge = "Design Collective",
-    title1 = "Elevate Your Digital Vision",
-    title2 = "Crafting Exceptional Websites",
-}: {
-    badge?: string;
-    title1?: string;
-    title2?: string;
-}) {
-    const fadeUpVariants = {
-        hidden: { opacity: 0, y: 30 },
-        visible: (i: number) => ({
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 1,
-                delay: 0.5 + i * 0.2,
-                ease: [0.25, 0.4, 0.25, 1],
-            },
-        }),
-    };
-
+export function HeroBackground() {
     return (
-        <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#030303] pt-20">
+        <div className="fixed inset-0 z-0 pointer-events-none bg-[#030303]">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/[0.05] via-transparent to-rose-500/[0.05] blur-3xl" />
 
             <div className="absolute inset-0 overflow-hidden">
@@ -144,6 +123,34 @@ function HeroGeometric({
                 />
             </div>
 
+        </div>
+    );
+}
+
+function HeroGeometric({
+    badge = "Design Collective",
+    title1 = "Elevate Your Digital Vision",
+    title2 = "Crafting Exceptional Websites",
+}: {
+    badge?: string;
+    title1?: string;
+    title2?: string;
+}) {
+    const fadeUpVariants = {
+        hidden: { opacity: 0, y: 30 },
+        visible: (i: number) => ({
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 1,
+                delay: 0.5 + i * 0.2,
+                ease: [0.25, 0.4, 0.25, 1],
+            },
+        }),
+    };
+
+    return (
+        <div className="relative w-full flex items-center justify-center pt-20 md:pt-32 pb-20">
             <div className="relative z-10 container mx-auto px-4 md:px-6">
                 <div className="max-w-3xl mx-auto text-center">
                     <motion.div
@@ -193,10 +200,9 @@ function HeroGeometric({
                     </motion.div>
                 </div>
             </div>
-
-            <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/80 pointer-events-none" />
         </div>
     );
 }
 
 export { HeroGeometric };
+

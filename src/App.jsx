@@ -11,6 +11,7 @@ import {
 
 // --- Configuration Supabase ---
 import { DemoHeroGeometric } from '../components/blocks/demo-hero';
+import { HeroBackground } from '../components/ui/shape-landing-hero';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -2327,9 +2328,9 @@ const LandingPage = ({ onNavigate }) => {
       setAiLoading(false);
     }
   };
-
   return (
-    <div className="min-h-screen bg-[#030303] font-sans text-white selection:bg-emerald-500/20 selection:text-white">
+    <div className="relative min-h-screen bg-transparent font-sans text-white selection:bg-emerald-500/20 selection:text-white">
+      <HeroBackground />
       {/* NAVBAR */}
       <nav className="fixed top-0 w-full z-50 bg-[#030303]/70 backdrop-blur-2xl border-b border-white/10/50 shadow-sm transition-all duration-300">
         <div className="max-w-6xl mx-auto px-6 h-16 md:h-20 flex justify-between items-center">
@@ -2371,7 +2372,7 @@ const LandingPage = ({ onNavigate }) => {
         </section>
 
         {/* 2. SECTION STORYTELLING - LE PROBLÈME */}
-        <section className="py-24 md:py-32 bg-[#0a0a0a] px-6">
+        <section className="py-24 md:py-32 bg-transparent px-6 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">Vous perdez déjà de l'argent.</h2>
             <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed mb-20">
@@ -2398,7 +2399,7 @@ const LandingPage = ({ onNavigate }) => {
         </section>
 
         {/* 3. SECTION TRANSITION - LE SHIFT */}
-        <section id="comment-ca-marche" className="py-32 bg-[#0a0a0a] px-6 relative overflow-hidden">
+        <section id="comment-ca-marche" className="py-32 bg-transparent px-6 relative overflow-hidden z-10">
           {/* Subtle decoration */}
           <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#0a0a0a] rounded-full blur-3xl opacity-50 -mr-40 -mt-40 pointer-events-none"></div>
 
@@ -2438,7 +2439,7 @@ const LandingPage = ({ onNavigate }) => {
         </section>
 
         {/* 4. SECTION IMPACT MASSIF - PROOF */}
-        <section id="proof" className="py-24 bg-[#0a0a0a] px-6">
+        <section id="proof" className="py-24 bg-transparent px-6 relative z-10">
           <div className="max-w-6xl mx-auto">
 
             {/* XXL Metrics */}
@@ -2503,7 +2504,7 @@ const LandingPage = ({ onNavigate }) => {
         </section>
 
         {/* 5. SECTION COMPARAISON (POSITIONNEMENT) */}
-        <section className="py-24 bg-[#030303] border-t border-white/10 px-6">
+        <section className="py-24 bg-transparent border-t border-white/10 px-6 relative z-10">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6 leading-tight">Ce n'est pas un outil.<br />C'est une <span className="text-indigo-600">infrastructure.</span></h2>
@@ -2542,7 +2543,7 @@ const LandingPage = ({ onNavigate }) => {
 
         {/* 5. SIMULATEUR ROI IA */}
         {/* === AI ROI SIMULATOR (RESTORED) START === */}
-        <section id="roi" className="py-24 bg-[#030303] border-y border-white/10 px-6">
+        <section id="roi" className="py-24 bg-transparent border-y border-white/10 px-6 relative z-10">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-6">Calculez votre ROI en temps réel.</h2>
@@ -2677,7 +2678,7 @@ const LandingPage = ({ onNavigate }) => {
         {/* === AI ROI SIMULATOR (RESTORED) END === */}
 
         {/* 7. PREUVE SOCIALE ELEGANTE */}
-        <section className="py-24 bg-[#0a0a0a] px-6 border-b border-white/5">
+        <section className="py-24 bg-transparent px-6 border-b border-white/5 relative z-10">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6">Ils ont transformé leur croissance.</h2>
@@ -2714,7 +2715,7 @@ const LandingPage = ({ onNavigate }) => {
         </section>
 
         {/* 7. FAQ */}
-        <section id="faq" className="py-24 bg-[#0a0a0a] px-6">
+        <section id="faq" className="py-24 bg-transparent px-6 relative z-10">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-6">Questions fréquentes.</h2>
@@ -2746,7 +2747,7 @@ const LandingPage = ({ onNavigate }) => {
         </section>
 
         {/* 9. APPEL STRATEGIQUE (CALENDLY) */}
-        <section id="calendly" className="py-24 bg-[#030303] px-6 relative overflow-hidden border-t border-white/10">
+        <section id="calendly" className="py-24 bg-transparent px-6 relative overflow-hidden border-t border-white/10 z-10">
           <div className="max-w-5xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
 
