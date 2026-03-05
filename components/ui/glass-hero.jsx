@@ -26,6 +26,11 @@ export const GlassHero = ({ onNavigate }) => {
         setIsModalOpen(true);
     };
 
+    const handleTagClick = (tag) => {
+        setPendingPrompt(tag);
+        generateAIResponse(tag, null);
+    };
+
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -47,17 +52,18 @@ export const GlassHero = ({ onNavigate }) => {
         let aiReply = "";
 
         const p = prompt.toLowerCase();
+        const brandName = brandData && brandData.brand ? `**${brandData.brand}**` : "**votre entreprise**";
 
         if (p.includes("client") || p.includes("sav") || p.includes("support")) {
-            aiReply = `Exemple d'automatisation pour le SAV de **${brandData.brand}** : Nous connectons vos canaux (Zendesk/Intercom/Mail) à un agent IA entraîné sur vos données. Dès qu'un client vous contacte, l'IA analyse l'intention et résout instantanément 80% des demandes répétitives (suivi de commande, remboursements). Vos équipes ne gèrent plus que les cas à haute valeur ajoutée.`;
+            aiReply = `Exemple d'automatisation pour le SAV de ${brandName} : Nous connectons vos canaux (Zendesk/Intercom/Mail) à un agent IA entraîné sur vos données. Dès qu'un client vous contacte, l'IA analyse l'intention et résout instantanément 80% des demandes répétitives (suivi de commande, remboursements). Vos équipes ne gèrent plus que les cas à haute valeur ajoutée.`;
         } else if (p.includes("commerce") || p.includes("shopify") || p.includes("produit") || p.includes("panier")) {
-            aiReply = `Exemple d'automatisation E-commerce pour **${brandData.brand}** : Nous déployons un Agent Vocal IA connecté à votre Shopify. Suite à un panier abandonné conséquent, l'IA téléphone automatiquement au client (avec voix ultra-réaliste) pour lever ses freins à l'achat et proposer une remise exclusive. Résultat : +15% de récupération.`;
+            aiReply = `Exemple d'automatisation E-commerce pour ${brandName} : Nous déployons un Agent Vocal IA connecté à votre Shopify. Suite à un panier abandonné conséquent, l'IA téléphone automatiquement au client (avec voix ultra-réaliste) pour lever ses freins à l'achat et proposer une remise exclusive. Résultat : +15% de récupération.`;
         } else if (p.includes("crm") || p.includes("lead") || p.includes("prospection") || p.includes("vente")) {
-            aiReply = `Exemple d'automatisation Sales pour **${brandData.brand}** : Nous synchronisons une IA avec votre CRM (Hubspot/Salesforce). Lorsqu'un nouveau lead qualifié entre, l'IA scrape son profil LinkedIn et le site de son entreprise, puis pré-rédige un e-mail d'approche ultra-personnalisé directement dans vos brouillons. Vos commerciaux n'ont plus qu'à valider.`;
+            aiReply = `Exemple d'automatisation Sales pour ${brandName} : Nous synchronisons une IA avec votre CRM (Hubspot/Salesforce). Lorsqu'un nouveau lead qualifié entre, l'IA scrape son profil LinkedIn et le site de son entreprise, puis pré-rédige un e-mail d'approche ultra-personnalisé directement dans vos brouillons. Vos commerciaux n'ont plus qu'à valider.`;
         } else if (p.includes("rapport") || p.includes("data") || p.includes("analyse")) {
-            aiReply = `Exemple d'automatisation Data pour **${brandData.brand}** : Oubliez la collecte manuelle. Nous créons un agent IA connecté à l'ensemble de vos outils de gestion. Chaque lundi matin, l'IA extrait, croise et synthétise les données pour générer un rapport PDF visuel complet, envoyé automatiquement sur Slack à votre comité de direction.`;
+            aiReply = `Exemple d'automatisation Data pour ${brandName} : Oubliez la collecte manuelle. Nous créons un agent IA connecté à l'ensemble de vos outils de gestion. Chaque lundi matin, l'IA extrait, croise et synthétise les données pour générer un rapport PDF visuel complet, envoyé automatiquement sur Slack à votre comité de direction.`;
         } else {
-            aiReply = `Exemple d'automatisation de processus métier pour **${brandData.brand}** : Dès qu'une nouvelle demande (document complexe, facture, candidature) arrive par e-mail, une IA extrait les données clés, met à jour vos bases de données automatiquement et notifie le service concerné sur Slack avec une proposition d'action pré-configurée.`;
+            aiReply = `Exemple d'automatisation de processus métier pour ${brandName} : Dès qu'une nouvelle demande (document complexe, facture, candidature) arrive par e-mail, une IA extrait les données clés, met à jour vos bases de données automatiquement et notifie le service concerné sur Slack avec une proposition d'action pré-configurée.`;
         }
 
         aiReply += "\n\nDiscutons-en pour auditer vos process spécifiques :";
@@ -165,15 +171,15 @@ export const GlassHero = ({ onNavigate }) => {
 
                                     {/* Suggestions / Tags (Empty State) */}
                                     <div className="w-full max-w-2xl flex flex-wrap items-center justify-center gap-2 mb-8 animate-in fade-in slide-in-from-bottom-2 duration-700">
-                                        <button onClick={() => handleMockInteraction("Service Client")} className="bg-white/10 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-white/5 hover:bg-white/20 hover:-translate-y-0.5 transition-all">Service Client</button>
-                                        <button onClick={() => handleMockInteraction("E-commerce")} className="bg-white/5 text-gray-400 text-xs font-semibold px-4 py-2 rounded-full border border-transparent hover:bg-white/10 hover:text-white transition-all">E-commerce</button>
-                                        <button onClick={() => handleMockInteraction("CRM")} className="bg-white/5 text-gray-400 text-xs font-semibold px-4 py-2 rounded-full border border-transparent hover:bg-white/10 hover:text-white transition-all">CRM</button>
-                                        <button onClick={() => handleMockInteraction("Rapports IA")} className="bg-white/5 text-gray-400 text-xs font-semibold px-4 py-2 rounded-full border border-transparent hover:bg-white/10 hover:text-white transition-all">Rapports IA</button>
+                                        <button onClick={() => handleTagClick("Service Client")} className="bg-white/10 text-gray-300 text-xs font-semibold px-4 py-2 rounded-full border border-white/5 hover:bg-white/20 hover:-translate-y-0.5 transition-all">Service Client</button>
+                                        <button onClick={() => handleTagClick("E-commerce")} className="bg-white/5 text-gray-400 text-xs font-semibold px-4 py-2 rounded-full border border-transparent hover:bg-white/10 hover:text-white transition-all">E-commerce</button>
+                                        <button onClick={() => handleTagClick("CRM")} className="bg-white/5 text-gray-400 text-xs font-semibold px-4 py-2 rounded-full border border-transparent hover:bg-white/10 hover:text-white transition-all">CRM</button>
+                                        <button onClick={() => handleTagClick("Rapports IA")} className="bg-white/5 text-gray-400 text-xs font-semibold px-4 py-2 rounded-full border border-transparent hover:bg-white/10 hover:text-white transition-all">Rapports IA</button>
                                     </div>
 
                                     <div className="w-full max-w-2xl flex flex-col items-center gap-3 mb-8">
                                         <button
-                                            onClick={() => handleMockInteraction("Connecter Shopify à Klaviyo et un agent vocal OpenAI")}
+                                            onClick={() => handleTagClick("Connecter Shopify à Klaviyo et un agent vocal OpenAI")}
                                             className="flex items-center justify-between gap-4 text-sm font-medium text-gray-400 py-2 px-4 rounded-xl hover:bg-white/5 hover:text-white transition-colors group border border-transparent hover:border-white/10 w-full md:w-auto"
                                         >
                                             <span className="truncate">Connecter Shopify à Klaviyo et un agent vocal OpenAI</span>
