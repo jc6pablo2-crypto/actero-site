@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Play, Mic, ArrowUp } from 'lucide-react';
 import { FadeInUp, ScaleIn } from './scroll-animations';
 import { LeadCaptureModal } from './lead-capture-modal';
+import { ButtonColorful } from './button-colorful';
 
 export const GlassHero = ({ onNavigate }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -123,15 +124,14 @@ export const GlassHero = ({ onNavigate }) => {
 
                 {/* Action Buttons */}
                 <FadeInUp delay={0.2} className="flex items-center gap-4 mb-20">
-                    <button
+                    <ButtonColorful
                         onClick={() => {
                             const el = document.getElementById('calendly');
                             if (el) el.scrollIntoView({ behavior: 'smooth' });
                         }}
-                        className="bg-white text-black px-7 py-3.5 rounded-full text-[15px] font-semibold hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.3)]"
                     >
                         Réserver un audit
-                    </button>
+                    </ButtonColorful>
                     <button
                         onClick={() => {
                             const el = document.getElementById('calendly');
@@ -214,15 +214,16 @@ export const GlassHero = ({ onNavigate }) => {
                                                 )}
 
                                                 {msg.role === 'assistant' && !msg.isLoading && (
-                                                    <button
-                                                        onClick={() => {
-                                                            const el = document.getElementById('calendly');
-                                                            if (el) el.scrollIntoView({ behavior: 'smooth' });
-                                                        }}
-                                                        className="mt-4 bg-white text-black text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-gray-200 transition-colors inline-flex items-center gap-2"
-                                                    >
-                                                        Réserver un appel technique <ArrowRight className="w-3.5 h-3.5" />
-                                                    </button>
+                                                    <div className="mt-6 inline-block">
+                                                        <ButtonColorful
+                                                            onClick={() => {
+                                                                const el = document.getElementById('calendly');
+                                                                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                                                            }}
+                                                        >
+                                                            Réserver un appel technique <ArrowRight className="w-3.5 h-3.5" />
+                                                        </ButtonColorful>
+                                                    </div>
                                                 )}
                                             </div>
                                         </div>

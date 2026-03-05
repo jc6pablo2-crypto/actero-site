@@ -11,28 +11,18 @@ export function ButtonColorful({
     return (
         <button
             className={cn(
-                "relative px-5 py-2.5 rounded-full overflow-hidden font-semibold shadow-md",
-                "bg-zinc-100", // Dark mode default (white bg)
-                "transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg",
-                "group",
+                "relative inline-flex h-12 overflow-hidden rounded-full p-[2px] shadow-2xl group hover:scale-[1.02] transition-transform duration-300 focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:ring-offset-2 focus:ring-offset-zinc-50",
                 className
             )}
             {...props}
         >
-            {/* Gradient background effect */}
-            <div
-                className={cn(
-                    "absolute inset-0",
-                    "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
-                    "opacity-40 group-hover:opacity-80",
-                    "blur transition-opacity duration-500"
-                )}
-            />
+            {/* Animated Conic Gradient Border */}
+            <span className="absolute inset-[-1000%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000_0%,#fff_5%,#f59e0b_10%,#ec4899_15%,#3b82f6_20%,#000_25%,#000_50%,#fff_55%,#f59e0b_60%,#ec4899_65%,#3b82f6_70%,#000_75%,#000_100%)]" />
 
-            {/* Content */}
-            <div className="relative flex items-center justify-center gap-2 text-zinc-900">
+            {/* Inner Pill */}
+            <span className="relative flex h-full w-full items-center justify-center rounded-full bg-[#f4f4f5] px-6 py-3 text-[15px] font-bold text-zinc-900 transition-colors group-hover:bg-white z-10 gap-2">
                 {children}
-            </div>
+            </span>
         </button>
     );
 }
