@@ -16,7 +16,6 @@ import { ButtonColorful } from '../components/ui/button-colorful';
 import { Futuristic3DBackground } from '../components/ui/futuristic-3d-background';
 import { GlassHero } from '../components/ui/glass-hero';
 import { FadeInUp, SlideInRight, SlideInLeft, StaggerContainer, StaggerItem, ScaleIn } from '../components/ui/scroll-animations';
-import { DottedSurface } from '../components/ui/dotted-surface';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -2363,7 +2362,7 @@ const LandingPage = ({ onNavigate }) => {
           className="w-full h-full object-cover object-[center_70%] opacity-40 mix-blend-screen"
         />
         {/* Gradient overlay to maintain high contrast for readable text everywhere */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#030303]/40 via-[#030303]/80 to-[#030303]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#030303]/20 via-[#030303]/70 to-[#030303]/90"></div>
       </div>
 
       {/* Content wrapper with relative positioning so it sits above the fixed bg */}
@@ -2404,8 +2403,7 @@ const LandingPage = ({ onNavigate }) => {
           <GlassHero onNavigate={onNavigate} />
 
           {/* BACKGROUND WRAPPER FOR ALL SECTIONS BELOW HERO */}
-          <div className="relative w-full z-10 bg-[#030303]">
-            <DottedSurface className="opacity-30" />
+          <div className="relative w-full z-10">
             <div className="relative z-10 w-full">
 
               {/* 2. SECTION STORYTELLING - LE PROBLÈME */}
