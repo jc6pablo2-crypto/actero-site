@@ -97,35 +97,98 @@ export const GlassHero = ({ onNavigate }) => {
         setIsGenerating(true);
         setInputValue('');
 
-        // Simulate API thinking
-        await new Promise(r => setTimeout(r, 2000));
+        const brandName = brandData && brandData.brand ? brandData.brand : 'votre entreprise';
 
-        let aiReply = "";
+        const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-        const p = prompt.toLowerCase();
-        const brandName = brandData && brandData.brand ? `**${brandData.brand}**` : "**votre entreprise**";
-
-        if (p.includes("client") || p.includes("sav") || p.includes("support")) {
-            aiReply = `Exemple d'automatisation pour le SAV de ${brandName} : Nous connectons vos canaux (Zendesk/Intercom/Mail) à un agent IA entraîné sur vos données. Dès qu'un client vous contacte, l'IA analyse l'intention et résout instantanément 80% des demandes répétitives (suivi de commande, remboursements). Vos équipes ne gèrent plus que les cas à haute valeur ajoutée.`;
-        } else if (p.includes("commerce") || p.includes("shopify") || p.includes("produit") || p.includes("panier")) {
-            aiReply = `Exemple d'automatisation E-commerce pour ${brandName} : Nous déployons un Agent Vocal IA connecté à votre Shopify. Suite à un panier abandonné conséquent, l'IA téléphone automatiquement au client (avec voix ultra-réaliste) pour lever ses freins à l'achat et proposer une remise exclusive. Résultat : +15% de récupération.`;
-        } else if (p.includes("crm") || p.includes("lead") || p.includes("prospection") || p.includes("vente")) {
-            aiReply = `Exemple d'automatisation Sales pour ${brandName} : Nous synchronisons une IA avec votre CRM (Hubspot/Salesforce). Lorsqu'un nouveau lead qualifié entre, l'IA scrape son profil LinkedIn et le site de son entreprise, puis pré-rédige un e-mail d'approche ultra-personnalisé directement dans vos brouillons. Vos commerciaux n'ont plus qu'à valider.`;
-        } else if (p.includes("rapport") || p.includes("data") || p.includes("analyse")) {
-            aiReply = `Exemple d'automatisation Data pour ${brandName} : Oubliez la collecte manuelle. Nous créons un agent IA connecté à l'ensemble de vos outils de gestion. Chaque lundi matin, l'IA extrait, croise et synthétise les données pour générer un rapport PDF visuel complet, envoyé automatiquement sur Slack à votre comité de direction.`;
-        } else {
-            aiReply = `Exemple d'automatisation de processus métier pour ${brandName} : Dès qu'une nouvelle demande (document complexe, facture, candidature) arrive par e-mail, une IA extrait les données clés, met à jour vos bases de données automatiquement et notifie le service concerné sur Slack avec une proposition d'action pré-configurée.`;
+        // If no API key, use fallback
+        if (!apiKey) {
+            await new Promise(r => setTimeout(r, 2000));
+            const fallback = `Exemple d'automatisation pour **${brandName}** : Dès qu'une nouvelle demande arrive par e-mail, une IA extrait les données clés, met à jour vos bases de données automatiquement et notifie le service concerné sur Slack.`;
+            setMessages(prev => {
+                const newMsgs = [...prev];
+                newMsgs[newMsgs.length - 1] = { role: 'assistant', content: fallback, isLoading: false };
+                return newMsgs;
+            });
+            setIsGenerating(false);
+            return;
         }
 
-        aiReply += "\n\nDiscutons-en pour auditer vos process spécifiques :";
+        const fullPrompt = `Entreprise: ${brandName}. Problème ou objectif: "${prompt}"`;
 
-        // Update with actual response
-        setMessages(prev => {
-            const newMsgs = [...prev];
-            newMsgs[newMsgs.length - 1] = { role: 'assistant', content: aiReply, isLoading: false };
-            return newMsgs;
-        });
-        setIsGenerating(false);
+        const payload = {
+            contents: [{ parts: [{ text: fullPrompt }] }],
+            systemInstruction: {
+                parts: [{ text: "Tu es un architecte système expert en automatisation e-commerce (n8n, Make, Shopify, Klaviyo, Stripe). Le prospect te décrit un problème opérationnel, une perte de temps ou une fuite de revenus. Ton rôle est d'analyser le problème et de proposer une solution d'automatisation élégante et haut de gamme. Ne parle pas de code, parle de flux de données et de résultats. Retourne UNIQUEMENT un JSON valide." }]
+            },
+            generationConfig: {
+                responseMimeType: "application/json",
+                responseSchema: {
+                    type: "OBJECT",
+                    properties: {
+                        diagnosis: { type: "STRING", description: "Le diagnostic du problème (1 phrase courte et percutante)" },
+                        solution: { type: "STRING", description: "La logique de la solution d'automatisation proposée (ex: Déclencheur X -> Action Y avec l'outil Z)" },
+                        timeSaved: { type: "STRING", description: "Estimation réaliste du temps gagné (ex: '15h / mois')" },
+                        revenueImpact: { type: "STRING", description: "Impact métier (ex: '+12% de conversion sur les paniers abandonnés')" }
+                    },
+                    required: ["diagnosis", "solution", "timeSaved", "revenueImpact"]
+                }
+            }
+        };
+
+        try {
+            const res = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }
+            );
+
+            if (!res.ok) throw new Error('API error');
+            const result = await res.json();
+
+            const jsonText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (jsonText) {
+                const roiData = JSON.parse(jsonText);
+                setMessages(prev => {
+                    const newMsgs = [...prev];
+                    newMsgs[newMsgs.length - 1] = {
+                        role: 'assistant',
+                        content: '',
+                        isLoading: false,
+                        roiData
+                    };
+                    return newMsgs;
+                });
+            } else {
+                throw new Error('Empty response');
+            }
+        } catch (err) {
+            console.error('Gemini API error:', err);
+            // Fallback to simulated response
+            await new Promise(r => setTimeout(r, 1500));
+            const p = prompt.toLowerCase();
+            let aiReply = '';
+            if (p.includes('client') || p.includes('sav') || p.includes('support')) {
+                aiReply = `Exemple d'automatisation SAV pour **${brandName}** : Nous connectons vos canaux (Zendesk/Intercom/Mail) à un agent IA entraîné sur vos données. Dès qu'un client vous contacte, l'IA analyse l'intention et résout 80% des demandes répétitives.`;
+            } else if (p.includes('commerce') || p.includes('shopify') || p.includes('panier')) {
+                aiReply = `Exemple d'automatisation E-commerce pour **${brandName}** : Un Agent Vocal IA connecté à votre Shopify téléphone automatiquement aux clients ayant abandonné leur panier. Résultat : +15% de récupération.`;
+            } else if (p.includes('crm') || p.includes('lead') || p.includes('vente')) {
+                aiReply = `Exemple d'automatisation Sales pour **${brandName}** : Une IA sync avec votre CRM pré-rédige des e-mails d'approche ultra-personnalisés en scrappant LinkedIn.`;
+            } else {
+                aiReply = `Exemple d'automatisation pour **${brandName}** : Dès qu'une nouvelle demande arrive par e-mail, une IA extrait les données clés, met à jour vos bases de données et notifie le service concerné sur Slack.`;
+            }
+            aiReply += '\n\nDiscutons-en pour auditer vos process spécifiques :';
+            setMessages(prev => {
+                const newMsgs = [...prev];
+                newMsgs[newMsgs.length - 1] = { role: 'assistant', content: aiReply, isLoading: false };
+                return newMsgs;
+            });
+        } finally {
+            setIsGenerating(false);
+        }
     };
 
     const handleModalSubmit = async (data) => {
@@ -253,6 +316,36 @@ export const GlassHero = ({ onNavigate }) => {
                                                         <div className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
                                                         <div className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
                                                         <div className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce"></div>
+                                                    </div>
+                                                ) : msg.roiData ? (
+                                                    <div className="space-y-4">
+                                                        {/* Diagnosis */}
+                                                        <div>
+                                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Diagnostic</p>
+                                                            <p className="text-white font-bold text-base leading-snug">{msg.roiData.diagnosis}</p>
+                                                        </div>
+                                                        {/* Architecture */}
+                                                        <div>
+                                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 flex items-center gap-1">
+                                                                <svg className="w-3 h-3 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                                                Architecture Recommandée
+                                                            </p>
+                                                            <div className="bg-white/5 border border-white/10 p-3 rounded-xl">
+                                                                <p className="text-gray-300 text-sm font-medium leading-relaxed">{msg.roiData.solution}</p>
+                                                            </div>
+                                                        </div>
+                                                        {/* ROI Cards */}
+                                                        <div className="grid grid-cols-2 gap-3">
+                                                            <div className="bg-emerald-900/20 border border-emerald-500/20 rounded-xl p-3">
+                                                                <p className="text-[10px] font-bold text-emerald-400 uppercase mb-1">Gain de temps</p>
+                                                                <p className="text-emerald-300 font-bold text-lg tracking-tighter">{msg.roiData.timeSaved}</p>
+                                                            </div>
+                                                            <div className="bg-zinc-800/30 border border-zinc-400/20 rounded-xl p-3">
+                                                                <p className="text-[10px] font-bold text-zinc-300 uppercase mb-1">Impact ROI</p>
+                                                                <p className="text-zinc-400 font-bold text-lg tracking-tighter">{msg.roiData.revenueImpact}</p>
+                                                            </div>
+                                                        </div>
+                                                        <p className="text-gray-400 text-sm">Discutons-en pour auditer vos process spécifiques :</p>
                                                     </div>
                                                 ) : (
                                                     <div className="text-[15px] leading-relaxed">
