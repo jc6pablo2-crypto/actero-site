@@ -14,6 +14,7 @@ import { DemoHeroGeometric } from '../components/blocks/demo-hero';
 import { HeroBackground } from '../components/ui/shape-landing-hero';
 import { ButtonColorful } from '../components/ui/button-colorful';
 import { Futuristic3DBackground } from '../components/ui/futuristic-3d-background';
+import { GlassHero } from '../components/ui/glass-hero';
 import { FadeInUp, SlideInRight, SlideInLeft, StaggerContainer, StaggerItem, ScaleIn } from '../components/ui/scroll-animations';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
@@ -2353,8 +2354,6 @@ const LandingPage = ({ onNavigate }) => {
   };
   return (
     <div className="relative min-h-screen bg-transparent font-sans text-white selection:bg-emerald-500/20 selection:text-white">
-      <Futuristic3DBackground />
-      <HeroBackground />
       {/* NAVBAR */}
       <nav className="fixed top-0 w-full z-50 bg-[#030303]/70 backdrop-blur-2xl border-b border-white/10/50 shadow-sm transition-all duration-300">
         <div className="max-w-6xl mx-auto px-6 h-16 md:h-20 flex justify-between items-center">
@@ -2386,11 +2385,9 @@ const LandingPage = ({ onNavigate }) => {
         </div>
       </nav>
 
-      <main className="pt-20 md:pt-24">
-        {/* 1. HERO SECTION */}
-        <section className="relative overflow-hidden flex flex-col items-center">
-          <DemoHeroGeometric />
-        </section>
+      <main>
+        {/* 1. HERO SECTION (New Redesign) */}
+        <GlassHero onNavigate={onNavigate} />
 
         {/* 2. SECTION STORYTELLING - LE PROBLÈME */}
         <section className="py-24 md:py-32 bg-transparent px-6 relative z-10">
