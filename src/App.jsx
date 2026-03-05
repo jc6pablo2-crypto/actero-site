@@ -16,6 +16,7 @@ import { ButtonColorful } from '../components/ui/button-colorful';
 import { Futuristic3DBackground } from '../components/ui/futuristic-3d-background';
 import { GlassHero } from '../components/ui/glass-hero';
 import { FadeInUp, SlideInRight, SlideInLeft, StaggerContainer, StaggerItem, ScaleIn } from '../components/ui/scroll-animations';
+import { DottedSurface } from '../components/ui/dotted-surface';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -2402,434 +2403,405 @@ const LandingPage = ({ onNavigate }) => {
           {/* 1. HERO SECTION (New Redesign) */}
           <GlassHero onNavigate={onNavigate} />
 
-          {/* 2. SECTION STORYTELLING - LE PROBLÈME */}
-          <section className="py-24 md:py-32 bg-transparent px-6 relative z-10">
-            <FadeInUp className="max-w-5xl mx-auto text-center">
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">Vous perdez déjà de l'argent.</h2>
-              <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed mb-20">
-                Panier abandonné. Support saturé. Données inexploitées.<br className="hidden md:block" />
-                Chaque jour sans automatisation vous coûte.
-              </p>
+          {/* BACKGROUND WRAPPER FOR ALL SECTIONS BELOW HERO */}
+          <div className="relative w-full z-10 bg-[#030303]">
+            <DottedSurface className="opacity-30" />
+            <div className="relative z-10 w-full">
 
-              <StaggerContainer className="grid md:grid-cols-3 gap-12 lg:gap-16 text-center">
-                {[
-                  { icon: <TrendingDown className="w-8 h-8 text-gray-400" />, title: "Perte de conversion", desc: "Des relances génériques qui ne convertissent plus." },
-                  { icon: <Clock className="w-8 h-8 text-gray-400" />, title: "Temps humain gaspillé", desc: "Des heures perdues sur des tâches répétitives." },
-                  { icon: <BarChart2 className="w-8 h-8 text-gray-400" />, title: "Décisions sans data", desc: "Navigation à vue au lieu d'itérer sur la data." }
-                ].map((block, i) => (
-                  <StaggerItem key={i} className="flex flex-col items-center group">
-                    <div className="mb-6 opacity-60 group-hover:opacity-100 group-hover:-translate-y-1 transition-all duration-300">
-                      {block.icon}
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-3">{block.title}</h3>
-                    <p className="text-base text-gray-400 font-medium leading-relaxed">{block.desc}</p>
-                  </StaggerItem>
-                ))}
-              </StaggerContainer>
-            </FadeInUp>
-          </section>
+              {/* 2. SECTION STORYTELLING - LE PROBLÈME */}
+              <section className="py-24 md:py-32 bg-transparent px-6 relative z-10">
+                <FadeInUp className="max-w-5xl mx-auto text-center">
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">Vous perdez déjà de l'argent.</h2>
+                  <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed mb-20">
+                    Panier abandonné. Support saturé. Données inexploitées.<br className="hidden md:block" />
+                    Chaque jour sans automatisation vous coûte.
+                  </p>
 
-          {/* 3. SECTION TRANSITION - LE SHIFT */}
-          <section id="comment-ca-marche" className="py-32 bg-transparent px-6 relative overflow-hidden z-10">
-            {/* Subtle decoration */}
-            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#0a0a0a] rounded-full blur-3xl opacity-50 -mr-40 -mt-40 pointer-events-none"></div>
+                  <StaggerContainer className="grid md:grid-cols-3 gap-12 lg:gap-16 text-center">
+                    {[
+                      { icon: <TrendingDown className="w-8 h-8 text-gray-400" />, title: "Perte de conversion", desc: "Des relances génériques qui ne convertissent plus." },
+                      { icon: <Clock className="w-8 h-8 text-gray-400" />, title: "Temps humain gaspillé", desc: "Des heures perdues sur des tâches répétitives." },
+                      { icon: <BarChart2 className="w-8 h-8 text-gray-400" />, title: "Décisions sans data", desc: "Navigation à vue au lieu d'itérer sur la data." }
+                    ].map((block, i) => (
+                      <StaggerItem key={i} className="flex flex-col items-center group">
+                        <div className="mb-6 opacity-60 group-hover:opacity-100 group-hover:-translate-y-1 transition-all duration-300">
+                          {block.icon}
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-3">{block.title}</h3>
+                        <p className="text-base text-gray-400 font-medium leading-relaxed">{block.desc}</p>
+                      </StaggerItem>
+                    ))}
+                  </StaggerContainer>
+                </FadeInUp>
+              </section>
 
-            <div className="max-w-4xl mx-auto relative z-10">
-              <FadeInUp className="text-center mb-24">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">Et si votre boutique devenait autonome ?</h2>
-              </FadeInUp>
+              {/* 3. SECTION TRANSITION - LE SHIFT */}
+              <section id="comment-ca-marche" className="py-32 bg-transparent px-6 relative overflow-hidden z-10">
+                {/* Subtle decoration */}
+                <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[#0a0a0a] rounded-full blur-3xl opacity-50 -mr-40 -mt-40 pointer-events-none"></div>
 
-              <div className="flex flex-col gap-12 relative">
-                {/* Connecting vertical line */}
-                <div className="absolute top-10 bottom-10 left-8 md:left-[50%] md:-ml-px w-0.5 bg-gradient-to-b from-transparent via-gray-300 to-transparent hidden md:block"></div>
-
-                {[
-                  { step: "01", title: "Analyse en continu", desc: "Actero se connecte à Shopify et surveille chaque interaction en temps réel.", align: "left" },
-                  { step: "02", title: "Recommandation IA", desc: "L'intelligence artificielle identifie le workflow exact qui augmentera vos marges.", align: "right" },
-                  { step: "03", title: "Exécution instantanée", desc: "Validez en un clic. L'architecture technique se déploie sans aucun code.", align: "left" }
-                ].map((item, i) => (
-                  <FadeInUp key={i} delay={i * 0.15} className={`flex flex-col md:flex-row items-center gap-8 ${item.align === 'right' ? 'md:flex-row-reverse' : ''}`}>
-                    <div className={`flex-1 w-full flex ${item.align === 'right' ? 'md:justify-start' : 'md:justify-end'}`}>
-                      <div className="bg-[#0a0a0a] rounded-[32px] p-8 md:p-10 border border-white/5 shadow-[0_10px_40px_rgba(0,0,0,0.03)] w-full max-w-sm hover:-translate-y-1 transition-transform duration-500 ease-out">
-                        <p className="text-sm font-bold text-zinc-400 mb-4 tracking-widest uppercase">Étape {item.step}</p>
-                        <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
-                        <p className="text-gray-400 font-medium leading-relaxed">{item.desc}</p>
-                      </div>
-                    </div>
-
-                    {/* Center Node */}
-                    <div className="hidden md:flex flex-shrink-0 w-16 h-16 rounded-full bg-[#0a0a0a] border-4 border-[#F6F7FB] shadow-sm items-center justify-center z-10">
-                      <div className="w-3 h-3 rounded-full bg-zinc-300"></div>
-                    </div>
-
-                    <div className="flex-1 w-full"></div>
+                <div className="max-w-4xl mx-auto relative z-10">
+                  <FadeInUp className="text-center mb-24">
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">Et si votre boutique devenait autonome ?</h2>
                   </FadeInUp>
-                ))}
-              </div>
-            </div>
-          </section>
 
-          {/* 4. SECTION IMPACT MASSIF - PROOF */}
-          <section id="proof" className="py-24 bg-transparent px-6 relative z-10">
-            <div className="max-w-6xl mx-auto">
+                  <div className="flex flex-col gap-12 relative">
+                    {/* Connecting vertical line */}
+                    <div className="absolute top-10 bottom-10 left-8 md:left-[50%] md:-ml-px w-0.5 bg-gradient-to-b from-transparent via-gray-300 to-transparent hidden md:block"></div>
 
-              {/* XXL Metrics */}
-              <FadeInUp className="text-center mb-16">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 max-w-4xl mx-auto">
-                  <div className="flex flex-col items-center justify-center py-6 md:border-r border-white/5">
-                    <span className="text-6xl lg:text-[5rem] font-bold tracking-tighter text-white mb-2 leading-none">+120h</span>
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Temps gagné / mois</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center py-6 md:border-r border-white/5">
-                    <span className="text-6xl lg:text-[5rem] font-bold tracking-tighter text-zinc-300 mb-2 leading-none">+18%</span>
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Hausse Conversion</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center py-6">
-                    <span className="text-6xl lg:text-[5rem] font-bold tracking-tighter text-white mb-2 leading-none">100%</span>
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Autonome</span>
-                  </div>
-                </div>
-                <p className="text-sm font-semibold text-gray-400 mt-12 uppercase tracking-wide">Résultats moyens observés chez nos clients E-commerce.</p>
-              </FadeInUp>
-
-              {/* Premium Case Study Card */}
-              <ScaleIn className="max-w-4xl mx-auto">
-                <div className="bg-[#030303] rounded-[32px] p-8 md:p-12 border border-white/10 shadow-xl relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-zinc-800 rounded-full blur-3xl opacity-50 -mr-40 -mt-40 transition-transform duration-700 group-hover:scale-110"></div>
-
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-10">
-                      <div className="px-3 py-1 bg-[#0a0a0a] border border-white/5 rounded-full text-xs font-bold uppercase tracking-widest text-zinc-300 shadow-sm">Étude de Cas</div>
-                      <span className="text-white font-bold">Marque DNVB (Beauté)</span>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-12 items-center">
-                      <div className="space-y-8">
-                        <div>
-                          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Architecture déployée</p>
-                          <p className="text-xl font-bold text-white leading-tight">Moteur de recommandation post-achat avec SMS dynamiques (Klaviyo + Shopify).</p>
-                        </div>
-                        <div className="flex gap-12">
-                          <div>
-                            <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">AOV Avant</p>
-                            <p className="text-2xl font-bold text-gray-400 line-through">65 €</p>
-                          </div>
-                          <div>
-                            <p className="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-1">AOV Après</p>
-                            <p className="text-3xl font-bold text-white tracking-tight">82 €</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="bg-[#0a0a0a] rounded-3xl p-8 border border-white/5 shadow-[0_10px_40px_rgba(0,0,0,0.04)] text-center">
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Revenus nets générés en 30 jours</p>
-                        <p className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-emerald-500 to-emerald-700 tracking-tighter mb-6">+ 12 400 €</p>
-                        <button onClick={() => scrollToId('calendly')} className="text-sm font-bold text-white border-b-2 border-transparent hover:border-gray-900 transition-colors pb-0.5 inline-flex items-center gap-1">Je veux le même plan <ArrowRight className="w-3 h-3" /></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ScaleIn>
-
-            </div>
-          </section>
-
-          {/* 5. SECTION COMPARAISON (POSITIONNEMENT) */}
-          <section className="py-24 bg-transparent border-t border-white/10 px-6 relative z-10">
-            <div className="max-w-4xl mx-auto">
-              <FadeInUp className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6 leading-tight">Ce n'est pas un outil.<br />C'est une <span className="text-zinc-300">infrastructure.</span></h2>
-              </FadeInUp>
-
-              <SlideInLeft className="bg-[#0a0a0a] rounded-[32px] border border-white/10 overflow-hidden shadow-sm">
-                <div className="grid grid-cols-2 md:grid-cols-2 border-b border-white/5 bg-white/5/50">
-                  <div className="p-6 md:p-8 border-r border-white/5">
-                    <p className="text-lg font-bold tracking-tight text-gray-400 line-through decoration-gray-300">Make / Zapier</p>
-                  </div>
-                  <div className="p-6 md:p-8">
-                    <p className="text-xl font-bold tracking-tight text-zinc-300 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-zinc-400 animate-pulse"></span>Actero</p>
-                  </div>
-                </div>
-
-                <div className="divide-y divide-gray-100">
-                  {[
-                    { old: "Création manuelle des flux", new: "Déploiement Autonome piloté par l'IA" },
-                    { old: "Focalisé sur la technique (API, Webhooks)", new: "Focalisé sur le Business (Marges, AOV, LTV)" },
-                    { old: "Maintenance constante en cas de bug", new: "Monitoring intelligent et auto-réparation" },
-                    { old: "Aucun suivi du ROI chiffré", new: "Impact financier mesuré sur chaque workflow" },
-                  ].map((row, i) => (
-                    <div key={i} className="grid grid-cols-2 group hover:bg-white/5/30 transition-colors">
-                      <div className="p-6 md:p-8 border-r border-white/5 flex items-center">
-                        <p className="text-[15px] font-medium text-gray-400">{row.old}</p>
-                      </div>
-                      <div className="p-6 md:p-8 flex items-center">
-                        <p className="text-[15px] font-bold text-white">{row.new}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </SlideInLeft>
-            </div>
-          </section>
-
-          {/* 5. SIMULATEUR ROI IA */}
-          {/* === AI ROI SIMULATOR (RESTORED) START === */}
-          <section id="roi" className="py-24 bg-transparent border-y border-white/10 px-6 relative z-10">
-            <div className="max-w-6xl mx-auto">
-              <FadeInUp className="text-center mb-16">
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-6">Calculez votre ROI en temps réel.</h2>
-                <p className="text-lg text-gray-400 font-medium max-w-2xl mx-auto">Notre intelligence artificielle analyse votre cas d'usage et génère instantanément l'architecture cible et l'impact estimé.</p>
-              </FadeInUp>
-
-              <FadeInUp className="bg-[#0a0a0a] rounded-[32px] border border-white/10 shadow-2xl p-6 md:p-10" delay={0.2}>
-                <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
-
-                  {/* Form Elements */}
-                  <div className="space-y-8">
-                    {/* Visual Stepper */}
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-zinc-300 text-white flex items-center justify-center font-bold text-sm">1</div>
-                      <div className="h-px bg-gray-200 flex-1"></div>
-                      <div className="w-8 h-8 rounded-full bg-white/10 text-gray-400 border border-white/10 flex items-center justify-center font-bold text-sm">2</div>
-                      <div className="h-px bg-gray-200 flex-1"></div>
-                      <div className="w-8 h-8 rounded-full bg-white/10 text-gray-400 border border-white/10 flex items-center justify-center font-bold text-sm">3</div>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-bold tracking-tight text-white mb-6">Paramétrez votre environnement</h3>
-                      <div className="grid grid-cols-2 gap-4 mb-6">
-                        <div>
-                          <label className="block text-sm font-semibold text-white mb-2">Plateforme</label>
-                          <select
-                            value={platform}
-                            onChange={(e) => setPlatform(e.target.value)}
-                            className="w-full bg-[#030303] border border-white/10 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-300 focus:border-zinc-300 transition-all font-medium text-white"
-                          >
-                            <option>Shopify</option>
-                            <option>WooCommerce</option>
-                            <option>Prestashop</option>
-                            <option>Autre</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-semibold text-white mb-2">Objectif principal</label>
-                          <select
-                            value={objective}
-                            onChange={(e) => setObjective(e.target.value)}
-                            className="w-full bg-[#030303] border border-white/10 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-300 focus:border-zinc-300 transition-all font-medium text-white"
-                          >
-                            <option>Conversion</option>
-                            <option>Support Client</option>
-                            <option>Opérations</option>
-                            <option>Acquisition</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-semibold text-white mb-2">Problème ou goulot d'étranglement</label>
-                        <textarea
-                          value={aiInput}
-                          onChange={(e) => setAiInput(e.target.value)}
-                          placeholder="Ex: Mon équipe perd du temps à mettre à jour les statuts de commande dans notre ERP..."
-                          className="w-full h-32 bg-[#030303] border border-white/10 rounded-xl py-4 px-4 outline-none focus:ring-2 focus:ring-zinc-300 focus:border-zinc-300 transition-all font-medium text-white resize-none leading-relaxed"
-                        />
-                      </div>
-                    </div>
-
-                    <ButtonColorful
-                      onClick={handleOpenModal}
-                      disabled={aiLoading || !aiInput.trim()}
-                      className="w-full flex items-center justify-center gap-2"
-                    >
-                      {aiLoading ? (
-                        <><svg className="animate-spin h-5 w-5 text-zinc-600" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Génération de l'architecture...</>
-                      ) : (
-                        <><Bot className="w-5 h-5 group-hover:scale-110 transition-transform" /> Analyser mon flux avec l'IA</>
-                      )}
-                    </ButtonColorful>
-                    {aiError && <p className="text-red-500 text-sm mt-3 flex items-center gap-2 font-semibold"><AlertCircle className="w-4 h-4" />{aiError}</p>}
-                  </div>
-
-                  {/* Result Block */}
-                  <div className="h-full min-h-[350px]">
-                    {!aiResult && !aiLoading ? (
-                      <div className="h-full bg-white/5 border border-white/10 border-dashed rounded-2xl p-10 flex flex-col items-center justify-center text-center">
-                        <div className="w-16 h-16 rounded-2xl bg-[#0a0a0a] border border-white/5 shadow-sm flex items-center justify-center mb-6">
-                          <Database className="w-8 h-8 text-gray-400" />
-                        </div>
-                        <p className="text-white font-bold text-lg mb-2">Prêt pour l'analyse</p>
-                        <p className="text-gray-400 font-medium max-w-xs">Remplissez les informations à gauche pour découvrir votre plan d'action.</p>
-                      </div>
-                    ) : aiLoading ? (
-                      <div className="h-full bg-zinc-800/30 border border-zinc-400/20 rounded-2xl p-10 flex flex-col items-center justify-center text-center relative overflow-hidden">
-                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                        <Cpu className="w-16 h-16 text-zinc-300 mb-6 animate-[bounce_2s_infinite]" />
-                        <p className="text-white font-bold text-lg relative z-10 mb-2">Modélisation en cours</p>
-                        <p className="text-zinc-400 font-medium max-w-xs relative z-10">Gemini analyse vos goulots d'étranglement pour concevoir le flux optimal...</p>
-                      </div>
-                    ) : aiResult ? (
-                      <div className="h-full bg-[#030303] border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col animate-fade-in-up shadow-inner relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-zinc-400/10 blur-3xl rounded-full pointer-events-none"></div>
-
-                        <div className="flex items-center gap-2 mb-8">
-                          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                          <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Audit Généré</span>
-                        </div>
-
-                        <div className="mb-6 relative z-10">
-                          <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-2">Diagnostic</h4>
-                          <p className="text-white font-bold text-lg leading-snug">{aiResult.diagnosis}</p>
-                        </div>
-
-                        <div className="mb-8 relative z-10">
-                          <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-2"><Zap className="w-3.5 h-3.5 text-amber-500" /> Architecture Recommandée</h4>
-                          <div className="bg-[#0a0a0a] border border-white/10 p-5 rounded-xl shadow-sm">
-                            <p className="text-gray-400 text-sm font-medium leading-relaxed">{aiResult.solution}</p>
+                    {[
+                      { step: "01", title: "Analyse en continu", desc: "Actero se connecte à Shopify et surveille chaque interaction en temps réel.", align: "left" },
+                      { step: "02", title: "Recommandation IA", desc: "L'intelligence artificielle identifie le workflow exact qui augmentera vos marges.", align: "right" },
+                      { step: "03", title: "Exécution instantanée", desc: "Validez en un clic. L'architecture technique se déploie sans aucun code.", align: "left" }
+                    ].map((item, i) => (
+                      <FadeInUp key={i} delay={i * 0.15} className={`flex flex-col md:flex-row items-center gap-8 ${item.align === 'right' ? 'md:flex-row-reverse' : ''}`}>
+                        <div className={`flex-1 w-full flex ${item.align === 'right' ? 'md:justify-start' : 'md:justify-end'}`}>
+                          <div className="bg-[#0a0a0a] rounded-[32px] p-8 md:p-10 border border-white/5 shadow-[0_10px_40px_rgba(0,0,0,0.03)] w-full max-w-sm hover:-translate-y-1 transition-transform duration-500 ease-out">
+                            <p className="text-sm font-bold text-zinc-400 mb-4 tracking-widest uppercase">Étape {item.step}</p>
+                            <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
+                            <p className="text-gray-400 font-medium leading-relaxed">{item.desc}</p>
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 mt-auto relative z-10">
-                          <div className="bg-emerald-900/20 border border-emerald-500/20 rounded-xl p-4 transition-transform hover:scale-105 duration-300">
-                            <p className="text-[10px] font-bold text-emerald-400 uppercase mb-2">Gain de temps estimé</p>
-                            <p className="text-emerald-300 font-bold text-2xl tracking-tighter">{aiResult.timeSaved}</p>
+                        {/* Center Node */}
+                        <div className="hidden md:flex flex-shrink-0 w-16 h-16 rounded-full bg-[#0a0a0a] border-4 border-[#F6F7FB] shadow-sm items-center justify-center z-10">
+                          <div className="w-3 h-3 rounded-full bg-zinc-300"></div>
+                        </div>
+
+                        <div className="flex-1 w-full"></div>
+                      </FadeInUp>
+                    ))}
+                  </div>
+                </div>
+              </section>
+
+              {/* 4. SECTION IMPACT MASSIF - PROOF */}
+              <section id="proof" className="py-24 bg-transparent px-6 relative z-10">
+                <div className="max-w-6xl mx-auto">
+
+                  {/* XXL Metrics */}
+                  <FadeInUp className="text-center mb-16">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 max-w-4xl mx-auto">
+                      <div className="flex flex-col items-center justify-center py-6 md:border-r border-white/5">
+                        <span className="text-6xl lg:text-[5rem] font-bold tracking-tighter text-white mb-2 leading-none">+120h</span>
+                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Temps gagné / mois</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center py-6 md:border-r border-white/5">
+                        <span className="text-6xl lg:text-[5rem] font-bold tracking-tighter text-zinc-300 mb-2 leading-none">+18%</span>
+                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Hausse Conversion</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center py-6">
+                        <span className="text-6xl lg:text-[5rem] font-bold tracking-tighter text-white mb-2 leading-none">100%</span>
+                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Autonome</span>
+                      </div>
+                    </div>
+                    <p className="text-sm font-semibold text-gray-400 mt-12 uppercase tracking-wide">Résultats moyens observés chez nos clients E-commerce.</p>
+                  </FadeInUp>
+
+                  {/* Premium Case Study Card */}
+                  <ScaleIn className="max-w-4xl mx-auto">
+                    <div className="bg-[#030303] rounded-[32px] p-8 md:p-12 border border-white/10 shadow-xl relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-zinc-800 rounded-full blur-3xl opacity-50 -mr-40 -mt-40 transition-transform duration-700 group-hover:scale-110"></div>
+
+                      <div className="relative z-10">
+                        <div className="flex items-center gap-3 mb-10">
+                          <div className="px-3 py-1 bg-[#0a0a0a] border border-white/5 rounded-full text-xs font-bold uppercase tracking-widest text-zinc-300 shadow-sm">Étude de Cas</div>
+                          <span className="text-white font-bold">Marque DNVB (Beauté)</span>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-12 items-center">
+                          <div className="space-y-8">
+                            <div>
+                              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Architecture déployée</p>
+                              <p className="text-xl font-bold text-white leading-tight">Moteur de recommandation post-achat avec SMS dynamiques (Klaviyo + Shopify).</p>
+                            </div>
+                            <div className="flex gap-12">
+                              <div>
+                                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">AOV Avant</p>
+                                <p className="text-2xl font-bold text-gray-400 line-through">65 €</p>
+                              </div>
+                              <div>
+                                <p className="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-1">AOV Après</p>
+                                <p className="text-3xl font-bold text-white tracking-tight">82 €</p>
+                              </div>
+                            </div>
                           </div>
-                          <div className="bg-zinc-800/20 border border-zinc-400/20 rounded-xl p-4 transition-transform hover:scale-105 duration-300">
-                            <p className="text-[10px] font-bold text-zinc-300 uppercase mb-2">Impact ROI</p>
-                            <p className="text-zinc-400 font-bold text-2xl tracking-tighter">{aiResult.revenueImpact}</p>
+
+                          <div className="bg-[#0a0a0a] rounded-3xl p-8 border border-white/5 shadow-[0_10px_40px_rgba(0,0,0,0.04)] text-center">
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Revenus nets générés en 30 jours</p>
+                            <p className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-emerald-500 to-emerald-700 tracking-tighter mb-6">+ 12 400 €</p>
+                            <button onClick={() => scrollToId('calendly')} className="text-sm font-bold text-white border-b-2 border-transparent hover:border-gray-900 transition-colors pb-0.5 inline-flex items-center gap-1">Je veux le même plan <ArrowRight className="w-3 h-3" /></button>
                           </div>
                         </div>
                       </div>
-                    ) : null}
-                  </div>
-                </div>
-              </FadeInUp>
-            </div>
-          </section>
-          {/* === AI ROI SIMULATOR (RESTORED) END === */}
-
-          {/* 7. PREUVE SOCIALE ELEGANTE */}
-          <section className="py-24 bg-transparent px-6 border-b border-white/5 relative z-10">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6">Ils ont transformé leur croissance.</h2>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-zinc-800/30 border border-zinc-400/30 shadow-sm text-xs font-bold text-zinc-400 uppercase tracking-widest">
-                  <span className="w-2 h-2 rounded-full bg-zinc-300 animate-pulse"></span>
-                  27 e-commerces automatisés ce mois-ci
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-8">
-                {[
-                  { quote: "Actero a identifié une faille dans notre système de relance panier. L'automatisation a été déployée en 2 clics. Le ROI est colossal.", name: "Julien M.", role: "CEO, DNVB Mode" },
-                  { quote: "Le fait de ne pas avoir à coder ni à comprendre Zapier a tout changé. Actero s'occupe de la technique, on regarde juste les métriques monter.", name: "Sarah L.", role: "CMO, Beauté Naturelle" },
-                  { quote: "Notre support client était saturé. L'agent IA s'occupe maintenant de 40% de nos tickets automatiquement. Indispensable.", name: "Marc D.", role: "Head of E-commerce" }
-                ].map((t, i) => (
-                  <div key={i} className="bg-[#030303] rounded-3xl border border-white/10 p-8 shadow-sm hover:-translate-y-1 transition-transform duration-300">
-                    <div className="flex gap-1 mb-6 text-gray-300">
-                      {/* Minimalist stars */}
-                      <svg className="w-4 h-4 text-zinc-400 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
-                      <svg className="w-4 h-4 text-zinc-400 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
-                      <svg className="w-4 h-4 text-zinc-400 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
-                      <svg className="w-4 h-4 text-zinc-400 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
-                      <svg className="w-4 h-4 text-zinc-400 fill-current" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
                     </div>
-                    <p className="text-white font-medium text-[15px] mb-8 leading-relaxed">"{t.quote}"</p>
-                    <div>
-                      <p className="font-bold text-white">{t.name}</p>
-                      <p className="text-xs font-bold tracking-widest uppercase text-gray-400 mt-1">{t.role}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
+                  </ScaleIn>
 
-          {/* 7. FAQ */}
-          <section id="faq" className="py-24 bg-transparent px-6 relative z-10">
-            <div className="max-w-3xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-6">Questions fréquentes.</h2>
-              </div>
-              <div className="space-y-4">
-                {[
-                  { q: "Est-ce que je dois savoir coder pour utiliser Actero ?", a: "Absolument pas. Actero est une plateforme 'Done-for-you' en arrière-plan. Vous validez simplement les recommandations de notre IA depuis votre interface, et nos ingénieurs (ou nos scripts) s'occupent du déploiement technique." },
-                  { q: "Combien de temps prend l'intégration avec ma boutique ?", a: "Moins de 5 minutes. Une fois votre compte créé, il suffit d'accorder les permissions Shopify/Klaviyo. Le premier audit de vos flux prend environ 24 heures." },
-                  { q: "Et si ça casse mon site existant ?", a: "Impossible. Nous opérons en aval via API. Nos automatisations ne modifient pas le code frontal de votre site (Liquid/React), mais optimisent le traitement des données dans vos outils marketing et logistiques." },
-                  { q: "Puis-je annuler à tout moment ?", a: "Oui, nos plans Starter et Growth sont sans engagement. Vous pouvez annuler d'un simple clic depuis vos paramètres." }
-                ].map((faq, i) => (
-                  <div key={i} className="border border-white/10 rounded-2xl bg-[#030303] overflow-hidden transition-all duration-300">
-                    <button
-                      onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
-                      className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
-                    >
-                      <span className="font-bold text-white text-lg">{faq.q}</span>
-                      <div className={`w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 transition-transform duration-300 ${openFaqIndex === i ? 'bg-zinc-300 border-zinc-300 text-white rotate-180' : 'bg-[#0a0a0a] border-white/10 text-gray-400'}`}>
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                </div>
+              </section>
+
+              {/* 5. SECTION COMPARAISON (POSITIONNEMENT) */}
+              <section className="py-24 bg-transparent border-t border-white/10 px-6 relative z-10">
+                <div className="max-w-4xl mx-auto">
+                  <FadeInUp className="text-center mb-16">
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6 leading-tight">Ce n'est pas un outil.<br />C'est une <span className="text-zinc-300">infrastructure.</span></h2>
+                  </FadeInUp>
+
+                  <SlideInLeft className="bg-[#0a0a0a] rounded-[32px] border border-white/10 overflow-hidden shadow-sm">
+                    <div className="grid grid-cols-2 md:grid-cols-2 border-b border-white/5 bg-white/5/50">
+                      <div className="p-6 md:p-8 border-r border-white/5">
+                        <p className="text-lg font-bold tracking-tight text-gray-400 line-through decoration-gray-300">Make / Zapier</p>
                       </div>
-                    </button>
-                    <div className={`px-6 overflow-hidden transition-all duration-500 ease-in-out ${openFaqIndex === i ? 'max-h-96 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}>
-                      <p className="text-gray-400 font-medium leading-relaxed">{faq.a}</p>
+                      <div className="p-6 md:p-8">
+                        <p className="text-xl font-bold tracking-tight text-zinc-300 flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-zinc-400 animate-pulse"></span>Actero</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
 
-          {/* 9. APPEL STRATEGIQUE (CALENDLY) */}
-          <section id="calendly" className="py-24 bg-transparent px-6 relative overflow-hidden border-t border-white/10 z-10">
-            <div className="max-w-5xl mx-auto">
-              <div className="grid lg:grid-cols-2 gap-16 items-center">
-
-                {/* Left Context */}
-                <div className="space-y-10">
-                  <div>
-                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6 leading-[1.1]">Audit stratégique offert.</h2>
-                    <p className="text-xl text-gray-400 font-medium leading-relaxed">15 minutes pour identifier précisément où vous perdez de la marge, sans aucun engagement.</p>
-                  </div>
-
-                  <div className="bg-[#0a0a0a] rounded-[24px] border border-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] p-8">
-                    <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-6">Pendant cet appel vous recevrez :</p>
-                    <ul className="space-y-4">
+                    <div className="divide-y divide-gray-100">
                       {[
-                        "Estimation ROI personnalisée",
-                        "3 workflows prioritaires à activer",
-                        "Plan d'architecture technique recommandé",
-                        "Projection de croissance sur 90 jours"
-                      ].map((item, i) => (
-                        <li key={i} className="flex items-center gap-3">
-                          <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 flex-shrink-0"><Zap className="w-3 h-3" /></div>
-                          <span className="text-gray-300 font-medium">{item}</span>
-                        </li>
+                        { old: "Création manuelle des flux", new: "Déploiement Autonome piloté par l'IA" },
+                        { old: "Focalisé sur la technique (API, Webhooks)", new: "Focalisé sur le Business (Marges, AOV, LTV)" },
+                        { old: "Maintenance constante en cas de bug", new: "Monitoring intelligent et auto-réparation" },
+                        { old: "Aucun suivi du ROI chiffré", new: "Impact financier mesuré sur chaque workflow" },
+                      ].map((row, i) => (
+                        <div key={i} className="grid grid-cols-2 group hover:bg-white/5/30 transition-colors">
+                          <div className="p-6 md:p-8 border-r border-white/5 flex items-center">
+                            <p className="text-[15px] font-medium text-gray-400">{row.old}</p>
+                          </div>
+                          <div className="p-6 md:p-8 flex items-center">
+                            <p className="text-[15px] font-bold text-white">{row.new}</p>
+                          </div>
+                        </div>
                       ))}
-                    </ul>
-                  </div>
+                    </div>
+                  </SlideInLeft>
+                </div>
+              </section>
 
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-900/20 border border-red-500/30 text-xs font-bold text-red-400">
-                    <Clock className="w-3.5 h-3.5" />
-                    3 créneaux restants cette semaine
+              {/* 5. SIMULATEUR ROI IA */}
+              {/* === AI ROI SIMULATOR (RESTORED) START === */}
+              <section id="roi" className="py-24 bg-transparent border-y border-white/10 px-6 relative z-10">
+                <div className="max-w-6xl mx-auto">
+                  <FadeInUp className="text-center mb-16">
+                    <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-6">Calculez votre ROI en temps réel.</h2>
+                    <p className="text-lg text-gray-400 font-medium max-w-2xl mx-auto">Notre intelligence artificielle analyse votre cas d'usage et génère instantanément l'architecture cible et l'impact estimé.</p>
+                  </FadeInUp>
+
+                  <FadeInUp className="bg-[#0a0a0a] rounded-[32px] border border-white/10 shadow-2xl p-6 md:p-10" delay={0.2}>
+                    <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
+
+                      {/* Form Elements */}
+                      <div className="space-y-8">
+                        {/* Visual Stepper */}
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-zinc-300 text-white flex items-center justify-center font-bold text-sm">1</div>
+                          <div className="h-px bg-gray-200 flex-1"></div>
+                          <div className="w-8 h-8 rounded-full bg-white/10 text-gray-400 border border-white/10 flex items-center justify-center font-bold text-sm">2</div>
+                          <div className="h-px bg-gray-200 flex-1"></div>
+                          <div className="w-8 h-8 rounded-full bg-white/10 text-gray-400 border border-white/10 flex items-center justify-center font-bold text-sm">3</div>
+                        </div>
+
+                        <div>
+                          <h3 className="text-xl font-bold tracking-tight text-white mb-6">Paramétrez votre environnement</h3>
+                          <div className="grid grid-cols-2 gap-4 mb-6">
+                            <div>
+                              <label className="block text-sm font-semibold text-white mb-2">Plateforme</label>
+                              <select
+                                value={platform}
+                                onChange={(e) => setPlatform(e.target.value)}
+                                className="w-full bg-[#030303] border border-white/10 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-300 focus:border-zinc-300 transition-all font-medium text-white"
+                              >
+                                <option>Shopify</option>
+                                <option>WooCommerce</option>
+                                <option>Prestashop</option>
+                                <option>Autre</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-sm font-semibold text-white mb-2">Objectif principal</label>
+                              <select
+                                value={objective}
+                                onChange={(e) => setObjective(e.target.value)}
+                                className="w-full bg-[#030303] border border-white/10 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-300 focus:border-zinc-300 transition-all font-medium text-white"
+                              >
+                                <option>Conversion</option>
+                                <option>Support Client</option>
+                                <option>Opérations</option>
+                                <option>Acquisition</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-semibold text-white mb-2">Problème ou goulot d'étranglement</label>
+                            <textarea
+                              value={aiInput}
+                              onChange={(e) => setAiInput(e.target.value)}
+                              placeholder="Ex: Mon équipe perd du temps à mettre à jour les statuts de commande dans notre ERP..."
+                              className="w-full h-32 bg-[#030303] border border-white/10 rounded-xl py-4 px-4 outline-none focus:ring-2 focus:ring-zinc-300 focus:border-zinc-300 transition-all font-medium text-white resize-none leading-relaxed"
+                            />
+                          </div>
+                        </div>
+
+                        <ButtonColorful
+                          onClick={handleOpenModal}
+                          disabled={aiLoading || !aiInput.trim()}
+                          className="w-full flex items-center justify-center gap-2"
+                        >
+                          {aiLoading ? (
+                            <><svg className="animate-spin h-5 w-5 text-zinc-600" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Génération de l'architecture...</>
+                          ) : (
+                            <><Bot className="w-5 h-5 group-hover:scale-110 transition-transform" /> Analyser mon flux avec l'IA</>
+                          )}
+                        </ButtonColorful>
+                        {aiError && <p className="text-red-500 text-sm mt-3 flex items-center gap-2 font-semibold"><AlertCircle className="w-4 h-4" />{aiError}</p>}
+                      </div>
+
+                      {/* Result Block */}
+                      <div className="h-full min-h-[350px]">
+                        {!aiResult && !aiLoading ? (
+                          <div className="h-full bg-white/5 border border-white/10 border-dashed rounded-2xl p-10 flex flex-col items-center justify-center text-center">
+                            <div className="w-16 h-16 rounded-2xl bg-[#0a0a0a] border border-white/5 shadow-sm flex items-center justify-center mb-6">
+                              <Database className="w-8 h-8 text-gray-400" />
+                            </div>
+                            <p className="text-white font-bold text-lg mb-2">Prêt pour l'analyse</p>
+                            <p className="text-gray-400 font-medium max-w-xs">Remplissez les informations à gauche pour découvrir votre plan d'action.</p>
+                          </div>
+                        ) : aiLoading ? (
+                          <div className="h-full bg-zinc-800/30 border border-zinc-400/20 rounded-2xl p-10 flex flex-col items-center justify-center text-center relative overflow-hidden">
+                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                            <Cpu className="w-16 h-16 text-zinc-300 mb-6 animate-[bounce_2s_infinite]" />
+                            <p className="text-white font-bold text-lg relative z-10 mb-2">Modélisation en cours</p>
+                            <p className="text-zinc-400 font-medium max-w-xs relative z-10">Gemini analyse vos goulots d'étranglement pour concevoir le flux optimal...</p>
+                          </div>
+                        ) : aiResult ? (
+                          <div className="h-full bg-[#030303] border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col animate-fade-in-up shadow-inner relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-zinc-400/10 blur-3xl rounded-full pointer-events-none"></div>
+
+                            <div className="flex items-center gap-2 mb-8">
+                              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                              <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Audit Généré</span>
+                            </div>
+
+                            <div className="mb-6 relative z-10">
+                              <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-2">Diagnostic</h4>
+                              <p className="text-white font-bold text-lg leading-snug">{aiResult.diagnosis}</p>
+                            </div>
+
+                            <div className="mb-8 relative z-10">
+                              <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-2"><Zap className="w-3.5 h-3.5 text-amber-500" /> Architecture Recommandée</h4>
+                              <div className="bg-[#0a0a0a] border border-white/10 p-5 rounded-xl shadow-sm">
+                                <p className="text-gray-400 text-sm font-medium leading-relaxed">{aiResult.solution}</p>
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 mt-auto relative z-10">
+                              <div className="bg-emerald-900/20 border border-emerald-500/20 rounded-xl p-4 transition-transform hover:scale-105 duration-300">
+                                <p className="text-[10px] font-bold text-emerald-400 uppercase mb-2">Gain de temps estimé</p>
+                                <p className="text-emerald-300 font-bold text-2xl tracking-tighter">{aiResult.timeSaved}</p>
+                              </div>
+                              <div className="bg-zinc-800/20 border border-zinc-400/20 rounded-xl p-4 transition-transform hover:scale-105 duration-300">
+                                <p className="text-[10px] font-bold text-zinc-300 uppercase mb-2">Impact ROI</p>
+                                <p className="text-zinc-400 font-bold text-2xl tracking-tighter">{aiResult.revenueImpact}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </FadeInUp>
+                </div>
+              </section>
+              {/* === AI ROI SIMULATOR (RESTORED) END === */}
+
+              {/* 7. FAQ */}
+              <section id="faq" className="py-24 bg-transparent px-6 relative z-10">
+                <div className="max-w-3xl mx-auto">
+                  <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-6">Questions fréquentes.</h2>
+                  </div>
+                  <div className="space-y-4">
+                    {[
+                      { q: "Est-ce que je dois savoir coder pour utiliser Actero ?", a: "Absolument pas. Actero est une plateforme 'Done-for-you' en arrière-plan. Vous validez simplement les recommandations de notre IA depuis votre interface, et nos ingénieurs (ou nos scripts) s'occupent du déploiement technique." },
+                      { q: "Combien de temps prend l'intégration avec ma boutique ?", a: "Moins de 5 minutes. Une fois votre compte créé, il suffit d'accorder les permissions Shopify/Klaviyo. Le premier audit de vos flux prend environ 24 heures." },
+                      { q: "Et si ça casse mon site existant ?", a: "Impossible. Nous opérons en aval via API. Nos automatisations ne modifient pas le code frontal de votre site (Liquid/React), mais optimisent le traitement des données dans vos outils marketing et logistiques." },
+                      { q: "Puis-je annuler à tout moment ?", a: "Oui, nos plans Starter et Growth sont sans engagement. Vous pouvez annuler d'un simple clic depuis vos paramètres." }
+                    ].map((faq, i) => (
+                      <div key={i} className="border border-white/10 rounded-2xl bg-[#030303] overflow-hidden transition-all duration-300">
+                        <button
+                          onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
+                          className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
+                        >
+                          <span className="font-bold text-white text-lg">{faq.q}</span>
+                          <div className={`w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 transition-transform duration-300 ${openFaqIndex === i ? 'bg-zinc-300 border-zinc-300 text-white rotate-180' : 'bg-[#0a0a0a] border-white/10 text-gray-400'}`}>
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                          </div>
+                        </button>
+                        <div className={`px-6 overflow-hidden transition-all duration-500 ease-in-out ${openFaqIndex === i ? 'max-h-96 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}>
+                          <p className="text-gray-400 font-medium leading-relaxed">{faq.a}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
+              </section>
 
-                {/* Right Calendly */}
-                <div className="relative">
-                  <div className="absolute inset-0 bg-zinc-400/5 blur-3xl transform scale-110 rounded-full"></div>
-                  <div className="bg-[#0a0a0a] rounded-[32px] border border-white/10 shadow-2xl relative overflow-hidden h-[700px] flex justify-center w-full">
-                    <iframe
-                      src="https://calendly.com/jc6pablo2/30min?embed_domain=actero.io&embed_type=Inline"
-                      width="100%"
-                      height="100%"
-                      frameBorder="0"
-                      title="Calendly Scheduling"
-                      className="bg-[#0a0a0a] absolute inset-0 w-full h-full"
-                    ></iframe>
+              {/* 9. APPEL STRATEGIQUE (CALENDLY) */}
+              <section id="calendly" className="py-24 bg-transparent px-6 relative overflow-hidden border-t border-white/10 z-10">
+                <div className="max-w-5xl mx-auto">
+                  <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+                    {/* Left Context */}
+                    <div className="space-y-10">
+                      <div>
+                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6 leading-[1.1]">Audit stratégique offert.</h2>
+                        <p className="text-xl text-gray-400 font-medium leading-relaxed">15 minutes pour identifier précisément où vous perdez de la marge, sans aucun engagement.</p>
+                      </div>
+
+                      <div className="bg-[#0a0a0a] rounded-[24px] border border-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] p-8">
+                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-6">Pendant cet appel vous recevrez :</p>
+                        <ul className="space-y-4">
+                          {[
+                            "Estimation ROI personnalisée",
+                            "3 workflows prioritaires à activer",
+                            "Plan d'architecture technique recommandé",
+                            "Projection de croissance sur 90 jours"
+                          ].map((item, i) => (
+                            <li key={i} className="flex items-center gap-3">
+                              <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 flex-shrink-0"><Zap className="w-3 h-3" /></div>
+                              <span className="text-gray-300 font-medium">{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-900/20 border border-red-500/30 text-xs font-bold text-red-400">
+                        <Clock className="w-3.5 h-3.5" />
+                        3 créneaux restants cette semaine
+                      </div>
+                    </div>
+
+                    {/* Right Calendly */}
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-zinc-400/5 blur-3xl transform scale-110 rounded-full"></div>
+                      <div className="bg-[#0a0a0a] rounded-[32px] border border-white/10 shadow-2xl relative overflow-hidden h-[700px] flex justify-center w-full">
+                        <iframe
+                          src="https://calendly.com/jc6pablo2/30min?embed_domain=actero.io&embed_type=Inline"
+                          width="100%"
+                          height="100%"
+                          frameBorder="0"
+                          title="Calendly Scheduling"
+                          className="bg-[#0a0a0a] absolute inset-0 w-full h-full"
+                        ></iframe>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
+              </section>
 
-              </div>
-            </div>
-          </section>
+            </div> {/* Close relative z-10 w-full content wrapper */}
+          </div> {/* Close relative w-full z-10 dotted surface wrapper */}
         </main>
 
         {/* STICKY CTA */}
