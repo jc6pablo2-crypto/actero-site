@@ -2889,9 +2889,9 @@ const LandingPage = ({ onNavigate }) => {
             </div>
 
             <div className="flex flex-wrap justify-center gap-8 text-sm font-bold text-gray-400">
-              <button className="hover:text-white transition-colors">Contact</button>
-              <button className="hover:text-white transition-colors">Mentions légales</button>
-              <button className="hover:text-white transition-colors">Confidentialité</button>
+              <button onClick={() => alert("Page à venir prochainement !")} className="hover:text-white transition-colors">Contact</button>
+              <button onClick={() => alert("Page à venir prochainement !")} className="hover:text-white transition-colors">Mentions légales</button>
+              <button onClick={() => alert("Page à venir prochainement !")} className="hover:text-white transition-colors">Confidentialité</button>
             </div>
 
             <div className="text-center md:text-right">

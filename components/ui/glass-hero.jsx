@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Play, Mic, ArrowUp } from 'lucide-react';
 import { FadeInUp, ScaleIn } from './scroll-animations';
@@ -11,6 +11,56 @@ export const GlassHero = ({ onNavigate }) => {
     const [pendingPrompt, setPendingPrompt] = useState('');
     const [messages, setMessages] = useState([]);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const fileInputRef = useRef(null);
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setInputValue(prev => prev + (prev ? "\n" : "") + `[Fichier joint : ${file.name}]`);
+            // Reset input so the same file can be selected again if removed
+            e.target.value = null;
+        }
+    };
+
+    const toggleRecording = () => {
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRec) {
+            alert("Désolé, votre navigateur ne supporte pas la reconnaissance vocale.");
+            return;
+        }
+
+        // Si on est déjà en train d'enregistrer, on annule (le navigateur gère souvent l'arrêt auto)
+        if (isRecording) {
+            setIsRecording(false);
+            return;
+        }
+
+        const recognition = new SpeechRec();
+        recognition.lang = 'fr-FR';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = () => {
+            setIsRecording(true);
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            setInputValue(prev => prev + (prev ? " " : "") + transcript);
+        };
+
+        recognition.onerror = (event) => {
+            console.error("Erreur micro:", event.error);
+            setIsRecording(false);
+        };
+
+        recognition.onend = () => {
+            setIsRecording(false);
+        };
+
+        recognition.start();
+    };
 
     const handleMockInteraction = (promptTextOrEvent) => {
         let text = '';
@@ -133,10 +183,7 @@ export const GlassHero = ({ onNavigate }) => {
                         Réserver un audit
                     </ButtonColorful>
                     <button
-                        onClick={() => {
-                            const el = document.getElementById('calendly');
-                            if (el) el.scrollIntoView({ behavior: 'smooth' });
-                        }}
+                        onClick={() => alert("Vidéo de présentation à venir prochainement !")}
                         className="bg-white/10 backdrop-blur-md border border-white/10 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-white/20 hover:scale-105 transition-all duration-300 group"
                     >
                         <Play className="w-4 h-4 text-white fill-white group-hover:scale-110 transition-transform" />
@@ -243,14 +290,22 @@ export const GlassHero = ({ onNavigate }) => {
                                 ></textarea>
                                 <div className="flex justify-between items-center mt-2 border-t border-white/5 pt-3">
                                     <div className="flex items-center gap-3 text-gray-500">
-                                        <button className="hover:text-white transition-colors" title="Joindre un fichier"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg></button>
-                                        <button className="hover:text-white transition-colors" title="Ajouter du contexte"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg></button>
-                                        <button className="hover:text-white transition-colors" title="Exécuter"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></button>
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            onChange={handleFileChange}
+                                            className="hidden"
+                                        />
+                                        <button onClick={() => fileInputRef.current?.click()} className="hover:text-white transition-colors" title="Joindre un fichier"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg></button>
+                                        <button onClick={() => alert("Intégration du contexte base de connaissances à venir.")} className="hover:text-white transition-colors" title="Ajouter du contexte"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg></button>
+                                        <button onClick={() => alert("Exécution du code en bac à sable à venir.")} className="hover:text-white transition-colors" title="Exécuter"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></button>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <button
                                             disabled={isGenerating}
-                                            className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
+                                            onClick={toggleRecording}
+                                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${isRecording ? 'bg-red-500/20 text-red-500 animate-pulse' : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10'}`}
+                                            title="Dicter à la voix"
                                         >
                                             <Mic className="w-4 h-4" />
                                         </button>
