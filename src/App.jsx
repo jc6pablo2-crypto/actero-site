@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
-import { motion, useInView as useFmInView, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion, useInView as useFmInView, useMotionValue, useTransform, animate, AnimatePresence } from 'framer-motion';
 import {
   ChevronRight, Play, UserX, Database, TrendingDown, ArrowRight, Activity,
   Clock, DollarSign, CheckCircle2, Cpu, BrainCircuit, Server, CreditCard,
@@ -178,7 +178,259 @@ const SectionHeader = ({ title, description, icon: Icon, action }) => (
 const SkeletonRow = ({ height = "h-4", width = "w-full", className = "" }) => (
   <div className={`${height} ${width} bg-white/10 rounded-md animate-pulse ${className}`}></div>
 );
+
+// --- PREMIUM DASHBOARD WIDGETS ---
+
+const LiveLogFeed = () => {
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {
+    const templates = [
+      { text: "Webhook Shopify réceptionné", icon: "🌐", color: "text-blue-400" },
+      { text: "Analyse IA terminée: Anomalie détectée", icon: "🧠", color: "text-amber-400" },
+      { text: "Correction envoyée à Klaviyo", icon: "✉️", color: "text-purple-400" },
+      { text: "Synchronisation CRM réussie", icon: "✅", color: "text-emerald-400" },
+      { text: "Nouvelle commande #4092 analysée", icon: "🛒", color: "text-zinc-300" },
+      { text: "Lead #89 scorer par Actero AI", icon: "⚡", color: "text-indigo-400" },
+      { text: "Workflow 'Panier Abandonné' déclenché", icon: "🔄", color: "text-orange-400" }
+    ];
+
+    let idCounter = 0;
+
+    // Initialize with some logs
+    setLogs(Array(4).fill(null).map((_, i) => ({
+      id: idCounter++,
+      ...templates[Math.floor(Math.random() * templates.length)],
+      time: new Date(Date.now() - (4 - i) * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    })));
+
+    const interval = setInterval(() => {
+      const template = templates[Math.floor(Math.random() * templates.length)];
+      setLogs(prev => {
+        const newLogs = [{
+          id: idCounter++,
+          ...template,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+        }, ...prev];
+        return newLogs.slice(0, 6); // Keep last 6
+      });
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="bg-[#0a0a0a] rounded-2xl border border-white/10 p-6 shadow-sm overflow-hidden flex flex-col h-full">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+          Flux en direct <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        </h3>
+        <Badge variant="zinc">Temps Réel</Badge>
+      </div>
+
+      <div className="flex-1 relative">
+        {/* Fading bottom edge */}
+        <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#0a0a0a] to-transparent z-10"></div>
+        <div className="space-y-3">
+          <AnimatePresence initial={false}>
+            {logs.map(log => (
+              <motion.div
+                key={log.id}
+                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="flex items-center gap-3 p-3 bg-white/5 border border-white/5 rounded-xl text-sm"
+              >
+                <div className="w-8 h-8 rounded-lg bg-black/50 flex items-center justify-center flex-shrink-0 border border-white/5 shadow-inner">
+                  <span>{log.icon}</span>
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <p className={`font-semibold truncate ${log.color}`}>{log.text}</p>
+                </div>
+                <span className="text-xs text-gray-500 font-mono flex-shrink-0">{log.time}</span>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ROIGlowChart = () => {
+  // Simulated chart path drawing an upward curve
+  return (
+    <div className="bg-[#0a0a0a] rounded-2xl border border-white/10 p-6 shadow-sm flex flex-col h-full relative overflow-hidden group">
+      <div className="absolute top-[-50%] right-[-10%] w-[300px] h-[300px] bg-emerald-500/10 blur-[100px] rounded-full group-hover:bg-emerald-500/20 transition-colors duration-700 pointer-events-none"></div>
+
+      <div className="flex items-center justify-between mb-8 relative z-10">
+        <div>
+          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">Croissance du ROI</h3>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-bold text-white tracking-tighter">+24%</span>
+            <span className="text-sm font-bold text-emerald-500 flex items-center"><ArrowUpRight className="w-4 h-4" /> ce mois</span>
+          </div>
+        </div>
+        <div className="p-3 bg-white/5 rounded-xl border border-white/5">
+          <DollarSign className="w-5 h-5 text-emerald-400" />
+        </div>
+      </div>
+
+      <div className="flex-1 relative w-full min-h-[160px] flex items-end">
+        <svg viewBox="0 0 400 120" className="w-full h-full preserve-3d overflow-visible">
+          <defs>
+            <linearGradient id="glowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="rgba(16, 185, 129, 0.4)" />
+              <stop offset="100%" stopColor="rgba(16, 185, 129, 0)" />
+            </linearGradient>
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
+          {/* Grid lines */}
+          <line x1="0" y1="30" x2="400" y2="30" stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 4" />
+          <line x1="0" y1="70" x2="400" y2="70" stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 4" />
+          <line x1="0" y1="110" x2="400" y2="110" stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 4" />
+
+          {/* Fill Area */}
+          <motion.path
+            d="M 0 110 Q 50 100, 100 80 T 200 60 T 300 30 T 400 10 L 400 120 L 0 120 Z"
+            fill="url(#glowGradient)"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.5, delay: 0.5 }}
+          />
+
+          {/* Stroke Line */}
+          <motion.path
+            d="M 0 110 Q 50 100, 100 80 T 200 60 T 300 30 T 400 10"
+            fill="none"
+            stroke="#10b981"
+            strokeWidth="3"
+            filter="url(#glow)"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, ease: "easeInOut" }}
+          />
+
+          {/* Dots */}
+          {[
+            { cx: 0, cy: 110 }, { cx: 100, cy: 80 }, { cx: 200, cy: 60 }, { cx: 300, cy: 30 }, { cx: 400, cy: 10 }
+          ].map((pt, i) => (
+            <motion.circle
+              key={i}
+              cx={pt.cx}
+              cy={pt.cy}
+              r="4"
+              fill="#0a0a0a"
+              stroke="#10b981"
+              strokeWidth="2"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 1.5 + (i * 0.1), type: "spring" }}
+            />
+          ))}
+        </svg>
+      </div>
+    </div>
+  );
+};
+
 // === DASHBOARD V2 DESIGN END ===
+
+const MilestoneBadge = ({ hoursSaved }) => {
+  if (!hoursSaved || hoursSaved < 100) return null;
+
+  return (
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-2xl p-6 mb-8 flex items-center justify-between"
+    >
+      <div className="flex items-center gap-4">
+        <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.4)]">
+          <Sparkles className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h3 className="text-lg font-bold text-amber-500">Jalon Atteint 🎉</h3>
+          <p className="text-zinc-400 font-medium">Félicitations ! Vous avez dépassé les {Math.floor(hoursSaved / 100) * 100} heures gagnées grâce à Actero AI.</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const InfrastructureNodeMap = () => {
+  return (
+    <div className="bg-[#0a0a0a] rounded-3xl border border-white/10 p-8 shadow-sm relative overflow-hidden h-[400px] flex items-center justify-center">
+      {/* Background grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+
+      {/* Animated Pulses running horizontally */}
+      <motion.div
+        animate={{ x: [0, 600] }}
+        transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
+        className="absolute top-[40%] left-[-100px] w-20 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent blur-sm"
+      ></motion.div>
+      <motion.div
+        animate={{ x: [0, 600] }}
+        transition={{ repeat: Infinity, duration: 3.5, ease: "linear", delay: 1 }}
+        className="absolute top-[60%] left-[-100px] w-20 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent blur-sm"
+      ></motion.div>
+
+      {/* Nodes */}
+      <div className="relative z-10 flex items-center gap-12 lg:gap-24 w-full justify-center">
+
+        {/* Source Node */}
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group">
+            <div className="absolute inset-0 bg-white/5 blur-xl group-hover:bg-white/10 transition-colors rounded-2xl"></div>
+            <ShoppingCart className="w-8 h-8 text-indigo-400" />
+          </div>
+          <span className="text-xs font-bold text-gray-400 tracking-widest uppercase">Shopify</span>
+        </div>
+
+        {/* Brain Node (Actero) */}
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-20 h-20 bg-zinc-900 border border-emerald-500/30 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.1)] relative">
+            <div className="absolute inset-[-10px] border border-emerald-500/20 rounded-full animate-ping [animation-duration:3s]"></div>
+            <BrainCircuit className="w-10 h-10 text-emerald-400" />
+          </div>
+          <span className="text-xs font-bold text-emerald-500 tracking-widest uppercase shadow-emerald-500/50">Actero OS</span>
+        </div>
+
+        {/* Dest Nodes */}
+        <div className="flex flex-col items-center gap-8">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group">
+              <Mail className="w-8 h-8 text-amber-400" />
+            </div>
+            <span className="text-xs font-bold text-gray-400 tracking-widest uppercase">Klaviyo</span>
+          </div>
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group">
+              <Database className="w-8 h-8 text-blue-400" />
+            </div>
+            <span className="text-xs font-bold text-gray-400 tracking-widest uppercase">Make</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Visual SVG Lines */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
+        {/* Left to Center */}
+        <path d="M 35% 50% L 45% 50%" stroke="rgba(255,255,255,0.1)" strokeWidth="2" strokeDasharray="4 4" fill="none" />
+        {/* Center to Top Right */}
+        <path d="M 55% 50% L 65% 35%" stroke="rgba(255,255,255,0.1)" strokeWidth="2" strokeDasharray="4 4" fill="none" />
+        {/* Center to Bottom Right */}
+        <path d="M 55% 50% L 65% 65%" stroke="rgba(255,255,255,0.1)" strokeWidth="2" strokeDasharray="4 4" fill="none" />
+      </svg>
+    </div>
+  );
+};
 
 // ==========================================
 // 1. PAGE DE CONNEXION (LOGIN)
@@ -534,6 +786,188 @@ const AdminOnboardingView = () => {
 // ==========================================
 // 2. DASHBOARD ADMIN
 // ==========================================
+
+const AdminActivityHeatmap = () => {
+  // Generate 30 days of mock data
+  const days = Array.from({ length: 30 }, (_, i) => {
+    const isWeekend = i % 7 === 0 || i % 7 === 6;
+    const intensity = isWeekend ? Math.floor(Math.random() * 2) : Math.floor(Math.random() * 5); // 0-4
+    return { id: i, intensity };
+  });
+
+  const getColor = (intensity) => {
+    switch (intensity) {
+      case 0: return 'bg-white/5 border-white/5';
+      case 1: return 'bg-emerald-900/40 border-emerald-800/50';
+      case 2: return 'bg-emerald-700/60 border-emerald-600/50';
+      case 3: return 'bg-emerald-500/80 border-emerald-400/50';
+      case 4: return 'bg-emerald-400 border-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.4)]';
+      default: return 'bg-white/5 border-white/5';
+    }
+  };
+
+  return (
+    <div className="bg-[#0a0a0a] rounded-2xl border border-white/10 p-6 shadow-sm mt-6">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">Activité Globale</h3>
+          <p className="text-xs text-zinc-500 mt-1">Intensité d'exécution des workflows par les clients (30 derniers jours)</p>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-medium">
+          Moins <div className="flex gap-1">
+            {[0, 1, 2, 3, 4].map(v => <div key={v} className={`w-3 h-3 rounded-sm border ${getColor(v)}`}></div>)}
+          </div> Plus
+        </div>
+      </div>
+      <div className="flex gap-2 justify-between items-end">
+        {days.map(day => (
+          <motion.div
+            key={day.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: day.id * 0.02 }}
+            className={`flex-1 rounded-sm border transition-colors hover:ring-2 ring-emerald-400/50 aspect-square ${getColor(day.intensity)}`}
+            title={`Jour ${day.id}: Activité niveau ${day.intensity}`}
+          ></motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const AdminKanbanBoard = ({ requests }) => {
+  const columns = [
+    { id: 'en_attente', title: 'À qualifier', statusFilter: ['en_attente', 'nouveau', null, ''], color: 'border-amber-500/30 bg-amber-500/5', badge: 'bg-amber-100 text-amber-700' },
+    { id: 'en_cours', title: 'Architecture en cours', statusFilter: ['en_cours', 'analyse'], color: 'border-blue-500/30 bg-blue-500/5', badge: 'bg-blue-100 text-blue-700' },
+    { id: 'termine', title: 'Déployé', statusFilter: ['termine', 'valide', 'deploye'], color: 'border-emerald-500/30 bg-emerald-500/5', badge: 'bg-emerald-100 text-emerald-700' },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+      {columns.map(col => {
+        const columnTasks = requests.filter(r => col.statusFilter.includes(r.status?.toLowerCase() || ''));
+        return (
+          <div key={col.id} className={`rounded-3xl border border-white/5 bg-[#0a0a0a]/50 p-4 flex flex-col gap-4 shadow-inner min-h-[60vh]`}>
+            <div className="flex items-center justify-between mb-2 px-2">
+              <h3 className="font-bold text-white text-sm tracking-widest uppercase">{col.title}</h3>
+              <span className="bg-white/10 text-zinc-400 px-2.5 py-0.5 rounded-full text-xs font-bold">{columnTasks.length}</span>
+            </div>
+            {columnTasks.map(req => (
+              <motion.div
+                layoutId={req.id}
+                key={req.id}
+                className={`bg-[#111] border ${col.color} p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow group cursor-pointer`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider ${col.badge}`}>{req.status || 'Nouveau'}</span>
+                  {req.priority === 'high' && <span className="text-red-500 bg-red-500/10 px-1.5 py-0.5 rounded text-[10px] font-bold tracking-widest uppercase">Prio</span>}
+                </div>
+                <h4 className="font-bold text-white text-base leading-tight mb-2 group-hover:text-emerald-400 transition-colors">{req.title || 'Projet IA'}</h4>
+                <p className="text-xs text-zinc-500 font-medium line-clamp-2 mb-4">{req.description}</p>
+                <div className="flex items-center justify-between border-t border-white/5 pt-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded bg-white/10 flex items-center justify-center text-[10px] font-bold text-white uppercase">{req.clients?.brand_name?.charAt(0) || '?'}</div>
+                    <span className="text-xs font-bold text-zinc-400 truncate max-w-[100px]">{req.clients?.brand_name || 'Client Inconnu'}</span>
+                  </div>
+                  <span className="text-[10px] text-zinc-600 font-mono">{new Date(req.created_at).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' })}</span>
+                </div>
+              </motion.div>
+            ))}
+            {columnTasks.length === 0 && (
+              <div className="text-center p-8 border border-white/5 border-dashed rounded-2xl text-zinc-600 text-sm font-medium">Vide</div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const CommandKModal = ({ isOpen, onClose, clients, setActiveTab }) => {
+  const [search, setSearch] = useState('');
+
+  // Close on Escape
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  const filteredClients = clients.filter(c =>
+    c.brand_name?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[20vh] px-4">
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: -20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: -20 }}
+        className="w-full max-w-2xl bg-[#111] border border-white/10 rounded-2xl shadow-2xl relative overflow-hidden"
+      >
+        <div className="flex items-center px-4 py-3 border-b border-white/10 relative">
+          <Search className="w-5 h-5 text-zinc-500 absolute left-4" />
+          <input
+            autoFocus
+            type="text"
+            placeholder="Rechercher un client, une commande, une page..."
+            className="w-full bg-transparent border-none outline-none text-white pl-10 py-2 placeholder:text-zinc-600 font-medium"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          <div className="flex items-center gap-1.5 ml-4">
+            <kbd className="bg-white/10 text-zinc-400 text-xs px-2 py-1 rounded font-mono font-bold tracking-widest leading-none">ESC</kbd>
+          </div>
+        </div>
+
+        <div className="max-h-[60vh] overflow-y-auto p-2">
+          {search === '' && (
+            <div className="mb-4">
+              <div className="text-xs font-bold text-zinc-600 uppercase tracking-widest px-3 py-2">Raccourcis Rapides</div>
+              <button onClick={() => { setActiveTab('overview'); onClose(); }} className="w-full flex items-center justify-between px-3 py-3 hover:bg-white/5 rounded-xl transition-colors text-left group">
+                <div className="flex items-center gap-3">
+                  <LayoutDashboard className="w-5 h-5 text-zinc-400 group-hover:text-white" />
+                  <span className="text-zinc-300 group-hover:text-white font-medium">Aller à Vue Globale</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-white opacity-0 group-hover:opacity-100 transition-all" />
+              </button>
+              <button onClick={() => { setActiveTab('requests'); onClose(); }} className="w-full flex items-center justify-between px-3 py-3 hover:bg-white/5 rounded-xl transition-colors text-left group">
+                <div className="flex items-center gap-3">
+                  <Sparkles className="w-5 h-5 text-amber-400 group-hover:text-amber-300" />
+                  <span className="text-zinc-300 group-hover:text-white font-medium">Aller aux Demandes IA</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-white opacity-0 group-hover:opacity-100 transition-all" />
+              </button>
+            </div>
+          )}
+
+          <div className="text-xs font-bold text-zinc-600 uppercase tracking-widest px-3 py-2">Clients</div>
+          {filteredClients.length > 0 ? (
+            filteredClients.map(client => (
+              <button key={client.id} onClick={() => { setActiveTab('clients'); onClose(); }} className="w-full flex items-center justify-between px-3 py-3 hover:bg-white/5 rounded-xl transition-colors text-left group">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded bg-white/5 flex items-center justify-center border border-white/5 font-bold text-white text-xs">
+                    {client.brand_name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="text-zinc-300 group-hover:text-white font-medium">{client.brand_name}</span>
+                </div>
+                <kbd className="bg-white/5 border border-white/10 text-zinc-500 text-[10px] px-2 py-0.5 rounded font-mono opacity-0 group-hover:opacity-100 transition-all">Aller au dossier</kbd>
+              </button>
+            ))
+          ) : (
+            <div className="px-4 py-8 text-center text-zinc-500 font-medium">Aucun client trouvé pour "{search}"</div>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 const AdminDashboard = ({ onNavigate, onLogout }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -544,6 +978,20 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
   const [leads, setLeads] = useState([]);
   const [dataLoading, setDataLoading] = useState(true);
   const [dataError, setDataError] = useState("");
+  const [isCommandKOpen, setIsCommandKOpen] = useState(false);
+
+  // Command-K Listener
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setIsCommandKOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -672,6 +1120,18 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
         </div>
       )}
 
+      {/* COMMAND-K MODAL */}
+      <AnimatePresence>
+        {isCommandKOpen && (
+          <CommandKModal
+            isOpen={isCommandKOpen}
+            onClose={() => setIsCommandKOpen(false)}
+            clients={clients}
+            setActiveTab={setActiveTab}
+          />
+        )}
+      </AnimatePresence>
+
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <header className="hidden md:flex h-16 bg-[#0a0a0a] border-b border-white/10 items-center px-8 shadow-sm">
           <h1 className="text-xl font-bold text-white capitalize tracking-tight">{activeTab.replace('-', ' ')}</h1>
@@ -695,18 +1155,20 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-[#0a0a0a] p-6 rounded-2xl border border-white/10 shadow-sm hover:shadow-md transition-shadow">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Total Heures Économisées</p>
-                  <p className="text-4xl font-bold text-white font-mono tracking-tighter">4,205 <span className="text-xl font-medium text-gray-400">h</span></p>
+                  <p className="text-4xl font-bold text-white font-mono tracking-tighter"><AnimatedCounter value={4205} /> <span className="text-xl font-medium text-gray-400">h</span></p>
                 </div>
                 <div className="bg-[#0a0a0a] p-6 rounded-2xl border border-white/10 shadow-sm hover:shadow-md transition-shadow">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Valeur Générée (Globale)</p>
-                  <p className="text-4xl font-bold text-white font-mono tracking-tighter">185,400 <span className="text-xl font-medium text-gray-400">€</span></p>
+                  <p className="text-4xl font-bold text-white font-mono tracking-tighter"><AnimatedCounter value={185400} /> <span className="text-xl font-medium text-gray-400">€</span></p>
                 </div>
                 <div className="bg-[#0a0a0a] p-6 rounded-2xl border border-white/10 shadow-sm relative overflow-hidden hover:shadow-md transition-shadow">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl"></div>
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Taux de succès global</p>
-                  <p className="text-4xl font-bold text-emerald-600 font-mono tracking-tighter">99.8 <span className="text-xl font-medium text-emerald-500">%</span></p>
+                  <p className="text-4xl font-bold text-emerald-600 font-mono tracking-tighter"><AnimatedCounter value={99} />.8 <span className="text-xl font-medium text-emerald-500">%</span></p>
                 </div>
               </div>
+
+              <AdminActivityHeatmap />
             </div>
           )}
 
@@ -855,52 +1317,7 @@ const AdminDashboard = ({ onNavigate, onLogout }) => {
                   <p className="text-gray-400 font-normal">Les projets soumis par vos clients apparaîtront ici.</p>
                 </div>
               ) : (
-                <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-sm overflow-x-auto">
-                  <table className="w-full text-left border-collapse min-w-[1000px]">
-                    <thead>
-                      <tr className="border-b border-white/5 bg-[#030303]">
-                        <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest w-1/4">Projet</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest w-1/5">Client</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest w-1/6">Stack</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest w-1/6">Statut & Priorité</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest w-1/6">Date</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                      {requestsData.map(req => (
-                        <tr key={req.id} className="hover:bg-white/5/50 transition-colors">
-                          <td className="px-6 py-4">
-                            <p className="font-bold text-white mb-1 leading-snug">{req.title || "Projet IA"}</p>
-                            <p className="text-xs text-gray-400 font-normal line-clamp-2" title={req.description}>{req.description}</p>
-                          </td>
-                          <td className="px-6 py-4 text-sm font-bold text-gray-300">
-                            {req.clients?.brand_name || "Client inconnu"}
-                          </td>
-                          <td className="px-6 py-4">
-                            {req.stack ? (
-                              <Badge variant="gray">{req.stack}</Badge>
-                            ) : (
-                              <span className="text-gray-400 font-bold">—</span>
-                            )}
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex flex-col gap-2 items-start">
-                              <span className="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-lg border border-amber-200">{req.status || "En attente"}</span>
-                              {req.priority && <span className="bg-zinc-800 text-zinc-400 text-[10px] font-bold px-2 py-0.5 rounded border border-zinc-600 uppercase tracking-wider">{req.priority}</span>}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-sm font-medium text-gray-400">
-                            {new Date(req.created_at).toLocaleDateString('fr-FR', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric'
-                            })}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <AdminKanbanBoard requests={requestsData} />
               )}
             </div>
           )}
@@ -2020,6 +2437,8 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
                 <p className="text-zinc-500 font-medium text-lg">Synthèse des 30 derniers jours.</p>
               </div>
 
+              {!metricsLoading && metrics && <MilestoneBadge hoursSaved={Math.round(metrics.time_saved_minutes / 60)} />}
+
               {metricsLoading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {[...Array(4)].map((_, i) => (
@@ -2081,6 +2500,18 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
                     color="zinc"
                     subtitleItems={["Actions réussies", "Ce mois-ci"]}
                   />
+                </div>
+              )}
+
+              {/* Advanced Dashboard Widgets */}
+              {!metricsLoading && !metricsError && metrics && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                  <div className="h-[400px]">
+                    <LiveLogFeed />
+                  </div>
+                  <div className="h-[400px]">
+                    <ROIGlowChart />
+                  </div>
                 </div>
               )}
 
@@ -2224,37 +2655,33 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
           {activeTab === 'systems' && (
             <div className="max-w-5xl mx-auto animate-fade-in-up">
               <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">Vos infrastructures actives</h2>
-              {!isSupabaseConfigured ? (
-                <div className="grid md:grid-cols-2 gap-6">
-                  {[
-                    { name: "Récupération Paniers Abandonnés", desc: "Séquence dynamique Shopify -> Klaviyo", status: "Actif", runs: "1,240 exécutions" },
-                    { name: "Support IA Niveau 1", desc: "Analyse des emails SAV et réponse automatique", status: "Actif", runs: "3,102 exécutions" },
-                    { name: "Synchronisation Comptable", desc: "Stripe -> Quickbooks (Quotidien)", status: "Actif", runs: "30 exécutions" },
-                  ].map((sys, idx) => (
-                    <div key={idx} className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-8 shadow-sm relative hover:shadow-md transition-shadow">
-                      <div className="flex justify-between items-start mb-6">
-                        <div className="p-3 bg-white/5 border border-white/5 rounded-xl">
-                          <Database className="w-6 h-6 text-gray-400" />
-                        </div>
-                        <span className="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-lg border border-emerald-200">{sys.status}</span>
+              <div className="mb-12">
+                <InfrastructureNodeMap />
+              </div>
+
+              <h3 className="text-xl font-bold text-white mb-6 tracking-tight">Workflows Déployés</h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  { name: "Récupération Paniers", desc: "Séquence dynamique Shopify -> Klaviyo", status: "Actif", runs: "1,240 exéc." },
+                  { name: "Support IA Niveau 1", desc: "Analyse des emails SAV et réponse", status: "Actif", runs: "3,102 exéc." },
+                  { name: "Synchronisation CRM", desc: "Stripe -> Quickbooks (Quotidien)", status: "Actif", runs: "30 exéc." },
+                ].map((sys, idx) => (
+                  <div key={idx} className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 shadow-sm relative hover:shadow-md hover:border-white/20 transition-all group">
+                    <div className="flex justify-between items-start mb-6">
+                      <div className="p-3 bg-white/5 border border-white/5 rounded-xl group-hover:bg-white/10 transition-colors">
+                        <Database className="w-5 h-5 text-gray-400" />
                       </div>
-                      <h3 className="text-xl font-bold text-white mb-2">{sys.name}</h3>
-                      <p className="text-sm text-zinc-500 font-medium mb-6">{sys.desc}</p>
-                      <div className="pt-4 border-t border-white/5 text-sm font-bold text-zinc-500">
-                        {sys.runs} ce mois
-                      </div>
+                      <span className="bg-emerald-50/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-lg border border-emerald-500/20">{sys.status}</span>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
-                  <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5">
-                    <Database className="w-8 h-8 text-zinc-300" />
+                    <h3 className="text-lg font-bold text-white mb-1">{sys.name}</h3>
+                    <p className="text-sm text-zinc-500 font-medium mb-6 leading-relaxed">{sys.desc}</p>
+                    <div className="pt-4 border-t border-white/5 flex items-center justify-between text-sm">
+                      <span className="font-bold text-zinc-400">{sys.runs}</span>
+                      <span className="text-emerald-500 flex items-center gap-1"><CheckCircle className="w-4 h-4" /> 100% de succès</span>
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Connecteurs et intégrations</h3>
-                  <p className="text-zinc-500 font-medium">L'intégration native de vos systèmes avec Actero OS est en cours de création.</p>
-                </div>
-              )}
+                ))}
+              </div>
             </div>
           )}
 
