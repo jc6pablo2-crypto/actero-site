@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Play, Mic, ArrowUp, Zap } from 'lucide-react';
 import { FadeInUp, ScaleIn } from './scroll-animations';
 import { LeadCaptureModal } from './lead-capture-modal';
@@ -14,6 +14,22 @@ export const GlassHero = ({ onNavigate, onOpenAuditScanner }) => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const fileInputRef = useRef(null);
+
+    const rotatingWords = [
+        "plus d'outils.",
+        "plus d'agences.",
+        "plus de devinettes.",
+        "plus de réunions.",
+        "plus de recrutements."
+    ];
+    const [currentWordIndex, setCurrentWordIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentWordIndex((prev) => (prev + 1) % rotatingWords.length);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -231,29 +247,33 @@ export const GlassHero = ({ onNavigate, onOpenAuditScanner }) => {
                     </div>
                 </FadeInUp>
 
-                {/* Headlines - Animated Word Reveal */}
+                {/* Headlines - Marketer Style Rotating Text */}
                 <FadeInUp delay={0.1} className="text-center max-w-4xl mb-6">
-                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-white mb-6 leading-[1.05]">
-                        {"L'IA qui fait tourner votre business pendant que vous dormez".split(' ').map((word, i) => (
-                            <motion.span
-                                key={i}
-                                initial={{ opacity: 0, filter: 'blur(12px)', y: 10 }}
-                                animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
-                                transition={{ duration: 0.6, delay: 0.3 + i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
-                                className="inline-block mr-[0.3em]"
-                            >
-                                {word}
-                            </motion.span>
-                        ))}
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1] md:leading-[1.1]">
+                        <span className="block mb-2">La croissance e-commerce</span>
+                        <span className="block mb-2 text-white/80">ne passe pas par</span>
+                        <div className="h-[1.4em] relative overflow-hidden flex justify-center items-center mt-2">
+                            <AnimatePresence mode="wait">
+                                <motion.span
+                                    key={currentWordIndex}
+                                    initial={{ y: 50, opacity: 0, filter: 'blur(8px)' }}
+                                    animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                                    exit={{ y: -50, opacity: 0, filter: 'blur(8px)' }}
+                                    transition={{ duration: 0.5, ease: "circOut" }}
+                                    className="absolute text-emerald-400 tracking-tight"
+                                >
+                                    {rotatingWords[currentWordIndex]}
+                                </motion.span>
+                            </AnimatePresence>
+                        </div>
                     </h1>
                     <motion.p
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.7, delay: 1.1, ease: 'easeOut' }}
-                        className="text-lg md:text-xl text-gray-300/80 font-medium max-w-xl mx-auto leading-relaxed"
+                        className="text-lg md:text-xl text-gray-300 font-medium max-w-2xl mx-auto leading-relaxed mt-8"
                     >
-                        Nous concevons et déployons des agents IA <br className="hidden md:block" />
-                        et automatisations sur mesure pour votre entreprise.
+                        Elle passe par une infrastructure connectée. Intégrez l'IA à votre Shopify, votre CRM et votre Support depuis un seul endroit.
                     </motion.p>
                 </FadeInUp>
 
