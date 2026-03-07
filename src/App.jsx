@@ -8,7 +8,7 @@ import {
   LifeBuoy, Search, Filter, MoreVertical, Lock, Mail, AlertCircle, TerminalSquare,
   ArrowUpRight, Download, Sparkles, Bot, Zap, ShoppingCart, MessageSquare,
   Repeat, Target, ShieldCheck, ZapOff, ArrowRightCircle, Copy, RefreshCw,
-  Lightbulb, TrendingUp, XCircle, CheckCircle, BarChart2, UserRoundX, Loader2, UserPlus
+  Lightbulb, TrendingUp, XCircle, CheckCircle, BarChart2, UserRoundX, Loader2, UserPlus, ChevronDown
 } from 'lucide-react';
 
 // --- Configuration Supabase ---
@@ -3037,6 +3037,7 @@ const LandingPage = ({ onNavigate }) => {
   // --- États UI (FAQ & Modals) ---
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [isAuditScannerOpen, setIsAuditScannerOpen] = useState(false);
+  const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
 
   // --- Initialiser Amplitude ---
   useEffect(() => {
@@ -3143,7 +3144,66 @@ const LandingPage = ({ onNavigate }) => {
             </div>
 
             <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-              <button onClick={() => scrollToId('comment-ca-marche')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Produit</button>
+              {/* === MEGA MENU === */}
+              <div
+                className="relative"
+                onMouseEnter={() => setIsMegaMenuOpen(true)}
+                onMouseLeave={() => setIsMegaMenuOpen(false)}
+              >
+                <div className="flex items-center gap-1 cursor-pointer py-4 text-sm font-semibold text-gray-400 hover:text-white transition-colors group">
+                  Produits
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isMegaMenuOpen ? 'rotate-180 text-white' : ''}`} />
+                </div>
+
+                <AnimatePresence>
+                  {isMegaMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[800px] bg-[#0a0a0a]/90 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden p-6 gap-4 grid grid-cols-3"
+                    >
+                      {/* Item 1 */}
+                      <div
+                        onClick={() => { setIsMegaMenuOpen(false); scrollToId('comment-ca-marche'); }}
+                        className="flex border border-white/5 flex-col p-5 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group"
+                      >
+                        <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-4 text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all">
+                          <Bot className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-white font-bold text-lg mb-1">Agents IA</h3>
+                        <p className="text-sm text-gray-400 leading-snug">Vos employés virtuels qui ne dorment jamais.</p>
+                      </div>
+
+                      {/* Item 2 */}
+                      <div
+                        onClick={() => { setIsMegaMenuOpen(false); scrollToId('comment-ca-marche'); }}
+                        className="flex border border-white/5 flex-col p-5 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group"
+                      >
+                        <div className="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center mb-4 text-amber-400 group-hover:scale-110 group-hover:bg-amber-500/20 transition-all">
+                          <Zap className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-white font-bold text-lg mb-1">Automatisations</h3>
+                        <p className="text-sm text-gray-400 leading-snug">Connectez Shopify, votre CRM et vos factures.</p>
+                      </div>
+
+                      {/* Item 3 */}
+                      <button
+                        onClick={() => { setIsMegaMenuOpen(false); setIsAuditScannerOpen(true); }}
+                        className="flex border border-white/5 flex-col p-5 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group text-left"
+                      >
+                        <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center mb-4 text-purple-400 group-hover:scale-110 group-hover:bg-purple-500/20 transition-all">
+                          <Sparkles className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-white font-bold text-lg mb-1">Audit IA</h3>
+                        <p className="text-sm text-gray-400 leading-snug">Analyse gratuite de votre business en temps réel.</p>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              {/* === END MEGA MENU === */}
               <button onClick={() => onNavigate('/cas-client')} className="text-sm font-semibold text-emerald-400/80 hover:text-emerald-400 transition-colors flex items-center gap-1"><Database className="w-3.5 h-3.5" /> Cas Clients</button>
               <button onClick={() => scrollToId('faq')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">FAQ</button>
             </div>
