@@ -3136,94 +3136,98 @@ const LandingPage = ({ onNavigate }) => {
       {/* Content wrapper with relative positioning so it sits above the fixed bg */}
       <div className="relative z-10 w-full">
         {/* NAVBAR */}
-        <nav className="fixed top-0 w-full z-50 bg-[#030303]/70 backdrop-blur-2xl border-b border-white/10/50 shadow-sm transition-all duration-300">
-          <div className="max-w-6xl mx-auto px-6 h-16 md:h-20 flex justify-between items-center">
-            <div className="flex items-center gap-2 cursor-pointer group" onClick={() => window.scrollTo(0, 0)}>
-              <Logo light={true} className="w-7 h-7 text-white group-hover:scale-105 transition-transform" />
-              <span className="font-bold text-xl tracking-tight text-white">Actero</span>
-            </div>
-
-            <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-              {/* === MEGA MENU === */}
-              <div
-                className="relative"
-                onMouseEnter={() => setIsMegaMenuOpen(true)}
-                onMouseLeave={() => setIsMegaMenuOpen(false)}
-              >
-                <div className="flex items-center gap-1 cursor-pointer py-4 text-sm font-semibold text-gray-400 hover:text-white transition-colors group">
-                  Produits
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isMegaMenuOpen ? 'rotate-180 text-white' : ''}`} />
-                </div>
-
-                <AnimatePresence>
-                  {isMegaMenuOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                      transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[850px] bg-[#030303] border border-white/10 rounded-[28px] shadow-2xl p-6 gap-6 grid grid-cols-3"
-                    >
-                      {/* Item 1 */}
-                      <div
-                        onClick={() => { setIsMegaMenuOpen(false); scrollToId('comment-ca-marche'); }}
-                        className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group"
-                      >
-                        <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-                          <Bot className="w-7 h-7" />
-                        </div>
-                        <h3 className="text-white font-semibold text-[19px] mb-2">Agents IA</h3>
-                        <p className="text-[15px] text-gray-400 font-medium leading-relaxed">Vos employés virtuels qui ne dorment jamais.</p>
-                      </div>
-
-                      {/* Item 2 */}
-                      <div
-                        onClick={() => { setIsMegaMenuOpen(false); scrollToId('comment-ca-marche'); }}
-                        className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group"
-                      >
-                        <div className="w-14 h-14 bg-[#141416] rounded-2xl flex items-center justify-center mb-6 text-amber-300 shadow-md border border-white/5 group-hover:scale-105 transition-transform">
-                          <Zap className="w-7 h-7 fill-amber-300" />
-                        </div>
-                        <h3 className="text-white font-semibold text-[19px] mb-2">Automatisations</h3>
-                        <p className="text-[15px] text-gray-400 font-medium leading-relaxed">Connectez Shopify, votre CRM et vos factures.</p>
-                      </div>
-
-                      {/* Item 3 */}
-                      <button
-                        onClick={() => { setIsMegaMenuOpen(false); setIsAuditScannerOpen(true); }}
-                        className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group text-left"
-                      >
-                        <div className="w-14 h-14 bg-[#1e1313] rounded-2xl flex items-center justify-center mb-6 text-orange-400 shadow-md border border-orange-500/10 group-hover:scale-105 transition-transform">
-                          <Sparkles className="w-7 h-7 fill-orange-400" />
-                        </div>
-                        <h3 className="text-white font-semibold text-[19px] mb-2">Audit IA</h3>
-                        <p className="text-[15px] text-gray-400 font-medium leading-relaxed">Analyse gratuite de votre business en temps réel.</p>
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50">
+          <nav className="w-full bg-[#0d0d0d]/70 backdrop-blur-3xl border border-white/10 shadow-2xl rounded-full transition-all duration-300">
+            <div className="px-6 md:px-8 h-14 md:h-[60px] flex justify-between items-center">
+              <div className="flex items-center gap-2 cursor-pointer group" onClick={() => window.scrollTo(0, 0)}>
+                <Logo light={true} className="w-7 h-7 text-white group-hover:scale-105 transition-transform" />
+                <span className="font-bold text-xl tracking-tight text-white">Actero</span>
               </div>
-              {/* === END MEGA MENU === */}
-              <button onClick={() => onNavigate('/cas-client')} className="text-sm font-semibold text-emerald-400/80 hover:text-emerald-400 transition-colors flex items-center gap-1"><Database className="w-3.5 h-3.5" /> Cas Clients</button>
-              <button onClick={() => scrollToId('faq')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">FAQ</button>
-            </div>
 
-            <div className="flex items-center gap-4 md:gap-6">
-              <button
-                onClick={() => onNavigate('/login')}
-                className="hidden md:block text-sm font-semibold text-gray-400 hover:text-white transition-colors"
-              >
-                Connexion
-              </button>
-              <ButtonColorful onClick={() => {
-                trackEvent('Header_CTA_Clicked', { location: 'navbar' });
-                scrollToId('calendly');
-              }}>
-                Demander un audit
-              </ButtonColorful>
+              <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+                {/* === MEGA MENU === */}
+                <div
+                  className="relative"
+                  onMouseEnter={() => setIsMegaMenuOpen(true)}
+                  onMouseLeave={() => setIsMegaMenuOpen(false)}
+                >
+                  <div className="flex items-center gap-1 cursor-pointer py-4 text-sm font-semibold text-gray-400 hover:text-white transition-colors group">
+                    Produits
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isMegaMenuOpen ? 'rotate-180 text-white' : ''}`} />
+                  </div>
+
+                  <AnimatePresence>
+                    {isMegaMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[850px] bg-[#030303] border border-white/10 rounded-[28px] shadow-2xl p-6 gap-6 grid grid-cols-3"
+                      >
+                        {/* Item 1 */}
+                        <div
+                          onClick={() => { setIsMegaMenuOpen(false); scrollToId('comment-ca-marche'); }}
+                          className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group"
+                        >
+                          <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+                            <Bot className="w-7 h-7" />
+                          </div>
+                          <h3 className="text-white font-semibold text-[19px] mb-2">Agents IA</h3>
+                          <p className="text-[15px] text-gray-400 font-medium leading-relaxed">Vos employés virtuels qui ne dorment jamais.</p>
+                        </div>
+
+                        {/* Item 2 */}
+                        <div
+                          onClick={() => { setIsMegaMenuOpen(false); scrollToId('comment-ca-marche'); }}
+                          className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group"
+                        >
+                          <div className="w-14 h-14 bg-[#141416] rounded-2xl flex items-center justify-center mb-6 text-amber-300 shadow-md border border-white/5 group-hover:scale-105 transition-transform">
+                            <Zap className="w-7 h-7 fill-amber-300" />
+                          </div>
+                          <h3 className="text-white font-semibold text-[19px] mb-2">Automatisations</h3>
+                          <p className="text-[15px] text-gray-400 font-medium leading-relaxed">Connectez Shopify, votre CRM et vos factures.</p>
+                        </div>
+
+                        {/* Item 3 */}
+                        <button
+                          onClick={() => { setIsMegaMenuOpen(false); setIsAuditScannerOpen(true); }}
+                          className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group text-left"
+                        >
+                          <div className="w-14 h-14 bg-[#1e1313] rounded-2xl flex items-center justify-center mb-6 text-orange-400 shadow-md border border-orange-500/10 group-hover:scale-105 transition-transform">
+                            <Sparkles className="w-7 h-7 fill-orange-400" />
+                          </div>
+                          <h3 className="text-white font-semibold text-[19px] mb-2">Audit IA</h3>
+                          <p className="text-[15px] text-gray-400 font-medium leading-relaxed">Analyse gratuite de votre business en temps réel.</p>
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+                {/* === END MEGA MENU === */}
+                <button onClick={() => onNavigate('/cas-client')} className="text-sm font-semibold text-emerald-400/80 hover:text-emerald-400 transition-colors flex items-center gap-1"><Database className="w-3.5 h-3.5" /> Cas Clients</button>
+                <button onClick={() => scrollToId('faq')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">FAQ</button>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => onNavigate('/login')}
+                  className="hidden md:block text-sm font-semibold text-gray-400 hover:text-white transition-colors px-2"
+                >
+                  Connexion
+                </button>
+                <div className="scale-90 origin-right">
+                  <ButtonColorful onClick={() => {
+                    trackEvent('Header_CTA_Clicked', { location: 'navbar' });
+                    scrollToId('calendly');
+                  }}>
+                    Demander un audit
+                  </ButtonColorful>
+                </div>
+              </div>
             </div>
-          </div>
-        </nav>
+          </nav>
+        </div>
 
         <main>
           {/* 1. HERO SECTION (New Redesign) */}
