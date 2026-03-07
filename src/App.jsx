@@ -3158,46 +3158,46 @@ const LandingPage = ({ onNavigate }) => {
                 <AnimatePresence>
                   {isMegaMenuOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.98 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-[800px] bg-[#0a0a0a]/90 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden p-6 gap-4 grid grid-cols-3"
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[850px] bg-[#030303] border border-white/10 rounded-[28px] shadow-2xl p-6 gap-6 grid grid-cols-3"
                     >
                       {/* Item 1 */}
                       <div
                         onClick={() => { setIsMegaMenuOpen(false); scrollToId('comment-ca-marche'); }}
-                        className="flex border border-white/5 flex-col p-5 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group"
+                        className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group"
                       >
-                        <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-4 text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500/20 transition-all">
-                          <Bot className="w-6 h-6" />
+                        <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+                          <Bot className="w-7 h-7" />
                         </div>
-                        <h3 className="text-white font-bold text-lg mb-1">Agents IA</h3>
-                        <p className="text-sm text-gray-400 leading-snug">Vos employés virtuels qui ne dorment jamais.</p>
+                        <h3 className="text-white font-semibold text-[19px] mb-2">Agents IA</h3>
+                        <p className="text-[15px] text-gray-400 font-medium leading-relaxed">Vos employés virtuels qui ne dorment jamais.</p>
                       </div>
 
                       {/* Item 2 */}
                       <div
                         onClick={() => { setIsMegaMenuOpen(false); scrollToId('comment-ca-marche'); }}
-                        className="flex border border-white/5 flex-col p-5 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group"
+                        className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group"
                       >
-                        <div className="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center mb-4 text-amber-400 group-hover:scale-110 group-hover:bg-amber-500/20 transition-all">
-                          <Zap className="w-6 h-6" />
+                        <div className="w-14 h-14 bg-[#141416] rounded-2xl flex items-center justify-center mb-6 text-amber-300 shadow-md border border-white/5 group-hover:scale-105 transition-transform">
+                          <Zap className="w-7 h-7 fill-amber-300" />
                         </div>
-                        <h3 className="text-white font-bold text-lg mb-1">Automatisations</h3>
-                        <p className="text-sm text-gray-400 leading-snug">Connectez Shopify, votre CRM et vos factures.</p>
+                        <h3 className="text-white font-semibold text-[19px] mb-2">Automatisations</h3>
+                        <p className="text-[15px] text-gray-400 font-medium leading-relaxed">Connectez Shopify, votre CRM et vos factures.</p>
                       </div>
 
                       {/* Item 3 */}
                       <button
                         onClick={() => { setIsMegaMenuOpen(false); setIsAuditScannerOpen(true); }}
-                        className="flex border border-white/5 flex-col p-5 rounded-xl hover:bg-white/5 transition-colors cursor-pointer group text-left"
+                        className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group text-left"
                       >
-                        <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center mb-4 text-purple-400 group-hover:scale-110 group-hover:bg-purple-500/20 transition-all">
-                          <Sparkles className="w-6 h-6" />
+                        <div className="w-14 h-14 bg-[#1e1313] rounded-2xl flex items-center justify-center mb-6 text-orange-400 shadow-md border border-orange-500/10 group-hover:scale-105 transition-transform">
+                          <Sparkles className="w-7 h-7 fill-orange-400" />
                         </div>
-                        <h3 className="text-white font-bold text-lg mb-1">Audit IA</h3>
-                        <p className="text-sm text-gray-400 leading-snug">Analyse gratuite de votre business en temps réel.</p>
+                        <h3 className="text-white font-semibold text-[19px] mb-2">Audit IA</h3>
+                        <p className="text-[15px] text-gray-400 font-medium leading-relaxed">Analyse gratuite de votre business en temps réel.</p>
                       </button>
                     </motion.div>
                   )}
