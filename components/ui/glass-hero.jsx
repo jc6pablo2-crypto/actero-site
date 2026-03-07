@@ -226,7 +226,7 @@ export const GlassHero = ({ onNavigate }) => {
                 {/* Headlines - Animated Word Reveal */}
                 <FadeInUp delay={0.1} className="text-center max-w-4xl mb-6">
                     <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-white mb-6 leading-[1.05]">
-                        {"L'agence IA qui transforme vos goulots en marges".split(' ').map((word, i) => (
+                        {"L'IA qui fait tourner votre business pendant que vous dormez".split(' ').map((word, i) => (
                             <motion.span
                                 key={i}
                                 initial={{ opacity: 0, filter: 'blur(12px)', y: 10 }}
