@@ -3570,29 +3570,7 @@ const LandingPage = ({ onNavigate }) => {
             </div> {/* Close relative z-10 w-full content wrapper */}
           </div> {/* Close relative w-full z-10 dotted surface wrapper */}
         </main>
-        {/* STICKY CTA */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 z-50 pointer-events-none flex justify-center md:hidden">
-          <div className="bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10/80 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] p-2 rounded-2xl w-full max-w-md pointer-events-auto flex items-center justify-between gap-4">
-            <span className="text-[13px] font-bold text-white ml-2">Prêt à automatiser<br />votre croissance ?</span>
-            <ButtonColorful onClick={() => {
-              trackEvent('StickyFooter_CTA_Clicked', { location: 'mobile_footer' });
-              scrollToId('calendly');
-            }}>
-              Réserver un audit
-            </ButtonColorful>
-          </div>
-        </div>
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-none hidden md:flex">
-          <div className="bg-[#0a0a0a]/95 backdrop-blur-2xl border border-white/10/50 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] rounded-full px-4 py-3 pointer-events-auto flex items-center gap-6 hover:-translate-y-1 transition-transform duration-300">
-            <span className="text-sm font-bold text-white pl-2">Prêt à automatiser votre croissance ?</span>
-            <ButtonColorful onClick={() => {
-              trackEvent('StickyFooter_CTA_Clicked', { location: 'desktop_footer' });
-              scrollToId('calendly');
-            }}>
-              Réserver mon audit stratégique
-            </ButtonColorful>
-          </div>
-        </div>
+
 
         {/* Modal Lead IA */}
         {
@@ -4067,10 +4045,7 @@ const CompanyPage = ({ onNavigate }) => {
     { icon: <BrainCircuit className="w-7 h-7" />, title: "IA pragmatique", desc: "On utilise l'IA là où elle crée de la valeur réelle, pas comme argument marketing." },
   ];
 
-  const team = [
-    { name: "Pablo Priefert", role: "Co-fondateur & CEO", bio: "Ex growth-hacker e-commerce. Obsédé par les systèmes qui scalent sans friction." },
-    { name: "Jean-Charles", role: "Co-fondateur & CTO", bio: "Architecte d'automatisations. Connecte les stacks les plus complexes en un système fluide." },
-  ];
+
 
   return (
     <div className="min-h-screen bg-[#030303] text-white font-sans selection:bg-white/20">
@@ -4176,25 +4151,7 @@ const CompanyPage = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* TEAM */}
-        <div className="max-w-4xl mx-auto mb-32">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Construit par des gens qui l'ont fait.</h2>
-            <p className="text-lg text-gray-400">Des builders, pas des consultants.</p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            {team.map((t, i) => (
-              <div key={i} className="bg-[#0a0a0a] border border-white/[0.08] rounded-3xl p-8 hover:border-white/20 transition-all">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center mb-6 text-3xl font-bold text-white/60">
-                  {t.name.charAt(0)}
-                </div>
-                <h3 className="text-white font-bold text-xl mb-1">{t.name}</h3>
-                <p className="text-emerald-400 font-semibold text-sm mb-4">{t.role}</p>
-                <p className="text-gray-400 font-medium leading-relaxed">{t.bio}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+
 
         {/* CTA */}
         <div className="max-w-4xl mx-auto text-center bg-gradient-to-b from-[#0a0a0a] to-[#030303] border border-white/10 rounded-3xl p-12 md:p-16 relative overflow-hidden">
