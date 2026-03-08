@@ -3205,8 +3205,8 @@ const LandingPage = ({ onNavigate }) => {
                   </AnimatePresence>
                 </div>
                 {/* === END MEGA MENU === */}
-                <button onClick={() => scrollToId('tarifs')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Tarification</button>
-                <button onClick={() => scrollToId('a-propos')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Entreprise</button>
+                <button onClick={() => onNavigate('/tarifs')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Tarification</button>
+                <button onClick={() => onNavigate('/entreprise')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Entreprise</button>
                 <button onClick={() => onNavigate('/cas-client')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Cas Clients</button>
               </div>
 
@@ -4053,153 +4053,157 @@ function AuthCallbackPage({ onNavigate }) {
 }
 
 // ==========================================
-// 8. CASE STUDIES PAGE
+// 8. COMPANY PAGE (Entreprise)
 // ==========================================
-const CaseStudiesPage = ({ onNavigate }) => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+const CompanyPage = ({ onNavigate }) => {
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
+  const values = [
+    { icon: <Cpu className="w-7 h-7" />, title: "Systèmes, pas services", desc: "Nous construisons des infrastructures autonomes qui fonctionnent 24/7, pas des prestations ponctuelles." },
+    { icon: <Target className="w-7 h-7" />, title: "Performance mesurable", desc: "Chaque action est traçable. Chaque automatisation doit prouver son ROI en conditions réelles." },
+    { icon: <Zap className="w-7 h-7" />, title: "Vitesse d'exécution", desc: "Nous livrons en sprints courts. Votre infra tourne en jours, pas en mois." },
+    { icon: <ShieldCheck className="w-7 h-7" />, title: "Transparence totale", desc: "Accès complet à vos données, vos workflows et vos résultats. Zéro boîte noire." },
+    { icon: <Users className="w-7 h-7" />, title: "Partenariat, pas prestation", desc: "On s'intègre à votre équipe. Votre croissance est notre croissance." },
+    { icon: <BrainCircuit className="w-7 h-7" />, title: "IA pragmatique", desc: "On utilise l'IA là où elle crée de la valeur réelle, pas comme argument marketing." },
+  ];
+
+  const team = [
+    { name: "Pablo Priefert", role: "Co-fondateur & CEO", bio: "Ex growth-hacker e-commerce. Obsédé par les systèmes qui scalent sans friction." },
+    { name: "Jean-Charles", role: "Co-fondateur & CTO", bio: "Architecte d'automatisations. Connecte les stacks les plus complexes en un système fluide." },
+  ];
 
   return (
     <div className="min-h-screen bg-[#030303] text-white font-sans selection:bg-white/20">
 
-      {/* Navigation Bar */}
-      <nav className="fixed w-full z-50 transition-all duration-300 backdrop-blur-md bg-[#0a0a0a]/80 border-b border-white/5 py-3">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14">
-            <div className="flex items-center gap-12">
-              <div
-                className="flex items-center gap-2 cursor-pointer group"
-                onClick={() => onNavigate('/')}
-              >
-                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 group-hover:scale-105 transition-transform duration-300">
-                  <Logo light className="w-6 h-6 text-white" />
-                </div>
-                <span className="font-bold text-xl tracking-tight hidden sm:block group-hover:text-gray-300 transition-colors">Actero</span>
-              </div>
-              <div className="hidden md:flex gap-8">
-                <button onClick={() => onNavigate('/')} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Accueil</button>
-              </div>
+      {/* Floating Pill Navbar */}
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50">
+        <nav className="w-full bg-[#0d0d0d]/70 backdrop-blur-3xl border border-white/10 shadow-2xl rounded-full transition-all duration-300">
+          <div className="px-6 md:px-8 h-14 md:h-[60px] flex justify-between items-center">
+            <div className="flex items-center gap-2 cursor-pointer group" onClick={() => onNavigate('/')}>
+              <Logo light={true} className="w-7 h-7 text-white group-hover:scale-105 transition-transform" />
+              <span className="font-bold text-xl tracking-tight text-white">Actero</span>
+            </div>
+            <div className="hidden md:flex items-center gap-8">
+              <button onClick={() => onNavigate('/')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Accueil</button>
+              <button onClick={() => onNavigate('/tarifs')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Tarification</button>
+              <span className="text-sm font-semibold text-white">Entreprise</span>
+              <button onClick={() => onNavigate('/cas-client')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Cas Clients</button>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => onNavigate('/login')} className="hidden sm:block text-sm font-medium text-gray-300 hover:text-white px-4 py-2 transition-colors">
-                Connexion
-              </button>
-              <button onClick={() => onNavigate('/login')} className="text-sm font-bold bg-white text-black px-5 py-2.5 rounded-xl hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                Espace Client
-              </button>
+              <button onClick={() => onNavigate('/login')} className="hidden md:block text-sm font-semibold text-gray-400 hover:text-white transition-colors">Connexion</button>
+              <div className="scale-90 origin-right">
+                <ButtonColorful onClick={() => onNavigate('/')}>Demander un audit</ButtonColorful>
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </div>
 
-      <main className="pt-32 pb-20 px-6 max-w-5xl mx-auto">
+      <main className="pt-32 pb-20 px-6">
 
-        {/* Hero Section */}
-        <div className="text-center mb-24 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm font-bold text-gray-300 mb-6">
-            <Database className="w-4 h-4 text-emerald-400" /> Cas Client
+        {/* HERO */}
+        <div className="max-w-5xl mx-auto text-center mb-32">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm font-bold text-gray-300 mb-8">
+            <Users className="w-4 h-4 text-emerald-400" /> À propos d'Actero
           </div>
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-6">
-            Maison Lumina
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-8 bg-gradient-to-b from-white to-gray-500 bg-clip-text text-transparent">
+            L'infrastructure de<br />votre croissance.
           </h1>
-          <p className="text-xl md:text-2xl text-zinc-400 font-medium max-w-3xl mx-auto leading-relaxed">
-            Comment une marque DNVB a automatisé 98% de son support de niveau 1 et augmenté son taux de réachat de 18% avec Actero OS.
+          <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed">
+            Les équipes e-commerce n'ont pas besoin de plus d'outils ni de plus de réunions. Elles ont besoin d'un <strong className="text-white">système</strong>. Actero connecte l'exécution, l'itération et la performance dans un seul workflow.
           </p>
         </div>
 
-        {/* Key Metrics Dashboard Snapshot */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
-          <StatCard
-            title="Temps sauvé / mois"
-            value={<AnimatedNumber end={42} suffix="h" />}
-            icon={Clock}
-            color="emerald"
-            subtitleItems={["Support technique", "Saisie manuelle"]}
-          />
-          <StatCard
-            title="Requêtes automatisées"
-            value={<AnimatedNumber end={98} suffix="%" />}
-            icon={CheckCircle}
-            color="amber"
-            subtitleItems={["Résolution < 2min", "Sans humain"]}
-          />
-          <StatCard
-            title="Taux de réachat"
-            value={<><span className="text-zinc-500 mr-1">+</span><AnimatedNumber end={18} suffix="%" /></>}
-            icon={TrendingUp}
-            color="zinc"
-            subtitleItems={["Segmentation dynamique", "Klaviyo"]}
-          />
-        </div>
-
-        {/* the Story */}
-        <div className="grid md:grid-cols-2 gap-16 mb-24">
-
-          {/* Le Problème */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center">
-                <Target className="w-6 h-6 text-red-400" />
-              </div>
-              <h2 className="text-3xl font-bold tracking-tight">Le défi</h2>
+        {/* MISSION SECTION */}
+        <div className="max-w-5xl mx-auto mb-32">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6">Votre marketing devrait tourner comme un logiciel.</h2>
+              <p className="text-lg text-gray-400 leading-relaxed font-medium mb-6">
+                Nous avons créé Actero parce que les vieilles solutions sont cassées : les agences scalent lentement, le recrutement est lourd, et les outils déconnectés créent des angles morts.
+              </p>
+              <p className="text-lg text-gray-400 leading-relaxed font-medium">
+                Notre mission est de remplacer cette complexité par une infrastructure unifiée, pilotée par l'IA, qui fait croître votre business pendant que vous dormez.
+              </p>
             </div>
-
-            <p className="text-lg text-zinc-400 leading-relaxed font-medium">
-              L'équipe support de Maison Lumina (3 personnes) était noyée sous un volume massif de tickets redondants, principalement : <strong className="text-white">"Où est ma commande ?"</strong> et la gestion des retours produits.
-            </p>
-            <p className="text-lg text-zinc-400 leading-relaxed font-medium">
-              En parallèle, les commerciaux perdaient près de 15h par semaine à extraire manuellement les données de Shopify pour segmenter les clients "VIP" dans Klaviyo, freinant l'efficacité des campagnes de rétention.
-            </p>
-          </div>
-
-          {/* La Solution */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                <BrainCircuit className="w-6 h-6 text-emerald-400" />
-              </div>
-              <h2 className="text-3xl font-bold tracking-tight">L'Architecture Actero</h2>
-            </div>
-
-            <div className="bg-[#0a0a0a] border border-white/10 p-6 rounded-2xl space-y-4 shadow-xl">
-              <div className="flex items-start gap-4">
-                <div className="mt-1"><Bot className="w-5 h-5 text-zinc-300" /></div>
-                <div>
-                  <h4 className="font-bold text-white mb-1">Agent Support Niveau 1</h4>
-                  <p className="text-sm text-zinc-400">Connecté par API à Shopify et aux transporteurs, l'IA lit l'historique de commande et répond en temps réel aux clients avec le ton de la marque.</p>
+            <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-500/10 rounded-full blur-[80px]"></div>
+              <div className="space-y-8 relative z-10">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0"><Zap className="w-6 h-6 text-emerald-400" /></div>
+                  <div>
+                    <h4 className="font-bold text-white">Déploiement en 7 jours</h4>
+                    <p className="text-sm text-gray-400">Votre infrastructure est opérationnelle en une semaine, pas en 3 mois.</p>
+                  </div>
                 </div>
-              </div>
-              <div className="w-full h-px bg-white/5"></div>
-              <div className="flex items-start gap-4">
-                <div className="mt-1"><Repeat className="w-5 h-5 text-emerald-400" /></div>
-                <div>
-                  <h4 className="font-bold text-white mb-1">Enrichissement CRM (Make)</h4>
-                  <p className="text-sm text-zinc-400">Chaque nouvel achat déclenche un workflow qui analyse le profil de l'acheteur (panier moyen, fréquence) et applique dynamiquement les tags VIP dans Klaviyo.</p>
+                <div className="w-full h-px bg-white/5"></div>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0"><Bot className="w-6 h-6 text-amber-400" /></div>
+                  <div>
+                    <h4 className="font-bold text-white">Agents IA dédiés</h4>
+                    <p className="text-sm text-gray-400">Des agents autonomes qui gèrent support, relances et segments 24/7.</p>
+                  </div>
+                </div>
+                <div className="w-full h-px bg-white/5"></div>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center flex-shrink-0"><Activity className="w-6 h-6 text-purple-400" /></div>
+                  <div>
+                    <h4 className="font-bold text-white">ROI prouvé</h4>
+                    <p className="text-sm text-gray-400">Chaque automatisation est mesurée et optimisée par les données, pas par l'intuition.</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Integration Stack */}
-        <div className="text-center mb-24">
-          <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-6">Infrastructures connectées</p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <span className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 font-bold text-white flex items-center gap-2"><ShoppingCart className="w-5 h-5" /> Shopify</span>
-            <span className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 font-bold text-white flex items-center gap-2"><RefreshCw className="w-5 h-5" /> Make</span>
-            <span className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 font-bold text-white flex items-center gap-2"><Mail className="w-5 h-5" /> Klaviyo</span>
-            <span className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 font-bold text-white flex items-center gap-2"><MessageSquare className="w-5 h-5" /> Gorgias</span>
+        {/* VALUES GRID */}
+        <div className="max-w-6xl mx-auto mb-32">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Nos principes</h2>
+            <p className="text-lg text-gray-400">Ce qui guide chacune de nos décisions.</p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {values.map((v, i) => (
+              <div key={i} className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-8 hover:border-white/20 transition-all group">
+                <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 text-gray-400 group-hover:text-white group-hover:scale-105 transition-all">
+                  {v.icon}
+                </div>
+                <h3 className="text-white font-bold text-lg mb-3">{v.title}</h3>
+                <p className="text-gray-400 font-medium leading-relaxed">{v.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Call to Action */}
-        <div className="mt-20 text-center bg-gradient-to-b from-[#0a0a0a] to-[#030303] border border-white/10 rounded-3xl p-12 relative overflow-hidden">
+        {/* TEAM */}
+        <div className="max-w-4xl mx-auto mb-32">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Construit par des gens qui l'ont fait.</h2>
+            <p className="text-lg text-gray-400">Des builders, pas des consultants.</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {team.map((t, i) => (
+              <div key={i} className="bg-[#0a0a0a] border border-white/[0.08] rounded-3xl p-8 hover:border-white/20 transition-all">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center mb-6 text-3xl font-bold text-white/60">
+                  {t.name.charAt(0)}
+                </div>
+                <h3 className="text-white font-bold text-xl mb-1">{t.name}</h3>
+                <p className="text-emerald-400 font-semibold text-sm mb-4">{t.role}</p>
+                <p className="text-gray-400 font-medium leading-relaxed">{t.bio}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="max-w-4xl mx-auto text-center bg-gradient-to-b from-[#0a0a0a] to-[#030303] border border-white/10 rounded-3xl p-12 md:p-16 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[100px]"></div>
-          <h2 className="text-3xl font-bold tracking-tight mb-4 relative z-10">Passez vous aussi à l'infrastructure autonome</h2>
-          <p className="text-zinc-500 font-medium mb-8 max-w-lg mx-auto relative z-10">Réservez un audit stratégique gratuit pour identifier les goulots d'étranglement de vos opérations.</p>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 rounded-full blur-[80px]"></div>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 relative z-10">Rejoignez l'infrastructure du futur.</h2>
+          <p className="text-gray-400 font-medium mb-8 max-w-lg mx-auto relative z-10">Discutons de comment Actero peut transformer vos opérations e-commerce.</p>
           <button onClick={() => onNavigate('/')} className="bg-white text-black px-8 py-4 rounded-xl font-bold hover:scale-105 transition-transform shadow-[0_0_30px_rgba(255,255,255,0.1)] relative z-10">
-            Réserver mon audit
+            Réserver mon audit gratuit
           </button>
         </div>
 
@@ -4209,24 +4213,412 @@ const CaseStudiesPage = ({ onNavigate }) => {
       <footer className="bg-[#0a0a0a] border-t border-white/5 py-16 px-6 relative z-10 w-full mt-auto">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-col items-center md:items-start gap-2">
-            <div className="flex items-center gap-2">
-              <Logo light={false} className="w-6 h-6" />
-              <span className="font-bold tracking-tight text-white text-lg">Actero</span>
-            </div>
+            <div className="flex items-center gap-2"><Logo light={false} className="w-6 h-6" /><span className="font-bold tracking-tight text-white text-lg">Actero</span></div>
             <p className="text-sm font-medium text-gray-400">L'infrastructure autopilotée des E-commerçants.</p>
           </div>
-
           <div className="flex flex-wrap justify-center gap-8 text-sm font-bold text-gray-400">
-            <button onClick={() => onNavigate('/cas-client')} className="hover:text-emerald-400 transition-colors flex items-center gap-1"><Database className="w-3.5 h-3.5" /> Cas Clients</button>
-            <button onClick={() => alert("Page à venir prochainement !")} className="hover:text-white transition-colors">Contact</button>
-            <button onClick={() => alert("Page à venir prochainement !")} className="hover:text-white transition-colors">Mentions légales</button>
-            <button onClick={() => alert("Page à venir prochainement !")} className="hover:text-white transition-colors">Confidentialité</button>
+            <button onClick={() => onNavigate('/tarifs')} className="hover:text-white transition-colors">Tarification</button>
+            <button onClick={() => onNavigate('/entreprise')} className="hover:text-white transition-colors">Entreprise</button>
+            <button onClick={() => onNavigate('/cas-client')} className="hover:text-white transition-colors">Cas Clients</button>
           </div>
-
           <div className="text-center md:text-right">
-            <p className="text-xs font-semibold text-gray-400">
-              © {new Date().getFullYear()} Actero. All rights reserved.
-            </p>
+            <p className="text-xs font-semibold text-gray-400">© {new Date().getFullYear()} Actero. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+// ==========================================
+// 9. PRICING PAGE (Tarification)
+// ==========================================
+const PricingPage = ({ onNavigate }) => {
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
+  const [openFaq, setOpenFaq] = useState(null);
+
+  const plans = [
+    {
+      name: "Audit System",
+      price: "Gratuit",
+      period: "",
+      description: "Un diagnostic complet de vos opérations e-commerce et des quick wins immédiats.",
+      features: [
+        "Audit IA de votre site en temps réel",
+        "Rapport d'opportunités automatisé",
+        "Recommandations stratégiques personnalisées",
+        "1 appel de restitution (30 min)",
+        "Accès au dashboard de suivi",
+      ],
+      cta: "Lancer mon audit",
+      highlighted: false,
+      color: "white",
+    },
+    {
+      name: "Croissance Automatisée",
+      price: "2 490€",
+      period: "/mois",
+      description: "L'infrastructure complète pour automatiser votre croissance sur 3 canaux avec un agent IA dédié.",
+      features: [
+        "Tout dans Audit System",
+        "Agent IA support client Niveau 1",
+        "Automatisations Make/Zapier illimitées",
+        "Intégration Shopify + CRM + Klaviyo",
+        "Relances panier abandonné IA",
+        "Dashboard de performance en temps réel",
+        "Account manager dédié",
+        "Reporting hebdomadaire",
+      ],
+      cta: "Réserver une démo",
+      highlighted: true,
+      color: "emerald",
+    },
+    {
+      name: "Scale sur Mesure",
+      price: "Sur devis",
+      period: "",
+      description: "Pour les marques qui scalent au-delà de 500K€/mois et ont besoin d'une infra sur mesure.",
+      features: [
+        "Tout dans Croissance Automatisée",
+        "Agents IA multi-canaux personnalisés",
+        "Architecture data warehouse",
+        "Intégrations API custom",
+        "Équipe dédiée (2+ agents IA)",
+        "SLA prioritaire",
+        "Onboarding white-glove",
+        "Optimisation continue par data science",
+      ],
+      cta: "Nous contacter",
+      highlighted: false,
+      color: "purple",
+    },
+  ];
+
+  const faqs = [
+    { q: "Comment fonctionne la période d'essai ?", a: "L'Audit System est entièrement gratuit et sans engagement. Vous obtenez un diagnostic complet de vos opérations avant de décider de passer à l'étape suivante." },
+    { q: "Puis-je changer de plan à tout moment ?", a: "Oui, vous pouvez upgrader ou downgrader votre plan à tout moment. Les changements prennent effet au prochain cycle de facturation." },
+    { q: "Mes données sont-elles sécurisées ?", a: "Absolument. Nous utilisons un chiffrement AES-256, des audits SOC 2 réguliers, et vos données ne sont jamais partagées avec des tiers. Vous gardez le contrôle total." },
+    { q: "Combien de temps prend le déploiement ?", a: "En moyenne 7 jours ouvrés pour le plan Croissance Automatisée. Le plan Scale sur Mesure nécessite un onboarding plus approfondi de 2-3 semaines." },
+    { q: "Quelles intégrations supportez-vous ?", a: "Nous nous connectons nativement à Shopify, Klaviyo, Gorgias, Make, Zapier, et des dizaines d'autres outils. Des intégrations custom sont disponibles sur le plan Scale." },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#030303] text-white font-sans selection:bg-white/20">
+
+      {/* Floating Pill Navbar */}
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50">
+        <nav className="w-full bg-[#0d0d0d]/70 backdrop-blur-3xl border border-white/10 shadow-2xl rounded-full transition-all duration-300">
+          <div className="px-6 md:px-8 h-14 md:h-[60px] flex justify-between items-center">
+            <div className="flex items-center gap-2 cursor-pointer group" onClick={() => onNavigate('/')}>
+              <Logo light={true} className="w-7 h-7 text-white group-hover:scale-105 transition-transform" />
+              <span className="font-bold text-xl tracking-tight text-white">Actero</span>
+            </div>
+            <div className="hidden md:flex items-center gap-8">
+              <button onClick={() => onNavigate('/')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Accueil</button>
+              <span className="text-sm font-semibold text-white">Tarification</span>
+              <button onClick={() => onNavigate('/entreprise')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Entreprise</button>
+              <button onClick={() => onNavigate('/cas-client')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Cas Clients</button>
+            </div>
+            <div className="flex items-center gap-3">
+              <button onClick={() => onNavigate('/login')} className="hidden md:block text-sm font-semibold text-gray-400 hover:text-white transition-colors">Connexion</button>
+              <div className="scale-90 origin-right">
+                <ButtonColorful onClick={() => onNavigate('/')}>Demander un audit</ButtonColorful>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <main className="pt-32 pb-20 px-6">
+
+        {/* HERO */}
+        <div className="max-w-5xl mx-auto text-center mb-20">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm font-bold text-gray-300 mb-8">
+            <CreditCard className="w-4 h-4 text-emerald-400" /> Tarification
+          </div>
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-8 bg-gradient-to-b from-white to-gray-500 bg-clip-text text-transparent">
+            Des formules calibrées<br />pour votre croissance.
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed">
+            Choisissez un plan adapté à votre chiffre d'affaires. Un système unique pour une croissance rentable sur Shopify.
+          </p>
+        </div>
+
+        {/* PRICING CARDS */}
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 mb-32">
+          {plans.map((plan, i) => (
+            <div
+              key={i}
+              className={`relative flex flex-col rounded-3xl p-8 border transition-all hover:scale-[1.02] duration-300 ${plan.highlighted
+                ? 'bg-gradient-to-b from-emerald-500/10 to-[#0a0a0a] border-emerald-500/30 shadow-[0_0_60px_rgba(16,185,129,0.12)]'
+                : 'bg-[#0a0a0a] border-white/[0.08] hover:border-white/20'
+                }`}
+            >
+              {plan.highlighted && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-emerald-500 text-black text-xs font-bold">
+                  Populaire
+                </div>
+              )}
+              <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
+              <div className="flex items-baseline gap-1 mb-4">
+                <span className="text-4xl font-extrabold text-white">{plan.price}</span>
+                {plan.period && <span className="text-gray-400 font-medium">{plan.period}</span>}
+              </div>
+              <p className="text-gray-400 font-medium leading-relaxed mb-8 flex-shrink-0">{plan.description}</p>
+              <ul className="space-y-3 mb-8 flex-grow">
+                {plan.features.map((f, j) => (
+                  <li key={j} className="flex items-start gap-3 text-sm text-gray-300">
+                    <CheckCircle2 className={`w-4 h-4 mt-0.5 flex-shrink-0 ${plan.highlighted ? 'text-emerald-400' : 'text-gray-500'}`} />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => onNavigate('/')}
+                className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all hover:scale-105 ${plan.highlighted
+                  ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20'
+                  : 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
+                  }`}
+              >
+                {plan.cta}
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* FAQ */}
+        <div className="max-w-3xl mx-auto mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Questions fréquentes</h2>
+            <p className="text-lg text-gray-400">Tout ce que vous devez savoir avant de commencer.</p>
+          </div>
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <div key={i} className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl overflow-hidden">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between p-6 text-left"
+                >
+                  <span className="font-bold text-white pr-4">{faq.q}</span>
+                  <div className={`flex-shrink-0 transition-transform duration-300 ${openFaq === i ? 'rotate-45' : ''}`}>
+                    <Plus className="w-5 h-5 text-gray-400" />
+                  </div>
+                </button>
+                {openFaq === i && (
+                  <div className="px-6 pb-6 -mt-2">
+                    <p className="text-gray-400 font-medium leading-relaxed">{faq.a}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </main>
+
+      {/* FOOTER */}
+      <footer className="bg-[#0a0a0a] border-t border-white/5 py-16 px-6 relative z-10 w-full mt-auto">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <div className="flex items-center gap-2"><Logo light={false} className="w-6 h-6" /><span className="font-bold tracking-tight text-white text-lg">Actero</span></div>
+            <p className="text-sm font-medium text-gray-400">L'infrastructure autopilotée des E-commerçants.</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-8 text-sm font-bold text-gray-400">
+            <button onClick={() => onNavigate('/tarifs')} className="hover:text-white transition-colors">Tarification</button>
+            <button onClick={() => onNavigate('/entreprise')} className="hover:text-white transition-colors">Entreprise</button>
+            <button onClick={() => onNavigate('/cas-client')} className="hover:text-white transition-colors">Cas Clients</button>
+          </div>
+          <div className="text-center md:text-right">
+            <p className="text-xs font-semibold text-gray-400">© {new Date().getFullYear()} Actero. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+// ==========================================
+// 10. CASE STUDIES PAGE (updated)
+const CaseStudiesPage = ({ onNavigate }) => {
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
+  const stories = [
+    {
+      brand: "Maison Lumina",
+      category: "DNVB • Décoration",
+      headline: "Exécution plus rapide, meilleurs résultats",
+      description: "Support automatisé à 98% et taux de réachat en hausse de 18% grâce à un agent IA connecté à Shopify et Gorgias.",
+      metric: "98%",
+      metricLabel: "tickets automatisés",
+      color: "emerald",
+    },
+    {
+      brand: "NovaSkin",
+      category: "Cosmétiques • DTC",
+      headline: "De 0 à un canal d'acquisition rentable",
+      description: "NovaSkin a lancé ses premières campagnes automatisées avec Actero. En 3 mois, l'acquisition payante est devenue un pilier de croissance avec un ROAS exceptionnel.",
+      metric: "12x",
+      metricLabel: "ROAS moyen",
+      color: "purple",
+    },
+    {
+      brand: "FitPro Nutrition",
+      category: "Nutrition sportive • E-commerce",
+      headline: "Transition du lead gen vers l'e-commerce",
+      description: "FitPro luttait pour passer d'un modèle lead-gen à la vente directe. Actero a restructuré leur stack et ils opèrent maintenant à 10x de retour sur investissement.",
+      metric: "10x",
+      metricLabel: "retour pub",
+      color: "amber",
+    },
+    {
+      brand: "UrbanWear",
+      category: "Mode streetwear • Shopify Plus",
+      headline: "Stabiliser la performance Meta à grande échelle",
+      description: "Les campagnes Meta étaient volatiles. Après le déploiement d'Actero, les performances se sont stabilisées à ~20x ROAS, restaurant la confiance dans Meta comme canal d'acquisition.",
+      metric: "20x",
+      metricLabel: "ROAS Meta",
+      color: "emerald",
+    },
+    {
+      brand: "TerraCraft",
+      category: "Artisanat • Marketplace",
+      headline: "Scaling sans expertise pub interne",
+      description: "TerraCraft n'avait jamais lancé de pub payante. Avec Actero, l'acquisition est devenue profitable dès le premier mois sans embaucher de media buyer.",
+      metric: "7.5x",
+      metricLabel: "ROAS premier mois",
+      color: "purple",
+    },
+    {
+      brand: "Chrono Luxe",
+      category: "Montres de luxe • High-ticket",
+      headline: "Scalez le high-ticket avec efficacité",
+      description: "Dans un secteur où chaque conversion compte, Chrono Luxe a atteint un retour pub exceptionnel sur des produits à plus de 3000€ grâce à une segmentation IA.",
+      metric: "150x",
+      metricLabel: "retour sur investissement",
+      color: "amber",
+    },
+  ];
+
+  const colorMap = {
+    emerald: { bg: "bg-emerald-500/10", border: "border-emerald-500/20", text: "text-emerald-400", glow: "shadow-emerald-500/10" },
+    purple: { bg: "bg-purple-500/10", border: "border-purple-500/20", text: "text-purple-400", glow: "shadow-purple-500/10" },
+    amber: { bg: "bg-amber-500/10", border: "border-amber-500/20", text: "text-amber-400", glow: "shadow-amber-500/10" },
+  };
+
+  return (
+    <div className="min-h-screen bg-[#030303] text-white font-sans selection:bg-white/20">
+
+      {/* Floating Pill Navbar */}
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50">
+        <nav className="w-full bg-[#0d0d0d]/70 backdrop-blur-3xl border border-white/10 shadow-2xl rounded-full transition-all duration-300">
+          <div className="px-6 md:px-8 h-14 md:h-[60px] flex justify-between items-center">
+            <div className="flex items-center gap-2 cursor-pointer group" onClick={() => onNavigate('/')}>
+              <Logo light={true} className="w-7 h-7 text-white group-hover:scale-105 transition-transform" />
+              <span className="font-bold text-xl tracking-tight text-white">Actero</span>
+            </div>
+            <div className="hidden md:flex items-center gap-8">
+              <button onClick={() => onNavigate('/')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Accueil</button>
+              <button onClick={() => onNavigate('/tarifs')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Tarification</button>
+              <button onClick={() => onNavigate('/entreprise')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Entreprise</button>
+              <span className="text-sm font-semibold text-white">Cas Clients</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <button onClick={() => onNavigate('/login')} className="hidden md:block text-sm font-semibold text-gray-400 hover:text-white transition-colors">Connexion</button>
+              <div className="scale-90 origin-right">
+                <ButtonColorful onClick={() => onNavigate('/')}>Demander un audit</ButtonColorful>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <main className="pt-32 pb-20 px-6">
+
+        {/* HERO */}
+        <div className="max-w-5xl mx-auto text-center mb-24">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm font-bold text-gray-300 mb-8">
+            <Database className="w-4 h-4 text-emerald-400" /> Success Stories
+          </div>
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter mb-8 bg-gradient-to-b from-white to-gray-500 bg-clip-text text-transparent">
+            Des résultats.<br />Pas des promesses.
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed">
+            Découvrez comment des marques e-commerce transforment leurs opérations avec l'infrastructure Actero.
+          </p>
+        </div>
+
+        {/* STORIES GRID */}
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6 mb-32">
+          {stories.map((s, i) => {
+            const c = colorMap[s.color];
+            return (
+              <div key={i} className="bg-[#0a0a0a] border border-white/[0.08] rounded-3xl p-8 hover:border-white/20 transition-all group relative overflow-hidden">
+                <div className={`absolute top-0 right-0 w-32 h-32 ${c.bg} rounded-full blur-[60px] opacity-40`}></div>
+                <div className="relative z-10">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">{s.category}</p>
+                      <h3 className="text-xl font-bold text-white">{s.brand}</h3>
+                    </div>
+                    <div className={`py-2 px-4 rounded-2xl ${c.bg} ${c.border} border`}>
+                      <span className={`text-2xl font-extrabold ${c.text}`}>{s.metric}</span>
+                      <p className={`text-[10px] font-bold ${c.text} opacity-70 uppercase tracking-wider`}>{s.metricLabel}</p>
+                    </div>
+                  </div>
+                  <h4 className="text-lg font-bold text-white/90 mb-3">{s.headline}</h4>
+                  <p className="text-gray-400 font-medium leading-relaxed">{s.description}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* SOCIAL PROOF STRIP */}
+        <div className="max-w-4xl mx-auto text-center mb-24">
+          <p className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-8">Fait confiance par des équipes growth partout en France</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { end: 42, suffix: "h", label: "Temps moyen sauvé / mois" },
+              { end: 98, suffix: "%", label: "Taux d'automatisation" },
+              { end: 12, suffix: "x", label: "ROAS moyen clients" },
+              { end: 7, suffix: "j", label: "Temps de déploiement" },
+            ].map((m, i) => (
+              <div key={i} className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-6">
+                <div className="text-3xl font-extrabold text-white mb-1"><AnimatedNumber end={m.end} suffix={m.suffix} /></div>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">{m.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="max-w-4xl mx-auto text-center bg-gradient-to-b from-[#0a0a0a] to-[#030303] border border-white/10 rounded-3xl p-12 md:p-16 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[100px]"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 rounded-full blur-[80px]"></div>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 relative z-10">Écrivez votre propre success story.</h2>
+          <p className="text-gray-400 font-medium mb-8 max-w-lg mx-auto relative z-10">Réservez un audit stratégique gratuit pour identifier les goulots d'étranglement de vos opérations.</p>
+          <button onClick={() => onNavigate('/')} className="bg-white text-black px-8 py-4 rounded-xl font-bold hover:scale-105 transition-transform shadow-[0_0_30px_rgba(255,255,255,0.1)] relative z-10">
+            Réserver mon audit gratuit
+          </button>
+        </div>
+
+      </main>
+
+      {/* FOOTER */}
+      <footer className="bg-[#0a0a0a] border-t border-white/5 py-16 px-6 relative z-10 w-full mt-auto">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <div className="flex items-center gap-2"><Logo light={false} className="w-6 h-6" /><span className="font-bold tracking-tight text-white text-lg">Actero</span></div>
+            <p className="text-sm font-medium text-gray-400">L'infrastructure autopilotée des E-commerçants.</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-8 text-sm font-bold text-gray-400">
+            <button onClick={() => onNavigate('/tarifs')} className="hover:text-white transition-colors">Tarification</button>
+            <button onClick={() => onNavigate('/entreprise')} className="hover:text-white transition-colors">Entreprise</button>
+            <button onClick={() => onNavigate('/cas-client')} className="hover:text-white transition-colors">Cas Clients</button>
+          </div>
+          <div className="text-center md:text-right">
+            <p className="text-xs font-semibold text-gray-400">© {new Date().getFullYear()} Actero. All rights reserved.</p>
           </div>
         </div>
       </footer>
@@ -4285,6 +4677,14 @@ function MainRouter() {
 
   if (currentRoute === '/auth/callback') {
     return <AuthCallbackPage onNavigate={setCurrentRoute} />;
+  }
+
+  if (currentRoute === '/entreprise') {
+    return <CompanyPage onNavigate={setCurrentRoute} />;
+  }
+
+  if (currentRoute === '/tarifs') {
+    return <PricingPage onNavigate={setCurrentRoute} />;
   }
 
   if (currentRoute === '/cas-client') {
