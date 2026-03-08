@@ -4257,7 +4257,7 @@ const PricingPage = ({ onNavigate }) => {
     },
     {
       name: "Croissance Automatisée",
-      price: "2 490€",
+      price: "1 199€",
       period: "/mois",
       description: "L'infrastructure complète pour automatiser votre croissance sur 3 canaux avec un agent IA dédié.",
       features: [
