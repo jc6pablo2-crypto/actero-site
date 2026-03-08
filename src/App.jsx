@@ -3038,6 +3038,7 @@ const LandingPage = ({ onNavigate }) => {
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [isAuditScannerOpen, setIsAuditScannerOpen] = useState(false);
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // --- Initialiser Amplitude ---
   useEffect(() => {
@@ -3213,11 +3214,11 @@ const LandingPage = ({ onNavigate }) => {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => onNavigate('/login')}
-                  className="hidden md:block text-sm font-semibold text-gray-400 hover:text-white transition-colors px-2"
+                  className="hidden lg:block text-sm font-semibold text-gray-400 hover:text-white transition-colors px-2"
                 >
                   Connexion
                 </button>
-                <div className="scale-90 origin-right">
+                <div className="hidden sm:block scale-90 origin-right">
                   <ButtonColorful onClick={() => {
                     trackEvent('Header_CTA_Clicked', { location: 'navbar' });
                     scrollToId('calendly');
@@ -3225,9 +3226,53 @@ const LandingPage = ({ onNavigate }) => {
                     Demander un audit
                   </ButtonColorful>
                 </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                >
+                  {isMobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
+                </button>
               </div>
             </div>
           </nav>
+
+          {/* MOBILE MENU OVERLAY */}
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="mt-3 bg-[#0d0d0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl p-6 space-y-1"
+              >
+                {[
+                  { label: "Produits", action: () => { setIsMobileMenuOpen(false); scrollToId('comment-ca-marche'); } },
+                  { label: "Tarification", action: () => { setIsMobileMenuOpen(false); onNavigate('/tarifs'); } },
+                  { label: "Entreprise", action: () => { setIsMobileMenuOpen(false); onNavigate('/entreprise'); } },
+                  { label: "Cas Clients", action: () => { setIsMobileMenuOpen(false); onNavigate('/cas-client'); } },
+                  { label: "Connexion", action: () => { setIsMobileMenuOpen(false); onNavigate('/login'); } },
+                ].map((item, i) => (
+                  <button
+                    key={i}
+                    onClick={item.action}
+                    className="w-full text-left px-4 py-3 rounded-xl text-base font-semibold text-gray-300 hover:text-white hover:bg-white/5 transition-all"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                <div className="pt-3 border-t border-white/10">
+                  <ButtonColorful onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    trackEvent('Header_CTA_Clicked', { location: 'mobile_menu' });
+                    scrollToId('calendly');
+                  }}>
+                    Demander un audit
+                  </ButtonColorful>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <main>
@@ -4035,6 +4080,7 @@ function AuthCallbackPage({ onNavigate }) {
 // ==========================================
 const CompanyPage = ({ onNavigate }) => {
   useEffect(() => { window.scrollTo(0, 0); }, []);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const values = [
     { icon: <Cpu className="w-7 h-7" />, title: "Systèmes, pas services", desc: "Nous construisons des infrastructures autonomes qui fonctionnent 24/7, pas des prestations ponctuelles." },
@@ -4058,20 +4104,33 @@ const CompanyPage = ({ onNavigate }) => {
               <Logo light={true} className="w-7 h-7 text-white group-hover:scale-105 transition-transform" />
               <span className="font-bold text-xl tracking-tight text-white">Actero</span>
             </div>
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-8">
               <button onClick={() => onNavigate('/')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Accueil</button>
               <button onClick={() => onNavigate('/tarifs')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Tarification</button>
               <span className="text-sm font-semibold text-white">Entreprise</span>
               <button onClick={() => onNavigate('/cas-client')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Cas Clients</button>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => onNavigate('/login')} className="hidden md:block text-sm font-semibold text-gray-400 hover:text-white transition-colors">Connexion</button>
-              <div className="scale-90 origin-right">
+              <button onClick={() => onNavigate('/login')} className="hidden lg:block text-sm font-semibold text-gray-400 hover:text-white transition-colors">Connexion</button>
+              <div className="hidden sm:block scale-90 origin-right">
                 <ButtonColorful onClick={() => onNavigate('/')}>Demander un audit</ButtonColorful>
               </div>
+              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                {isMobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
+              </button>
             </div>
           </div>
         </nav>
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="mt-3 bg-[#0d0d0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl p-6 space-y-1">
+              {[{ label: "Accueil", action: () => { setIsMobileMenuOpen(false); onNavigate('/'); } }, { label: "Tarification", action: () => { setIsMobileMenuOpen(false); onNavigate('/tarifs'); } }, { label: "Entreprise", action: () => { } }, { label: "Cas Clients", action: () => { setIsMobileMenuOpen(false); onNavigate('/cas-client'); } }, { label: "Connexion", action: () => { setIsMobileMenuOpen(false); onNavigate('/login'); } }].map((item, i) => (
+                <button key={i} onClick={item.action} className={`w-full text-left px-4 py-3 rounded-xl text-base font-semibold ${item.label === 'Entreprise' ? 'text-white bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/5'} transition-all`}>{item.label}</button>
+              ))}
+              <div className="pt-3 border-t border-white/10"><ButtonColorful onClick={() => { setIsMobileMenuOpen(false); onNavigate('/'); }}>Demander un audit</ButtonColorful></div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <main className="pt-32 pb-20 px-6">
@@ -4194,6 +4253,7 @@ const PricingPage = ({ onNavigate }) => {
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   const [openFaq, setOpenFaq] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const plans = [
     {
@@ -4271,20 +4331,33 @@ const PricingPage = ({ onNavigate }) => {
               <Logo light={true} className="w-7 h-7 text-white group-hover:scale-105 transition-transform" />
               <span className="font-bold text-xl tracking-tight text-white">Actero</span>
             </div>
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-8">
               <button onClick={() => onNavigate('/')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Accueil</button>
               <span className="text-sm font-semibold text-white">Tarification</span>
               <button onClick={() => onNavigate('/entreprise')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Entreprise</button>
               <button onClick={() => onNavigate('/cas-client')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Cas Clients</button>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => onNavigate('/login')} className="hidden md:block text-sm font-semibold text-gray-400 hover:text-white transition-colors">Connexion</button>
-              <div className="scale-90 origin-right">
+              <button onClick={() => onNavigate('/login')} className="hidden lg:block text-sm font-semibold text-gray-400 hover:text-white transition-colors">Connexion</button>
+              <div className="hidden sm:block scale-90 origin-right">
                 <ButtonColorful onClick={() => onNavigate('/')}>Demander un audit</ButtonColorful>
               </div>
+              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                {isMobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
+              </button>
             </div>
           </div>
         </nav>
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="mt-3 bg-[#0d0d0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl p-6 space-y-1">
+              {[{ label: "Accueil", action: () => { setIsMobileMenuOpen(false); onNavigate('/'); } }, { label: "Tarification", action: () => { } }, { label: "Entreprise", action: () => { setIsMobileMenuOpen(false); onNavigate('/entreprise'); } }, { label: "Cas Clients", action: () => { setIsMobileMenuOpen(false); onNavigate('/cas-client'); } }, { label: "Connexion", action: () => { setIsMobileMenuOpen(false); onNavigate('/login'); } }].map((item, i) => (
+                <button key={i} onClick={item.action} className={`w-full text-left px-4 py-3 rounded-xl text-base font-semibold ${item.label === 'Tarification' ? 'text-white bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/5'} transition-all`}>{item.label}</button>
+              ))}
+              <div className="pt-3 border-t border-white/10"><ButtonColorful onClick={() => { setIsMobileMenuOpen(false); onNavigate('/'); }}>Demander un audit</ButtonColorful></div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <main className="pt-32 pb-20 px-6">
@@ -4399,6 +4472,7 @@ const PricingPage = ({ onNavigate }) => {
 // 10. CASE STUDIES PAGE (updated)
 const CaseStudiesPage = ({ onNavigate }) => {
   useEffect(() => { window.scrollTo(0, 0); }, []);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const stories = [
     {
@@ -4474,20 +4548,33 @@ const CaseStudiesPage = ({ onNavigate }) => {
               <Logo light={true} className="w-7 h-7 text-white group-hover:scale-105 transition-transform" />
               <span className="font-bold text-xl tracking-tight text-white">Actero</span>
             </div>
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-8">
               <button onClick={() => onNavigate('/')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Accueil</button>
               <button onClick={() => onNavigate('/tarifs')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Tarification</button>
               <button onClick={() => onNavigate('/entreprise')} className="text-sm font-semibold text-gray-400 hover:text-white transition-colors">Entreprise</button>
               <span className="text-sm font-semibold text-white">Cas Clients</span>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => onNavigate('/login')} className="hidden md:block text-sm font-semibold text-gray-400 hover:text-white transition-colors">Connexion</button>
-              <div className="scale-90 origin-right">
+              <button onClick={() => onNavigate('/login')} className="hidden lg:block text-sm font-semibold text-gray-400 hover:text-white transition-colors">Connexion</button>
+              <div className="hidden sm:block scale-90 origin-right">
                 <ButtonColorful onClick={() => onNavigate('/')}>Demander un audit</ButtonColorful>
               </div>
+              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                {isMobileMenuOpen ? <X className="w-5 h-5 text-white" /> : <Menu className="w-5 h-5 text-white" />}
+              </button>
             </div>
           </div>
         </nav>
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }} className="mt-3 bg-[#0d0d0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl p-6 space-y-1">
+              {[{ label: "Accueil", action: () => { setIsMobileMenuOpen(false); onNavigate('/'); } }, { label: "Tarification", action: () => { setIsMobileMenuOpen(false); onNavigate('/tarifs'); } }, { label: "Entreprise", action: () => { setIsMobileMenuOpen(false); onNavigate('/entreprise'); } }, { label: "Cas Clients", action: () => { } }, { label: "Connexion", action: () => { setIsMobileMenuOpen(false); onNavigate('/login'); } }].map((item, i) => (
+                <button key={i} onClick={item.action} className={`w-full text-left px-4 py-3 rounded-xl text-base font-semibold ${item.label === 'Cas Clients' ? 'text-white bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/5'} transition-all`}>{item.label}</button>
+              ))}
+              <div className="pt-3 border-t border-white/10"><ButtonColorful onClick={() => { setIsMobileMenuOpen(false); onNavigate('/'); }}>Demander un audit</ButtonColorful></div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <main className="pt-32 pb-20 px-6">
