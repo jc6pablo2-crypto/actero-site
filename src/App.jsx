@@ -468,9 +468,12 @@ const LoginPage = ({ onNavigate, onLogin }) => {
         email,
         password,
       });
-      if (authError) throw authError;
-
-      onNavigate('/app');
+      const intent = localStorage.getItem('checkout_intent');
+      if (intent) {
+        onNavigate('/tarifs');
+      } else {
+        onNavigate('/app');
+      }
 
     } catch (err) {
       setError(isForgot
@@ -4005,8 +4008,13 @@ function AuthCallbackPage({ onNavigate }) {
 
         if (error) throw error;
         if (session && mounted) {
-          logger("Session existante ! Routing to /app");
-          onNavigate('/app');
+          logger("Session existante !");
+          const intent = localStorage.getItem('checkout_intent');
+          if (intent) {
+            onNavigate('/tarifs');
+          } else {
+            onNavigate('/app');
+          }
         }
       } catch (err) {
         if (mounted) setErrorMsg(err.message || "Erreur lors de la récupération de la session.");
@@ -4020,8 +4028,13 @@ function AuthCallbackPage({ onNavigate }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       logger("onAuthStateChange emitted:", event, session ? "Session Active" : "No Session");
       if (session && mounted) {
-        logger("Session caught via listener. Routing to /app");
-        onNavigate('/app');
+        logger("Session caught via listener.");
+        const intent = localStorage.getItem('checkout_intent');
+        if (intent) {
+          onNavigate('/tarifs');
+        } else {
+          onNavigate('/app');
+        }
       }
     });
 
@@ -4250,13 +4263,71 @@ const CompanyPage = ({ onNavigate }) => {
 // 9. PRICING PAGE (Tarification)
 // ==========================================
 const PricingPage = ({ onNavigate }) => {
-  useEffect(() => { window.scrollTo(0, 0); }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const intent = localStorage.getItem('checkout_intent');
+    if (intent) {
+      localStorage.removeItem('checkout_intent');
+      handleCheckout(intent);
+    }
+  }, []);
 
   const [openFaq, setOpenFaq] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleCheckout = async (planId) => {
+    if (planId === 'free') {
+      onNavigate('/login');
+      return;
+    }
+    if (planId === 'contact') {
+      window.location.href = "mailto:contact@actero.fr";
+      return;
+    }
+
+    try {
+      setIsProcessing(true);
+      // Verify login
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        // Not logged in -> redirect to login but save intent
+        localStorage.setItem('checkout_intent', planId);
+        onNavigate('/login');
+        return;
+      }
+
+      // Call Edge Function
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          plan: planId,
+          returnUrl: window.location.origin
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url; // Redirect to Stripe
+      } else {
+        throw new Error(data.error || "Erreur lors de la création de la session de paiement.");
+      }
+    } catch (err) {
+      alert("Une erreur est survenue : " + err.message);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const plans = [
     {
+      id: "free",
       name: "Audit System",
       price: "Gratuit",
       period: "",
@@ -4273,6 +4344,7 @@ const PricingPage = ({ onNavigate }) => {
       color: "white",
     },
     {
+      id: "croissance_automatisee",
       name: "Croissance Automatisée",
       price: "1 199€",
       period: "/mois",
@@ -4293,6 +4365,7 @@ const PricingPage = ({ onNavigate }) => {
       color: "emerald",
     },
     {
+      id: "contact",
       name: "Scale sur Mesure",
       price: "Sur devis",
       period: "",
@@ -4407,13 +4480,18 @@ const PricingPage = ({ onNavigate }) => {
               </ul>
               <div className="mt-auto pt-8">
                 <button
-                  onClick={() => onNavigate('/')}
+                  onClick={() => handleCheckout(plan.id)}
+                  disabled={isProcessing}
                   className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all hover:scale-105 flex items-center justify-center gap-2 ${plan.highlighted
-                    ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20'
-                    : 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
+                    ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20 disabled:bg-emerald-500/50 disabled:cursor-not-allowed'
+                    : 'bg-white/5 border border-white/10 text-white hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed'
                     }`}
                 >
-                  {plan.cta} <ArrowUpRight className="w-4 h-4 ml-1" />
+                  {isProcessing && plan.highlighted ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-black" />
+                  ) : (
+                    <>{plan.cta} <ArrowUpRight className="w-4 h-4 ml-1" /></>
+                  )}
                 </button>
                 {plan.secondaryCta && (
                   <button
@@ -4756,6 +4834,49 @@ function MainRouter() {
 
   if (currentRoute === '/cas-client') {
     return <CaseStudiesPage onNavigate={navigate} />;
+  }
+
+  if (currentRoute === '/payment/success') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white/5 font-sans">
+        <div className="text-center p-12 bg-[#0a0a0a] border border-white/10 rounded-3xl shadow-2xl max-w-md w-full mx-6">
+          <div className="w-20 h-20 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-6">
+            <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">Paiement validé !</h2>
+          <p className="text-gray-400 font-medium mb-8 leading-relaxed">
+            Merci pour votre confiance. Votre infrastructure de croissance est prête à être déployée. Vous pouvez maintenant accéder à votre tableau de bord.
+          </p>
+          <button onClick={() => navigate('/app')} className="w-full bg-white text-zinc-900 px-6 py-4 rounded-xl font-bold hover:bg-zinc-200 transition-colors shadow-lg">
+            Accéder à mon espace
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (currentRoute === '/payment/cancel') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white/5 font-sans">
+        <div className="text-center p-12 bg-[#0a0a0a] border border-white/10 rounded-3xl shadow-2xl max-w-md w-full mx-6">
+          <div className="w-20 h-20 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-6">
+            <XCircle className="w-10 h-10 text-red-500" />
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">Paiement annulé</h2>
+          <p className="text-gray-400 font-medium mb-8 leading-relaxed">
+            Vous avez annulé le processus de paiement. Aucun prélèvement n'a été effectué. Vous pouvez réessayer à tout moment.
+          </p>
+          <div className="flex gap-4">
+            <button onClick={() => navigate('/tarifs')} className="flex-1 bg-white/5 border border-white/10 text-white px-6 py-4 rounded-xl font-bold hover:bg-white/10 transition-colors">
+              Retour aux tarifs
+            </button>
+            <button onClick={() => navigate('/app')} className="flex-1 bg-white text-zinc-900 px-6 py-4 rounded-xl font-bold hover:bg-zinc-200 transition-colors">
+              Mon espace
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (currentRoute === '/app' || currentRoute === '/admin') {
