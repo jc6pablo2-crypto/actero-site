@@ -33,7 +33,7 @@ Deno.serve(async (req: Request) => {
         const plan = session.metadata?.plan;
 
         if (userId) {
-          await supabaseAdmin
+          const { error } = await supabaseAdmin
             .from("clients")
             .update({
               stripe_customer_id: customerId,
@@ -41,17 +41,40 @@ Deno.serve(async (req: Request) => {
               status: "active",
               plan: plan
             })
-            .eq("id", userId);
+            .eq("owner_user_id", userId);
+            
+          if (error) {
+            console.error("Erreur DB update checkout.session.completed:", error);
+          }
+        }
+        break;
+      }
+      
+      case "customer.subscription.updated": {
+        const subscription = event.data.object as any;
+        const status = subscription.status; // e.g active, past_due, canceled
+        
+        const { error } = await supabaseAdmin
+            .from("clients")
+            .update({ status: status === "active" ? "active" : (status === "canceled" ? "canceled" : "past_due") })
+            .eq("stripe_subscription_id", subscription.id);
+            
+        if (error) {
+           console.error("Erreur DB update customer.subscription.updated:", error);
         }
         break;
       }
       
       case "customer.subscription.deleted": {
         const subscription = event.data.object as any;
-        await supabaseAdmin
+        const { error } = await supabaseAdmin
             .from("clients")
             .update({ status: "canceled" })
             .eq("stripe_subscription_id", subscription.id);
+            
+        if (error) {
+           console.error("Erreur DB update customer.subscription.deleted:", error);
+        }
         break;
       }
     }

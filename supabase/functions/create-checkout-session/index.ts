@@ -51,7 +51,7 @@ Deno.serve(async (req: Request) => {
     const { data: clientData } = await supabaseClient
       .from("clients")
       .select("stripe_customer_id")
-      .eq("id", user.id)
+      .eq("owner_user_id", user.id)
       .single();
 
     let customerId = clientData?.stripe_customer_id;
