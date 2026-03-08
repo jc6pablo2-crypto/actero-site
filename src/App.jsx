@@ -4949,7 +4949,7 @@ const LandingPage = ({ onNavigate }) => {
                         {[
                           { name: "Shopify", icon: "shopify", color: "95BF47" },
                           { name: "Stripe", icon: "stripe", color: "635BFF" },
-                          { name: "Klaviyo", src: "/klaviyo.jpg" },
+                          { name: "Klaviyo", src: "/klaviyo.svg" },
                           { name: "Make", icon: "make", color: "5F4CFF" },
                           { name: "n8n", icon: "n8n", color: "FF6D5A" },
                           { name: "HubSpot", icon: "hubspot", color: "FF7A59" },
