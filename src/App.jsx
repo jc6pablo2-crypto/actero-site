@@ -4957,7 +4957,6 @@ const LandingPage = ({ onNavigate }) => {
                           { name: "Slack", src: "/slack.svg" },
                           { name: "OpenAI", src: "/openai.svg" },
                           { name: "Intercom", icon: "intercom", color: "0058DD" },
-                          { name: "Salesforce", icon: "salesforce", color: "00A1E0" },
                           { name: "Zapier", icon: "zapier", color: "FF4A00" },
                         ].map((tech, i) => (
                           <div
