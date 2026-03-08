@@ -4949,7 +4949,7 @@ const LandingPage = ({ onNavigate }) => {
                         {[
                           { name: "Shopify", icon: "shopify", color: "95BF47" },
                           { name: "Stripe", icon: "stripe", color: "635BFF" },
-                          { name: "Klaviyo", icon: "klaviyo", color: "FF6666" },
+                          { name: "Klaviyo", src: "/klaviyo.jpg" },
                           { name: "Make", icon: "make", color: "5F4CFF" },
                           { name: "n8n", icon: "n8n", color: "FF6D5A" },
                           { name: "HubSpot", icon: "hubspot", color: "FF7A59" },
@@ -4966,10 +4966,10 @@ const LandingPage = ({ onNavigate }) => {
                             <img
                               src={tech.src ? tech.src : `https://cdn.simpleicons.org/${tech.icon}/${tech.color}`}
                               alt={tech.name}
-                              className="w-8 h-8 md:w-10 md:h-10 opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+                              className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-all duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
                               loading="lazy"
                             />
-                            <span>{tech.name}</span>
+                            <span className="text-white font-bold">{tech.name}</span>
                           </div>
                         ))}
                       </React.Fragment>
