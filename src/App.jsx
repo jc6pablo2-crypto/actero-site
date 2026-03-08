@@ -4287,7 +4287,8 @@ const PricingPage = ({ onNavigate }) => {
         "Account manager dédié",
         "Reporting hebdomadaire",
       ],
-      cta: "Réserver une démo",
+      cta: "Débuter mon essai",
+      secondaryCta: "Ou réserver un appel de conseil",
       highlighted: true,
       color: "emerald",
     },
@@ -4404,15 +4405,25 @@ const PricingPage = ({ onNavigate }) => {
                   </li>
                 ))}
               </ul>
-              <button
-                onClick={() => onNavigate('/')}
-                className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all hover:scale-105 ${plan.highlighted
-                  ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20'
-                  : 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
-                  }`}
-              >
-                {plan.cta}
-              </button>
+              <div className="mt-auto pt-8">
+                <button
+                  onClick={() => onNavigate('/')}
+                  className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all hover:scale-105 flex items-center justify-center gap-2 ${plan.highlighted
+                    ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20'
+                    : 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
+                    }`}
+                >
+                  {plan.cta} <ArrowUpRight className="w-4 h-4 ml-1" />
+                </button>
+                {plan.secondaryCta && (
+                  <button
+                    onClick={() => onNavigate('/')}
+                    className="w-full mt-4 text-xs font-semibold text-gray-400 hover:text-white transition-colors text-center"
+                  >
+                    {plan.secondaryCta}
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
