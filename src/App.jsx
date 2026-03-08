@@ -4947,25 +4947,25 @@ const LandingPage = ({ onNavigate }) => {
                     {[...Array(2)].map((_, setIdx) => (
                       <React.Fragment key={setIdx}>
                         {[
-                          { name: "Shopify", icon: "shopify" },
-                          { name: "Stripe", icon: "stripe" },
-                          { name: "Klaviyo", icon: "klaviyo" },
-                          { name: "Make", icon: "make" },
-                          { name: "n8n", icon: "n8n" },
-                          { name: "HubSpot", icon: "hubspot" },
-                          { name: "Zendesk", icon: "zendesk" },
-                          { name: "Slack", icon: "slack" },
-                          { name: "OpenAI", icon: "openai" },
-                          { name: "Intercom", icon: "intercom" },
-                          { name: "Salesforce", icon: "salesforce" },
-                          { name: "Zapier", icon: "zapier" },
+                          { name: "Shopify", icon: "shopify", color: "95BF47" },
+                          { name: "Stripe", icon: "stripe", color: "635BFF" },
+                          { name: "Klaviyo", icon: "klaviyo", color: "FF6666" },
+                          { name: "Make", icon: "make", color: "5F4CFF" },
+                          { name: "n8n", icon: "n8n", color: "FF6D5A" },
+                          { name: "HubSpot", icon: "hubspot", color: "FF7A59" },
+                          { name: "Zendesk", icon: "zendesk", color: "17494D" },
+                          { name: "Slack", src: "/slack.svg" },
+                          { name: "OpenAI", src: "/openai.svg" },
+                          { name: "Intercom", icon: "intercom", color: "0058DD" },
+                          { name: "Salesforce", icon: "salesforce", color: "00A1E0" },
+                          { name: "Zapier", icon: "zapier", color: "FF4A00" },
                         ].map((tech, i) => (
                           <div
                             key={`${setIdx}-${i}`}
                             className="group flex items-center gap-3 text-xl md:text-2xl font-bold text-white/70 hover:text-white transition-all duration-500 select-none flex-shrink-0"
                           >
                             <img
-                              src={`https://cdn.simpleicons.org/${tech.icon}/ffffff`}
+                              src={tech.src ? tech.src : `https://cdn.simpleicons.org/${tech.icon}/${tech.color}`}
                               alt={tech.name}
                               className="w-8 h-8 md:w-10 md:h-10 opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
                               loading="lazy"
