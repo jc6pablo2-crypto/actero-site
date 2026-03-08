@@ -4454,15 +4454,7 @@ const PricingPage = ({ onNavigate }) => {
           </div>
           <div className="space-y-3">
             {faqs.map((faq, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                whileHover={{ scale: 1.01, rotateX: 2, transition: { duration: 0.2 } }}
-                style={{ transformPerspective: 800 }}
-                className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl overflow-hidden hover:border-white/20 transition-colors"
-              >
+              <div key={i} className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl overflow-hidden">
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
                   className="w-full flex items-center justify-between p-6 text-left"
@@ -4477,7 +4469,7 @@ const PricingPage = ({ onNavigate }) => {
                     <p className="text-gray-400 font-medium leading-relaxed">{faq.a}</p>
                   </div>
                 )}
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
