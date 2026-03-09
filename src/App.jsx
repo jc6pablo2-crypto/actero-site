@@ -84,6 +84,7 @@ import { ArchitectureMap } from "../components/ui/architecture-map";
 import { BeforeAfterSlider } from "../components/ui/before-after-slider";
 import { AITeamBuilder } from "../components/ui/ai-team-builder";
 import { DemoDashboardPage } from "../components/ui/demo-dashboard";
+import { PromptLibraryPage } from "../components/ui/prompt-library-page";
 import {
   FadeInUp,
   SlideInRight,
@@ -7381,6 +7382,12 @@ const AuditPage = ({ onNavigate }) => {
             >
               FAQ
             </button>
+            <button
+              onClick={() => onNavigate("/ressources")}
+              className="hover:text-white transition-colors flex items-center gap-1"
+            >
+              <Sparkles className="w-3 h-3 text-emerald-500" /> Prompts IA
+            </button>
           </div>
           <div className="text-center md:text-right">
             <p className="text-xs font-semibold text-gray-400">
@@ -7549,6 +7556,14 @@ function MainRouter() {
     return (
       <ScrollToTop>
         <DemoDashboardPage onNavigate={navigate} />
+      </ScrollToTop>
+    );
+  }
+
+  if (currentRoute === "/ressources") {
+    return (
+      <ScrollToTop>
+        <PromptLibraryPage onNavigate={navigate} />
       </ScrollToTop>
     );
   }
