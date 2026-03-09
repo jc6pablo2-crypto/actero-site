@@ -80,6 +80,7 @@ import { ButtonColorful } from "../components/ui/button-colorful";
 import { Futuristic3DBackground } from "../components/ui/futuristic-3d-background";
 import { GlassHero } from "../components/ui/glass-hero";
 import { RevenueCalculator } from "../components/ui/revenue-calculator";
+import { ArchitectureMap } from "../components/ui/architecture-map";
 import {
   FadeInUp,
   SlideInRight,
@@ -5131,6 +5132,9 @@ const LandingPage = ({ onNavigate }) => {
 
               {/* 3.5 INNOVATION : REVENUE LEAK CALCULATOR */}
               <RevenueCalculator />
+
+              {/* 3.6 INNOVATION : ARCHITECTURE MAP */}
+              <ArchitectureMap />
 
               {/* 4. SECTION IMPACT MASSIF - PROOF */}
               <section
