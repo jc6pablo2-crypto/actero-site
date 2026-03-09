@@ -280,10 +280,7 @@ export const GlassHero = ({ onNavigate, onOpenAuditScanner }) => {
                 {/* Action Buttons */}
                 <FadeInUp delay={0.2} className="flex items-center gap-4 mb-20">
                     <ButtonColorful
-                        onClick={() => {
-                            const el = document.getElementById('calendly');
-                            if (el) el.scrollIntoView({ behavior: 'smooth' });
-                        }}
+                        onClick={() => onNavigate('/audit')}
                     >
                         Réserver un audit
                     </ButtonColorful>
