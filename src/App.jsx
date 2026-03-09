@@ -83,6 +83,7 @@ import { RevenueCalculator } from "../components/ui/revenue-calculator";
 import { ArchitectureMap } from "../components/ui/architecture-map";
 import { BeforeAfterSlider } from "../components/ui/before-after-slider";
 import { AITeamBuilder } from "../components/ui/ai-team-builder";
+import { DemoDashboardPage } from "../components/ui/demo-dashboard";
 import {
   FadeInUp,
   SlideInRight,
@@ -7541,6 +7542,14 @@ function MainRouter() {
         onNavigate={navigate}
         onLogout={handleLogout}
       />
+    );
+  }
+
+  if (currentRoute === "/demo") {
+    return (
+      <ScrollToTop>
+        <DemoDashboardPage onNavigate={navigate} />
+      </ScrollToTop>
     );
   }
 
