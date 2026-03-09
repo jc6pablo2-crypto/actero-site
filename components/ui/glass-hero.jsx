@@ -143,19 +143,20 @@ export const GlassHero = ({ onNavigate, onOpenAuditScanner }) => {
         const payload = {
             contents: [{ parts: [{ text: fullPrompt }] }],
             systemInstruction: {
-                parts: [{ text: "Tu es le Lead Architect IA d'Acero, spécialiste incontesté de l'automatisation E-commerce (Shopify, Klaviyo, Zendesk, Stripe, Make). Un CEO e-commerce te décrit une friction, une perte de temps ou d'argent dans ses processus. Ton rôle : 1. Analyser la vraie faille. 2. Proposer une architecture technique instantanée (Data Flow) pour l'éradiquer. 3. Chiffrer le gain mensuel. Sois ultra-premium, direct, impactant, sans blabla. Parle de croissance, de marge et de scalabilité. TES RÉPONSES DOIVENT TOUJOURS ÊTRE EN FRANÇAIS. Retourne UNIQUEMENT un JSON valide respectant le schéma." }]
+                parts: [{ text: "Tu es le Lead Architect IA d'Acero, spécialiste incontesté de l'automatisation E-commerce (Shopify, Klaviyo, Zendesk, Stripe, Make). Un CEO e-commerce te décrit une friction, une perte de temps ou d'argent dans ses processus. Ton rôle : 1. Analyser la vraie faille. 2. Proposer une architecture technique instantanée (Data Flow) pour l'éradiquer. 3. Chiffrer le gain mensuel. Sois ultra-premium, direct, impactant, mais garde toujours une phrase d'accroche très humaine, empathique et professionnelle. Parle de croissance, de marge et de scalabilité. TES RÉPONSES DOIVENT TOUJOURS ÊTRE EN FRANÇAIS. Retourne UNIQUEMENT un JSON valide respectant le schéma." }]
             },
             generationConfig: {
                 responseMimeType: "application/json",
                 responseSchema: {
                     type: "OBJECT",
                     properties: {
+                        introMessage: { type: "STRING", description: "Une phrase ou deux très naturelles et empathiques pour accuser réception du problème comme un vrai humain (ex: 'C'est un problème classique qui épuise votre équipe pour rien. Voyons comment on peut régler ça définitivement.')" },
                         diagnosis: { type: "STRING", description: "Le diagnostic du problème (1 phrase courte et percutante)" },
                         solution: { type: "STRING", description: "La logique de la solution d'automatisation proposée (ex: Déclencheur X -> Action Y avec l'outil Z)" },
                         timeSaved: { type: "STRING", description: "Estimation réaliste du temps gagné (ex: '15h / mois')" },
                         revenueImpact: { type: "STRING", description: "Impact métier (ex: '+12% de conversion sur les paniers abandonnés')" }
                     },
-                    required: ["diagnosis", "solution", "timeSaved", "revenueImpact"]
+                    required: ["introMessage", "diagnosis", "solution", "timeSaved", "revenueImpact"]
                 }
             }
         };
@@ -367,6 +368,12 @@ export const GlassHero = ({ onNavigate, onOpenAuditScanner }) => {
                                                     </div>
                                                 ) : msg.roiData ? (
                                                     <div className="space-y-4">
+                                                        {/* Intro Message */}
+                                                        {msg.roiData.introMessage && (
+                                                            <div className="text-[15px] leading-relaxed text-gray-300 mb-6 border-b border-white/5 pb-4">
+                                                                {msg.roiData.introMessage}
+                                                            </div>
+                                                        )}
                                                         {/* Diagnosis */}
                                                         <div>
                                                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Diagnostic</p>
