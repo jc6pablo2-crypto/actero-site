@@ -7073,9 +7073,30 @@ const FaqPage = ({ onNavigate }) => {
 // AUDIT PAGE (Dedicated Booking)
 // ==========================================
 const AuditPage = ({ onNavigate }) => {
+  const [openFaq, setOpenFaq] = useState(null);
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, []);
+
+  const auditFaqs = [
+    {
+      q: "Est-ce vraiment 100% gratuit sans engagement ?",
+      a: "Absolument. Cet audit de 15 minutes est conçu pour vous montrer exactement comment notre infrastructure peut optimiser vos process. Si vous décidez de ne pas travailler avec nous, vous repartez au moins avec une vision claire de vos failles actuelles et un plan d'action de base.",
+    },
+    {
+      q: "À qui s'adresse cet audit ?",
+      a: "Nous aidons principalement les e-commerçants générant déjà plus de 10 000€ par mois, dont la croissance est freinée par des tâches manuelles (support client répétitif, gestion des retours complexes, mauvaise rétention, etc.).",
+    },
+    {
+      q: "Que dois-je préparer avant l'appel ?",
+      a: "Pas besoin de préparer de présentation. Connaissez simplement vos outils actuels (Shopify, Stripe, CRM, Helpdesk) et soyez prêt à nous parler de vos plus gros goulots d'étranglement opérationnels.",
+    },
+    {
+      q: "Quelle est la suite si je suis convaincu ?",
+      a: "Si nous identifions un potentiel d'optimisation fort, nous vous proposerons de concevoir votre infrastructure sur mesure. Vous choisirez entre une prestation clé en main ou un abonnement à notre système propriétaire en fonction de vos besoins.",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-[#030303] text-zinc-50 font-sans selection:bg-white/20 relative overflow-hidden flex flex-col">
@@ -7161,6 +7182,149 @@ const AuditPage = ({ onNavigate }) => {
             </div>
           </FadeInUp>
         </div>
+
+        {/* SECTION 2 : VALUE PROP (CE QUE VOUS ALLEZ DÉCOUVRIR) */}
+        <section className="py-24 mt-12 bg-transparent relative z-10 border-t border-white/5">
+          <div className="max-w-6xl mx-auto px-6">
+            <FadeInUp className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+                Ce que nous allons analyser
+              </h2>
+              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                En 15 minutes chrono, nous passons au peigne fin l'architecture de votre boutique en ligne.
+              </p>
+            </FadeInUp>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              <FadeInUp delay={0.1}>
+                <div className="bg-[#0a0a0a] rounded-2xl p-8 border border-white/5 h-full hover:border-white/10 transition-colors">
+                  <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 text-indigo-400">
+                    <Database className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-3">
+                    Audit de votre Stack
+                  </h3>
+                  <p className="text-gray-400 leading-relaxed text-sm">
+                    Revue complète de vos outils actuels (Shopify, CRM, Helpdesk). Nous identifions les silos de données qui vous font perdre du temps.
+                  </p>
+                </div>
+              </FadeInUp>
+              <FadeInUp delay={0.2}>
+                <div className="bg-[#0a0a0a] rounded-2xl p-8 border border-white/5 h-full hover:border-white/10 transition-colors">
+                  <div className="w-12 h-12 bg-rose-500/10 rounded-xl flex items-center justify-center mb-6 text-rose-400">
+                    <Activity className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-3">
+                    Détection des Failles
+                  </h3>
+                  <p className="text-gray-400 leading-relaxed text-sm">
+                    Mise en évidence précise des process manuels et des coûts cachés qui grignotent actuellement votre marge nette (SAV, logistique, rétention).
+                  </p>
+                </div>
+              </FadeInUp>
+              <FadeInUp delay={0.3}>
+                <div className="bg-[#0a0a0a] rounded-2xl p-8 border border-white/5 h-full hover:border-white/10 transition-colors">
+                  <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-6 text-emerald-400">
+                    <ArrowUpRight className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-3">
+                    Plan d'Action Sur-Mesure
+                  </h3>
+                  <p className="text-gray-400 leading-relaxed text-sm">
+                    Recommandation immédiate avec les 3 workflows d'automatisation et IA à déployer d'urgence pour stabiliser votre infrastructure technique.
+                  </p>
+                </div>
+              </FadeInUp>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 3 : SOCIAL PROOF MARQUEE */}
+        <section className="py-20 relative bg-transparent overflow-hidden border-t border-white/5">
+          <FadeInUp className="text-center mb-10">
+            <p className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em]">
+              Ils optimisent leur activité avec nous
+            </p>
+          </FadeInUp>
+          <div className="relative">
+            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#030303] to-transparent z-10 pointer-events-none"></div>
+            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#030303] to-transparent z-10 pointer-events-none"></div>
+            <div className="flex animate-marquee gap-16 items-center whitespace-nowrap">
+              {[...Array(2)].map((_, setIdx) => (
+                <React.Fragment key={setIdx}>
+                  {[
+                    { name: "Shopify", icon: "shopify", color: "95BF47" },
+                    { name: "Stripe", icon: "stripe", color: "635BFF" },
+                    { name: "Klaviyo", src: "/klaviyo.svg" },
+                    { name: "Make", icon: "make", color: "5F4CFF" },
+                    { name: "n8n", icon: "n8n", color: "FF6D5A" },
+                    { name: "HubSpot", icon: "hubspot", color: "FF7A59" },
+                    { name: "Zendesk", icon: "zendesk", color: "17494D" },
+                    { name: "Slack", src: "/slack.svg" },
+                    { name: "OpenAI", src: "/openai.svg" },
+                    { name: "Intercom", icon: "intercom", color: "0058DD" },
+                    { name: "Zapier", icon: "zapier", color: "FF4A00" },
+                  ].map((tech, i) => (
+                    <div
+                      key={`${setIdx}-${i}`}
+                      className="group flex items-center gap-3 text-xl md:text-2xl font-bold text-white/50 hover:text-white transition-all duration-500 select-none flex-shrink-0 grayscale opacity-40 hover:grayscale-0 hover:opacity-100"
+                    >
+                      <img
+                        src={tech.src ? tech.src : `https://cdn.simpleicons.org/${tech.icon}/${tech.color}`}
+                        alt={tech.name}
+                        className="w-10 h-10 md:w-12 md:h-12 object-contain"
+                        loading="lazy"
+                      />
+                      <span>{tech.name}</span>
+                    </div>
+                  ))}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 4 : FAQ */}
+        <section className="py-24 relative bg-transparent border-t border-white/5">
+          <div className="max-w-3xl mx-auto px-6">
+            <FadeInUp className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+                Questions fréquentes relatives à l'audit
+              </h2>
+            </FadeInUp>
+            <div className="space-y-3">
+              {auditFaqs.map((faq, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                  className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl overflow-hidden group"
+                >
+                  <button
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                    className="w-full flex items-center justify-between p-6 text-left"
+                  >
+                    <span className="font-bold text-white pr-4">{faq.q}</span>
+                    <div
+                      className={`flex-shrink-0 transition-transform duration-300 ${openFaq === i ? "rotate-45" : ""}`}
+                    >
+                      <Plus className="w-5 h-5 text-gray-400 group-hover:text-emerald-400 transition-colors" />
+                    </div>
+                  </button>
+                  {openFaq === i && (
+                    <div className="px-6 pb-6 -mt-2 animate-fade-in-up">
+                      <p className="text-gray-400 font-medium leading-relaxed">
+                        {faq.a}
+                      </p>
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* FOOTER */}
