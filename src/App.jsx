@@ -7553,19 +7553,11 @@ function MainRouter() {
   }
 
   if (currentRoute === "/demo") {
-    return (
-      <ScrollToTop>
-        <DemoDashboardPage onNavigate={navigate} />
-      </ScrollToTop>
-    );
+    return <DemoDashboardPage onNavigate={navigate} />;
   }
 
   if (currentRoute === "/ressources") {
-    return (
-      <ScrollToTop>
-        <PromptLibraryPage onNavigate={navigate} />
-      </ScrollToTop>
-    );
+    return <PromptLibraryPage onNavigate={navigate} />;
   }
 
   return (
