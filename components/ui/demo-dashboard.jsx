@@ -14,6 +14,8 @@ import {
     Lock
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { ArchitectureMap } from './architecture-map';
+import { BeforeAfterSlider } from './before-after-slider';
 
 // Faux data for the Recharts graph
 const data = [
@@ -217,8 +219,8 @@ export const DemoDashboardPage = ({ onNavigate }) => {
                                         >
                                             {/* Colored indicator based on type */}
                                             <div className={`w-1 h-full absolute left-0 top-0 rounded-l-xl ${log.type === 'support' ? 'bg-purple-500' :
-                                                    log.type === 'sales' ? 'bg-blue-500' :
-                                                        log.type === 'alert' ? 'bg-amber-500' : 'bg-emerald-500'
+                                                log.type === 'sales' ? 'bg-blue-500' :
+                                                    log.type === 'alert' ? 'bg-amber-500' : 'bg-emerald-500'
                                                 }`}></div>
 
                                             <div className="flex-1 pl-2">
@@ -237,6 +239,30 @@ export const DemoDashboardPage = ({ onNavigate }) => {
                     </div>
                 </div>
             </div>
+
+            {/* Architecture Map Section */}
+            <ArchitectureMap />
+
+            {/* Before/After Slider Section */}
+            <BeforeAfterSlider />
+
+            {/* Bottom CTA */}
+            <section className="py-24 text-center bg-[#030303] border-t border-white/5">
+                <div className="max-w-2xl mx-auto px-6">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-6">
+                        Prêt à transformer votre stack ?
+                    </h2>
+                    <p className="text-gray-400 text-lg font-medium mb-8">
+                        Ce simulateur n'est qu'un aperçu. Réservez un audit gratuit pour voir ce que l'IA peut faire sur votre propre infrastructure.
+                    </p>
+                    <button
+                        onClick={() => onNavigate('/audit')}
+                        className="inline-flex items-center gap-2 bg-emerald-500 text-black px-8 py-4 rounded-xl font-bold hover:bg-emerald-400 transition-colors shadow-[0_0_30px_rgba(16,185,129,0.3)] text-lg"
+                    >
+                        Demander mon audit gratuit <ArrowRight className="w-5 h-5" />
+                    </button>
+                </div>
+            </section>
         </div>
     );
 };
