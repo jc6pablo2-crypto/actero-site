@@ -4120,7 +4120,7 @@ const ClientDashboard = ({ onNavigate, onLogout }) => {
 // ==========================================
 // AI AUDIT SCANNER (Free Modal version)
 // ==========================================
-const AIAuditScannerModal = ({ isOpen, onClose }) => {
+const AIAuditScannerModal = ({ isOpen, onClose, onNavigate }) => {
   const [url, setUrl] = useState("");
   const [scanState, setScanState] = useState("idle"); // idle, scanning, complete
   const [progress, setProgress] = useState(0);
@@ -4270,8 +4270,7 @@ const AIAuditScannerModal = ({ isOpen, onClose }) => {
 
   const handleApplyAutomations = () => {
     onClose();
-    const el = document.getElementById("calendly");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    if (onNavigate) onNavigate("/audit");
   };
 
   if (!isOpen) return null;
@@ -4779,7 +4778,7 @@ const LandingPage = ({ onNavigate }) => {
                   <ButtonColorful
                     onClick={() => {
                       trackEvent("Header_CTA_Clicked", { location: "navbar" });
-                      scrollToId("calendly");
+                      onNavigate("/audit");
                     }}
                   >
                     Demander un audit
@@ -4861,7 +4860,7 @@ const LandingPage = ({ onNavigate }) => {
                       trackEvent("Header_CTA_Clicked", {
                         location: "mobile_menu",
                       });
-                      scrollToId("calendly");
+                      onNavigate("/audit");
                     }}
                   >
                     Demander un audit
@@ -5109,7 +5108,7 @@ const LandingPage = ({ onNavigate }) => {
                               trackEvent("Bento_CTA_Clicked", {
                                 location: "comment_ca_marche",
                               });
-                              scrollToId("calendly");
+                              onNavigate("/audit");
                             }}
                             className="flex-shrink-0"
                           >
@@ -5229,7 +5228,7 @@ const LandingPage = ({ onNavigate }) => {
                               + 12 400 €
                             </p>
                             <button
-                              onClick={() => scrollToId("calendly")}
+                              onClick={() => onNavigate("/audit")}
                               className="text-sm font-bold text-white border-b-2 border-transparent hover:border-gray-900 transition-colors pb-0.5 inline-flex items-center gap-1"
                             >
                               Je veux le même plan{" "}
@@ -5384,71 +5383,7 @@ const LandingPage = ({ onNavigate }) => {
                 </div>
               </section>
 
-              {/* 9. APPEL STRATEGIQUE (CALENDLY) */}
-              <section
-                id="calendly"
-                className="py-24 bg-transparent px-6 relative overflow-hidden border-t border-white/10 z-10"
-              >
-                <div className="max-w-5xl mx-auto">
-                  <div className="grid lg:grid-cols-2 gap-16 items-center">
-                    {/* Left Context */}
-                    <div className="space-y-10">
-                      <div>
-                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6 leading-[1.1]">
-                          Audit stratégique offert.
-                        </h2>
-                        <p className="text-xl text-gray-400 font-medium leading-relaxed">
-                          15 minutes pour identifier précisément où vous perdez
-                          de la marge, sans aucun engagement.
-                        </p>
-                      </div>
 
-                      <div className="bg-[#0a0a0a] rounded-[24px] border border-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] p-8">
-                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-6">
-                          Pendant cet appel vous recevrez :
-                        </p>
-                        <ul className="space-y-4">
-                          {[
-                            "Estimation ROI personnalisée",
-                            "3 workflows prioritaires à activer",
-                            "Plan d'architecture technique recommandé",
-                            "Projection de croissance sur 90 jours",
-                          ].map((item, i) => (
-                            <li key={i} className="flex items-center gap-3">
-                              <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 flex-shrink-0">
-                                <Zap className="w-3 h-3" />
-                              </div>
-                              <span className="text-gray-300 font-medium">
-                                {item}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-900/20 border border-red-500/30 text-xs font-bold text-red-400">
-                        <Clock className="w-3.5 h-3.5" />3 créneaux restants
-                        cette semaine
-                      </div>
-                    </div>
-
-                    {/* Right Calendly */}
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-zinc-400/5 blur-3xl transform scale-110 rounded-full"></div>
-                      <div className="bg-[#0a0a0a] rounded-[32px] border border-white/10 shadow-2xl relative overflow-hidden h-[700px] flex justify-center w-full">
-                        <iframe
-                          src="https://calendly.com/jc6pablo2/30min?embed_domain=actero.io&embed_type=Inline"
-                          width="100%"
-                          height="100%"
-                          frameBorder="0"
-                          title="Calendly Scheduling"
-                          className="bg-[#0a0a0a] absolute inset-0 w-full h-full"
-                        ></iframe>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
             </div>{" "}
             {/* Close relative z-10 w-full content wrapper */}
           </div>{" "}
@@ -5616,6 +5551,7 @@ const LandingPage = ({ onNavigate }) => {
         <AIAuditScannerModal
           isOpen={isAuditScannerOpen}
           onClose={() => setIsAuditScannerOpen(false)}
+          onNavigate={onNavigate}
         />
       </div>
     </div>
@@ -7132,6 +7068,145 @@ const FaqPage = ({ onNavigate }) => {
   );
 };
 
+// ==========================================
+// AUDIT PAGE (Dedicated Booking)
+// ==========================================
+const AuditPage = ({ onNavigate }) => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-[#030303] text-zinc-50 font-sans selection:bg-white/20 relative overflow-hidden flex flex-col">
+      {/* HEADER */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => onNavigate("/")}
+          >
+            <Logo light={false} className="w-8 h-8" />
+            <span className="font-bold tracking-tight text-white text-xl">
+              Actero
+            </span>
+          </div>
+          <button
+            onClick={() => onNavigate("/")}
+            className="text-sm font-semibold text-gray-400 hover:text-white transition-colors flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" /> Retour
+          </button>
+        </div>
+      </header>
+
+      {/* MAIN */}
+      <main className="pt-32 pb-24 relative z-10 flex-grow px-6">
+        <div className="max-w-5xl mx-auto">
+          <FadeInUp>
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              {/* Left Context */}
+              <div className="space-y-10">
+                <div>
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6 leading-[1.1]">
+                    Audit stratégique offert.
+                  </h2>
+                  <p className="text-xl text-gray-400 font-medium leading-relaxed">
+                    15 minutes pour identifier précisément où vous perdez de la marge, sans aucun engagement.
+                  </p>
+                </div>
+
+                <div className="bg-[#0a0a0a] rounded-[24px] border border-white/5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] p-8">
+                  <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-6">
+                    Pendant cet appel vous recevrez :
+                  </p>
+                  <ul className="space-y-4">
+                    {[
+                      "Estimation ROI personnalisée",
+                      "3 workflows prioritaires à activer",
+                      "Plan d'architecture technique recommandé",
+                      "Projection de croissance sur 90 jours",
+                    ].map((item, i) => (
+                      <li key={i} className="flex items-center gap-3">
+                        <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100 flex-shrink-0">
+                          <Zap className="w-3 h-3" />
+                        </div>
+                        <span className="text-gray-300 font-medium">
+                          {item}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-900/20 border border-emerald-500/30 text-xs font-bold text-emerald-400">
+                  <Clock className="w-3.5 h-3.5" />3 créneaux restants cette semaine
+                </div>
+              </div>
+
+              {/* Right Calendly */}
+              <div className="relative">
+                <div className="absolute inset-0 bg-zinc-400/5 blur-3xl transform scale-110 rounded-full"></div>
+                <div className="bg-[#0a0a0a] rounded-[32px] border border-white/10 shadow-2xl relative overflow-hidden h-[700px] flex justify-center w-full">
+                  <iframe
+                    src="https://calendly.com/jc6pablo2/30min?embed_domain=actero.io&embed_type=Inline"
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    title="Calendly Scheduling"
+                    className="bg-[#0a0a0a] absolute inset-0 w-full h-full"
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+          </FadeInUp>
+        </div>
+      </main>
+
+      {/* FOOTER */}
+      <footer className="bg-[#0a0a0a] border-t border-white/5 py-16 px-6 relative z-10 w-full mt-auto">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col items-center md:items-start gap-2">
+            <div className="flex items-center gap-2">
+              <Logo light={false} className="w-6 h-6" />
+              <span className="font-bold tracking-tight text-white text-lg">
+                Actero
+              </span>
+            </div>
+            <p className="text-sm font-medium text-gray-400">
+              L'infrastructure autopilotée des E-commerçants.
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-8 text-sm font-bold text-gray-400">
+            <button
+              onClick={() => onNavigate("/tarifs")}
+              className="hover:text-white transition-colors"
+            >
+              Tarification
+            </button>
+            <button
+              onClick={() => onNavigate("/entreprise")}
+              className="hover:text-white transition-colors"
+            >
+              Entreprise
+            </button>
+            <button
+              onClick={() => onNavigate("/faq")}
+              className="hover:text-white transition-colors"
+            >
+              FAQ
+            </button>
+          </div>
+          <div className="text-center md:text-right">
+            <p className="text-xs font-semibold text-gray-400">
+              © {new Date().getFullYear()} Actero. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
 function MainRouter() {
   const [currentRoute, setCurrentRoute] = useState("/");
   const [isRouting, setIsRouting] = useState(true);
@@ -7207,6 +7282,10 @@ function MainRouter() {
 
   if (currentRoute === "/faq") {
     return <FaqPage onNavigate={navigate} />;
+  }
+
+  if (currentRoute === "/audit") {
+    return <AuditPage onNavigate={navigate} />;
   }
 
   if (currentRoute === "/payment/success") {
