@@ -4,7 +4,9 @@ import React, {
   useRef,
   createContext,
   useContext,
+  useMemo,
 } from "react";
+import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Analytics } from "@vercel/analytics/react";
 import {
   motion,
@@ -361,87 +363,50 @@ const SkeletonRow = ({ height = "h-4", width = "w-full", className = "" }) => (
 
 // --- PREMIUM DASHBOARD WIDGETS ---
 
-const LiveLogFeed = ({ theme = "dark" }) => {
-  const [logs, setLogs] = useState([]);
+const LiveLogFeed = ({ theme = "dark", supabase }) => {
   const isLight = theme === "light";
+  const { data: logs = [], isLoading } = useQuery({
+    queryKey: ["live-logs"],
+    queryFn: async () => {
+      if (!supabase) return [];
+      const { data, error } = await supabase
+        .from("automation_events")
+        .select("id, event_category, ticket_type, created_at")
+        .order("created_at", { ascending: false })
+        .limit(5);
+      if (error) throw error;
+      return data;
+    },
+    refetchInterval: 10000,
+    enabled: !!supabase,
+  });
 
-  useEffect(() => {
-    const templates = [
-      {
-        text: "Webhook Shopify réceptionné",
-        icon: "🌐",
-        color: "text-blue-400",
-      },
-      {
-        text: "Analyse IA terminée: Anomalie détectée",
-        icon: "🧠",
-        color: "text-amber-400",
-      },
-      {
-        text: "Correction envoyée à Klaviyo",
-        icon: "✉️",
-        color: "text-purple-400",
-      },
-      {
-        text: "Synchronisation CRM réussie",
-        icon: "✅",
-        color: "text-emerald-400",
-      },
-      {
-        text: "Nouvelle commande #4092 analysée",
-        icon: "🛒",
-        color: "text-zinc-300",
-      },
-      {
-        text: "Lead #89 scorer par Actero AI",
-        icon: "⚡",
-        color: "text-indigo-400",
-      },
-      {
-        text: "Workflow 'Panier Abandonné' déclenché",
-        icon: "🔄",
-        color: "text-orange-400",
-      },
-    ];
-
-    let idCounter = 0;
-
-    // Initialize with some logs
-    setLogs(
-      Array(4)
-        .fill(null)
-        .map((_, i) => ({
-          id: idCounter++,
-          ...templates[Math.floor(Math.random() * templates.length)],
-          time: new Date(Date.now() - (4 - i) * 60000).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-          }),
-        })),
+  if (isLoading) {
+    return (
+      <div
+        className={`h-full rounded-3xl p-6 border animate-pulse ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"}`}
+      >
+        <div className="space-y-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-12 bg-white/5 rounded-xl w-full" />
+          ))}
+        </div>
+      </div>
     );
+  }
 
-    const interval = setInterval(() => {
-      const template = templates[Math.floor(Math.random() * templates.length)];
-      setLogs((prev) => {
-        const newLogs = [
-          {
-            id: idCounter++,
-            ...template,
-            time: new Date().toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-            }),
-          },
-          ...prev,
-        ];
-        return newLogs.slice(0, 6); // Keep last 6
-      });
-    }, 4500);
-
-    return () => clearInterval(interval);
-  }, []);
+  if (logs.length === 0) {
+    return (
+      <div
+        className={`h-full rounded-3xl p-6 border flex flex-col items-center justify-center text-center ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"}`}
+      >
+        <Activity className="w-8 h-8 text-gray-500 mb-2 opacity-50" />
+        <p className={`text-sm font-medium ${isLight ? "text-slate-500" : "text-gray-400"}`}>
+          Aucune activité pour le moment.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -455,31 +420,36 @@ const LiveLogFeed = ({ theme = "dark" }) => {
           Flux en direct{" "}
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         </h3>
-        <div className="flex gap-1">
-          <div
-            className={`w-1 h-1 rounded-full ${isLight ? "bg-slate-200" : "bg-white/20"}`}
-          ></div>
-          <div
-            className={`w-1 h-1 rounded-full ${isLight ? "bg-slate-200" : "bg-white/20"}`}
-          ></div>
-        </div>
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
         {logs.map((log) => (
           <div key={log.id} className="flex items-start gap-3 group/log">
-            <span className="text-lg leading-none mt-0.5">{log.icon}</span>
+            <span className="text-lg leading-none mt-0.5">
+              {log.event_category === "Webhook" ? "🌐" :
+                log.event_category === "IA" ? "🧠" :
+                  log.event_category === "Email" ? "✉️" :
+                    log.event_category === "CRM" ? "✅" :
+                      log.event_category === "Commande" ? "🛒" :
+                        log.event_category === "Lead" ? "⚡" :
+                          log.event_category === "Workflow" ? "🔄" : "⚙️"
+              }
+            </span>
             <div className="flex-1 min-w-0">
               <p
                 className={`text-sm font-bold leading-snug truncate transition-colors ${isLight ? "text-slate-700" : "text-white"
                   }`}
               >
-                {log.text}
+                {log.ticket_type || log.event_category || "Événement inconnu"}
               </p>
               <p
                 className={`text-[10px] font-bold ${isLight ? "text-slate-400" : "text-gray-500"}`}
               >
-                {log.time}
+                {new Date(log.created_at).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                })}
               </p>
             </div>
           </div>
@@ -488,6 +458,23 @@ const LiveLogFeed = ({ theme = "dark" }) => {
     </div>
   );
 };
+<div className="flex-1 min-w-0">
+  <p
+    className={`text-sm font-bold leading-snug truncate transition-colors ${isLight ? "text-slate-700" : "text-white"
+      }`}
+  >
+    {log.ticket_type || log.event_category || "Événement inconnu"}
+  </p>
+  <p
+    className={`text-[10px] font-bold ${isLight ? "text-slate-400" : "text-gray-500"}`}
+  >
+    {new Date(log.created_at).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    })}
+  </p>
+</div>
 
 const ROIGlowChart = ({ theme = "dark" }) => {
   const isLight = theme === "light";
@@ -1144,7 +1131,7 @@ const AdminOnboardingView = () => {
       <div className="bg-[#0a0a0a] p-8 rounded-2xl border border-white/10 shadow-sm mb-8">
         <form onSubmit={handleCreateAndInvite} className="space-y-6">
           {errorMsg && (
-            <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-start gap-3 text-sm font-medium">
+            <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-500/20 flex items-start gap-3 text-sm font-medium">
               <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
               <span>{errorMsg}</span>
             </div>
@@ -2140,63 +2127,6 @@ const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             </div>
           )}
 
-          {activeTab === "requests" && (
-            <div className="max-w-6xl mx-auto animate-fade-in-up">
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
-                  Demandes d'architecture IA
-                </h2>
-                <p className="text-gray-400 font-normal">
-                  Projets soumis par vos prospects via le widget de la landing
-                  page.
-                </p>
-              </div>
-
-              {dataLoading ? (
-                <div className="flex justify-center items-center py-20">
-                  <svg
-                    className="animate-spin h-8 w-8 text-zinc-300"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                </div>
-              ) : dataError ? (
-                <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 flex items-center gap-2">
-                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                  {dataError}
-                </div>
-              ) : requestsData.length === 0 ? (
-                <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-16 text-center shadow-sm flex flex-col items-center">
-                  <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5">
-                    <Sparkles className="w-10 h-10 text-gray-300" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    Aucune demande pour le moment
-                  </h3>
-                  <p className="text-gray-400 font-normal">
-                    Les projets soumis par vos clients apparaîtront ici.
-                  </p>
-                </div>
-              ) : (
-                <AdminKanbanBoard requests={requestsData} />
-              )}
-            </div>
-          )}
-
           {activeTab === "automations" && (
             <div className="max-w-6xl mx-auto text-center py-20 animate-fade-in-up">
               <Database className="w-16 h-16 text-gray-200 mx-auto mb-4" />
@@ -2389,44 +2319,21 @@ const ActivityModal = ({ log, onClose }) => {
 };
 
 const ActivityView = ({ supabase, theme = "dark" }) => {
-  const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState("");
-  const [hasMore, setHasMore] = useState(true);
-  const [lastCreatedAt, setLastCreatedAt] = useState(null);
-
+  const isLight = theme === "light";
   const [period, setPeriod] = useState("30d");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [selectedLog, setSelectedLog] = useState(null);
 
-  const isLight = theme === "light";
-
-  // Derive unique categories and types
-  const uniqueCategories = [
-    ...new Set(logs.map((l) => l.event_category).filter(Boolean)),
-  ];
-  const uniqueTypes = [
-    ...new Set(logs.map((l) => l.ticket_type).filter(Boolean)),
-  ];
-
-  const fetchActivity = async (isLoadMore = false) => {
-    if (!supabase) return;
-    setError("");
-    if (isLoadMore) setLoadingMore(true);
-    else setLoading(true);
-
-    try {
+  const { data: logs = [], isLoading, error, refetch } = useQuery({
+    queryKey: ["activity-logs", period, categoryFilter, typeFilter],
+    queryFn: async () => {
       let query = supabase
         .from("automation_events")
-        .select(
-          "id, event_category, ticket_type, time_saved_seconds, revenue_amount, created_at",
-        )
+        .select("id, event_category, ticket_type, time_saved_seconds, revenue_amount, created_at")
         .order("created_at", { ascending: false })
-        .limit(50);
+        .limit(100);
 
-      // Period filter
       if (period !== "all") {
         const date = new Date();
         if (period === "24h") date.setDate(date.getDate() - 1);
@@ -2435,45 +2342,18 @@ const ActivityView = ({ supabase, theme = "dark" }) => {
         query = query.gte("created_at", date.toISOString());
       }
 
-      // Categories and types
-      if (categoryFilter !== "all")
-        query = query.eq("event_category", categoryFilter);
+      if (categoryFilter !== "all") query = query.eq("event_category", categoryFilter);
       if (typeFilter !== "all") query = query.eq("ticket_type", typeFilter);
-
-      // Pagination
-      if (isLoadMore && lastCreatedAt) {
-        query = query.lt("created_at", lastCreatedAt);
-      }
 
       const { data, error: fetchErr } = await query;
       if (fetchErr) throw fetchErr;
+      return data || [];
+    },
+    enabled: !!supabase,
+  });
 
-      const newLogs = data || [];
-      if (isLoadMore) {
-        setLogs((prev) => [...prev, ...newLogs]);
-      } else {
-        setLogs(newLogs);
-      }
-
-      if (newLogs.length === 50) {
-        setHasMore(true);
-        setLastCreatedAt(newLogs[49].created_at);
-      } else {
-        setHasMore(false);
-      }
-    } catch (err) {
-      setError(err.message || "Erreur lors de la récupération des logs.");
-    } finally {
-      if (isLoadMore) setLoadingMore(false);
-      else setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    setLastCreatedAt(null);
-    setHasMore(true);
-    fetchActivity(false);
-  }, [period, categoryFilter, typeFilter]);
+  const uniqueCategories = useMemo(() => [...new Set(logs.map(l => l.event_category).filter(Boolean))], [logs]);
+  const uniqueTypes = useMemo(() => [...new Set(logs.map(l => l.ticket_type).filter(Boolean))], [logs]);
 
   return (
     <div
@@ -2497,15 +2377,15 @@ const ActivityView = ({ supabase, theme = "dark" }) => {
           </p>
         </div>
         <button
-          onClick={() => fetchActivity(false)}
+          onClick={() => refetch()}
           className={`text-sm font-bold px-4 py-2 rounded-xl shadow-sm transition-all text-nowrap disabled:opacity-50 flex items-center gap-2 ${isLight
             ? "bg-white text-slate-900 border border-slate-200 hover:bg-slate-100"
             : "bg-[#0a0a0a] border border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
             }`}
-          disabled={loading}
+          disabled={isLoading}
         >
           <RefreshCw
-            className={`w-4 h-4 ${loading && !loadingMore ? "animate-spin" : ""}`}
+            className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`}
           />{" "}
           Rafraîchir
         </button>
@@ -2574,9 +2454,9 @@ const ActivityView = ({ supabase, theme = "dark" }) => {
           <div className="p-10 flex flex-col items-center justify-center text-center">
             <AlertCircle className="w-10 h-10 text-red-500 mb-4" />
             <p className="text-red-700 font-bold mb-1">Erreur de connexion</p>
-            <p className="text-sm text-red-500 font-medium">{error}</p>
+            <p className="text-sm text-red-500 font-medium">{error.message}</p>
           </div>
-        ) : loading && logs.length === 0 ? (
+        ) : isLoading && logs.length === 0 ? (
           <div className="p-6 md:p-8 space-y-6">
             {[...Array(5)].map((_, i) => (
               <div key={i} className="flex gap-4 items-start">
@@ -2704,28 +2584,6 @@ const ActivityView = ({ supabase, theme = "dark" }) => {
                 );
               })}
             </div>
-
-            {hasMore && (
-              <div
-                className={`p-6 md:p-8 flex justify-center border-t ${isLight ? "border-slate-100 bg-slate-50" : "border-white/5 bg-[#030303]"
-                  }`}
-              >
-                <button
-                  onClick={() => fetchActivity(true)}
-                  disabled={loadingMore}
-                  className={`border font-bold px-6 py-3 rounded-xl transition-colors shadow-sm disabled:opacity-50 flex items-center gap-2 ${isLight
-                    ? "bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300"
-                    : "bg-[#0a0a0a] border-white/10 text-gray-300 hover:text-white hover:border-gray-300"
-                    }`}
-                >
-                  {loadingMore ? (
-                    <span className="animate-spin w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full"></span>
-                  ) : (
-                    "Charger les événements précédents"
-                  )}
-                </button>
-              </div>
-            )}
           </>
         )}
       </div>
@@ -3037,7 +2895,7 @@ const ExecutionPlanDrawer = ({
             <button
               disabled={loading}
               onClick={handleImplementClick}
-              className="flex-1 bg-zinc-300 text-white font-bold py-3.5 px-6 rounded-xl hover:bg-zinc-400 transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 bg-zinc-300 text-white font-bold py-3.5 px-6 rounded-xl hover:bg-zinc-400 transition-colors shadow-lg shadow-blue-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <span className="animate-spin w-5 h-5 border-2 border-white/20 border-t-white rounded-full"></span>
@@ -3222,11 +3080,8 @@ const RecommendationCard = ({ reco, onAction, onOpenPlan, theme = "dark" }) => {
 };
 
 const IntelligenceView = ({ supabase, setActiveTab, theme = "dark" }) => {
-  const [recommendations, setRecommendations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const queryClient = useQueryClient();
   const isLight = theme === "light";
-
   const [statusFilter, setStatusFilter] = useState("active");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [sortBy, setSortBy] = useState("impact");
@@ -3234,17 +3089,17 @@ const IntelligenceView = ({ supabase, setActiveTab, theme = "dark" }) => {
 
   const [selectedPlanReco, setSelectedPlanReco] = useState(null);
 
-  const fetchRecommendations = async () => {
-    if (!supabase) return;
-    setLoading(true);
-    setError("");
-    setActionError("");
-    try {
+  const { data: recommendations = [], isLoading, error } = useQuery({
+    queryKey: ["ai-recommendations", statusFilter, categoryFilter, sortBy],
+    queryFn: async () => {
+      if (!supabase) return [];
       let query = supabase
         .from("ai_recommendations")
-        .select("*")
-        .eq("status", statusFilter)
-        .limit(50);
+        .select("*");
+
+      if (statusFilter !== "all") {
+        query = query.eq("status", statusFilter);
+      }
 
       if (categoryFilter !== "all") {
         query = query.eq("category", categoryFilter);
@@ -3258,17 +3113,10 @@ const IntelligenceView = ({ supabase, setActiveTab, theme = "dark" }) => {
 
       const { data, error: fetchErr } = await query;
       if (fetchErr) throw fetchErr;
-      setRecommendations(data || []);
-    } catch (err) {
-      setError(err.message || "Erreur lors de la récupération.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchRecommendations();
-  }, [statusFilter, categoryFilter, sortBy]);
+      return data || [];
+    },
+    enabled: !!supabase,
+  });
 
   const handleAction = async (id, newStatus) => {
     try {
@@ -3278,19 +3126,14 @@ const IntelligenceView = ({ supabase, setActiveTab, theme = "dark" }) => {
         p_status: newStatus,
       });
       if (rpcErr) throw rpcErr;
-
-      if (statusFilter === "active") {
-        setRecommendations((prev) => prev.filter((r) => r.id !== id));
-      } else {
-        await fetchRecommendations();
-      }
+      queryClient.invalidateQueries({ queryKey: ["ai-recommendations"] });
     } catch (err) {
       setActionError(err.message || "Erreur lors de la mise à jour.");
     }
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6" >
       <div
         className={`border rounded-3xl shadow-sm overflow-hidden transition-colors duration-300 ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
           }`}
@@ -3392,72 +3235,75 @@ const IntelligenceView = ({ supabase, setActiveTab, theme = "dark" }) => {
         </div>
       )}
 
-      {error ? (
-        <div className="p-10 rounded-3xl flex flex-col items-center justify-center text-center border bg-red-50 border-red-100">
-          <AlertCircle className="w-10 h-10 text-red-400 mb-4" />
-          <p className="text-red-900 font-bold mb-1">Erreur de connexion</p>
-          <p className="text-sm text-red-600">{error}</p>
-        </div>
-      ) : loading && recommendations.length === 0 ? (
-        <div className="space-y-6">
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className={`border rounded-3xl p-6 shadow-sm animate-pulse h-48 flex flex-col gap-4 ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
-                }`}
-            >
-              <div className={`h-6 rounded w-1/4 ${isLight ? "bg-slate-100" : "bg-white/5"}`}></div>
-              <div className={`h-4 rounded w-3/4 mt-2 ${isLight ? "bg-slate-100" : "bg-white/5"}`}></div>
-              <div className="mt-auto flex gap-4">
-                <div className={`h-10 rounded w-32 ${isLight ? "bg-slate-100" : "bg-white/5"}`}></div>
+      {
+        error ? (
+          <div className="p-10 rounded-3xl flex flex-col items-center justify-center text-center border bg-red-50 border-red-100" >
+            <AlertCircle className="w-10 h-10 text-red-400 mb-4" />
+            <p className="text-red-900 font-bold mb-1">Erreur de connexion</p>
+            <p className="text-sm text-red-600">{error}</p>
+          </div >
+        ) : loading && recommendations.length === 0 ? (
+          <div className="space-y-6">
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className={`border rounded-3xl p-6 shadow-sm animate-pulse h-48 flex flex-col gap-4 ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
+                  }`}
+              >
+                <div className={`h-6 rounded w-1/4 ${isLight ? "bg-slate-100" : "bg-white/5"}`}></div>
+                <div className={`h-4 rounded w-3/4 mt-2 ${isLight ? "bg-slate-100" : "bg-white/5"}`}></div>
+                <div className="mt-auto flex gap-4">
+                  <div className={`h-10 rounded w-32 ${isLight ? "bg-slate-100" : "bg-white/5"}`}></div>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : recommendations.length === 0 ? (
-        <div
-          className={`border rounded-3xl p-16 text-center shadow-sm flex flex-col items-center ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
-            }`}
-        >
+            ))}
+          </div>
+        ) : recommendations.length === 0 ? (
           <div
-            className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 border ${isLight ? "bg-blue-50 border-blue-100" : "bg-white/5 border-white/5"
+            className={`border rounded-3xl p-16 text-center shadow-sm flex flex-col items-center ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
               }`}
           >
-            <Lightbulb
-              className={`w-10 h-10 ${isLight ? "text-blue-500" : "text-gray-300"}`}
-            />
+            <div
+              className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 border ${isLight ? "bg-blue-50 border-blue-100" : "bg-white/5 border-white/5"
+                }`}
+            >
+              <Lightbulb
+                className={`w-10 h-10 ${isLight ? "text-blue-500" : "text-gray-300"}`}
+              />
+            </div>
+            <p className={`font-bold text-xl mb-2 ${isLight ? "text-slate-900" : "text-white"}`}>
+              Tout est optimisé
+            </p>
+            <p className={`font-medium max-w-md ${isLight ? "text-slate-500" : "text-zinc-500"}`}>
+              L'IA n'a pas de nouvelle recommandation à proposer pour le moment.
+            </p>
           </div>
-          <p className={`font-bold text-xl mb-2 ${isLight ? "text-slate-900" : "text-white"}`}>
-            Tout est optimisé
-          </p>
-          <p className={`font-medium max-w-md ${isLight ? "text-slate-500" : "text-zinc-500"}`}>
-            L'IA n'a pas de nouvelle recommandation à proposer pour le moment.
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-6 animate-fade-in-up">
-          {recommendations.map((reco) => (
-            <RecommendationCard
-              key={reco.id}
-              reco={reco}
-              onAction={handleAction}
-              onOpenPlan={setSelectedPlanReco}
-              theme={theme}
-            />
-          ))}
-        </div>
-      )}
+        ) : (
+          <div className="space-y-6 animate-fade-in-up">
+            {recommendations.map((reco) => (
+              <RecommendationCard
+                key={reco.id}
+                reco={reco}
+                onAction={handleAction}
+                onOpenPlan={setSelectedPlanReco}
+                theme={theme}
+              />
+            ))}
+          </div>
+        )}
 
-      {selectedPlanReco && (
-        <ExecutionPlanDrawer
-          reco={selectedPlanReco}
-          supabase={supabase}
-          onClose={() => setSelectedPlanReco(null)}
-          onImplement={handleAction}
-          onNavigateToActivity={() => setActiveTab("activity")}
-        />
-      )}
-    </div>
+      {
+        selectedPlanReco && (
+          <ExecutionPlanDrawer
+            reco={selectedPlanReco}
+            supabase={supabase}
+            onClose={() => setSelectedPlanReco(null)}
+            onImplement={handleAction}
+            onNavigateToActivity={() => setActiveTab("activity")}
+          />
+        )
+      }
+    </div >
   );
 };
 
@@ -3485,6 +3331,7 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     onNavigate(route);
   };
 
+  const queryClient = useQueryClient();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("actero-theme") || "dark";
@@ -3496,13 +3343,54 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     localStorage.setItem("actero-theme", newTheme);
   };
 
-  const [currentClient, setCurrentClient] = useState(null);
-  const [requests, setRequests] = useState([]);
-  const [metrics, setMetrics] = useState(null);
-  const [metricsLoading, setMetricsLoading] = useState(true);
-  const [metricsError, setMetricsError] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  // 1. Fetch Client Profile
+  const { data: currentClient, isLoading: clientLoading, error: clientError } = useQuery({
+    queryKey: ["client-profile"],
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Non authentifié");
+
+      const { data, error } = await supabase
+        .from("clients")
+        .select("id, brand_name, owner_user_id, created_at")
+        .eq("owner_user_id", session.user.id)
+        .single();
+
+      if (error && error.code !== "PGRST116") throw error;
+      return data;
+    },
+    enabled: !!supabase,
+  });
+
+  // 2. Fetch Metrics (with polling)
+  const { data: metrics, isLoading: metricsLoading, error: metricsError } = useQuery({
+    queryKey: ["client-metrics", currentClient?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc(
+        "recompute_client_metrics",
+        { p_client_id: currentClient.id }
+      );
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!supabase && !!currentClient?.id,
+    refetchInterval: 30000, // 30s polling
+  });
+
+  // 3. Fetch Requests
+  const { data: requests = [], isLoading: requestsLoading } = useQuery({
+    queryKey: ["client-requests", currentClient?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("requests")
+        .select("*")
+        .eq("client_id", currentClient.id)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!supabase && !!currentClient?.id,
+  });
 
   // Project submission state
   const [projectTitle, setProjectTitle] = useState("");
@@ -3512,93 +3400,6 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
-
-  useEffect(() => {
-    const fetchClientData = async () => {
-      if (!isSupabaseConfigured || !supabase) {
-        setIsLoading(false);
-        return;
-      }
-
-      setIsLoading(true);
-      setError("");
-      try {
-        const { data: sessionData, error: sessionError } =
-          await supabase.auth.getSession();
-        const session = sessionData?.session;
-        if (sessionError || !session) {
-          onNavigate("/login");
-          return;
-        }
-
-        const { data: clientRecord, error: clientErr } = await supabase
-          .from("clients")
-          .select("id, brand_name, owner_user_id, created_at")
-          .eq("owner_user_id", session.user.id)
-          .single();
-
-        if (clientErr && clientErr.code !== "PGRST116") {
-          throw clientErr;
-        }
-
-        if (clientRecord) {
-          setCurrentClient(clientRecord);
-          // Fetch requests
-          const { data: requestsData, error: reqErr } = await supabase
-            .from("requests")
-            .select("*")
-            .eq("client_id", clientRecord.id)
-            .order("created_at", { ascending: false });
-
-          if (reqErr) throw reqErr;
-          setRequests(requestsData || []);
-
-          // Fetch Metrics via RPC
-          setMetricsLoading(true);
-          const { data: metricsData, error: metricsErr } = await supabase.rpc(
-            "recompute_client_metrics",
-            { p_client_id: clientRecord.id },
-          );
-
-          if (metricsErr && metricsErr.code !== "PGRST116") {
-            console.error(metricsErr);
-            setMetricsError("Impossible de charger les métriques.");
-          } else {
-            setMetrics(metricsData);
-          }
-          setMetricsLoading(false);
-        } else {
-          setCurrentClient(null);
-        }
-      } catch (err) {
-        setError(err.message || "Erreur lors du chargement des données.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchClientData();
-  }, [onNavigate]);
-
-  // Polling metrics every 30s using RPC
-  useEffect(() => {
-    if (!currentClient || !isSupabaseConfigured) return;
-
-    const intervalId = setInterval(async () => {
-      try {
-        const { data: metricsData, error: metricsErr } = await supabase.rpc(
-          "recompute_client_metrics",
-          { p_client_id: currentClient.id },
-        );
-        if (!metricsErr && metricsData) {
-          setMetrics(metricsData);
-        }
-      } catch (err) {
-        console.error("Polling error", err);
-      }
-    }, 30000);
-
-    return () => clearInterval(intervalId);
-  }, [currentClient, isSupabaseConfigured]);
 
   const handleSubmitProject = async (e) => {
     e.preventDefault();
@@ -3626,16 +3427,8 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       setProjectStack("");
       setProjectPriority("normal");
 
-      // Refresh requests
-      const { data: requestsData, error: reqErr } = await supabase
-        .from("requests")
-        .select("*")
-        .eq("client_id", currentClient.id)
-        .order("created_at", { ascending: false });
-
-      if (!reqErr && requestsData) {
-        setRequests(requestsData);
-      }
+      // Invalidate requests to trigger refetch
+      queryClient.invalidateQueries({ queryKey: ["client-requests", currentClient.id] });
 
       setTimeout(() => {
         setActiveTab("requests");
@@ -3643,10 +3436,11 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       }, 2000);
     } catch (err) {
       setSubmitError(err.message || "Erreur lors de la soumission du projet.");
-    } finally {
-      setIsSubmitting(false);
     }
   };
+
+  const isLoading = clientLoading || (!!currentClient && metricsLoading && !metrics);
+  const error = clientError?.message || metricsError?.message;
 
   if (isSupabaseConfigured && isLoading) {
     return (
@@ -4533,78 +4327,31 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               >
                 Workflows Déployés
               </h3>
+
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[
-                  {
-                    name: "Récupération Paniers",
-                    desc: "Séquence dynamique Shopify -> Klaviyo",
-                    status: "Actif",
-                    runs: "1,240 exéc.",
-                  },
-                  {
-                    name: "Support IA Niveau 1",
-                    desc: "Analyse des emails SAV et réponse",
-                    status: "Actif",
-                    runs: "3,102 exéc.",
-                  },
-                  {
-                    name: "Synchronisation CRM",
-                    desc: "Stripe -> Quickbooks (Quotidien)",
-                    status: "Actif",
-                    runs: "30 exéc.",
-                  },
-                ].map((sys, idx) => (
-                  <div
-                    key={idx}
-                    className={`border rounded-2xl p-6 shadow-sm relative transition-all group ${theme === "light"
-                      ? "bg-white border-slate-200 hover:shadow-md hover:border-slate-300"
-                      : "bg-[#0a0a0a] border-white/10 hover:shadow-md hover:border-white/20"
-                      }`}
-                  >
-                    <div className="flex justify-between items-start mb-6">
-                      <div
-                        className={`p-3 border rounded-xl transition-colors ${theme === "light"
-                          ? "bg-slate-50 border-slate-100 group-hover:bg-slate-100"
-                          : "bg-white/5 border-white/5 group-hover:bg-white/10"
-                          }`}
-                      >
-                        <Database
-                          className={`w-5 h-5 ${theme === "light" ? "text-slate-400" : "text-gray-400"}`}
-                        />
-                      </div>
-                      <span
-                        className={`text-xs font-bold px-3 py-1 rounded-lg border ${theme === "light"
-                          ? "bg-emerald-50 text-emerald-600 border-emerald-100"
-                          : "bg-emerald-50/10 text-emerald-400 border-emerald-500/20"
-                          }`}
-                      >
-                        {sys.status}
-                      </span>
-                    </div>
-                    <h3
-                      className={`text-lg font-bold mb-1 ${theme === "light" ? "text-slate-900" : "text-white"}`}
-                    >
-                      {sys.name}
-                    </h3>
-                    <p
-                      className={`text-sm font-medium mb-6 leading-relaxed ${theme === "light" ? "text-slate-500" : "text-zinc-500"}`}
-                    >
-                      {sys.desc}
+                {/* Real Workflows from client_settings or empty state */}
+                {!metricsLoading && (metrics?.active_automations || 0) === 0 ? (
+                  <div className={`col-span-full border rounded-2xl p-12 text-center flex flex-col items-center ${theme === "light" ? "bg-slate-50 border-slate-100" : "bg-white/5 border-white/5"}`}>
+                    <Database className="w-10 h-10 text-gray-500 mb-4 opacity-50" />
+                    <p className={`font-bold text-lg ${theme === "light" ? "text-slate-900" : "text-white"}`}>
+                      Aucun workflow actif
                     </p>
-                    <div
-                      className={`pt-4 border-t flex items-center justify-between text-sm ${theme === "light" ? "border-slate-100" : "border-white/5"}`}
-                    >
-                      <span
-                        className={`font-bold ${theme === "light" ? "text-slate-500" : "text-zinc-400"}`}
-                      >
-                        {sys.runs}
-                      </span>
-                      <span className="text-emerald-500 flex items-center gap-1">
-                        <CheckCircle className="w-4 h-4" /> 100% de succès
-                      </span>
-                    </div>
+                    <p className="text-gray-500 max-w-sm mx-auto mt-2">
+                      Vos automations apparaîtront ici dès qu'elles seront configurées par nos ingénieurs.
+                    </p>
                   </div>
-                ))}
+                ) : (
+                  // If we had a workflows table, we would map it here.
+                  // For now, if active_automations > 0, we can show a summary or fetch from client_settings.
+                  <div className={`col-span-full border rounded-2xl p-8 text-center ${theme === "light" ? "bg-slate-50 border-slate-100" : "bg-white/5 border-white/5"}`}>
+                    <p className={`font-bold ${theme === "light" ? "text-slate-900" : "text-white"}`}>
+                      {metrics?.active_automations} infrastructure(s) connectée(s)
+                    </p>
+                    <p className="text-gray-500 mt-1">
+                      Flux de données actifs et surveillés 24/7.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -8261,9 +8008,11 @@ export default function App() {
   }
 
   return (
-    <ErrorBoundary>
-      <MainRouter />
-      <Analytics />
-    </ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ErrorBoundary>
+        <MainRouter />
+        <Analytics />
+      </ErrorBoundary>
+    </QueryClientProvider>
   );
 }
