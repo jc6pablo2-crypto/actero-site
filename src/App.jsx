@@ -72,6 +72,8 @@ import {
   ChevronDown,
   HelpCircle,
   ClipboardList,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 // --- Configuration Supabase ---
@@ -254,71 +256,84 @@ const StatCard = ({
   color = "zinc",
   subtitleItems = [],
   className = "",
+  theme = "dark",
 }) => {
+  const isLight = theme === "light";
   const colors = {
     zinc: {
-      bg: "bg-zinc-800",
-      border: "border-zinc-700",
-      text: "text-zinc-300",
-      val: "text-zinc-300",
-      hover: "group-hover:bg-zinc-400/10",
+      bg: isLight ? "bg-slate-100" : "bg-zinc-800",
+      border: isLight ? "border-slate-200" : "border-zinc-700",
+      text: isLight ? "text-slate-500" : "text-zinc-300",
+      val: isLight ? "text-slate-900" : "text-zinc-300",
+      hover: isLight ? "group-hover:bg-slate-200/50" : "group-hover:bg-zinc-400/10",
     },
     emerald: {
-      bg: "bg-emerald-50",
-      border: "border-emerald-100",
+      bg: isLight ? "bg-emerald-50" : "bg-emerald-500/10",
+      border: isLight ? "border-emerald-100" : "border-emerald-500/20",
       text: "text-emerald-600",
-      val: "text-emerald-600",
-      hover: "group-hover:bg-emerald-500/10",
+      val: isLight ? "text-emerald-700" : "text-emerald-500",
+      hover: isLight ? "group-hover:bg-emerald-100/50" : "group-hover:bg-emerald-500/20",
     },
     amber: {
-      bg: "bg-amber-50",
-      border: "border-amber-100",
+      bg: isLight ? "bg-amber-50" : "bg-amber-500/10",
+      border: isLight ? "border-amber-100" : "border-amber-500/20",
       text: "text-amber-600",
-      val: "text-amber-600",
-      hover: "group-hover:bg-amber-500/10",
+      val: isLight ? "text-amber-700" : "text-amber-500",
+      hover: isLight ? "group-hover:bg-amber-100/50" : "group-hover:bg-amber-500/20",
     },
-    gray: {
-      bg: "bg-white/5",
-      border: "border-white/5",
-      text: "text-gray-400",
-      val: "text-white",
-      hover: "group-hover:bg-gray-500/10",
+    blue: {
+      bg: isLight ? "bg-blue-50" : "bg-blue-500/10",
+      border: isLight ? "border-blue-100" : "border-blue-500/20",
+      text: "text-blue-600",
+      val: isLight ? "text-blue-700" : "text-blue-500",
+      hover: isLight ? "group-hover:bg-blue-100/50" : "group-hover:bg-blue-500/20",
     },
   };
-  const c = colors[color] || colors.gray;
+
+  const c = colors[color] || colors.zinc;
 
   return (
     <div
-      className={`bg-[#0a0a0a] p-6 rounded-2xl border border-white/10 shadow-sm flex flex-col relative overflow-hidden group transition-all duration-200 ease-out transform hover:-translate-y-1 hover:shadow-md ${className}`}
+      className={`group p-6 rounded-2xl border transition-all duration-300 ${isLight
+        ? "bg-white border-slate-200 shadow-sm hover:shadow-md"
+        : "bg-[#0a0a0a] border-white/10 hover:border-white/20"
+        } ${className}`}
     >
-      <div
-        className={`absolute -top-10 -right-10 w-32 h-32 ${c.hover} rounded-full blur-3xl transition-colors`}
-      ></div>
-      <div className="flex items-center gap-3 mb-4 relative z-10">
+      <div className="flex items-center gap-3 mb-6">
         <div
-          className={`p-2.5 ${c.bg} border ${c.border} ${c.text} rounded-xl`}
+          className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${c.bg} ${c.border} ${c.hover}`}
         >
-          <Icon className="w-5 h-5" />
+          <Icon className={`w-5 h-5 ${c.text}`} />
         </div>
-        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-          {title}
-        </p>
+        <div className="flex-1">
+          <p
+            className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-slate-400" : "text-zinc-500"}`}
+          >
+            {title}
+          </p>
+          <div className="flex items-center gap-2 mt-0.5">
+            {subtitleItems.map((item, idx) => (
+              <React.Fragment key={idx}>
+                <span
+                  className={`text-[10px] font-bold ${isLight ? "text-slate-400" : "text-zinc-600"}`}
+                >
+                  {item}
+                </span>
+                {idx < subtitleItems.length - 1 && (
+                  <span
+                    className={`w-1 h-1 rounded-full ${isLight ? "bg-slate-200" : "bg-zinc-800"}`}
+                  />
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
       </div>
       <div
-        className={`text-3xl font-bold ${c.val} tracking-tight mb-1 relative z-10 min-h-[36px] flex items-end`}
+        className={`text-3xl font-bold tracking-tight transition-colors ${c.val}`}
       >
         {value}
       </div>
-      {subtitleItems.length > 0 && (
-        <div className="mt-auto relative z-10 flex items-center gap-2 text-xs font-medium text-gray-400 pt-2">
-          {subtitleItems.map((item, idx) => (
-            <React.Fragment key={idx}>
-              {idx > 0 && <span>•</span>}
-              <span>{item}</span>
-            </React.Fragment>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
@@ -346,8 +361,9 @@ const SkeletonRow = ({ height = "h-4", width = "w-full", className = "" }) => (
 
 // --- PREMIUM DASHBOARD WIDGETS ---
 
-const LiveLogFeed = () => {
+const LiveLogFeed = ({ theme = "dark" }) => {
   const [logs, setLogs] = useState([]);
+  const isLight = theme === "light";
 
   useEffect(() => {
     const templates = [
@@ -428,66 +444,75 @@ const LiveLogFeed = () => {
   }, []);
 
   return (
-    <div className="bg-[#0a0a0a] rounded-2xl border border-white/10 p-6 shadow-sm overflow-hidden flex flex-col h-full">
+    <div
+      className={`rounded-2xl border p-6 shadow-sm overflow-hidden flex flex-col h-full transition-colors duration-300 ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
+        }`}
+    >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+        <h3
+          className={`text-sm font-bold uppercase tracking-widest flex items-center gap-2 ${isLight ? "text-slate-900" : "text-white"}`}
+        >
           Flux en direct{" "}
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         </h3>
-        <Badge variant="zinc">Temps Réel</Badge>
+        <div className="flex gap-1">
+          <div
+            className={`w-1 h-1 rounded-full ${isLight ? "bg-slate-200" : "bg-white/20"}`}
+          ></div>
+          <div
+            className={`w-1 h-1 rounded-full ${isLight ? "bg-slate-200" : "bg-white/20"}`}
+          ></div>
+        </div>
       </div>
 
-      <div className="flex-1 relative">
-        {/* Fading bottom edge */}
-        <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#0a0a0a] to-transparent z-10"></div>
-        <div className="space-y-3">
-          <AnimatePresence initial={false}>
-            {logs.map((log) => (
-              <motion.div
-                key={log.id}
-                initial={{ opacity: 0, y: -20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{
-                  opacity: 0,
-                  scale: 0.95,
-                  transition: { duration: 0.2 },
-                }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                className="flex items-center gap-3 p-3 bg-white/5 border border-white/5 rounded-xl text-sm"
+      <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
+        {logs.map((log) => (
+          <div key={log.id} className="flex items-start gap-3 group/log">
+            <span className="text-lg leading-none mt-0.5">{log.icon}</span>
+            <div className="flex-1 min-w-0">
+              <p
+                className={`text-sm font-bold leading-snug truncate transition-colors ${isLight ? "text-slate-700" : "text-white"
+                  }`}
               >
-                <div className="w-8 h-8 rounded-lg bg-black/50 flex items-center justify-center flex-shrink-0 border border-white/5 shadow-inner">
-                  <span>{log.icon}</span>
-                </div>
-                <div className="flex-1 overflow-hidden">
-                  <p className={`font-semibold truncate ${log.color}`}>
-                    {log.text}
-                  </p>
-                </div>
-                <span className="text-xs text-gray-500 font-mono flex-shrink-0">
-                  {log.time}
-                </span>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+                {log.text}
+              </p>
+              <p
+                className={`text-[10px] font-bold ${isLight ? "text-slate-400" : "text-gray-500"}`}
+              >
+                {log.time}
+              </p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-const ROIGlowChart = () => {
+const ROIGlowChart = ({ theme = "dark" }) => {
+  const isLight = theme === "light";
   // Simulated chart path drawing an upward curve
   return (
-    <div className="bg-[#0a0a0a] rounded-2xl border border-white/10 p-6 shadow-sm flex flex-col h-full relative overflow-hidden group">
-      <div className="absolute top-[-50%] right-[-10%] w-[300px] h-[300px] bg-emerald-500/10 blur-[100px] rounded-full group-hover:bg-emerald-500/20 transition-colors duration-700 pointer-events-none"></div>
+    <div
+      className={`rounded-2xl border p-6 shadow-sm flex flex-col h-full relative overflow-hidden group transition-colors duration-300 ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
+        }`}
+    >
+      <div
+        className={`absolute top-[-50%] right-[-10%] w-[300px] h-[300px] blur-[100px] rounded-full transition-colors duration-700 pointer-events-none opacity-20 ${isLight ? "bg-blue-400" : "bg-emerald-500/10"
+          }`}
+      ></div>
 
       <div className="flex items-center justify-between mb-8 relative z-10">
         <div>
-          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">
+          <h3
+            className={`text-sm font-bold uppercase tracking-widest mb-1 ${isLight ? "text-slate-400" : "text-gray-400"}`}
+          >
             Croissance du ROI
           </h3>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-white tracking-tighter">
+            <span
+              className={`text-3xl font-bold tracking-tighter ${isLight ? "text-slate-900" : "text-white"}`}
+            >
               +24%
             </span>
             <span className="text-sm font-bold text-emerald-500 flex items-center">
@@ -495,8 +520,15 @@ const ROIGlowChart = () => {
             </span>
           </div>
         </div>
-        <div className="p-3 bg-white/5 rounded-xl border border-white/5">
-          <DollarSign className="w-5 h-5 text-emerald-400" />
+        <div
+          className={`p-3 rounded-xl border ${isLight
+            ? "bg-slate-50 border-slate-100"
+            : "bg-white/5 border-white/5"
+            }`}
+        >
+          <DollarSign
+            className={`w-5 h-5 ${isLight ? "text-blue-600" : "text-emerald-400"}`}
+          />
         </div>
       </div>
 
@@ -507,8 +539,14 @@ const ROIGlowChart = () => {
         >
           <defs>
             <linearGradient id="glowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="rgba(16, 185, 129, 0.4)" />
-              <stop offset="100%" stopColor="rgba(16, 185, 129, 0)" />
+              <stop
+                offset="0%"
+                stopColor={isLight ? "rgba(37, 99, 235, 0.4)" : "rgba(16, 185, 129, 0.4)"}
+              />
+              <stop
+                offset="100%"
+                stopColor={isLight ? "rgba(37, 99, 235, 0)" : "rgba(16, 185, 129, 0)"}
+              />
             </linearGradient>
             <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="4" result="blur" />
@@ -517,33 +555,18 @@ const ROIGlowChart = () => {
           </defs>
 
           {/* Grid lines */}
-          <line
-            x1="0"
-            y1="30"
-            x2="400"
-            y2="30"
-            stroke="rgba(255,255,255,0.05)"
-            strokeWidth="1"
-            strokeDasharray="4 4"
-          />
-          <line
-            x1="0"
-            y1="70"
-            x2="400"
-            y2="70"
-            stroke="rgba(255,255,255,0.05)"
-            strokeWidth="1"
-            strokeDasharray="4 4"
-          />
-          <line
-            x1="0"
-            y1="110"
-            x2="400"
-            y2="110"
-            stroke="rgba(255,255,255,0.05)"
-            strokeWidth="1"
-            strokeDasharray="4 4"
-          />
+          {[30, 70, 110].map((y) => (
+            <line
+              key={y}
+              x1="0"
+              y1={y}
+              x2="400"
+              y2={y}
+              stroke={isLight ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.05)"}
+              strokeWidth="1"
+              strokeDasharray="4 4"
+            />
+          ))}
 
           {/* Fill Area */}
           <motion.path
@@ -558,7 +581,7 @@ const ROIGlowChart = () => {
           <motion.path
             d="M 0 110 Q 50 100, 100 80 T 200 60 T 300 30 T 400 10"
             fill="none"
-            stroke="#10b981"
+            stroke={isLight ? "#2563eb" : "#10b981"}
             strokeWidth="3"
             filter="url(#glow)"
             initial={{ pathLength: 0 }}
@@ -579,8 +602,8 @@ const ROIGlowChart = () => {
               cx={pt.cx}
               cy={pt.cy}
               r="4"
-              fill="#0a0a0a"
-              stroke="#10b981"
+              fill={isLight ? "#ffffff" : "#0a0a0a"}
+              stroke={isLight ? "#2563eb" : "#10b981"}
               strokeWidth="2"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -595,75 +618,107 @@ const ROIGlowChart = () => {
 
 // === DASHBOARD V2 DESIGN END ===
 
-const MilestoneBadge = ({ hoursSaved }) => {
+const MilestoneBadge = ({ hoursSaved, theme = "dark" }) => {
   if (!hoursSaved || hoursSaved < 100) return null;
+  const isLight = theme === "light";
 
   return (
     <motion.div
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-2xl p-6 mb-8 flex items-center justify-between"
+      className={`rounded-2xl p-6 mb-8 flex items-center justify-between border transition-colors duration-300 ${isLight
+        ? "bg-slate-900 text-white border-slate-800 shadow-lg"
+        : "bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-amber-500/30"
+        }`}
     >
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.4)]">
-          <Sparkles className="w-6 h-6 text-white" />
+        <div
+          className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isLight ? "bg-white/10" : "bg-amber-500/20"}`}
+        >
+          <Award
+            className={`w-6 h-6 ${isLight ? "text-amber-400" : "text-amber-500"}`}
+          />
         </div>
         <div>
-          <h3 className="text-lg font-bold text-amber-500">Jalon Atteint 🎉</h3>
-          <p className="text-zinc-400 font-medium">
-            Félicitations ! Vous avez dépassé les{" "}
-            {Math.floor(hoursSaved / 100) * 100} heures gagnées grâce à Actero
-            AI.
+          <h4 className="font-bold text-lg leading-tight">
+            Pionnier de l'Automatisation
+          </h4>
+          <p
+            className={`text-sm ${isLight ? "text-slate-400" : "text-amber-200/60"}`}
+          >
+            Vous avez libéré plus de <strong>{hoursSaved}h</strong> ce mois-ci.
           </p>
         </div>
       </div>
+      <Badge variant="blue">Badge Or</Badge>
     </motion.div>
   );
 };
 
-const InfrastructureNodeMap = () => {
+const InfrastructureNodeMap = ({ theme = "dark" }) => {
+  const isLight = theme === "light";
   return (
-    <div className="bg-[#0a0a0a] rounded-3xl border border-white/10 p-8 shadow-sm relative overflow-hidden h-[400px] flex items-center justify-center">
+    <div
+      className={`rounded-3xl border p-8 shadow-sm relative overflow-hidden h-[400px] flex items-center justify-center transition-colors duration-300 ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
+        }`}
+    >
       {/* Background grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+      <div
+        className={`absolute inset-0 ${isLight
+          ? "bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)]"
+          : "bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)]"
+          } bg-[size:40px_40px]`}
+      ></div>
 
-      {/* Animated Pulses running horizontally */}
+      {/* Animated Pulses */}
       <motion.div
         animate={{ x: [0, 600] }}
         transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
-        className="absolute top-[40%] left-[-100px] w-20 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent blur-sm"
-      ></motion.div>
-      <motion.div
-        animate={{ x: [0, 600] }}
-        transition={{
-          repeat: Infinity,
-          duration: 3.5,
-          ease: "linear",
-          delay: 1,
-        }}
-        className="absolute top-[60%] left-[-100px] w-20 h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent blur-sm"
+        className={`absolute top-[40%] left-[-100px] w-20 h-1 blur-sm ${isLight
+          ? "bg-gradient-to-r from-transparent via-blue-500 to-transparent"
+          : "bg-gradient-to-r from-transparent via-emerald-500 to-transparent"
+          }`}
       ></motion.div>
 
       {/* Nodes */}
       <div className="relative z-10 flex items-center gap-12 lg:gap-24 w-full justify-center">
         {/* Source Node */}
         <div className="flex flex-col items-center gap-3">
-          <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group">
-            <div className="absolute inset-0 bg-white/5 blur-xl group-hover:bg-white/10 transition-colors rounded-2xl"></div>
-            <ShoppingCart className="w-8 h-8 text-indigo-400" />
+          <div
+            className={`w-16 h-16 border rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group ${isLight ? "bg-slate-50 border-slate-200" : "bg-white/5 border-white/10"
+              }`}
+          >
+            <ShoppingCart
+              className={`w-8 h-8 ${isLight ? "text-blue-600" : "text-indigo-400"}`}
+            />
           </div>
-          <span className="text-xs font-bold text-gray-400 tracking-widest uppercase">
+          <span
+            className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-slate-400" : "text-gray-400"}`}
+          >
             Shopify
           </span>
         </div>
 
         {/* Brain Node (Actero) */}
         <div className="flex flex-col items-center gap-3">
-          <div className="w-20 h-20 bg-zinc-900 border border-emerald-500/30 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(16,185,129,0.1)] relative">
-            <div className="absolute inset-[-10px] border border-emerald-500/20 rounded-full animate-ping [animation-duration:3s]"></div>
-            <BrainCircuit className="w-10 h-10 text-emerald-400" />
+          <div
+            className={`w-20 h-20 border rounded-full flex items-center justify-center relative ${isLight
+              ? "bg-slate-900 border-slate-800 shadow-xl"
+              : "bg-zinc-900 border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.1)]"
+              }`}
+          >
+            <div
+              className={`absolute inset-[-10px] border rounded-full animate-ping [animation-duration:3s] ${isLight ? "border-blue-500/20" : "border-emerald-500/20"
+                }`}
+            ></div>
+            <BrainCircuit
+              className={`w-10 h-10 ${isLight ? "text-blue-400" : "text-emerald-400"}`}
+            />
           </div>
-          <span className="text-xs font-bold text-emerald-500 tracking-widest uppercase shadow-emerald-500/50">
+          <span
+            className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-slate-900" : "text-emerald-500"
+              }`}
+          >
             Actero OS
           </span>
         </div>
@@ -671,49 +726,60 @@ const InfrastructureNodeMap = () => {
         {/* Dest Nodes */}
         <div className="flex flex-col items-center gap-8">
           <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group">
-              <Mail className="w-8 h-8 text-amber-400" />
+            <div
+              className={`w-16 h-16 border rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group ${isLight ? "bg-slate-50 border-slate-200" : "bg-white/5 border-white/10"
+                }`}
+            >
+              <Mail
+                className={`w-8 h-8 ${isLight ? "text-amber-600" : "text-amber-400"}`}
+              />
             </div>
-            <span className="text-xs font-bold text-gray-400 tracking-widest uppercase">
+            <span
+              className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-slate-400" : "text-gray-400"}`}
+            >
               Klaviyo
             </span>
           </div>
           <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group">
-              <Database className="w-8 h-8 text-blue-400" />
+            <div
+              className={`w-16 h-16 border rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group ${isLight ? "bg-slate-50 border-slate-200" : "bg-white/5 border-white/10"
+                }`}
+            >
+              <Database
+                className={`w-8 h-8 ${isLight ? "text-blue-600" : "text-blue-400"}`}
+              />
             </div>
-            <span className="text-xs font-bold text-gray-400 tracking-widest uppercase">
+            <span
+              className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-slate-400" : "text-gray-400"}`}
+            >
               Make
             </span>
           </div>
         </div>
       </div>
 
-      {/* Visual SVG Lines */}
+      {/* SVG Lines */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none"
         style={{ zIndex: 0 }}
       >
-        {/* Left to Center */}
         <path
           d="M 35% 50% L 45% 50%"
-          stroke="rgba(255,255,255,0.1)"
+          stroke={isLight ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)"}
           strokeWidth="2"
           strokeDasharray="4 4"
           fill="none"
         />
-        {/* Center to Top Right */}
         <path
           d="M 55% 50% L 65% 35%"
-          stroke="rgba(255,255,255,0.1)"
+          stroke={isLight ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)"}
           strokeWidth="2"
           strokeDasharray="4 4"
           fill="none"
         />
-        {/* Center to Bottom Right */}
         <path
           d="M 55% 50% L 65% 65%"
-          stroke="rgba(255,255,255,0.1)"
+          stroke={isLight ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.1)"}
           strokeWidth="2"
           strokeDasharray="4 4"
           fill="none"
@@ -2322,7 +2388,7 @@ const ActivityModal = ({ log, onClose }) => {
   );
 };
 
-const ActivityView = ({ supabase }) => {
+const ActivityView = ({ supabase, theme = "dark" }) => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -2334,6 +2400,8 @@ const ActivityView = ({ supabase }) => {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [selectedLog, setSelectedLog] = useState(null);
+
+  const isLight = theme === "light";
 
   // Derive unique categories and types
   const uniqueCategories = [
@@ -2408,19 +2476,32 @@ const ActivityView = ({ supabase }) => {
   }, [period, categoryFilter, typeFilter]);
 
   return (
-    <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-      <div className="p-6 md:p-8 border-b border-white/5 bg-[#030303] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div
+      className={`border rounded-2xl shadow-sm overflow-hidden flex flex-col transition-colors duration-300 ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
+        }`}
+    >
+      <div
+        className={`p-6 md:p-8 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${isLight ? "bg-slate-50 border-slate-100" : "bg-[#030303] border-white/5"
+          }`}
+      >
         <div>
-          <h3 className="text-xl font-bold text-white tracking-tight">
+          <h3
+            className={`text-xl font-bold tracking-tight ${isLight ? "text-slate-900" : "text-white"}`}
+          >
             Flux de données récent
           </h3>
-          <p className="text-sm text-gray-400 font-medium mt-1">
+          <p
+            className={`text-sm font-medium mt-1 ${isLight ? "text-slate-500" : "text-gray-400"}`}
+          >
             Historique des actions exécutées par l'infrastructure.
           </p>
         </div>
         <button
           onClick={() => fetchActivity(false)}
-          className="text-sm font-bold text-gray-400 hover:text-white flex items-center gap-2 bg-[#0a0a0a] border border-white/10 px-4 py-2 rounded-xl shadow-sm hover:shadow-md transition-all text-nowrap disabled:opacity-50"
+          className={`text-sm font-bold px-4 py-2 rounded-xl shadow-sm transition-all text-nowrap disabled:opacity-50 flex items-center gap-2 ${isLight
+            ? "bg-white text-slate-900 border border-slate-200 hover:bg-slate-100"
+            : "bg-[#0a0a0a] border border-white/10 text-gray-400 hover:text-white hover:bg-white/5"
+            }`}
           disabled={loading}
         >
           <RefreshCw
@@ -2431,15 +2512,23 @@ const ActivityView = ({ supabase }) => {
       </div>
 
       {/* Filters */}
-      <div className="px-6 py-4 bg-[#0a0a0a] border-b border-white/5 flex flex-wrap gap-4 items-center">
+      <div
+        className={`px-6 py-4 flex flex-wrap gap-4 items-center border-b ${isLight ? "bg-slate-50 border-slate-100" : "bg-[#0a0a0a] border-white/5"
+          }`}
+      >
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-gray-400" />
-          <span className="text-sm font-bold text-gray-400">Filtres :</span>
+          <Filter className={`w-4 h-4 ${isLight ? "text-slate-400" : "text-gray-400"}`} />
+          <span className={`text-sm font-bold ${isLight ? "text-slate-500" : "text-gray-400"}`}>
+            Filtres :
+          </span>
         </div>
         <select
           value={period}
           onChange={(e) => setPeriod(e.target.value)}
-          className="bg-[#0a0a0a] border border-white/10 text-gray-300 text-sm font-medium rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400 outline-none shadow-sm cursor-pointer hover:bg-white/5 transition-colors"
+          className={`border text-sm font-medium rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400 outline-none shadow-sm cursor-pointer transition-colors ${isLight
+            ? "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+            : "bg-[#0a0a0a] border-white/10 text-gray-300 hover:bg-white/5"
+            }`}
         >
           <option value="24h">Dernières 24h</option>
           <option value="7d">7 derniers jours</option>
@@ -2450,7 +2539,10 @@ const ActivityView = ({ supabase }) => {
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="bg-[#0a0a0a] border border-white/10 text-gray-300 text-sm font-medium rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400 outline-none max-w-[200px] truncate shadow-sm cursor-pointer hover:bg-white/5 transition-colors"
+          className={`border text-sm font-medium rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400 outline-none max-w-[200px] truncate shadow-sm cursor-pointer transition-colors ${isLight
+            ? "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+            : "bg-[#0a0a0a] border-white/10 text-gray-300 hover:bg-white/5"
+            }`}
         >
           <option value="all">Toutes les catégories</option>
           {uniqueCategories.map((cat) => (
@@ -2463,7 +2555,10 @@ const ActivityView = ({ supabase }) => {
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
-          className="bg-[#0a0a0a] border border-white/10 text-gray-300 text-sm font-medium rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400 outline-none max-w-[200px] truncate shadow-sm cursor-pointer hover:bg-white/5 transition-colors"
+          className={`border text-sm font-medium rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-400 focus:border-zinc-400 outline-none max-w-[200px] truncate shadow-sm cursor-pointer transition-colors ${isLight
+            ? "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+            : "bg-[#0a0a0a] border-white/10 text-gray-300 hover:bg-white/5"
+            }`}
         >
           <option value="all">Tous les types</option>
           {uniqueTypes.map((t) => (
@@ -2499,19 +2594,25 @@ const ActivityView = ({ supabase }) => {
           </div>
         ) : logs.length === 0 ? (
           <div className="p-16 flex flex-col items-center justify-center text-center">
-            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5">
-              <Activity className="w-10 h-10 text-gray-300" />
+            <div
+              className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 border ${isLight ? "bg-slate-50 border-slate-100" : "bg-white/5 border-white/5"
+                }`}
+            >
+              <Activity className={`w-10 h-10 ${isLight ? "text-slate-400" : "text-gray-300"}`} />
             </div>
-            <p className="text-white font-bold text-xl mb-2">
+            <p className={`font-bold text-xl mb-2 ${isLight ? "text-slate-900" : "text-white"}`}>
               Aucune activité trouvée
             </p>
-            <p className="text-gray-400 font-medium">
+            <p className={`font-medium ${isLight ? "text-slate-500" : "text-gray-400"}`}>
               Réessayez en modifiant vos filtres.
             </p>
           </div>
         ) : (
           <>
-            <div className="relative border-l border-white/10 ml-6 md:ml-10 my-4 py-2 space-y-4">
+            <div
+              className={`relative border-l ml-6 md:ml-10 my-4 py-2 space-y-4 ${isLight ? "border-slate-200" : "border-white/10"
+                }`}
+            >
               {logs.map((log) => {
                 const savedTime = log.time_saved_seconds
                   ? `${Math.round(log.time_saved_seconds / 60)}m`
@@ -2526,14 +2627,28 @@ const ActivityView = ({ supabase }) => {
                     onClick={() => setSelectedLog(log)}
                     className="relative pl-6 md:pl-8 pr-6 md:pr-10 group cursor-pointer animate-fade-in-up"
                   >
-                    <div className="absolute left-[-5px] top-6 w-2.5 h-2.5 rounded-full bg-gray-200 ring-4 ring-white group-hover:bg-zinc-400 group-hover:ring-zinc-800 transition-all"></div>
-                    <div className="bg-[#0a0a0a] border border-white/5 p-4 rounded-xl shadow-sm hover:shadow-md hover:border-white/10 transition-all flex items-start gap-4">
+                    <div
+                      className={`absolute left-[-5px] top-6 w-2.5 h-2.5 rounded-full ring-4 transition-all ${isLight
+                        ? "bg-slate-400 ring-white group-hover:bg-slate-600 group-hover:ring-slate-100"
+                        : "bg-gray-200 ring-white group-hover:bg-zinc-400 group-hover:ring-zinc-800"
+                        }`}
+                    ></div>
+                    <div
+                      className={`border p-4 rounded-xl shadow-sm transition-all flex items-start gap-4 ${isLight
+                        ? "bg-white border-slate-200 hover:shadow-md hover:border-slate-300"
+                        : "bg-[#0a0a0a] border-white/5 hover:shadow-md hover:border-white/10"
+                        }`}
+                    >
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-1.5">
                           {log.event_category && (
-                            <Badge variant="gray">{log.event_category}</Badge>
+                            <Badge variant={isLight ? "slate" : "gray"}>
+                              {log.event_category}
+                            </Badge>
                           )}
-                          <span className="text-xs font-medium text-gray-400">
+                          <span
+                            className={`text-xs font-medium ${isLight ? "text-slate-500" : "text-gray-400"}`}
+                          >
                             {new Date(log.created_at).toLocaleString("fr-FR", {
                               month: "short",
                               day: "numeric",
@@ -2542,12 +2657,19 @@ const ActivityView = ({ supabase }) => {
                             })}
                           </span>
                         </div>
-                        <p className="text-base font-bold text-white truncate mb-2 leading-snug">
+                        <p
+                          className={`text-base font-bold truncate mb-2 leading-snug ${isLight ? "text-slate-900" : "text-white"}`}
+                        >
                           {log.ticket_type || "Exécution standard du flux"}
                         </p>
                         <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-gray-400">
                           {savedTime && (
-                            <span className="flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
+                            <span
+                              className={`flex items-center gap-1 px-2 py-0.5 rounded-md ${isLight
+                                ? "text-emerald-700 bg-emerald-100"
+                                : "text-emerald-600 bg-emerald-50"
+                                }`}
+                            >
                               <Clock className="w-3.5 h-3.5" />{" "}
                               <span className="text-[10px] uppercase font-bold tracking-widest opacity-80">
                                 Gagnées:
@@ -2556,7 +2678,12 @@ const ActivityView = ({ supabase }) => {
                             </span>
                           )}
                           {revenue && (
-                            <span className="flex items-center gap-1 text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">
+                            <span
+                              className={`flex items-center gap-1 px-2 py-0.5 rounded-md ${isLight
+                                ? "text-amber-700 bg-amber-100"
+                                : "text-amber-600 bg-amber-50"
+                                }`}
+                            >
                               <DollarSign className="w-3.5 h-3.5" />{" "}
                               <span className="text-[10px] uppercase font-bold tracking-widest opacity-80">
                                 Impact:
@@ -2566,7 +2693,10 @@ const ActivityView = ({ supabase }) => {
                           )}
                         </div>
                       </div>
-                      <div className="flex-shrink-0 text-gray-300 group-hover:text-zinc-300 transition-colors mt-2">
+                      <div
+                        className={`flex-shrink-0 group-hover:text-zinc-300 transition-colors mt-2 ${isLight ? "text-slate-400 group-hover:text-slate-600" : "text-gray-300"
+                          }`}
+                      >
                         <ArrowRight className="w-5 h-5" />
                       </div>
                     </div>
@@ -2576,11 +2706,17 @@ const ActivityView = ({ supabase }) => {
             </div>
 
             {hasMore && (
-              <div className="p-6 md:p-8 flex justify-center border-t border-white/5 bg-[#030303]">
+              <div
+                className={`p-6 md:p-8 flex justify-center border-t ${isLight ? "border-slate-100 bg-slate-50" : "border-white/5 bg-[#030303]"
+                  }`}
+              >
                 <button
                   onClick={() => fetchActivity(true)}
                   disabled={loadingMore}
-                  className="bg-[#0a0a0a] border border-white/10 text-gray-300 font-bold px-6 py-3 rounded-xl hover:text-white hover:border-gray-300 transition-colors shadow-sm disabled:opacity-50 flex items-center gap-2"
+                  className={`border font-bold px-6 py-3 rounded-xl transition-colors shadow-sm disabled:opacity-50 flex items-center gap-2 ${isLight
+                    ? "bg-white border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300"
+                    : "bg-[#0a0a0a] border-white/10 text-gray-300 hover:text-white hover:border-gray-300"
+                    }`}
                 >
                   {loadingMore ? (
                     <span className="animate-spin w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full"></span>
@@ -2925,106 +3061,128 @@ const ExecutionPlanDrawer = ({
 };
 // === EXECUTION PLAN DRAWER END ===
 
-const RecommendationCard = ({ reco, onAction, onOpenPlan }) => {
+const RecommendationCard = ({ reco, onAction, onOpenPlan, theme = "dark" }) => {
   const [loadingAction, setLoadingAction] = useState(false);
+  const isLight = theme === "light";
 
-  const handleAction = async (status) => {
+  const handleAction = async (newStatus) => {
     setLoadingAction(true);
-    await onAction(reco.id, status);
+    await onAction(reco.id, newStatus);
     setLoadingAction(false);
   };
 
-  const priorityVariants = {
-    high: "red",
-    medium: "amber",
-    low: "emerald",
+  const getCategoryTheme = (cat) => {
+    switch (cat) {
+      case "growth":
+        return {
+          icon: TrendingUp,
+          c: "text-amber-500",
+          bg: isLight ? "bg-amber-50" : "bg-amber-500/10",
+        };
+      case "efficiency":
+        return {
+          icon: Zap,
+          c: "text-blue-500",
+          bg: isLight ? "bg-blue-50" : "bg-blue-500/10",
+        };
+      case "risk":
+        return {
+          icon: ShieldAlert,
+          c: "text-red-500",
+          bg: isLight ? "bg-red-50" : "bg-red-500/10",
+        };
+      default:
+        return {
+          icon: Lightbulb,
+          c: "text-emerald-500",
+          bg: isLight ? "bg-emerald-50" : "bg-emerald-500/10",
+        };
+    }
   };
 
-  const categoryLabels = {
-    growth: "Croissance",
-    efficiency: "Efficacité",
-    risk: "Risque",
-    automation: "Automatisation",
-    all: "Toutes les catégories",
-  };
-
-  const impactColor =
-    reco.impact_score >= 80
-      ? "bg-emerald-500"
-      : reco.impact_score >= 50
-        ? "bg-amber-500"
-        : "bg-gray-400";
+  const cat = getCategoryTheme(reco.category);
+  const ImpactIcon = cat.icon;
 
   return (
-    <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 md:p-8 shadow-sm flex flex-col gap-6 transition-all hover:shadow-md relative overflow-hidden group">
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+    <div
+      className={`border rounded-3xl p-6 transition-all duration-300 ${isLight
+        ? "bg-white border-slate-200 shadow-sm hover:shadow-md"
+        : "bg-[#0a0a0a] border-white/10 hover:border-white/20"
+        }`}
+    >
+      <div className="flex flex-col lg:flex-row gap-6 mb-6">
         <div className="flex-1">
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <Badge variant={priorityVariants[reco.priority_level] || "amber"}>
-              Priorité{" "}
-              {reco.priority_level === "high"
-                ? "Haute"
-                : reco.priority_level === "medium"
-                  ? "Moyenne"
-                  : "Basse"}
-            </Badge>
-            {reco.category && (
-              <Badge variant="gray">
-                {categoryLabels[reco.category] || reco.category}
-              </Badge>
-            )}
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-auto md:ml-0">
-              {new Date(reco.created_at).toLocaleDateString("fr-FR", {
-                day: "numeric",
-                month: "short",
-              })}
-            </span>
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className={`w-10 h-10 rounded-xl flex items-center justify-center ${cat.bg}`}
+            >
+              <ImpactIcon className={`w-5 h-5 ${cat.c}`} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <Badge variant={isLight ? "blue" : "zinc"}>
+                  {reco.category || "Automatisation"}
+                </Badge>
+                {reco.priority_level === "high" && (
+                  <Badge variant="red">Critique</Badge>
+                )}
+              </div>
+            </div>
           </div>
-          <h4 className="text-xl font-bold text-white mb-2 leading-tight tracking-tight">
+
+          <h4
+            className={`text-xl font-bold mb-2 tracking-tight ${isLight ? "text-slate-900" : "text-white"
+              }`}
+          >
             {reco.title}
           </h4>
-          <p className="text-sm font-medium text-gray-400 line-clamp-2 md:line-clamp-none leading-relaxed mb-6">
+          <p
+            className={`text-sm font-medium leading-relaxed mb-4 ${isLight ? "text-slate-500" : "text-zinc-400"
+              }`}
+          >
             {reco.description}
           </p>
 
-          <div className="flex flex-wrap items-center gap-6 mb-2">
-            <div className="flex items-center gap-3 bg-white/5 px-3 py-2 rounded-xl border border-white/5">
-              <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mb-1">
-                  Impact
-                </p>
-                <span className="text-sm font-bold text-white leading-none">
+          <div className="flex flex-wrap gap-6 mt-4">
+            <div className="flex flex-col gap-1">
+              <span
+                className={`text-[10px] font-bold uppercase tracking-widest ${isLight ? "text-slate-400" : "text-zinc-600"
+                  }`}
+              >
+                Impact estimé
+              </span>
+              <div className="flex items-center gap-3">
+                <span
+                  className={`text-lg font-bold ${isLight ? "text-slate-900" : "text-white"
+                    }`}
+                >
                   {reco.impact_score}/100
                 </span>
-              </div>
-              <div className="h-8 w-px bg-gray-200"></div>
-              <div className="h-1.5 w-16 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
                 <div
-                  className={`h-full rounded-full ${impactColor}`}
-                  style={{ width: `${Math.min(100, reco.impact_score)}%` }}
-                ></div>
+                  className={`h-1.5 w-24 rounded-full overflow-hidden ${isLight ? "bg-slate-100" : "bg-white/5"
+                    }`}
+                >
+                  <div
+                    className={`h-full rounded-full ${cat.c.replace(
+                      "text-",
+                      "bg-",
+                    )}`}
+                    style={{ width: `${reco.impact_score}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
 
             {reco.estimated_time_gain_minutes > 0 && (
-              <div className="flex flex-col justify-center">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+              <div className="flex flex-col gap-1">
+                <span
+                  className={`text-[10px] font-bold uppercase tracking-widest ${isLight ? "text-slate-400" : "text-zinc-600"
+                    }`}
+                >
                   Gain de temps
-                </p>
-                <p className="text-sm font-bold text-emerald-600 flex items-center gap-1">
-                  <Clock className="w-4 h-4" /> +
-                  {Math.round(reco.estimated_time_gain_minutes / 60)}h/mois
-                </p>
-              </div>
-            )}
-            {reco.estimated_revenue_gain > 0 && (
-              <div className="flex flex-col justify-center">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
-                  Impact CA
-                </p>
-                <p className="text-sm font-bold text-amber-600 flex items-center gap-1">
-                  <TrendingUp className="w-4 h-4" /> +
-                  {Number(reco.estimated_revenue_gain).toLocaleString("fr-FR")}€
+                </span>
+                <p className="text-lg font-bold text-emerald-600 flex items-center gap-1">
+                  +{Math.round(reco.estimated_time_gain_minutes / 60)}h/mois
                 </p>
               </div>
             )}
@@ -3032,66 +3190,48 @@ const RecommendationCard = ({ reco, onAction, onOpenPlan }) => {
         </div>
       </div>
 
-      {reco.status === "active" && (
-        <div className="pt-6 border-t border-white/5 flex flex-wrap items-center gap-3">
-          <button
-            disabled={loadingAction}
-            onClick={() => handleAction("implemented")}
-            className="flex-1 lg:flex-none text-sm font-bold bg-zinc-300 text-white px-5 py-2.5 rounded-xl hover:bg-zinc-400 transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
-          >
-            {loadingAction ? (
-              <span className="animate-spin w-4 h-4 border-2 border-white/20 border-t-white rounded-full"></span>
-            ) : (
-              <CheckCircle className="w-4 h-4" />
-            )}{" "}
-            Implémenter
-          </button>
-          {onOpenPlan && (
-            <button
-              disabled={loadingAction}
-              onClick={() => onOpenPlan(reco)}
-              className="flex-1 lg:flex-none text-sm font-bold bg-[#0a0a0a] text-gray-300 border border-white/10 px-5 py-2.5 rounded-xl hover:text-white hover:bg-white/5 transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              Voir le plan <ArrowRight className="w-4 h-4 text-gray-400" />
-            </button>
+      <div
+        className={`pt-6 border-t flex flex-wrap items-center gap-3 ${isLight ? "border-slate-100" : "border-white/5"
+          }`}
+      >
+        <button
+          disabled={loadingAction}
+          onClick={() => handleAction("implemented")}
+          className="flex-1 lg:flex-none text-sm font-bold bg-blue-600 text-white px-6 py-2.5 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
+        >
+          {loadingAction ? (
+            <span className="animate-spin w-4 h-4 border-2 border-white/20 border-t-white rounded-full"></span>
+          ) : (
+            <CheckCircle className="w-4 h-4" />
           )}
-          <button
-            disabled={loadingAction}
-            onClick={() => handleAction("dismissed")}
-            className="flex-1 lg:flex-none text-sm font-bold bg-[#0a0a0a] text-gray-400 border border-transparent px-4 py-2.5 rounded-xl hover:text-white hover:bg-white/5 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 lg:ml-auto"
-          >
-            {loadingAction ? (
-              <span className="animate-spin w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full"></span>
-            ) : (
-              <XCircle className="w-4 h-4" />
-            )}{" "}
-            Ignorer
-          </button>
-        </div>
-      )}
-      {reco.status !== "active" && (
-        <div className="pt-5 border-t border-white/5 flex items-center gap-2 text-sm font-bold text-gray-400">
-          <CheckCircle className="w-4 h-4" />{" "}
-          {reco.status === "implemented"
-            ? "Marqué comme implémenté"
-            : "Recommandation ignorée"}
-        </div>
-      )}
+          Approuver
+        </button>
+        <button
+          disabled={loadingAction}
+          onClick={() => onOpenPlan(reco)}
+          className={`flex-1 lg:flex-none text-sm font-bold border px-6 py-2.5 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 ${isLight
+            ? "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+            : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
+            }`}
+        >
+          Détails techniques <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 };
 
-const IntelligenceView = ({ supabase, setActiveTab }) => {
+const IntelligenceView = ({ supabase, setActiveTab, theme = "dark" }) => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const isLight = theme === "light";
 
   const [statusFilter, setStatusFilter] = useState("active");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("impact"); // impact or recent
+  const [sortBy, setSortBy] = useState("impact");
   const [actionError, setActionError] = useState("");
 
-  // Execution Plan Drawer state
   const [selectedPlanReco, setSelectedPlanReco] = useState(null);
 
   const fetchRecommendations = async () => {
@@ -3102,9 +3242,7 @@ const IntelligenceView = ({ supabase, setActiveTab }) => {
     try {
       let query = supabase
         .from("ai_recommendations")
-        .select(
-          "id, client_id, title, description, category, priority_level, impact_score, estimated_time_gain_minutes, estimated_revenue_gain, status, created_at, updated_at, expires_at",
-        )
+        .select("*")
         .eq("status", statusFilter)
         .limit(50);
 
@@ -3120,12 +3258,9 @@ const IntelligenceView = ({ supabase, setActiveTab }) => {
 
       const { data, error: fetchErr } = await query;
       if (fetchErr) throw fetchErr;
-
       setRecommendations(data || []);
     } catch (err) {
-      setError(
-        err.message || "Erreur lors de la récupération des recommandations.",
-      );
+      setError(err.message || "Erreur lors de la récupération.");
     } finally {
       setLoading(false);
     }
@@ -3138,70 +3273,83 @@ const IntelligenceView = ({ supabase, setActiveTab }) => {
   const handleAction = async (id, newStatus) => {
     try {
       setActionError("");
-      // Call RPC only (no fallback to update the table directly)
       const { error: rpcErr } = await supabase.rpc("mark_ai_recommendation", {
         p_id: id,
         p_status: newStatus,
       });
+      if (rpcErr) throw rpcErr;
 
-      if (rpcErr) {
-        throw rpcErr;
-      }
-
-      // Success, remove from active list if filter is active
       if (statusFilter === "active") {
         setRecommendations((prev) => prev.filter((r) => r.id !== id));
       } else {
-        // Just refresh list
         await fetchRecommendations();
       }
     } catch (err) {
-      setActionError(
-        err.message || "Une erreur est survenue lors de la mise à jour.",
-      );
+      setActionError(err.message || "Erreur lors de la mise à jour.");
     }
   };
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
-        <div className="p-6 md:p-8 border-b border-white/5 bg-gradient-to-r from-zinc-900 to-zinc-800 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div
+        className={`border rounded-3xl shadow-sm overflow-hidden transition-colors duration-300 ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
+          }`}
+      >
+        <div
+          className={`p-6 md:p-8 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${isLight
+            ? "bg-slate-900 text-white"
+            : "bg-gradient-to-r from-zinc-900 to-zinc-800 text-white"
+            }`}
+        >
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-[#0a0a0a]/10 rounded-xl backdrop-blur-md border border-white/10 shadow-sm">
+              <div className="p-2 bg-white/10 rounded-xl backdrop-blur-md border border-white/10 shadow-sm">
                 <Lightbulb className="w-5 h-5 text-amber-300" />
               </div>
               <h3 className="text-xl font-bold tracking-tight">
                 Intelligence & Recommandations
               </h3>
             </div>
-            <p className="text-sm text-zinc-300 font-medium max-w-xl">
+            <p className="text-sm text-slate-300/80 font-medium max-w-xl">
               L'IA analyse vos flux de données en continu pour identifier des
-              optimisations de croissance, d'efficacité et des correctifs
-              applicatifs.
+              optimisations de croissance et d'efficacité.
             </p>
           </div>
           <button
             onClick={() => fetchRecommendations()}
             disabled={loading}
-            className="text-sm font-bold text-white bg-[#0a0a0a] hover:bg-zinc-100 px-4 py-2 rounded-xl shadow-sm transition-colors flex items-center gap-2 disabled:opacity-50"
+            className={`text-sm font-bold px-4 py-2 rounded-xl shadow-sm transition-all flex items-center gap-2 disabled:opacity-50 ${isLight
+              ? "bg-white text-slate-900 hover:bg-slate-100"
+              : "bg-white/5 text-white hover:bg-white/10"
+              }`}
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />{" "}
             Rafraîchir
           </button>
         </div>
 
-        <div className="px-6 py-4 bg-[#0a0a0a] border-b border-white/5 flex flex-wrap gap-4 items-center">
+        <div
+          className={`px-6 py-4 flex flex-wrap gap-4 items-center border-b ${isLight ? "bg-slate-50 border-slate-100" : "bg-[#0a0a0a] border-white/5"
+            }`}
+        >
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-zinc-500" />
-            <span className="text-sm font-bold text-zinc-600">
+            <Filter
+              className={`w-4 h-4 ${isLight ? "text-slate-400" : "text-zinc-500"}`}
+            />
+            <span
+              className={`text-sm font-bold ${isLight ? "text-slate-500" : "text-zinc-600"}`}
+            >
               Filtrer par :
             </span>
           </div>
+
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-white/5 border border-white/10 text-zinc-700 text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-900 outline-none"
+            className={`border text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 outline-none transition-colors ${isLight
+              ? "bg-white border-slate-200 text-slate-700 focus:ring-slate-200"
+              : "bg-white/5 border-white/10 text-gray-300 focus:ring-zinc-900"
+              }`}
           >
             <option value="active">À traiter</option>
             <option value="implemented">Implémentées</option>
@@ -3211,7 +3359,10 @@ const IntelligenceView = ({ supabase, setActiveTab }) => {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="bg-white/5 border border-white/10 text-zinc-700 text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-900 outline-none"
+            className={`border text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 outline-none transition-colors ${isLight
+              ? "bg-white border-slate-200 text-slate-700 focus:ring-slate-200"
+              : "bg-white/5 border-white/10 text-gray-300 focus:ring-zinc-900"
+              }`}
           >
             <option value="all">Toutes les catégories</option>
             <option value="growth">Croissance</option>
@@ -3223,23 +3374,26 @@ const IntelligenceView = ({ supabase, setActiveTab }) => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-white/5 border border-white/10 text-zinc-700 text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-zinc-900 outline-none ml-auto"
+            className={`border text-sm font-bold rounded-lg px-3 py-1.5 focus:ring-2 outline-none transition-colors ml-auto ${isLight
+              ? "bg-white border-slate-200 text-slate-700 focus:ring-slate-200"
+              : "bg-white/5 border-white/10 text-gray-300 focus:ring-zinc-900"
+              }`}
           >
-            <option value="impact">Trier par: Impact (Haut &rarr; Bas)</option>
+            <option value="impact">Trier par: Impact</option>
             <option value="recent">Trier par: Plus récentes</option>
           </select>
         </div>
       </div>
 
       {actionError && (
-        <div className="p-4 bg-red-50 text-red-600 rounded-2xl border border-red-100 flex items-start gap-3 animate-pulse">
+        <div className="p-4 bg-red-50 text-red-600 rounded-2xl border border-red-100 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <p className="text-sm font-medium">{actionError}</p>
         </div>
       )}
 
       {error ? (
-        <div className="p-10 bg-[#0a0a0a] border border-red-100 rounded-3xl flex flex-col items-center justify-center text-center shadow-sm">
+        <div className="p-10 rounded-3xl flex flex-col items-center justify-center text-center border bg-red-50 border-red-100">
           <AlertCircle className="w-10 h-10 text-red-400 mb-4" />
           <p className="text-red-900 font-bold mb-1">Erreur de connexion</p>
           <p className="text-sm text-red-600">{error}</p>
@@ -3249,27 +3403,35 @@ const IntelligenceView = ({ supabase, setActiveTab }) => {
           {[...Array(3)].map((_, i) => (
             <div
               key={i}
-              className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-6 shadow-sm animate-pulse h-48 flex flex-col gap-4"
+              className={`border rounded-3xl p-6 shadow-sm animate-pulse h-48 flex flex-col gap-4 ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
+                }`}
             >
-              <div className="h-6 bg-zinc-100 rounded w-1/4"></div>
-              <div className="h-4 bg-zinc-100 rounded w-3/4 mt-2"></div>
-              <div className="h-4 bg-zinc-100 rounded w-1/2"></div>
+              <div className={`h-6 rounded w-1/4 ${isLight ? "bg-slate-100" : "bg-white/5"}`}></div>
+              <div className={`h-4 rounded w-3/4 mt-2 ${isLight ? "bg-slate-100" : "bg-white/5"}`}></div>
               <div className="mt-auto flex gap-4">
-                <div className="h-10 bg-zinc-100 rounded w-32"></div>
-                <div className="h-10 bg-zinc-100 rounded w-32"></div>
+                <div className={`h-10 rounded w-32 ${isLight ? "bg-slate-100" : "bg-white/5"}`}></div>
               </div>
             </div>
           ))}
         </div>
       ) : recommendations.length === 0 ? (
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
-          <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-6 border border-emerald-100">
-            <Lightbulb className="w-10 h-10 text-emerald-400" />
+        <div
+          className={`border rounded-3xl p-16 text-center shadow-sm flex flex-col items-center ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"
+            }`}
+        >
+          <div
+            className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 border ${isLight ? "bg-blue-50 border-blue-100" : "bg-white/5 border-white/5"
+              }`}
+          >
+            <Lightbulb
+              className={`w-10 h-10 ${isLight ? "text-blue-500" : "text-gray-300"}`}
+            />
           </div>
-          <p className="text-white font-bold text-xl mb-2">Tout est optimisé</p>
-          <p className="text-zinc-500 font-medium max-w-md">
-            L'IA n'a pas de nouvelle recommandation à proposer pour le moment
-            avec ces critères de recherche.
+          <p className={`font-bold text-xl mb-2 ${isLight ? "text-slate-900" : "text-white"}`}>
+            Tout est optimisé
+          </p>
+          <p className={`font-medium max-w-md ${isLight ? "text-slate-500" : "text-zinc-500"}`}>
+            L'IA n'a pas de nouvelle recommandation à proposer pour le moment.
           </p>
         </div>
       ) : (
@@ -3280,6 +3442,7 @@ const IntelligenceView = ({ supabase, setActiveTab }) => {
               reco={reco}
               onAction={handleAction}
               onOpenPlan={setSelectedPlanReco}
+              theme={theme}
             />
           ))}
         </div>
@@ -3297,6 +3460,7 @@ const IntelligenceView = ({ supabase, setActiveTab }) => {
     </div>
   );
 };
+
 // ==========================================
 // INTELLIGENCE FEATURE END
 // ==========================================
@@ -3320,7 +3484,17 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     const route = tab === "overview" ? "/client" : `/client/${tab}`;
     onNavigate(route);
   };
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("actero-theme") || "dark";
+  });
+
+  const toggleTheme = () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    localStorage.setItem("actero-theme", newTheme);
+  };
 
   const [currentClient, setCurrentClient] = useState(null);
   const [requests, setRequests] = useState([]);
@@ -3501,11 +3675,21 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   }
 
   const Sidebar = () => (
-    <div className="w-full md:w-64 bg-[#0a0a0a] border-r border-white/10 flex flex-col h-full">
-      <div className="h-16 flex items-center px-6 border-b border-white/10 justify-between md:justify-start">
+    <div
+      className={`w-full md:w-64 flex flex-col h-full ${theme === "light" ? "bg-white border-r border-slate-200" : "bg-[#0a0a0a] border-r border-white/10"}`}
+    >
+      <div
+        className={`h-16 flex items-center px-6 justify-between md:justify-start ${theme === "light" ? "border-b border-slate-100" : "border-b border-white/10"}`}
+      >
         <div className="flex items-center gap-2">
-          <Logo className="w-6 h-6 text-white" />
-          <span className="font-bold text-lg text-white">Actero OS</span>
+          <Logo
+            className={`w-6 h-6 ${theme === "light" ? "text-blue-600" : "text-white"}`}
+          />
+          <span
+            className={`font-bold text-lg ${theme === "light" ? "text-slate-900" : "text-white"}`}
+          >
+            Actero OS
+          </span>
         </div>
         <button
           className="md:hidden text-zinc-500"
@@ -3523,7 +3707,14 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             setActiveTab("overview");
             setIsMobileMenuOpen(false);
           }}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "overview" ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"}`}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "overview"
+            ? theme === "light"
+              ? "bg-blue-50 text-blue-600"
+              : "bg-white/10 text-white"
+            : theme === "light"
+              ? "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+              : "text-gray-400 hover:bg-white/5 hover:text-white"
+            }`}
         >
           <LayoutDashboard className="w-4 h-4" /> Vue d'ensemble
         </button>
@@ -3532,7 +3723,14 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             setActiveTab("requests");
             setIsMobileMenuOpen(false);
           }}
-          className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "requests" ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"}`}
+          className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "requests"
+            ? theme === "light"
+              ? "bg-blue-50 text-blue-600"
+              : "bg-white/10 text-white"
+            : theme === "light"
+              ? "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+              : "text-gray-400 hover:bg-white/5 hover:text-white"
+            }`}
         >
           <div className="flex items-center gap-3">
             <ClipboardList className="w-4 h-4" /> Requêtes
@@ -3548,7 +3746,14 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             setActiveTab("architect");
             setIsMobileMenuOpen(false);
           }}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "architect" ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"}`}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "architect"
+            ? theme === "light"
+              ? "bg-blue-50 text-blue-600"
+              : "bg-white/10 text-white"
+            : theme === "light"
+              ? "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+              : "text-gray-400 hover:bg-white/5 hover:text-white"
+            }`}
         >
           <BrainCircuit className="w-4 h-4" /> Architecte IA
         </button>
@@ -3561,7 +3766,14 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             setActiveTab("systems");
             setIsMobileMenuOpen(false);
           }}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "systems" ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"}`}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "systems"
+            ? theme === "light"
+              ? "bg-blue-50 text-blue-600"
+              : "bg-white/10 text-white"
+            : theme === "light"
+              ? "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+              : "text-gray-400 hover:bg-white/5 hover:text-white"
+            }`}
         >
           <Database className="w-4 h-4" /> Mes Systèmes
         </button>
@@ -3570,7 +3782,14 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             setActiveTab("activity");
             setIsMobileMenuOpen(false);
           }}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "activity" ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"}`}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "activity"
+            ? theme === "light"
+              ? "bg-blue-50 text-blue-600"
+              : "bg-white/10 text-white"
+            : theme === "light"
+              ? "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+              : "text-gray-400 hover:bg-white/5 hover:text-white"
+            }`}
         >
           <Activity className="w-4 h-4" /> Activité en direct
         </button>
@@ -3579,7 +3798,14 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             setActiveTab("intelligence");
             setIsMobileMenuOpen(false);
           }}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "intelligence" ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"}`}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "intelligence"
+            ? theme === "light"
+              ? "bg-blue-50 text-blue-600"
+              : "bg-white/10 text-white"
+            : theme === "light"
+              ? "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+              : "text-gray-400 hover:bg-white/5 hover:text-white"
+            }`}
         >
           <Lightbulb className="w-4 h-4" /> Intelligence
         </button>
@@ -3588,15 +3814,44 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             setActiveTab("reports");
             setIsMobileMenuOpen(false);
           }}
-          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "reports" ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"}`}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === "reports"
+            ? theme === "light"
+              ? "bg-blue-50 text-blue-600"
+              : "bg-white/10 text-white"
+            : theme === "light"
+              ? "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+              : "text-gray-400 hover:bg-white/5 hover:text-white"
+            }`}
         >
           <Download className="w-4 h-4" /> Rapports
         </button>
       </div>
-      <div className="p-4 border-t border-white/10">
+      <div
+        className={`p-4 space-y-2 border-t ${theme === "light" ? "border-slate-100" : "border-white/10"}`}
+      >
+        <button
+          onClick={toggleTheme}
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${theme === "light"
+            ? "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+            : "text-gray-400 hover:bg-white/5 hover:text-white"
+            }`}
+        >
+          {theme === "light" ? (
+            <>
+              <Moon className="w-4 h-4" /> Mode Sombre
+            </>
+          ) : (
+            <>
+              <Sun className="w-4 h-4" /> Mode Clair
+            </>
+          )}
+        </button>
         <button
           onClick={onLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold text-gray-400 hover:bg-white/5 hover:text-white transition-colors"
+          className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${theme === "light"
+            ? "text-slate-500 hover:bg-red-50 hover:text-red-600"
+            : "text-gray-400 hover:bg-white/5 hover:text-white"
+            }`}
         >
           <LogOut className="w-4 h-4" /> Déconnexion
         </button>
@@ -3605,16 +3860,29 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   );
 
   return (
-    <div className="min-h-screen bg-[#030303] flex flex-col md:flex-row font-sans">
+    <div
+      className={`min-h-screen flex flex-col md:flex-row font-sans transition-colors duration-300 ${theme === "light"
+        ? "bg-slate-50 text-slate-900"
+        : "bg-[#030303] text-white"
+        }`}
+    >
       {/* Mobile Header */}
-      <div className="md:hidden h-16 bg-[#0a0a0a] border-b border-white/10 flex items-center justify-between px-4">
+      <div
+        className={`md:hidden h-16 flex items-center justify-between px-4 sticky top-0 z-50 ${theme === "light" ? "bg-white border-b border-slate-200" : "bg-[#0a0a0a] border-b border-white/10"}`}
+      >
         <div className="flex items-center gap-2">
-          <Logo className="w-6 h-6 text-white" />
-          <span className="font-bold text-lg text-white">Actero OS</span>
+          <Logo
+            className={`w-6 h-6 ${theme === "light" ? "text-blue-600" : "text-white"}`}
+          />
+          <span
+            className={`font-bold text-lg ${theme === "light" ? "text-slate-900" : "text-white"}`}
+          >
+            Actero OS
+          </span>
         </div>
         <button
           onClick={() => setIsMobileMenuOpen(true)}
-          className="text-zinc-600"
+          className={theme === "light" ? "text-slate-500" : "text-zinc-600"}
         >
           <Menu className="w-6 h-6" />
         </button>
@@ -3631,7 +3899,9 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             className="fixed inset-0 bg-zinc-900/50 backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
           ></div>
-          <div className="relative w-4/5 max-w-xs bg-[#0a0a0a] h-full shadow-2xl">
+          <div
+            className={`relative w-4/5 max-w-xs h-full shadow-2xl ${theme === "light" ? "bg-white" : "bg-[#0a0a0a]"}`}
+          >
             <Sidebar />
           </div>
         </div>
@@ -3639,9 +3909,16 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         {/* Command Center Sticky Header */}
-        <header className="sticky top-0 z-40 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/10 px-4 md:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <header
+          className={`sticky top-0 z-40 backdrop-blur-md px-4 md:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b ${theme === "light"
+            ? "bg-white/80 border-slate-200"
+            : "bg-[#0a0a0a]/80 border-white/10"
+            }`}
+        >
           <div className="flex items-center gap-6">
-            <h1 className="text-xl font-bold text-white tracking-tight whitespace-nowrap">
+            <h1
+              className={`text-xl font-bold tracking-tight whitespace-nowrap ${theme === "light" ? "text-slate-900" : "text-white"}`}
+            >
               {activeTab === "overview" && "Vue d'ensemble"}
               {activeTab === "requests" && "Mes demandes"}
               {activeTab === "architect" && "Architecte IA"}
@@ -3659,35 +3936,80 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 </span>
                 Opérationnel
               </Badge>
-              <div className="h-4 w-px bg-gray-200 mx-1"></div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg">
-                <Clock className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="text-xs font-bold text-white">
+              <div
+                className={`h-4 w-px mx-1 ${theme === "light" ? "bg-slate-200" : "bg-white/10"}`}
+              ></div>
+              <div
+                className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg ${theme === "light"
+                  ? "bg-slate-50 border-slate-200"
+                  : "bg-white/5 border-white/10"
+                  }`}
+              >
+                <Clock className="w-3.5 h-3.5 text-blue-600" />
+                <span
+                  className={`text-xs font-bold ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                >
                   <AnimatedCounter
                     value={
                       metrics ? Math.round(metrics.time_saved_minutes / 60) : 0
                     }
                   />
                   h{" "}
-                  <span className="text-gray-400 font-medium font-normal">
+                  <span
+                    className={
+                      theme === "light"
+                        ? "text-slate-500 font-normal"
+                        : "text-gray-400 font-normal"
+                    }
+                  >
                     /mois
                   </span>
                 </span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg">
-                <DollarSign className="w-3.5 h-3.5 text-amber-600" />
-                <span className="text-xs font-bold text-white">
+              <div
+                className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg ${theme === "light"
+                  ? "bg-slate-50 border-slate-200"
+                  : "bg-white/5 border-white/10"
+                  }`}
+              >
+                <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+                <span
+                  className={`text-xs font-bold ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                >
                   <AnimatedCounter value={metrics?.estimated_roi || 0} />€{" "}
-                  <span className="text-gray-400 font-medium font-normal">
+                  <span
+                    className={
+                      theme === "light"
+                        ? "text-slate-500 font-normal"
+                        : "text-gray-400 font-normal"
+                    }
+                  >
                     /mois
                   </span>
                 </span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg">
-                <Activity className="w-3.5 h-3.5 text-zinc-300" />
-                <span className="text-xs font-bold text-white">
+              <div
+                className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg ${theme === "light"
+                  ? "bg-slate-50 border-slate-200"
+                  : "bg-white/5 border-white/10"
+                  }`}
+              >
+                <Activity
+                  className={
+                    theme === "light" ? "text-slate-400" : "text-zinc-300"
+                  }
+                />
+                <span
+                  className={`text-xs font-bold ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                >
                   <AnimatedCounter value={metrics?.active_automations || 0} />{" "}
-                  <span className="text-gray-400 font-medium font-normal">
+                  <span
+                    className={
+                      theme === "light"
+                        ? "text-slate-500 font-normal"
+                        : "text-gray-400 font-normal"
+                    }
+                  >
                     actifs
                   </span>
                 </span>
@@ -3707,11 +4029,15 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "overview" && (
             <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
               <div>
-                <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
+                <h2
+                  className={`text-3xl font-bold mb-2 tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                >
                   Bonjour{currentClient ? ` ${currentClient.brand_name}` : ""},
                   voici vos performances.
                 </h2>
-                <p className="text-zinc-500 font-medium text-lg">
+                <p
+                  className={`font-medium text-lg ${theme === "light" ? "text-slate-500" : "text-zinc-500"}`}
+                >
                   Synthèse des 30 derniers jours.
                 </p>
               </div>
@@ -3719,6 +4045,7 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               {!metricsLoading && metrics && (
                 <MilestoneBadge
                   hoursSaved={Math.round(metrics.time_saved_minutes / 60)}
+                  theme={theme}
                 />
               )}
 
@@ -3790,6 +4117,7 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                     icon={Clock}
                     color="emerald"
                     subtitleItems={["Équivalent en temps humain", "Ce mois-ci"]}
+                    theme={theme}
                   />
                   <StatCard
                     title="ROI Généré"
@@ -3802,6 +4130,7 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                     icon={DollarSign}
                     color="amber"
                     subtitleItems={["Valeur métier estimée"]}
+                    theme={theme}
                   />
                   <StatCard
                     title="Automatisations actives"
@@ -3811,6 +4140,7 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                     icon={Activity}
                     color="emerald"
                     subtitleItems={["Workflows surveillés 24/7"]}
+                    theme={theme}
                   />
                   <StatCard
                     title="Tâches automatisées"
@@ -3818,6 +4148,7 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                     icon={TerminalSquare}
                     color="zinc"
                     subtitleItems={["Actions réussies", "Ce mois-ci"]}
+                    theme={theme}
                   />
                 </div>
               )}
@@ -3826,10 +4157,10 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               {!metricsLoading && !metricsError && metrics && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                   <div className="h-[400px]">
-                    <LiveLogFeed />
+                    <LiveLogFeed theme={theme} />
                   </div>
                   <div className="h-[400px]">
-                    <ROIGlowChart />
+                    <ROIGlowChart theme={theme} />
                   </div>
                 </div>
               )}
@@ -3858,10 +4189,14 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "requests" && (
             <div className="max-w-4xl mx-auto animate-fade-in-up">
               <div className="mb-8">
-                <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
+                <h2
+                  className={`text-3xl font-bold mb-2 tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                >
                   Mes demandes d'architecture
                 </h2>
-                <p className="text-zinc-500 font-medium">
+                <p
+                  className={`font-medium ${theme === "light" ? "text-slate-500" : "text-zinc-500"}`}
+                >
                   Suivez l'état d'avancement de vos projets d'automatisation.
                 </p>
               </div>
@@ -3872,20 +4207,36 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                   {error}
                 </div>
               ) : requests.length === 0 ? (
-                <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
-                  <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5">
-                    <FileText className="w-10 h-10 text-gray-300" />
+                <div
+                  className={`border rounded-2xl p-16 text-center shadow-sm flex flex-col items-center ${theme === "light"
+                    ? "bg-white border-slate-200"
+                    : "bg-[#0a0a0a] border-white/10"
+                    }`}
+                >
+                  <div
+                    className={`w-20 h-20 rounded-full flex items-center justify-center mb-6 border ${theme === "light"
+                      ? "bg-slate-50 border-slate-100"
+                      : "bg-white/5 border-white/5"
+                      }`}
+                  >
+                    <FileText
+                      className={`w-10 h-10 ${theme === "light" ? "text-slate-400" : "text-gray-300"}`}
+                    />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">
+                  <h3
+                    className={`text-xl font-bold mb-2 ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                  >
                     Aucune demande pour l'instant
                   </h3>
-                  <p className="text-gray-400 font-normal mb-6">
+                  <p
+                    className={`font-normal mb-6 ${theme === "light" ? "text-slate-500" : "text-gray-400"}`}
+                  >
                     Soumettez votre premier projet à notre équipe d'architectes
                     IA.
                   </p>
                   <button
                     onClick={() => setActiveTab("architect")}
-                    className="bg-zinc-300 text-white px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-zinc-400 transition-colors shadow-sm"
+                    className="bg-blue-600 text-white px-6 py-3 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
                   >
                     <Plus className="w-4 h-4" /> Soumettre un projet
                   </button>
@@ -3895,18 +4246,35 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                   {requests.map((req) => (
                     <div
                       key={req.id}
-                      className="bg-[#0a0a0a] border border-white/10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden flex flex-col md:flex-row"
+                      className={`border rounded-[2rem] shadow-sm overflow-hidden flex flex-col md:flex-row transition-all ${theme === "light"
+                        ? "bg-white border-slate-200 hover:shadow-md"
+                        : "bg-[#0a0a0a] border-white/10 hover:border-white/20"
+                        }`}
                     >
-                      <div className="p-8 md:w-1/3 border-b md:border-b-0 md:border-r border-white/5 bg-[#030303]">
+                      <div
+                        className={`p-8 md:w-1/3 border-b md:border-b-0 md:border-r ${theme === "light"
+                          ? "bg-slate-50 border-slate-100"
+                          : "bg-[#030303] border-white/5"
+                          }`}
+                      >
                         <div className="flex items-center justify-between mb-6">
-                          <span className="bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-lg border border-amber-200">
+                          <span
+                            className={`text-xs font-bold px-3 py-1 rounded-lg border ${theme === "light"
+                              ? "bg-amber-50 text-amber-700 border-amber-100"
+                              : "bg-amber-100 text-amber-700 border-amber-200"
+                              }`}
+                          >
                             {req.status || "En attente"}
                           </span>
-                          <span className="text-xs text-zinc-500 font-bold">
+                          <span
+                            className={`text-xs font-bold ${theme === "light" ? "text-slate-400" : "text-zinc-500"}`}
+                          >
                             {new Date(req.created_at).toLocaleDateString()}
                           </span>
                         </div>
-                        <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-1">
+                        <p
+                          className={`text-xs font-bold uppercase tracking-widest mb-1 ${theme === "light" ? "text-slate-400" : "text-zinc-500"}`}
+                        >
                           Impact estimé :
                         </p>
                         <p className="text-base text-emerald-600 font-bold flex items-center gap-1">
@@ -3915,20 +4283,37 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                         </p>
                       </div>
                       <div className="p-8 md:w-2/3">
-                        <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">
+                        <h3
+                          className={`text-2xl font-bold mb-4 tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                        >
                           {req.title || "Projet IA"}
                         </h3>
-                        <p className="text-base font-medium text-zinc-600 mb-6 pb-6 border-b border-white/5 leading-relaxed">
+                        <p
+                          className={`text-base font-medium mb-6 pb-6 border-b leading-relaxed ${theme === "light"
+                            ? "text-slate-600 border-slate-100"
+                            : "text-zinc-400 border-white/5"
+                            }`}
+                        >
                           {req.description || req.diagnosis}
                         </p>
                         <div className="flex flex-wrap gap-2 mb-4">
                           {req.stack && (
-                            <span className="bg-zinc-100 text-zinc-700 text-xs font-bold px-3 py-1 rounded-lg border border-white/10">
+                            <span
+                              className={`text-xs font-bold px-3 py-1 rounded-lg border ${theme === "light"
+                                ? "bg-slate-100 text-slate-700 border-slate-200"
+                                : "bg-zinc-800 text-zinc-400 border-white/10"
+                                }`}
+                            >
                               Stack : {req.stack}
                             </span>
                           )}
                           {req.priority && (
-                            <span className="bg-zinc-800 text-zinc-400 text-xs font-bold px-3 py-1 rounded-lg border border-zinc-600">
+                            <span
+                              className={`text-xs font-bold px-3 py-1 rounded-lg border ${theme === "light"
+                                ? "bg-blue-50 text-blue-700 border-blue-100"
+                                : "bg-zinc-800 text-zinc-400 border-zinc-600"
+                                }`}
+                            >
                               Priorité : {req.priority}
                             </span>
                           )}
@@ -3944,10 +4329,14 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "architect" && (
             <div className="max-w-3xl mx-auto animate-fade-in-up">
               <div className="mb-8">
-                <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
+                <h2
+                  className={`text-3xl font-bold mb-2 tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                >
                   Architecte IA
                 </h2>
-                <p className="text-zinc-500 font-medium tracking-tight leading-relaxed">
+                <p
+                  className={`font-medium tracking-tight leading-relaxed ${theme === "light" ? "text-slate-500" : "text-zinc-500"}`}
+                >
                   Décrivez votre besoin d'automatisation. Nos experts concevront
                   une architecture sur mesure pour vous faire gagner de la bande
                   passante.
@@ -3956,7 +4345,10 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
               <form
                 onSubmit={handleSubmitProject}
-                className="bg-[#0a0a0a] border border-white/10 p-8 md:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-6"
+                className={`border p-8 md:p-10 rounded-3xl shadow-sm space-y-6 ${theme === "light"
+                  ? "bg-white border-slate-200"
+                  : "bg-[#0a0a0a] border-white/10"
+                  }`}
               >
                 {submitSuccess && (
                   <div className="p-4 bg-emerald-50 text-emerald-600 rounded-xl border border-emerald-100 flex items-center gap-2">
@@ -3972,37 +4364,51 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 )}
 
                 <div>
-                  <label className="block text-sm font-bold text-white mb-2">
-                    Titre du projet <span className="text-emerald-500">*</span>
+                  <label
+                    className={`block text-sm font-bold mb-2 ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                  >
+                    Titre du projet <span className="text-blue-500">*</span>
                   </label>
                   <input
                     required
                     value={projectTitle}
                     onChange={(e) => setProjectTitle(e.target.value)}
                     type="text"
-                    className="w-full bg-[#030303] border border-white/10 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 transition-all font-medium"
+                    className={`w-full border rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium ${theme === "light"
+                      ? "bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400"
+                      : "bg-[#030303] border-white/10 text-white placeholder:text-zinc-600"
+                      }`}
                     placeholder="Ex: Relance automatique des factures impayées"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-white mb-2">
+                  <label
+                    className={`block text-sm font-bold mb-2 ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                  >
                     Objectif & Contexte{" "}
-                    <span className="text-emerald-500">*</span>
+                    <span className="text-blue-500">*</span>
                   </label>
                   <textarea
                     required
                     value={projectDesc}
                     onChange={(e) => setProjectDesc(e.target.value)}
                     rows="5"
-                    className="w-full bg-[#030303] border border-white/10 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 transition-all font-medium leading-relaxed"
+                    className={`w-full border rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium leading-relaxed ${theme === "light"
+                      ? "bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400"
+                      : "bg-[#030303] border-white/10 text-white placeholder:text-zinc-600"
+                      }`}
                     placeholder="Décrivez le processus chronophage que vous souhaitez automatiser. Indiquez la perte de temps ou d'argent pour nous aider à évaluer le ROI potentiel..."
                   ></textarea>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-bold text-white mb-2">
+                    <label
+                      className={`block text-sm font-bold mb-2 ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                    >
                       Outils existants (Stack){" "}
-                      <span className="text-zinc-500 font-normal">
+                      <span
+                        className={`font-normal ${theme === "light" ? "text-slate-400" : "text-zinc-500"}`}
+                      >
                         (Optionnel)
                       </span>
                     </label>
@@ -4010,36 +4416,46 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                       value={projectStack}
                       onChange={(e) => setProjectStack(e.target.value)}
                       type="text"
-                      className="w-full bg-[#030303] border border-white/10 rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 transition-all font-medium"
+                      className={`w-full border rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium ${theme === "light"
+                        ? "bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400"
+                        : "bg-[#030303] border-white/10 text-white placeholder:text-zinc-600"
+                        }`}
                       placeholder="Ex: Shopify, Klaviyo, Stripe..."
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-white mb-2">
-                      Priorité <span className="text-emerald-500">*</span>
+                    <label
+                      className={`block text-sm font-bold mb-2 ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                    >
+                      Priorité <span className="text-blue-500">*</span>
                     </label>
                     <div className="relative">
                       <select
                         value={projectPriority}
                         onChange={(e) => setProjectPriority(e.target.value)}
-                        className="w-full bg-[#030303] border border-white/10 rounded-xl py-3 px-4 appearance-none outline-none focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 transition-all font-medium text-zinc-700"
+                        className={`w-full border rounded-xl py-3 px-4 appearance-none outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-bold ${theme === "light"
+                          ? "bg-slate-50 border-slate-200 text-slate-900"
+                          : "bg-[#030303] border-white/10 text-white"
+                          }`}
                       >
-                        <option value="low">Basse (Pas d'urgence)</option>
-                        <option value="normal">
+                        <option value="low" className={theme === "light" ? "bg-white text-slate-900" : "bg-black text-white"}>Basse (Pas d'urgence)</option>
+                        <option value="normal" className={theme === "light" ? "bg-white text-slate-900" : "bg-black text-white"}>
                           Normale (D'ici quelques semaines)
                         </option>
-                        <option value="high">
+                        <option value="high" className={theme === "light" ? "bg-white text-slate-900" : "bg-black text-white"}>
                           Haute (Impact immédiat attendu)
                         </option>
                       </select>
                     </div>
                   </div>
                 </div>
-                <div className="pt-2 border-t border-white/5 flex justify-end">
+                <div
+                  className={`pt-2 border-t flex justify-end ${theme === "light" ? "border-slate-100" : "border-white/5"}`}
+                >
                   <button
                     disabled={isSubmitting || submitSuccess}
                     type="submit"
-                    className="w-full md:w-auto mt-4 px-8 bg-white text-zinc-900 rounded-xl py-4 font-bold hover:bg-zinc-800 disabled:opacity-50 transition-colors shadow-sm inline-flex items-center justify-center gap-2"
+                    className="w-full md:w-auto mt-4 px-8 bg-blue-600 text-white rounded-xl py-4 font-bold hover:bg-blue-700 disabled:opacity-50 transition-all shadow-lg shadow-blue-600/20 inline-flex items-center justify-center gap-2"
                   >
                     {isSubmitting ? (
                       <>
@@ -4072,7 +4488,7 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                   </p>
                 </div>
               ) : (
-                <ActivityView supabase={supabase} />
+                <ActivityView supabase={supabase} theme={theme} />
               )}
             </div>
           )}
@@ -4095,6 +4511,7 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 <IntelligenceView
                   supabase={supabase}
                   setActiveTab={setActiveTab}
+                  theme={theme}
                 />
               )}
             </div>
@@ -4102,14 +4519,18 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "systems" && (
             <div className="max-w-5xl mx-auto animate-fade-in-up">
-              <h2 className="text-3xl font-bold text-white mb-8 tracking-tight">
+              <h2
+                className={`text-3xl font-bold mb-8 tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+              >
                 Vos infrastructures actives
               </h2>
               <div className="mb-12">
-                <InfrastructureNodeMap />
+                <InfrastructureNodeMap theme={theme} />
               </div>
 
-              <h3 className="text-xl font-bold text-white mb-6 tracking-tight">
+              <h3
+                className={`text-xl font-bold mb-6 tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+              >
                 Workflows Déployés
               </h3>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -4135,24 +4556,47 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 ].map((sys, idx) => (
                   <div
                     key={idx}
-                    className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 shadow-sm relative hover:shadow-md hover:border-white/20 transition-all group"
+                    className={`border rounded-2xl p-6 shadow-sm relative transition-all group ${theme === "light"
+                      ? "bg-white border-slate-200 hover:shadow-md hover:border-slate-300"
+                      : "bg-[#0a0a0a] border-white/10 hover:shadow-md hover:border-white/20"
+                      }`}
                   >
                     <div className="flex justify-between items-start mb-6">
-                      <div className="p-3 bg-white/5 border border-white/5 rounded-xl group-hover:bg-white/10 transition-colors">
-                        <Database className="w-5 h-5 text-gray-400" />
+                      <div
+                        className={`p-3 border rounded-xl transition-colors ${theme === "light"
+                          ? "bg-slate-50 border-slate-100 group-hover:bg-slate-100"
+                          : "bg-white/5 border-white/5 group-hover:bg-white/10"
+                          }`}
+                      >
+                        <Database
+                          className={`w-5 h-5 ${theme === "light" ? "text-slate-400" : "text-gray-400"}`}
+                        />
                       </div>
-                      <span className="bg-emerald-50/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-lg border border-emerald-500/20">
+                      <span
+                        className={`text-xs font-bold px-3 py-1 rounded-lg border ${theme === "light"
+                          ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                          : "bg-emerald-50/10 text-emerald-400 border-emerald-500/20"
+                          }`}
+                      >
                         {sys.status}
                       </span>
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-1">
+                    <h3
+                      className={`text-lg font-bold mb-1 ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                    >
                       {sys.name}
                     </h3>
-                    <p className="text-sm text-zinc-500 font-medium mb-6 leading-relaxed">
+                    <p
+                      className={`text-sm font-medium mb-6 leading-relaxed ${theme === "light" ? "text-slate-500" : "text-zinc-500"}`}
+                    >
                       {sys.desc}
                     </p>
-                    <div className="pt-4 border-t border-white/5 flex items-center justify-between text-sm">
-                      <span className="font-bold text-zinc-400">
+                    <div
+                      className={`pt-4 border-t flex items-center justify-between text-sm ${theme === "light" ? "border-slate-100" : "border-white/5"}`}
+                    >
+                      <span
+                        className={`font-bold ${theme === "light" ? "text-slate-500" : "text-zinc-400"}`}
+                      >
                         {sys.runs}
                       </span>
                       <span className="text-emerald-500 flex items-center gap-1">
@@ -5141,6 +5585,306 @@ const LandingPage = ({ onNavigate }) => {
                         <div className="relative z-10 flex flex-col h-full">
                           <div className="flex items-center gap-3 mb-6">
                             <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                              {activeTab === "overview" && (
+                                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                                  {/* Hero KPI Grid */}
+                                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                    <div
+                                      className={`p-6 rounded-3xl border transition-all duration-300 ${theme === "light"
+                                        ? "bg-white border-slate-200 shadow-sm hover:shadow-md"
+                                        : "bg-[#0a0a0a] border-white/10 hover:border-white/20"
+                                        }`}
+                                    >
+                                      <div className="flex items-center justify-between mb-4">
+                                        <div className="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center">
+                                          <DollarSign className="w-5 h-5 text-blue-600" />
+                                        </div>
+                                        <Badge variant="emerald">+12%</Badge>
+                                      </div>
+                                      <p
+                                        className={`text-sm font-medium mb-1 ${theme === "light" ? "text-slate-500" : "text-gray-400"}`}
+                                      >
+                                        ROI Estimé (Mensuel)
+                                      </p>
+                                      <h3
+                                        className={`text-2xl font-bold tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                                      >
+                                        {metrics?.estimated_roi || 0}€
+                                      </h3>
+                                    </div>
+
+                                    <div
+                                      className={`p-6 rounded-3xl border transition-all duration-300 ${theme === "light"
+                                        ? "bg-white border-slate-200 shadow-sm hover:shadow-md"
+                                        : "bg-[#0a0a0a] border-white/10 hover:border-white/20"
+                                        }`}
+                                    >
+                                      <div className="flex items-center justify-between mb-4">
+                                        <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
+                                          <Clock className="w-5 h-5 text-emerald-600" />
+                                        </div>
+                                        <Badge variant="emerald">Live</Badge>
+                                      </div>
+                                      <p
+                                        className={`text-sm font-medium mb-1 ${theme === "light" ? "text-slate-500" : "text-gray-400"}`}
+                                      >
+                                        Temps libéré
+                                      </p>
+                                      <h3
+                                        className={`text-2xl font-bold tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                                      >
+                                        {metrics ? Math.round(metrics.time_saved_minutes / 60) : 0}
+                                        h
+                                      </h3>
+                                    </div>
+
+                                    <div
+                                      className={`p-6 rounded-3xl border transition-all duration-300 ${theme === "light"
+                                        ? "bg-white border-slate-200 shadow-sm hover:shadow-md"
+                                        : "bg-[#0a0a0a] border-white/10 hover:border-white/20"
+                                        }`}
+                                    >
+                                      <div className="flex items-center justify-between mb-4">
+                                        <div className="w-10 h-10 rounded-2xl bg-purple-500/10 flex items-center justify-center">
+                                          <Zap className="w-5 h-5 text-purple-600" />
+                                        </div>
+                                      </div>
+                                      <p
+                                        className={`text-sm font-medium mb-1 ${theme === "light" ? "text-slate-500" : "text-gray-400"}`}
+                                      >
+                                        Automations actives
+                                      </p>
+                                      <h3
+                                        className={`text-2xl font-bold tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                                      >
+                                        {metrics?.active_automations || 0}
+                                      </h3>
+                                    </div>
+
+                                    <div
+                                      className={`p-6 rounded-3xl border transition-all duration-300 ${theme === "light"
+                                        ? "bg-white border-slate-200 shadow-sm hover:shadow-md"
+                                        : "bg-[#0a0a0a] border-white/10 hover:border-white/20"
+                                        }`}
+                                    >
+                                      <div className="flex items-center justify-between mb-4">
+                                        <div className="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center">
+                                          <Repeat className="w-5 h-5 text-amber-600" />
+                                        </div>
+                                      </div>
+                                      <p
+                                        className={`text-sm font-medium mb-1 ${theme === "light" ? "text-slate-500" : "text-gray-400"}`}
+                                      >
+                                        Actions effectuées
+                                      </p>
+                                      <h3
+                                        className={`text-2xl font-bold tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                                      >
+                                        {metrics?.total_executions || 0}
+                                      </h3>
+                                    </div>
+                                  </div>
+
+                                  {/* Quick Actions & Status */}
+                                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    <div className="lg:col-span-2 space-y-6">
+                                      <div
+                                        className={`p-8 rounded-[2rem] border overflow-hidden relative ${theme === "light"
+                                          ? "bg-white border-slate-200 shadow-sm"
+                                          : "bg-[#0a0a0a] border-white/10"
+                                          }`}
+                                      >
+                                        {/* Decorative Background */}
+                                        <div
+                                          className={`absolute top-0 right-0 w-64 h-64 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2 opacity-20 ${theme === "light" ? "bg-blue-400" : "bg-blue-500"
+                                            }`}
+                                        ></div>
+
+                                        <div className="relative z-10">
+                                          <h2
+                                            className={`text-2xl font-bold mb-2 tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                                          >
+                                            Bienvenue sur votre portail Actero
+                                          </h2>
+                                          <p
+                                            className={`mb-8 max-w-lg leading-relaxed ${theme === "light" ? "text-slate-500" : "text-gray-400 font-medium"}`}
+                                          >
+                                            Votre infrastructure IA est actuellement déployée et
+                                            sous surveillance. Utilisez l'architecte pour demander
+                                            de nouvelles automatisations.
+                                          </p>
+                                          <div className="flex flex-wrap gap-4">
+                                            <button
+                                              onClick={() => setActiveTab("architect")}
+                                              className="bg-blue-600 text-white px-6 py-3.5 rounded-2xl font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2"
+                                            >
+                                              <Plus className="w-4 h-4" /> Nouvelle automatisation
+                                            </button>
+                                            <button
+                                              onClick={() => setActiveTab("requests")}
+                                              className={`px-6 py-3.5 rounded-2xl font-bold text-sm transition-all flex items-center gap-2 border ${theme === "light"
+                                                ? "bg-white border-slate-200 text-slate-900 hover:bg-slate-50 shadow-sm"
+                                                : "bg-white/5 border-white/10 text-white hover:bg-white/10"
+                                                }`}
+                                            >
+                                              <ClipboardList className="w-4 h-4" /> Voir mes
+                                              demandes
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div
+                                        className={`p-8 rounded-[2rem] border ${theme === "light"
+                                          ? "bg-white border-slate-200 shadow-sm"
+                                          : "bg-[#0a0a0a] border-white/10"
+                                          }`}
+                                      >
+                                        <div className="flex items-center justify-between mb-8">
+                                          <h3
+                                            className={`text-lg font-bold tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                                          >
+                                            Dernières activités
+                                          </h3>
+                                          <button
+                                            onClick={() => setActiveTab("activity")}
+                                            className="text-xs font-bold text-blue-600 hover:underline"
+                                          >
+                                            Voir tout l'historique
+                                          </button>
+                                        </div>
+                                        <div className="space-y-4">
+                                          {[
+                                            {
+                                              label: "Analyse Intelligence",
+                                              desc: "Nouveau rapport ROI généré",
+                                              time: "il y a 2h",
+                                              icon: Lightbulb,
+                                              c: "text-amber-500",
+                                            },
+                                            {
+                                              label: "Agent Support",
+                                              desc: "14 tickets résolus automatiquement",
+                                              time: "il y a 4h",
+                                              icon: CheckCircle2,
+                                              c: "text-emerald-500",
+                                            },
+                                            {
+                                              label: "Infrastructure",
+                                              desc: "Optimisation de la base de données terminée",
+                                              time: "Hier",
+                                              icon: Database,
+                                              c: "text-blue-500",
+                                            },
+                                          ].map((item, i) => (
+                                            <div
+                                              key={i}
+                                              className={`flex items-center justify-between p-4 rounded-2xl transition-colors ${theme === "light"
+                                                ? "bg-slate-50 border border-slate-100 hover:border-slate-200"
+                                                : "bg-white/5 border border-white/5 hover:border-white/10"
+                                                }`}
+                                            >
+                                              <div className="flex items-center gap-4">
+                                                <div
+                                                  className={`w-10 h-10 rounded-xl flex items-center justify-center ${theme === "light" ? "bg-white shadow-sm" : "bg-white/5"}`}
+                                                >
+                                                  <item.icon className={`w-5 h-5 ${item.c}`} />
+                                                </div>
+                                                <div>
+                                                  <p
+                                                    className={`text-sm font-bold ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                                                  >
+                                                    {item.label}
+                                                  </p>
+                                                  <p
+                                                    className={`text-xs ${theme === "light" ? "text-slate-500" : "text-gray-400 font-medium"}`}
+                                                  >
+                                                    {item.desc}
+                                                  </p>
+                                                </div>
+                                              </div>
+                                              <span
+                                                className={`text-[10px] font-bold ${theme === "light" ? "text-slate-400" : "text-gray-500 uppercase tracking-wider"}`}
+                                              >
+                                                {item.time}
+                                              </span>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div className="space-y-6">
+                                      <div
+                                        className={`p-8 rounded-[2rem] border ${theme === "light"
+                                          ? "bg-slate-900 text-white shadow-xl"
+                                          : "bg-gradient-to-br from-blue-600 to-indigo-700 border-white/10 shadow-2xl shadow-blue-500/20"
+                                          }`}
+                                      >
+                                        <h3 className="text-lg font-bold mb-2">Support Prioritaire</h3>
+                                        <p className="text-blue-50/70 text-sm mb-6 leading-relaxed">
+                                          Besoin d'aide ou d'une modification urgente ? Votre
+                                          Account Manager est disponible.
+                                        </p>
+                                        <button className="w-full bg-white text-blue-600 py-3.5 rounded-2xl font-bold text-sm hover:bg-blue-50 transition-colors shadow-lg">
+                                          Contacter le support
+                                        </button>
+                                      </div>
+
+                                      <div
+                                        className={`p-8 rounded-[2rem] border ${theme === "light"
+                                          ? "bg-white border-slate-200 shadow-sm"
+                                          : "bg-[#0a0a0a] border-white/10"
+                                          }`}
+                                      >
+                                        <h3
+                                          className={`text-lg font-bold mb-6 tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                                        >
+                                          Santé Infrastructure
+                                        </h3>
+                                        <div className="space-y-6">
+                                          {[
+                                            { l: "Automatisations", v: 100, c: "bg-emerald-500" },
+                                            { l: "SLA / Disponibilité", v: 99.9, c: "bg-blue-500" },
+                                            { l: "Sécurité", v: 100, c: "bg-purple-500" },
+                                          ].map((stat, i) => (
+                                            <div key={i} className="space-y-2">
+                                              <div className="flex justify-between text-xs font-bold">
+                                                <span
+                                                  className={
+                                                    theme === "light"
+                                                      ? "text-slate-600"
+                                                      : "text-gray-400"
+                                                  }
+                                                >
+                                                  {stat.l}
+                                                </span>
+                                                <span
+                                                  className={
+                                                    theme === "light"
+                                                      ? "text-slate-900"
+                                                      : "text-white"
+                                                  }
+                                                >
+                                                  {stat.v}%
+                                                </span>
+                                              </div>
+                                              <div
+                                                className={`h-1.5 w-full rounded-full overflow-hidden ${theme === "light" ? "bg-slate-100" : "bg-white/5"}`}
+                                              >
+                                                <div
+                                                  className={`h-full ${stat.c}`}
+                                                  style={{ width: `${stat.v}%` }}
+                                                ></div>
+                                              </div>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                               <BrainCircuit className="w-5 h-5 text-amber-400" />
                             </div>
                             <span className="text-xs font-bold uppercase tracking-widest text-gray-500">
