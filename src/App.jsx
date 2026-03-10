@@ -89,6 +89,7 @@ import {
   Sun,
   Moon,
   ShieldAlert,
+  Award,
 } from "lucide-react";
 
 // --- Configuration Supabase ---
@@ -274,6 +275,7 @@ const StatCard = ({
   subtitleItems = [],
   className = "",
   theme = "dark",
+  variation = null,
 }) => {
   const isLight = theme === "light";
   const colors = {
@@ -308,6 +310,30 @@ const StatCard = ({
   };
 
   const c = colors[color] || colors.zinc;
+
+  const renderVariation = () => {
+    if (variation === null || variation === undefined) return null;
+    if (variation === "—") {
+      return (
+        <span className="text-[10px] font-bold text-gray-500 mt-2 block">
+          — pas de données
+        </span>
+      );
+    }
+
+    const isPos = variation > 0;
+    const isNeg = variation < 0;
+    const isNeut = variation === 0;
+
+    return (
+      <div className={`flex items-center gap-1 mt-2 text-[10px] font-bold ${isPos ? "text-emerald-500" : isNeg ? "text-rose-500" : "text-gray-500"}`}>
+        {isPos && <TrendingUp className="w-3 h-3" />}
+        {isNeg && <TrendingDown className="w-3 h-3" />}
+        {isNeut && <span className="mr-0.5">=</span>}
+        <span>{variation > 0 ? `+${variation}` : variation}% vs mois dernier</span>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -346,10 +372,13 @@ const StatCard = ({
           </div>
         </div>
       </div>
-      <div
-        className={`text-3xl font-bold tracking-tight transition-colors ${c.val}`}
-      >
-        {value}
+      <div>
+        <div
+          className={`text-3xl font-bold tracking-tight transition-colors ${c.val}`}
+        >
+          {value}
+        </div>
+        {renderVariation()}
       </div>
     </div>
   );
@@ -474,13 +503,120 @@ const LiveLogFeed = ({ theme = "dark", supabase }) => {
   );
 };
 
-const ROIGlowChart = ({ theme = "dark", metrics, growthPct }) => {
+const ROIGlowChart = ({ theme = "dark", metrics, growthPct, dailyMetrics = [], selectedPeriod = "this_month" }) => {
   const isLight = theme === "light";
-  const hasData = metrics && metrics.estimated_roi > 0;
+  const hasData = (metrics && metrics.estimated_roi > 0) || dailyMetrics.length > 0;
 
   const isPositive = typeof growthPct === 'number' && growthPct > 0;
   const isNegative = typeof growthPct === 'number' && growthPct < 0;
   const formattedGrowth = growthPct === "—" ? "—" : `${growthPct >= 0 ? '+' : ''}${growthPct}%`;
+
+  const getPeriodDates = (period) => {
+    const now = new Date();
+    let start, end;
+
+    if (period === "this_month") {
+      start = new Date(now.getFullYear(), now.getMonth(), 1);
+      end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59); // End of current month
+    } else if (period === "last_month") {
+      start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59); // End of last month
+    } else { // Default to last 30 days
+      start = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      end = now;
+    }
+    return { start, end };
+  };
+
+  // Cumulative ROI for the sparkline for the current period
+  const currentPeriodChartData = useMemo(() => {
+    const { start, end } = getPeriodDates(selectedPeriod);
+    const filtered = dailyMetrics.filter(d => {
+      const dDate = new Date(d.date);
+      return dDate >= start && dDate <= end;
+    }).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    let sum = 0;
+    return filtered.map((d, index) => {
+      sum += Number(d.estimated_roi);
+      return {
+        ...d,
+        dayIndex: index,
+        cumulative: sum,
+        dateLabel: new Date(d.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
+      };
+    });
+  }, [dailyMetrics, selectedPeriod]);
+
+  // Cumulative ROI for the sparkline for the previous period (overlay)
+  const previousPeriodChartData = useMemo(() => {
+    let prevPeriod;
+    if (selectedPeriod === "this_month") prevPeriod = "last_month";
+    else if (selectedPeriod === "last_month") {
+      // For last month, compare with the month before
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+      const end = new Date(now.getFullYear(), now.getMonth() - 1, 0, 23, 59, 59);
+      // We'll manualy filter here
+      const filtered = dailyMetrics.filter(d => {
+        const dDate = new Date(d.date);
+        return dDate >= start && dDate <= end;
+      }).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      let sum = 0;
+      return filtered.map((d, index) => {
+        sum += Number(d.estimated_roi);
+        return { ...d, dayIndex: index, cumulative_prev: sum };
+      });
+    } else {
+      // last_30_days -> compare with 60d-30d ago
+      const now = new Date();
+      const end = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      const start = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+      const filtered = dailyMetrics.filter(d => {
+        const dDate = new Date(d.date);
+        return dDate >= start && dDate <= end;
+      }).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      let sum = 0;
+      return filtered.map((d, index) => {
+        sum += Number(d.estimated_roi);
+        return { ...d, dayIndex: index, cumulative_prev: sum };
+      });
+    }
+
+    const { start, end } = getPeriodDates(prevPeriod);
+    const filtered = dailyMetrics.filter(d => {
+      const dDate = new Date(d.date);
+      return dDate >= start && dDate <= end;
+    }).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    let sum = 0;
+    return filtered.map((d, index) => {
+      sum += Number(d.estimated_roi);
+      return { ...d, dayIndex: index, cumulative_prev: sum };
+    });
+  }, [dailyMetrics, selectedPeriod]);
+
+  // Combine data for recharts based on day index to align curves
+  const combinedChartData = useMemo(() => {
+    const combined = [];
+    const maxDays = Math.max(currentPeriodChartData.length, previousPeriodChartData.length);
+
+    for (let i = 0; i < maxDays; i++) {
+      const currentDay = currentPeriodChartData[i];
+      const prevDay = previousPeriodChartData[i];
+
+      combined.push({
+        dayIndex: i,
+        dateLabel: currentDay?.dateLabel || `Jour ${i + 1}`,
+        cumulative: currentDay?.cumulative,
+        cumulative_prev: prevDay?.cumulative_prev,
+      });
+    }
+    return combined;
+  }, [currentPeriodChartData, previousPeriodChartData]);
+
 
   return (
     <div
@@ -520,7 +656,7 @@ const ROIGlowChart = ({ theme = "dark", metrics, growthPct }) => {
                   {formattedGrowth}
                 </span>
                 <span className={`text-sm font-bold flex items-center ${isPositive ? "text-emerald-500" : isNegative ? "text-rose-500" : "text-gray-400"}`}>
-                  {isPositive ? <ArrowUpRight className="w-4 h-4" /> : isNegative ? <TrendingDown className="w-4 h-4" /> : null} ce mois
+                  {isPositive ? <ArrowUpRight className="w-4 h-4" /> : isNegative ? <TrendingDown className="w-4 h-4" /> : <span className="mr-1">=</span>} vs mois dernier
                 </span>
               </div>
             </div>
@@ -536,85 +672,56 @@ const ROIGlowChart = ({ theme = "dark", metrics, growthPct }) => {
             </div>
           </div>
 
-          <div className="flex-1 relative w-full min-h-[160px] flex items-end">
-            <svg
-              viewBox="0 0 400 120"
-              className="w-full h-full preserve-3d overflow-visible"
-            >
-              <defs>
-                <linearGradient id="glowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop
-                    offset="0%"
-                    stopColor={isLight ? "rgba(37, 99, 235, 0.4)" : "rgba(16, 185, 129, 0.4)"}
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor={isLight ? "rgba(37, 99, 235, 0)" : "rgba(16, 185, 129, 0)"}
-                  />
-                </linearGradient>
-                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="4" result="blur" />
-                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
-              </defs>
-
-              {/* Grid lines */}
-              {[30, 70, 110].map((y) => (
-                <line
-                  key={y}
-                  x1="0"
-                  y1={y}
-                  x2="400"
-                  y2={y}
-                  stroke={isLight ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.05)"}
-                  strokeWidth="1"
-                  strokeDasharray="4 4"
+          <div className="flex-1 w-full min-h-[160px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={combinedChartData} margin={{ top: 10, right: 10, left: -30, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorCumulative" x1="0" y1="0" x2="0" y2="100%">
+                    <stop offset="5%" stopColor={isLight ? "#2563eb" : "#10b981"} stopOpacity={0.3} />
+                    <stop offset="95%" stopColor={isLight ? "#2563eb" : "#10b981"} stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="colorCumulativePrev" x1="0" y1="0" x2="0" y2="100%">
+                    <stop offset="5%" stopColor={isLight ? "#94a3b8" : "#6b7280"} stopOpacity={0.1} />
+                    <stop offset="95%" stopColor={isLight ? "#94a3b8" : "#6b7280"} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isLight ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.05)"} />
+                <XAxis dataKey="dateLabel" hide />
+                <YAxis hide domain={['auto', 'auto']} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: isLight ? '#fff' : '#0a0a0a', border: isLight ? '1px solid #e2e8f0' : '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px' }}
+                  labelStyle={{ fontWeight: 'bold', marginBottom: '4px' }}
+                  formatter={(val, name) => {
+                    if (name === 'ROI Cumulé (Actuel)') return [`${Math.round(val)}€`, 'ROI Cumulé (Actuel)'];
+                    if (name === 'ROI Cumulé (Précédent)') return [`${Math.round(val)}€`, 'ROI Cumulé (Précédent)'];
+                    return [`${Math.round(val)}€`, name];
+                  }}
                 />
-              ))}
-
-              {/* Fill Area */}
-              <motion.path
-                d="M 0 110 Q 50 100, 100 80 T 200 60 T 300 30 T 400 10 L 400 120 L 0 120 Z"
-                fill="url(#glowGradient)"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1.5, delay: 0.5 }}
-              />
-
-              {/* Stroke Line */}
-              <motion.path
-                d="M 0 110 Q 50 100, 100 80 T 200 60 T 300 30 T 400 10"
-                fill="none"
-                stroke={isLight ? "#2563eb" : "#10b981"}
-                strokeWidth="3"
-                filter="url(#glow)"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 2, ease: "easeInOut" }}
-              />
-
-              {/* Dots */}
-              {[
-                { cx: 0, cy: 110 },
-                { cx: 100, cy: 80 },
-                { cx: 200, cy: 60 },
-                { cx: 300, cy: 30 },
-                { cx: 400, cy: 10 },
-              ].map((pt, i) => (
-                <motion.circle
-                  key={i}
-                  cx={pt.cx}
-                  cy={pt.cy}
-                  r="4"
-                  fill={isLight ? "#ffffff" : "#0a0a0a"}
+                <Area
+                  type="monotone"
+                  dataKey="cumulative"
+                  name="ROI Cumulé (Actuel)"
                   stroke={isLight ? "#2563eb" : "#10b981"}
-                  strokeWidth="2"
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 1.5 + i * 0.1, type: "spring" }}
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#colorCumulative)"
+                  animationDuration={2000}
                 />
-              ))}
-            </svg>
+                {previousPeriodChartData.length > 0 && (
+                  <Area
+                    type="monotone"
+                    dataKey="cumulative_prev"
+                    name="ROI Cumulé (Précédent)"
+                    stroke={isLight ? "#94a3b8" : "#6b7280"}
+                    strokeWidth={2}
+                    strokeDasharray="3 3"
+                    fillOpacity={1}
+                    fill="url(#colorCumulativePrev)"
+                    animationDuration={2000}
+                  />
+                )}
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </>
       )}
@@ -622,20 +729,32 @@ const ROIGlowChart = ({ theme = "dark", metrics, growthPct }) => {
   );
 };
 
-const ActivityChart = ({ theme = "dark", supabase }) => {
+const ActivityChart = ({ theme = "dark", supabase, selectedPeriod = "this_month" }) => {
   const isLight = theme === "light";
 
   const { data: events = [], isLoading } = useQuery({
-    queryKey: ["client-activity-events"],
+    queryKey: ["client-activity-events", selectedPeriod],
     queryFn: async () => {
       if (!supabase) return [];
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const now = new Date();
+      let start, end;
+
+      if (selectedPeriod === "this_month") {
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+        end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+      } else if (selectedPeriod === "last_month") {
+        start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59);
+      } else { // Default to last 30 days
+        start = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        end = now;
+      }
 
       const { data, error } = await supabase
         .from('automation_events')
         .select('created_at, event_category')
-        .gte('created_at', thirtyDaysAgo.toISOString())
+        .gte('created_at', start.toISOString())
+        .lte('created_at', end.toISOString())
         .order('created_at', { ascending: true });
 
       if (error) throw error;
@@ -3450,6 +3569,8 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     localStorage.setItem("actero-theme", newTheme);
   };
 
+  const [selectedPeriod, setSelectedPeriod] = useState("this_month");
+
   // 1. Fetch Client Profile
   const { data: currentClient, isLoading: clientLoading, error: clientError } = useQuery({
     queryKey: ["client-profile"],
@@ -3469,7 +3590,7 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     enabled: !!supabase,
   });
 
-  // 2. Fetch Metrics (with polling)
+  // 2. Fetch Metrics (legacy - will keep for some global stats if needed, but we'll use dailyMetrics primarily)
   const { data: metrics, isLoading: metricsLoading, error: metricsError } = useQuery({
     queryKey: ["client-metrics", currentClient?.id],
     queryFn: async () => {
@@ -3481,7 +3602,7 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       return data;
     },
     enabled: !!supabase && !!currentClient?.id,
-    refetchInterval: 30000, // 30s polling
+    refetchInterval: 30000,
   });
 
   // 3. Fetch Requests
@@ -3499,18 +3620,17 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     enabled: !!supabase && !!currentClient?.id,
   });
 
-  // 4. Fetch Daily Metrics for ROI Growth calculation
-  const { data: dailyMetrics = [] } = useQuery({
-    queryKey: ["client-daily-metrics", currentClient?.id],
+  // 4. Broad Fetch of Daily Metrics (Jan 2026 to now)
+  const { data: dailyMetrics = [], isLoading: dailyMetricsLoading } = useQuery({
+    queryKey: ["client-daily-metrics-wide", currentClient?.id],
     queryFn: async () => {
-      const now = new Date();
-      const startOfPreviousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const startOfYear = new Date(2026, 0, 1);
 
       const { data, error } = await supabase
         .from("metrics_daily")
-        .select("estimated_roi, date")
+        .select("*")
         .eq("client_id", currentClient.id)
-        .gte("date", startOfPreviousMonth.toISOString())
+        .gte("date", startOfYear.toISOString())
         .order("date", { ascending: true });
 
       if (error) throw error;
@@ -3519,29 +3639,80 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     enabled: !!supabase && !!currentClient?.id,
   });
 
-  const growthPct = useMemo(() => {
-    if (!dailyMetrics || dailyMetrics.length === 0) return 0;
+  // KPI Calculations based on period
+  const periodStats = useMemo(() => {
+    if (!dailyMetrics.length) return null;
 
     const now = new Date();
     const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfPrevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const startOfTwoMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
 
-    const currentMonthData = dailyMetrics.filter(d => new Date(d.date) >= startOfCurrentMonth);
-    const previousMonthData = dailyMetrics.filter(d => {
-      const dDate = new Date(d.date);
-      return dDate < startOfCurrentMonth;
+    const getPeriodData = (start, end) => dailyMetrics.filter(d => {
+      const date = new Date(d.date);
+      return date >= start && date <= end;
     });
 
-    if (previousMonthData.length === 0) return "—";
+    let currentPeriodArr = [];
+    let comparisonPeriodArr = [];
 
-    const currentTotal = currentMonthData.reduce((sum, d) => sum + Number(d.estimated_roi), 0);
-    const previousTotal = previousMonthData.reduce((sum, d) => sum + Number(d.estimated_roi), 0);
+    if (selectedPeriod === "this_month") {
+      currentPeriodArr = getPeriodData(startOfCurrentMonth, now);
+      comparisonPeriodArr = getPeriodData(startOfPrevMonth, new Date(now.getFullYear(), now.getMonth(), 0));
+    } else if (selectedPeriod === "last_month") {
+      currentPeriodArr = getPeriodData(startOfPrevMonth, new Date(now.getFullYear(), now.getMonth(), 0));
+      comparisonPeriodArr = getPeriodData(startOfTwoMonthsAgo, new Date(now.getFullYear(), now.getMonth() - 1, 0));
+    } else {
+      currentPeriodArr = getPeriodData(thirtyDaysAgo, now);
+      comparisonPeriodArr = getPeriodData(sixtyDaysAgo, thirtyDaysAgo);
+    }
 
-    const currentAvg = currentMonthData.length > 0 ? currentTotal / currentMonthData.length : 0;
-    const previousAvg = previousMonthData.length > 0 ? previousTotal / previousMonthData.length : 0;
+    const calcSum = (arr, field) => arr.reduce((sum, d) => sum + (Number(d[field]) || 0), 0);
+    const calcAvg = (arr, field) => arr.length > 0 ? calcSum(arr, field) / arr.length : 0;
+    const getLast = (arr, field) => arr.length > 0 ? Number(arr[arr.length - 1][field]) || 0 : 0;
 
-    if (previousAvg === 0) return currentAvg > 0 ? 100 : 0;
+    const computeVar = (currentAvg, prevAvg) => {
+      if (prevAvg === 0) return currentAvg > 0 ? 100 : "—";
+      return Math.round(((currentAvg - prevAvg) / prevAvg) * 100);
+    };
 
-    return Math.round(((currentAvg - previousAvg) / previousAvg) * 100);
+    return {
+      time_saved: Math.round(calcSum(currentPeriodArr, 'time_saved_minutes') / 60),
+      time_saved_var: computeVar(calcAvg(currentPeriodArr, 'time_saved_minutes'), calcAvg(comparisonPeriodArr, 'time_saved_minutes')),
+
+      roi: Math.round(calcSum(currentPeriodArr, 'estimated_roi')),
+      roi_var: computeVar(calcAvg(currentPeriodArr, 'estimated_roi'), calcAvg(comparisonPeriodArr, 'estimated_roi')),
+
+      active_automations: getLast(currentPeriodArr, 'active_automations'),
+      active_automations_var: computeVar(getLast(currentPeriodArr, 'active_automations'), getLast(comparisonPeriodArr, 'active_automations')),
+
+      tasks_executed: calcSum(currentPeriodArr, 'tasks_executed'),
+      tasks_executed_var: computeVar(calcAvg(currentPeriodArr, 'tasks_executed'), calcAvg(comparisonPeriodArr, 'tasks_executed')),
+    };
+  }, [dailyMetrics, selectedPeriod]);
+
+  // Fixed growth metric (always this month vs last month)
+  const growthPct = useMemo(() => {
+    if (!dailyMetrics.length) return 0;
+    const now = new Date();
+    const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfPrevMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+    const curMonth = dailyMetrics.filter(d => new Date(d.date) >= startOfCurrentMonth);
+    const prevMonth = dailyMetrics.filter(d => {
+      const date = new Date(d.date);
+      return date >= startOfPrevMonth && date < startOfCurrentMonth;
+    });
+
+    if (prevMonth.length === 0) return "—";
+
+    const curAvg = curMonth.reduce((sum, d) => sum + Number(d.estimated_roi), 0) / (curMonth.length || 1);
+    const prevAvg = prevMonth.reduce((sum, d) => sum + Number(d.estimated_roi), 0) / prevMonth.length;
+
+    if (prevAvg === 0) return curAvg > 0 ? 100 : 0;
+    return Math.round(((curAvg - prevAvg) / prevAvg) * 100);
   }, [dailyMetrics]);
 
   // Project submission state
@@ -3974,28 +4145,50 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
           {activeTab === "overview" && (
             <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
-              <div>
-                <h2
-                  className={`text-3xl font-bold mb-2 tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
-                >
-                  Bonjour{currentClient ? ` ${currentClient.brand_name}` : ""},
-                  voici vos performances.
-                </h2>
-                <p
-                  className={`font-medium text-lg ${theme === "light" ? "text-slate-500" : "text-zinc-500"}`}
-                >
-                  Synthèse des 30 derniers jours.
-                </p>
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                  <h2
+                    className={`text-3xl font-bold mb-2 tracking-tight ${theme === "light" ? "text-slate-900" : "text-white"}`}
+                  >
+                    Bonjour{currentClient ? ` ${currentClient.brand_name}` : ""},
+                    voici vos performances.
+                  </h2>
+                  <p
+                    className={`font-medium text-lg ${theme === "light" ? "text-slate-500" : "text-zinc-500"}`}
+                  >
+                    {selectedPeriod === "this_month" ? "Synthèse du mois en cours." : selectedPeriod === "last_month" ? "Détails du mois dernier." : "Rapport des 30 derniers jours."}
+                  </p>
+                </div>
+
+                {/* Period Selector Toggle */}
+                <div className={`flex p-1 rounded-xl border ${theme === 'light' ? 'bg-slate-100 border-slate-200' : 'bg-white/5 border-white/10'}`}>
+                  {[
+                    { id: 'this_month', label: 'Ce mois' },
+                    { id: 'last_month', label: 'Mois dernier' },
+                    { id: 'last_30_days', label: '30 jours' }
+                  ].map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => setSelectedPeriod(p.id)}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${selectedPeriod === p.id
+                        ? (theme === 'light' ? 'bg-white text-blue-600 shadow-sm' : 'bg-white/10 text-white shadow-lg')
+                        : (theme === 'light' ? 'text-slate-500 hover:text-slate-900' : 'text-zinc-500 hover:text-zinc-300')
+                        }`}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {!metricsLoading && metrics && (
                 <MilestoneBadge
-                  hoursSaved={Math.round(metrics.time_saved_minutes / 60)}
+                  hoursSaved={periodStats?.time_saved || 0}
                   theme={theme}
                 />
               )}
 
-              {metricsLoading ? (
+              {dailyMetricsLoading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {[...Array(4)].map((_, i) => (
                     <div
@@ -4033,11 +4226,7 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                     </p>
                   </div>
                 </div>
-              ) : !metrics ||
-                (metrics.active_automations === 0 &&
-                  metrics.tasks_executed === 0 &&
-                  metrics.time_saved_minutes === 0 &&
-                  metrics.estimated_roi === 0) ? (
+              ) : !dailyMetrics.length ? (
                 <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-16 text-center shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center">
                   <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5">
                     <Activity className="w-8 h-8 text-gray-300" />
@@ -4051,62 +4240,72 @@ const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <StatCard
                     title="Temps économisé"
                     value={
                       <AnimatedCounter
-                        value={Math.round(metrics.time_saved_minutes / 60)}
+                        value={periodStats?.time_saved || 0}
                         suffix="h"
                       />
                     }
+                    variation={periodStats?.time_saved_var}
                     icon={Clock}
                     color="emerald"
-                    subtitleItems={["Équivalent en temps humain", "Ce mois-ci"]}
+                    subtitleItems={["Équivalent humain"]}
                     theme={theme}
                   />
                   <StatCard
                     title="ROI Généré"
                     value={
                       <AnimatedCounter
-                        value={metrics.estimated_roi}
+                        value={periodStats?.roi || 0}
                         suffix="€"
                       />
                     }
+                    variation={periodStats?.roi_var}
                     icon={DollarSign}
                     color="amber"
-                    subtitleItems={["Valeur métier estimée"]}
+                    subtitleItems={["Valeur métier"]}
                     theme={theme}
                   />
                   <StatCard
-                    title="Automatisations actives"
+                    title="Automatisations"
                     value={
-                      <AnimatedCounter value={metrics.active_automations} />
+                      <AnimatedCounter value={periodStats?.active_automations || 0} />
                     }
+                    variation={periodStats?.active_automations_var}
                     icon={Activity}
                     color="emerald"
-                    subtitleItems={["Workflows surveillés 24/7"]}
+                    subtitleItems={["Workflows actifs"]}
                     theme={theme}
                   />
                   <StatCard
-                    title="Tâches automatisées"
-                    value={<AnimatedCounter value={metrics.tasks_executed} />}
+                    title="Tâches IA"
+                    value={<AnimatedCounter value={periodStats?.tasks_executed || 0} />}
+                    variation={periodStats?.tasks_executed_var}
                     icon={TerminalSquare}
                     color="zinc"
-                    subtitleItems={["Actions réussies", "Ce mois-ci"]}
+                    subtitleItems={["Actions réussies"]}
                     theme={theme}
                   />
                 </div>
               )}
 
               {/* Advanced Dashboard Widgets */}
-              {!metricsLoading && !metricsError && metrics && (
+              {!dailyMetricsLoading && dailyMetrics.length > 0 && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                   <div className="h-[400px]">
-                    <ActivityChart theme={theme} supabase={supabase} />
+                    <ActivityChart theme={theme} supabase={supabase} selectedPeriod={selectedPeriod} />
                   </div>
                   <div className="h-[400px]">
-                    <ROIGlowChart theme={theme} metrics={metrics} growthPct={growthPct} />
+                    <ROIGlowChart
+                      theme={theme}
+                      metrics={metrics}
+                      growthPct={growthPct}
+                      dailyMetrics={dailyMetrics}
+                      selectedPeriod={selectedPeriod}
+                    />
                   </div>
                 </div>
               )}
