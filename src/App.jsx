@@ -4762,40 +4762,40 @@ const LandingPage = ({ onNavigate }) => {
                 {/* === END MEGA MENU === */}
                 <button
                   onClick={() => onNavigate("/tarifs")}
-                  className="text-sm font-semibold text-gray-400 hover:text-white transition-colors"
+                  className="text-[13px] font-semibold text-gray-400 hover:text-white transition-colors"
                 >
-                  Tarification
+                  Tarifs
                 </button>
                 <button
                   onClick={() => onNavigate("/entreprise")}
-                  className="text-sm font-semibold text-gray-400 hover:text-white transition-colors"
+                  className="text-[13px] font-semibold text-gray-400 hover:text-white transition-colors"
                 >
                   Entreprise
                 </button>
                 <button
                   onClick={() => onNavigate("/faq")}
-                  className="text-sm font-semibold text-gray-400 hover:text-white transition-colors"
+                  className="text-[13px] font-semibold text-gray-400 hover:text-white transition-colors"
                 >
                   FAQ
                 </button>
                 <button
                   onClick={() => onNavigate("/demo")}
-                  className="text-sm font-semibold text-gray-400 hover:text-white transition-colors"
+                  className="text-[13px] font-semibold text-gray-400 hover:text-white transition-colors"
                 >
                   Simulateur
                 </button>
                 <button
                   onClick={() => onNavigate("/ressources")}
-                  className="text-sm font-semibold text-gray-400 hover:text-white transition-colors"
+                  className="text-[13px] font-semibold text-gray-400 hover:text-white transition-colors"
                 >
                   Ressources
                 </button>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => onNavigate("/login")}
-                  className="hidden lg:block text-sm font-semibold text-gray-400 hover:text-white transition-colors px-2"
+                  className="hidden lg:block text-[13px] font-semibold text-gray-400 hover:text-white transition-colors px-1"
                 >
                   Connexion
                 </button>
