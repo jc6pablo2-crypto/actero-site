@@ -725,6 +725,33 @@ const InfrastructureNodeMap = () => {
 // ==========================================
 // 1. PAGE DE CONNEXION (LOGIN)
 // ==========================================
+// Helper: fetch the user's role from profiles, fallback to admin_users
+const fetchUserRole = async (userId) => {
+  try {
+    // 1. Try profiles.role first
+    const { data: profile, error: profileErr } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (!profileErr && profile && profile.role) {
+      return profile.role; // 'admin' or 'client'
+    }
+
+    // 2. Fallback: check admin_users table
+    const { data: adminRow } = await supabase
+      .from("admin_users")
+      .select("user_id")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    return adminRow ? "admin" : "client";
+  } catch {
+    return "client"; // Safe default
+  }
+};
+
 const LoginPage = ({ onNavigate, onLogin }) => {
   const [isForgot, setIsForgot] = useState(false);
   const [email, setEmail] = useState("");
@@ -759,7 +786,11 @@ const LoginPage = ({ onNavigate, onLogin }) => {
           password,
         },
       );
-      onNavigate("/app");
+      if (authError) throw authError;
+
+      // Fetch role and redirect accordingly
+      const userRole = await fetchUserRole(data.user.id);
+      onNavigate(userRole === "admin" ? "/admin" : "/client");
     } catch (err) {
       setError(
         isForgot
@@ -778,7 +809,7 @@ const LoginPage = ({ onNavigate, onLogin }) => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/app`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       if (error) throw error;
@@ -1475,8 +1506,21 @@ const CommandKModal = ({ isOpen, onClose, clients, setActiveTab }) => {
   );
 };
 
-const AdminDashboard = ({ onNavigate, onLogout }) => {
-  const [activeTab, setActiveTab] = useState("overview");
+const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
+  // Derive active tab from URL
+  const getAdminTabFromRoute = (route) => {
+    if (route === "/admin/clients") return "clients";
+    if (route === "/admin/requests") return "requests";
+    if (route === "/admin/leads") return "leads";
+    if (route === "/admin/intelligence") return "intelligence";
+    if (route === "/admin/onboard") return "onboard";
+    return "overview";
+  };
+  const activeTab = getAdminTabFromRoute(currentRoute);
+  const setActiveTab = (tab) => {
+    const route = tab === "overview" ? "/admin" : `/admin/${tab}`;
+    onNavigate(route);
+  };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // ✅ DATA FROM SUPABASE (instead of mocks)
@@ -3257,8 +3301,22 @@ const IntelligenceView = ({ supabase, setActiveTab }) => {
 // ==========================================
 // 3. DASHBOARD USER (CLIENT)
 // ==========================================
-const ClientDashboard = ({ onNavigate, onLogout }) => {
-  const [activeTab, setActiveTab] = useState("overview");
+const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
+  // Derive active tab from URL
+  const getTabFromRoute = (route) => {
+    if (route === "/client/requests") return "requests";
+    if (route === "/client/architect") return "architect";
+    if (route === "/client/activity") return "activity";
+    if (route === "/client/systems") return "systems";
+    if (route === "/client/intelligence") return "intelligence";
+    if (route === "/client/reports") return "reports";
+    return "overview";
+  };
+  const activeTab = getTabFromRoute(currentRoute);
+  const setActiveTab = (tab) => {
+    const route = tab === "overview" ? "/client" : `/client/${tab}`;
+    onNavigate(route);
+  };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [currentClient, setCurrentClient] = useState(null);
@@ -5794,40 +5852,35 @@ const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
           setUser(activeSession.user);
         }
 
-        // 1. ADMIN CHECK
-        dLog(`Checking 'admin_users' for user_id: ${activeSession.user.id}`);
-        const isAdminCheck = await fetchWithRetry(async () => {
-          const { data, error } = await supabase
-            .from("admin_users")
-            .select("user_id")
-            .eq("user_id", activeSession.user.id)
-            .maybeSingle();
-
-          if (error) throw error;
-          return !!data;
+        // 1. ROLE CHECK via profiles.role (primary) + admin_users fallback
+        dLog(`Fetching role for user_id: ${activeSession.user.id}`);
+        const userRole = await fetchWithRetry(async () => {
+          return await fetchUserRole(activeSession.user.id);
         });
 
-        dLog(`Admin Status: ${isAdminCheck ? "TRUE" : "FALSE"}`);
+        dLog(`User Role: ${userRole}`);
 
-        if (isAdminCheck) {
+        if (userRole === "admin") {
           if (mounted) {
             setRole("admin");
-            setClientId("ADMIN_BYPASS"); // Admins don't strictly bind to one tenant visually right now.
-            if (currentRoute !== "/admin") {
-              dLog(
-                `Admin User found on ${currentRoute}, redirecting to /admin`,
-              );
+            setClientId("ADMIN_BYPASS");
+            // If on legacy /app or /client routes, redirect to /admin
+            if (currentRoute === "/app" || currentRoute.startsWith("/client")) {
+              dLog(`Admin User on ${currentRoute}, redirecting to /admin`);
               onNavigate("/admin");
             }
           }
         } else {
-          // 2. CLIENT CHECK
-          if (currentRoute === "/admin") {
-            dLog(
-              `Non-Admin User attempting to access /admin, redirecting to /app`,
-            );
-            if (mounted) onNavigate("/app");
-            // Allow state check to fall through seamlessly since we just issued a navigation order (it will re-render)
+          // CLIENT ROLE
+          // Block access to admin routes
+          if (currentRoute.startsWith("/admin")) {
+            dLog(`Client User attempting to access /admin, redirecting to /client`);
+            if (mounted) onNavigate("/client");
+          }
+          // Redirect legacy /app to /client
+          if (currentRoute === "/app") {
+            dLog(`Legacy /app route, redirecting to /client`);
+            if (mounted) onNavigate("/client");
           }
 
           dLog(`Fetching 'client_users' for user_id: ${activeSession.user.id}`);
@@ -5840,10 +5893,7 @@ const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
 
             dLog("Query resolve:", { status, data, error });
 
-            if (error) {
-              // Hard errors shouldn't be cast as "no tenant"
-              throw error;
-            }
+            if (error) throw error;
             return data;
           });
 
@@ -5854,10 +5904,22 @@ const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
               setClientId(mappingResult.client_id);
               setRole(mappingResult.role || "client");
             } else {
-              dLog(
-                "No mapping found (data is null). Explicitly setting NO TENANT block.",
-              );
-              setClientId(null);
+              // Try owner_user_id from clients table
+              const { data: ownedClient } = await supabase
+                .from("clients")
+                .select("id")
+                .eq("owner_user_id", activeSession.user.id)
+                .maybeSingle();
+
+              if (ownedClient) {
+                dLog("Owner mapping found:", ownedClient.id);
+                setClientId(ownedClient.id);
+                setRole("client");
+              } else {
+                dLog("No mapping found. Setting NO TENANT block.");
+                setClientId(null);
+                setRole("client");
+              }
             }
           }
         }
@@ -5917,9 +5979,9 @@ const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
       value={{ session, user, clientId, role, loadingTenant }}
     >
       {role === "admin" ? (
-        <AdminDashboard onNavigate={onNavigate} onLogout={onLogout} />
+        <AdminDashboard onNavigate={onNavigate} onLogout={onLogout} currentRoute={currentRoute} />
       ) : (
-        <ClientDashboard onNavigate={onNavigate} onLogout={onLogout} />
+        <ClientDashboard onNavigate={onNavigate} onLogout={onLogout} currentRoute={currentRoute} />
       )}
     </TenantContext.Provider>
   );
@@ -5958,8 +6020,9 @@ function AuthCallbackPage({ onNavigate }) {
 
         if (error) throw error;
         if (session && mounted) {
-          logger("Session existante ! Routing to /app");
-          onNavigate("/app");
+          logger("Session existante ! Fetching role for redirect...");
+          const userRole = await fetchUserRole(session.user.id);
+          onNavigate(userRole === "admin" ? "/admin" : "/client");
         }
       } catch (err) {
         if (mounted)
@@ -5982,8 +6045,10 @@ function AuthCallbackPage({ onNavigate }) {
         session ? "Session Active" : "No Session",
       );
       if (session && mounted) {
-        logger("Session caught via listener. Routing to /app");
-        onNavigate("/app");
+        logger("Session caught via listener. Fetching role...");
+        fetchUserRole(session.user.id).then((userRole) => {
+          if (mounted) onNavigate(userRole === "admin" ? "/admin" : "/client");
+        });
       }
     });
 
@@ -7557,7 +7622,7 @@ function MainRouter() {
               Retour aux tarifs
             </button>
             <button
-              onClick={() => navigate("/app")}
+              onClick={() => navigate("/client")}
               className="flex-1 bg-white text-zinc-900 px-6 py-4 rounded-xl font-bold hover:bg-zinc-200 transition-colors"
             >
               Mon espace
@@ -7568,7 +7633,29 @@ function MainRouter() {
     );
   }
 
-  if (currentRoute === "/app" || currentRoute === "/admin") {
+  if (currentRoute === "/app") {
+    // Legacy /app route: redirect to proper dashboard
+    // DashboardGate will handle the redirect
+    return (
+      <DashboardGate
+        currentRoute={currentRoute}
+        onNavigate={navigate}
+        onLogout={handleLogout}
+      />
+    );
+  }
+
+  if (currentRoute.startsWith("/admin")) {
+    return (
+      <DashboardGate
+        currentRoute={currentRoute}
+        onNavigate={navigate}
+        onLogout={handleLogout}
+      />
+    );
+  }
+
+  if (currentRoute.startsWith("/client")) {
     return (
       <DashboardGate
         currentRoute={currentRoute}
