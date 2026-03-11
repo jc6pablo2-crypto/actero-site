@@ -42,7 +42,7 @@ import {
 } from '../components/ui/scroll-animations'
 import { initAmplitude, trackEvent } from '../lib/analytics'
 import { supabase } from '../lib/supabase'
-// AI calls now handled by AIAuditScannerModal
+import { callGemini } from '../lib/gemini'
 
 export const LandingPage = ({ onNavigate }) => {
   // --- Helpers ---
@@ -53,7 +53,19 @@ export const LandingPage = ({ onNavigate }) => {
     }
   };
 
-  // AI demo state removed — AI interaction now handled by AIAuditScannerModal
+  // --- États pour l'interaction IA ---
+  // eslint-disable-next-line no-unused-vars
+  const [aiInput, setAiInput] = useState("");
+  // eslint-disable-next-line no-unused-vars
+  const [platform, setPlatform] = useState("Shopify");
+  // eslint-disable-next-line no-unused-vars
+  const [objective, setObjective] = useState("Conversion");
+  // eslint-disable-next-line no-unused-vars
+  const [aiLoading, setAiLoading] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [aiResult, setAiResult] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [aiError, setAiError] = useState("");
 
   // --- Modal AI Lead ---
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -73,6 +85,8 @@ export const LandingPage = ({ onNavigate }) => {
     trackEvent("Landing_Page_Viewed");
   }, []);
 
+  // eslint-disable-next-line no-unused-vars
+  const handleOpenModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const handleModalSubmit = async (e) => {
@@ -95,6 +109,39 @@ export const LandingPage = ({ onNavigate }) => {
 
     setIsSubmitting(false);
     setIsModalOpen(false);
+    generateAIAudit();
+  };
+
+   
+  const generateAIAudit = async () => {
+    if (!aiInput.trim()) return;
+    setAiLoading(true);
+    setAiError("");
+    setAiResult(null);
+
+    const fullPrompt = `Plateforme: ${platform}, Objectif: ${objective}. Problème e-commerce: "${aiInput}"
+
+    Tu es un architecte système expert en automatisation e-commerce (n8n, Make, Shopify, Klaviyo, Stripe). Le prospect te décrit un problème opérationnel, une perte de temps ou une fuite de revenus. Ton rôle est d'analyser le problème et de proposer une solution d'automatisation élégante et haut de gamme. Ne parle pas de code, parle de flux de données et de résultats.
+    Retourne UNIQUEMENT un JSON valide avec les propriétés suivantes:
+    - diagnosis: Le diagnostic du problème (1 phrase courte et percutante)
+    - solution: La logique de la solution d'automatisation proposée (ex: Déclencheur X -> Action Y avec l'outil Z)
+    - timeSaved: Estimation réaliste du temps gagné (ex: '15h / mois')
+    - revenueImpact: Impact métier (ex: '+12% de conversion sur les paniers abandonnés')`;
+
+    try {
+      const result = await callGemini(fullPrompt);
+      if (result) {
+        setAiResult(result);
+      } else {
+        throw new Error("Réponse vide de l'IA");
+      }
+    } catch (_err) {
+      setAiError(
+        "Le système d'analyse est actuellement très sollicité. Veuillez réessayer dans quelques instants.",
+      );
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   return (

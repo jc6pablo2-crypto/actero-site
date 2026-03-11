@@ -38,6 +38,13 @@ export function HealthScoreIndicator({ metricsData, eventsData, theme = "dark" }
     return "text-rose-500";
   };
 
+  // eslint-disable-next-line no-unused-vars
+  const getStatusBg = (s) => {
+    if (s >= 90) return "bg-emerald-500/10";
+    if (s >= 70) return "bg-amber-500/10";
+    return "bg-rose-500/10";
+  };
+
   return (
     <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${isLight ? "bg-slate-50 border-slate-200" : "bg-white/5 border-white/10"}`}>
       <div className={`w-2 h-2 rounded-full animate-pulse ${score >= 70 ? "bg-emerald-500" : "bg-rose-500"}`}></div>
