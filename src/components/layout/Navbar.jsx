@@ -98,7 +98,7 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
                     <button
                       onClick={() => {
                         setIsMegaMenuOpen(false);
-                        onAuditOpen();
+                        onAuditOpen?.();
                       }}
                       className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group text-left"
                     >
@@ -141,8 +141,8 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
             <div className="hidden sm:block scale-90 origin-right">
               <ButtonColorful
                 onClick={() => {
-                  trackEvent("Header_CTA_Clicked", { location: "navbar" });
-                  onAuditOpen();
+                  trackEvent?.("Header_CTA_Clicked", { location: "navbar" });
+                  onAuditOpen?.();
                 }}
               >
                 Demander un audit
