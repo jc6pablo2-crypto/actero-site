@@ -22,7 +22,8 @@ import {
   TerminalSquare, 
   ArrowUpRight, 
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Menu
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
