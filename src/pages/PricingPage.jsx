@@ -17,7 +17,7 @@ export const PricingPage = ({ onNavigate }) => {
     window.scrollTo(0, 0);
   }, []);
 
-  const [isAnnual, setIsAnnual] = useState(true);
+  const isAnnual = false;
   const [openFaq, setOpenFaq] = useState(null);
 
   const plans = [
@@ -147,36 +147,14 @@ export const PricingPage = ({ onNavigate }) => {
               Des tarifs clairs, indexés sur la valeur générée et le temps économisé.
             </motion.p>
 
-            {/* Annual/Monthly Toggle */}
+            {/* Pricing label */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-3 bg-white/5 border border-white/10 rounded-full p-1.5"
+              className="inline-flex items-center gap-3 bg-white/5 border border-white/10 rounded-full px-5 py-2.5"
             >
-              <button
-                onClick={() => setIsAnnual(false)}
-                className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 ${
-                  !isAnnual
-                    ? "bg-white text-black shadow-lg"
-                    : "text-gray-400 hover:text-white"
-                }`}
-              >
-                Mensuel
-              </button>
-              <button
-                onClick={() => setIsAnnual(true)}
-                className={`px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 flex items-center gap-2 ${
-                  isAnnual
-                    ? "bg-white text-black shadow-lg"
-                    : "text-gray-400 hover:text-white"
-                }`}
-              >
-                Annuel
-                <span className="text-[10px] font-bold bg-emerald-500 text-black px-2 py-0.5 rounded-full">
-                  -20%
-                </span>
-              </button>
+              <span className="text-sm font-bold text-white">Mensuel</span>
             </motion.div>
           </div>
 
