@@ -30,6 +30,7 @@ export const LoginPage = ({ onNavigate }) => {
           password,
         });
         if (error) throw error;
+        onNavigate("/app");
       }
     } catch (_err) {
       setError(
