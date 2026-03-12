@@ -29,7 +29,9 @@ function getInitialRoute() {
   if (hash.includes("type=recovery")) return "/reset-password";
   if (path === "/auth/callback" || hash.includes("access_token=")) return "/auth/callback";
   // PKCE flow: Supabase may use a ?code= query param instead of hash
-  if (new URLSearchParams(search).has("code")) return "/auth/callback";
+  // But if the redirect already points to a specific page (e.g. /setup-password),
+  // let that page handle the session exchange itself
+  if (new URLSearchParams(search).has("code") && path === "/") return "/auth/callback";
   return path;
 }
 

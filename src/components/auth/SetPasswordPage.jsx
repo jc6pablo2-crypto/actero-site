@@ -14,17 +14,40 @@ export function SetPasswordPage({ onNavigate }) {
   const [sessionReady, setSessionReady] = useState(false)
 
   useEffect(() => {
-    // Verify we have an active session (from the invite link)
+    let mounted = true;
+
+    // With PKCE flow, the ?code= param is exchanged for a session ASYNCHRONOUSLY
+    // by the Supabase client. We need to wait for that exchange to complete.
     const check = async () => {
       const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        // No session = link expired or invalid
-        setErrorMsg("Session expirée. Veuillez demander un nouveau lien d'invitation.")
+      if (session && mounted) {
+        setSessionReady(true)
         return
       }
-      setSessionReady(true)
+      // Session not ready yet — the PKCE code exchange may still be in progress
+      // Don't set error immediately, the listener below will catch it
     }
     check()
+
+    // Listen for auth state changes (PKCE code exchange completing)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session && mounted) {
+        setSessionReady(true)
+      }
+    })
+
+    // Timeout fallback: if no session after 10s, show error
+    const timeout = setTimeout(() => {
+      if (mounted && !sessionReady) {
+        setErrorMsg("Session expirée. Veuillez demander un nouveau lien d'invitation.")
+      }
+    }, 10000)
+
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+      clearTimeout(timeout)
+    }
   }, [])
 
   const isValid = password.length >= 8 && password === confirmPassword
