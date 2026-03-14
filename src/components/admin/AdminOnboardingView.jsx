@@ -13,9 +13,13 @@ import { supabase } from '../../lib/supabase'
 export const AdminOnboardingView = () => {
   const [brandName, setBrandName] = useState("");
   const [email, setEmail] = useState("");
+  const [hourlyCost, setHourlyCost] = useState("");
+  const [avgTicketTime, setAvgTicketTime] = useState("");
+  const [acteroPrice, setActeroPrice] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successData, setSuccessData] = useState(null);
+  const [settingsSaved, setSettingsSaved] = useState(false);
 
   const handleCreateAndInvite = async (e) => {
     e.preventDefault();
@@ -41,9 +45,31 @@ export const AdminOnboardingView = () => {
       if (!data?.ok)
         throw new Error(data?.message || "Erreur indéterminée via RPC.");
 
+      // Create client_settings row if pricing fields are filled
+      if (data?.client_id && (hourlyCost || avgTicketTime || acteroPrice)) {
+        const { error: settingsError } = await supabase
+          .from("client_settings")
+          .upsert({
+            client_id: data.client_id,
+            hourly_cost: hourlyCost ? parseFloat(hourlyCost) : 0,
+            avg_ticket_time_min: avgTicketTime ? parseInt(avgTicketTime, 10) : 5,
+            actero_monthly_price: acteroPrice ? parseFloat(acteroPrice) : 0,
+            currency: "EUR",
+          }, { onConflict: "client_id" });
+
+        if (settingsError) {
+          console.error("[SETTINGS ERROR]", settingsError);
+        } else {
+          setSettingsSaved(true);
+        }
+      }
+
       setSuccessData(data);
       setBrandName("");
       setEmail("");
+      setHourlyCost("");
+      setAvgTicketTime("");
+      setActeroPrice("");
     } catch (err) {
       console.error("[ONBOARDING ERROR]", err);
       setErrorMsg(err.message || "Une erreur est survenue.");
@@ -129,6 +155,56 @@ export const AdminOnboardingView = () => {
             </div>
           </div>
 
+          <div className="border-t border-white/10 pt-6 mt-2">
+            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Configuration tarification (optionnel)</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label htmlFor="hourly-cost" className="block text-sm font-bold text-white mb-2">
+                  Coût horaire client (€/h)
+                </label>
+                <input
+                  id="hourly-cost"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={hourlyCost}
+                  onChange={(e) => setHourlyCost(e.target.value)}
+                  placeholder="Ex: 25"
+                  className="w-full px-4 py-3 bg-[#030303] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-white"
+                />
+              </div>
+              <div>
+                <label htmlFor="avg-ticket-time" className="block text-sm font-bold text-white mb-2">
+                  Temps moyen / ticket (min)
+                </label>
+                <input
+                  id="avg-ticket-time"
+                  type="number"
+                  min="1"
+                  value={avgTicketTime}
+                  onChange={(e) => setAvgTicketTime(e.target.value)}
+                  placeholder="Ex: 5"
+                  className="w-full px-4 py-3 bg-[#030303] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-white"
+                />
+              </div>
+              <div>
+                <label htmlFor="actero-price" className="block text-sm font-bold text-white mb-2">
+                  Prix Actero mensuel (€)
+                </label>
+                <input
+                  id="actero-price"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={acteroPrice}
+                  onChange={(e) => setActeroPrice(e.target.value)}
+                  placeholder="Ex: 490"
+                  className="w-full px-4 py-3 bg-[#030303] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-white"
+                />
+              </div>
+            </div>
+          </div>
+
           <div className="pt-2">
             <button
               type="submit"
@@ -196,6 +272,22 @@ export const AdminOnboardingView = () => {
                 ) : (
                   <span className="text-amber-500 flex items-center gap-1">
                     <Clock className="w-4 h-4" /> En attente de connexion du client
+                  </span>
+                )}
+              </span>
+            </div>
+            <div className="flex justify-between border-t border-white/5 pt-2 flex-wrap gap-2">
+              <span className="text-gray-400 font-medium whitespace-nowrap">
+                Tarification
+              </span>
+              <span className="font-bold text-white">
+                {settingsSaved ? (
+                  <span className="text-emerald-500 flex items-center gap-1">
+                    <CheckCircle2 className="w-4 h-4" /> Configurée
+                  </span>
+                ) : (
+                  <span className="text-amber-500 flex items-center gap-1">
+                    <Clock className="w-4 h-4" /> Non configurée
                   </span>
                 )}
               </span>

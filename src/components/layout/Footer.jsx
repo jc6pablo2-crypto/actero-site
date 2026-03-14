@@ -6,7 +6,7 @@ export const Footer = ({ onNavigate }) => {
   return (
     <footer className="bg-[#0a0a0a] border-t border-white/5 py-16 px-6 relative z-10 w-full mt-auto">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-        <div className="flex flex-col items-center md:items-start gap-2">
+        <div className="flex flex-col items-center md:items-start gap-4">
           <div className="flex items-center gap-2">
             <Logo light={false} className="w-6 h-6" />
             <span className="font-bold tracking-tight text-white text-lg">
@@ -16,6 +16,18 @@ export const Footer = ({ onNavigate }) => {
           <p className="text-sm font-medium text-gray-400">
             L'infrastructure autopilotée des E-commerçants.
           </p>
+          <a
+            href="https://elevenlabs.io/startup-grants"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="opacity-70 hover:opacity-100 transition-opacity"
+          >
+            <img
+              src="/elevenlabs-grants.webp"
+              alt="ElevenLabs Startup Grants"
+              className="h-5 w-auto brightness-0 invert"
+            />
+          </a>
         </div>
 
         <div className="flex flex-wrap justify-center gap-8 text-sm font-bold text-gray-400">

@@ -15,6 +15,7 @@ import {
   Bot
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { AdminClientSettingsModal } from '../components/admin/AdminClientSettingsModal'
 import { Logo } from '../components/layout/Logo'
 import { Sidebar } from '../components/layout/Sidebar'
 import { CommandKModal } from '../components/layout/CommandKModal'
@@ -28,6 +29,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const queryClient = useQueryClient();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCommandKOpen, setIsCommandKOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState(null);
 
   const getAdminTabFromRoute = (route) => {
     if (route === "/admin/clients") return "clients";
@@ -283,7 +285,11 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                             <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2 py-1 rounded-md text-[10px] font-bold">ACTIF</span>
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <button className="text-gray-500 hover:text-white transition-colors">
+                            <button
+                              onClick={() => setSelectedClient(client)}
+                              className="text-gray-500 hover:text-white transition-colors"
+                              title="Configurer"
+                            >
                               <MoreVertical className="w-5 h-5" />
                             </button>
                           </td>
@@ -346,6 +352,14 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
         </main>
       </div>
+
+      {selectedClient && (
+        <AdminClientSettingsModal
+          client={selectedClient}
+          onClose={() => setSelectedClient(null)}
+          onSaved={() => queryClient.invalidateQueries({ queryKey: ['admin-clients'] })}
+        />
+      )}
     </div>
   );
 };
