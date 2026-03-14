@@ -20,12 +20,13 @@ export const Footer = ({ onNavigate }) => {
             href="https://elevenlabs.io/startup-grants"
             target="_blank"
             rel="noopener noreferrer"
-            className="opacity-70 hover:opacity-100 transition-opacity"
+            className="flex items-center gap-2 opacity-50 hover:opacity-80 transition-opacity"
           >
+            <span className="text-[10px] text-gray-500 uppercase tracking-widest">Powered by</span>
             <img
               src="/elevenlabs-grants.webp"
               alt="ElevenLabs Startup Grants"
-              className="h-5 w-auto brightness-0 invert"
+              className="h-3.5 w-auto brightness-0 invert"
             />
           </a>
         </div>
