@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Analytics } from "@vercel/analytics/react";
 import { AlertCircle } from "lucide-react";
 import { supabase, INITIAL_URL } from "./lib/supabase";
 import { LandingPage } from "./pages/LandingPage";
-import { LoginPage } from "./components/auth/LoginPage";
-import { ResetPasswordPage } from "./components/auth/ResetPasswordPage";
-import { SetPasswordPage } from "./components/auth/SetPasswordPage";
-import { AuthCallbackPage } from "./pages/AuthCallbackPage";
-import { CompanyPage } from "./pages/CompanyPage";
-import { PricingPage } from "./pages/PricingPage";
-import { FaqPage } from "./pages/FaqPage";
-import { AuditPage } from "./pages/AuditPage";
-import { DashboardGate } from "./components/auth/DashboardGate"
-import { DemoDashboardPage } from "./components/ui/demo-dashboard";
-import { PromptLibraryPage } from "./components/ui/prompt-library-page";
 import { CursorGlow } from "./components/ui/cursor-glow";
 import { CommandPalette } from "./components/ui/command-palette";
+import { SEOHead } from "./components/seo/SEOHead";
+import { pageSEO, organizationJsonLd, servicesJsonLd, faqJsonLd } from "./lib/seo-config";
+
+// Lazy-loaded pages (code splitting for faster initial load)
+const LoginPage = lazy(() => import("./components/auth/LoginPage").then(m => ({ default: m.LoginPage })));
+const ResetPasswordPage = lazy(() => import("./components/auth/ResetPasswordPage").then(m => ({ default: m.ResetPasswordPage })));
+const SetPasswordPage = lazy(() => import("./components/auth/SetPasswordPage").then(m => ({ default: m.SetPasswordPage })));
+const AuthCallbackPage = lazy(() => import("./pages/AuthCallbackPage").then(m => ({ default: m.AuthCallbackPage })));
+const CompanyPage = lazy(() => import("./pages/CompanyPage").then(m => ({ default: m.CompanyPage })));
+const PricingPage = lazy(() => import("./pages/PricingPage").then(m => ({ default: m.PricingPage })));
+const FaqPage = lazy(() => import("./pages/FaqPage").then(m => ({ default: m.FaqPage })));
+const AuditPage = lazy(() => import("./pages/AuditPage").then(m => ({ default: m.AuditPage })));
+const DashboardGate = lazy(() => import("./components/auth/DashboardGate").then(m => ({ default: m.DashboardGate })));
+const DemoDashboardPage = lazy(() => import("./components/ui/demo-dashboard").then(m => ({ default: m.DemoDashboardPage })));
+const PromptLibraryPage = lazy(() => import("./components/ui/prompt-library-page").then(m => ({ default: m.PromptLibraryPage })));
 
 const queryClient = new QueryClient();
 
@@ -62,18 +66,33 @@ function MainRouter() {
 
   if (isRouting) return null;
 
+  // Resolve SEO config for current route
+  const getSeoHead = (path, extraJsonLd) => {
+    const config = pageSEO[path];
+    if (!config) return null;
+    return (
+      <SEOHead
+        title={config.title}
+        description={config.description}
+        path={path}
+        noindex={config.noindex || false}
+        jsonLd={extraJsonLd || null}
+      />
+    );
+  };
+
   let page;
-  if (currentRoute === "/") page = <LandingPage onNavigate={navigate} />;
-  else if (currentRoute === "/login") page = <LoginPage onNavigate={navigate} />;
-  else if (currentRoute === "/reset-password") page = <ResetPasswordPage onNavigate={navigate} />;
-  else if (currentRoute === "/setup-password") page = <SetPasswordPage onNavigate={navigate} />;
-  else if (currentRoute === "/auth/callback") page = <AuthCallbackPage onNavigate={navigate} />;
-  else if (currentRoute === "/entreprise") page = <CompanyPage onNavigate={navigate} />;
-  else if (currentRoute === "/tarifs") page = <PricingPage onNavigate={navigate} />;
-  else if (currentRoute === "/faq") page = <FaqPage onNavigate={navigate} />;
-  else if (currentRoute === "/audit") page = <AuditPage onNavigate={navigate} />;
-  else if (currentRoute === "/demo") page = <DemoDashboardPage onNavigate={navigate} />;
-  else if (currentRoute === "/ressources") page = <PromptLibraryPage onNavigate={navigate} />;
+  if (currentRoute === "/") page = <>{getSeoHead("/", [organizationJsonLd, ...servicesJsonLd])}<LandingPage onNavigate={navigate} /></>;
+  else if (currentRoute === "/login") page = <>{getSeoHead("/login")}<LoginPage onNavigate={navigate} /></>;
+  else if (currentRoute === "/reset-password") page = <>{getSeoHead("/reset-password")}<ResetPasswordPage onNavigate={navigate} /></>;
+  else if (currentRoute === "/setup-password") page = <>{getSeoHead("/setup-password")}<SetPasswordPage onNavigate={navigate} /></>;
+  else if (currentRoute === "/auth/callback") page = <>{getSeoHead("/auth/callback")}<AuthCallbackPage onNavigate={navigate} /></>;
+  else if (currentRoute === "/entreprise") page = <>{getSeoHead("/entreprise")}<CompanyPage onNavigate={navigate} /></>;
+  else if (currentRoute === "/tarifs") page = <>{getSeoHead("/tarifs")}<PricingPage onNavigate={navigate} /></>;
+  else if (currentRoute === "/faq") page = <>{getSeoHead("/faq", faqJsonLd)}<FaqPage onNavigate={navigate} /></>;
+  else if (currentRoute === "/audit") page = <>{getSeoHead("/audit")}<AuditPage onNavigate={navigate} /></>;
+  else if (currentRoute === "/demo") page = <>{getSeoHead("/demo")}<DemoDashboardPage onNavigate={navigate} /></>;
+  else if (currentRoute === "/ressources") page = <>{getSeoHead("/ressources")}<PromptLibraryPage onNavigate={navigate} /></>;
   else if (currentRoute === "/app" || currentRoute.startsWith("/admin") || currentRoute.startsWith("/client")) {
     page = <DashboardGate currentRoute={currentRoute} onNavigate={navigate} onLogout={handleLogout} />;
   } else if (currentRoute === "/payment/success") {
@@ -101,11 +120,19 @@ function MainRouter() {
     );
   }
 
+  const fallback = (
+    <div className="min-h-screen flex items-center justify-center bg-[#030303]">
+      <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+    </div>
+  );
+
   return (
     <>
       <CursorGlow />
       <CommandPalette onNavigate={navigate} />
-      {page}
+      <Suspense fallback={fallback}>
+        {page}
+      </Suspense>
     </>
   );
 }

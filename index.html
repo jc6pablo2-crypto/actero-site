@@ -9,41 +9,46 @@
   <link rel="apple-touch-icon" sizes="192x192" href="/favicon-192.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Google Fonts — Inter -->
+  <!-- Google Fonts — Inter (preconnect for speed) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Structured Data — Site Name -->
+  <!-- Structured Data — WebSite (static fallback, dynamic JSON-LD added per-page by React) -->
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Actero",
-      "url": "https://actero.fr/"
+      "url": "https://actero.fr/",
+      "description": "Agents IA & automatisation pour e-commerce Shopify",
+      "inLanguage": "fr"
     }
   </script>
 
-  <!-- SEO Primaire -->
-  <title>Actero | L'infrastructure IA de votre croissance E-commerce</title>
+  <!-- SEO Primaire (fallback — dynamic per-page via react-helmet-async) -->
+  <title>Actero | Agents IA & Automatisation pour E-commerce Shopify</title>
   <meta name="description"
-    content="Les équipes e-commerce n'ont pas besoin de plus d'outils, elles ont besoin d'un système. Actero connecte votre Shopify, CRM et support dans une infrastructure automatisée." />
+    content="Actero déploie des agents IA et des infrastructures d'automatisation pour les boutiques e-commerce Shopify. SAV automatisé, workflows intelligents, croissance accélérée." />
+  <link rel="canonical" href="https://actero.fr/" />
 
   <!-- Open Graph / Facebook / LinkedIn -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://actero.fr/" />
-  <meta property="og:title" content="Actero | Infrastructure IA pour E-commerce" />
+  <meta property="og:title" content="Actero | Agents IA & Automatisation pour E-commerce Shopify" />
   <meta property="og:description"
-    content="Connectez l'exécution, l'itération et la performance dans un seul workflow. Laissez l'IA gérer l'opérationnel." />
+    content="Actero déploie des agents IA et des infrastructures d'automatisation pour les boutiques e-commerce Shopify. SAV automatisé, workflows intelligents, croissance accélérée." />
   <meta property="og:image" content="https://actero.fr/og-image.jpg" />
+  <meta property="og:site_name" content="Actero" />
+  <meta property="og:locale" content="fr_FR" />
 
   <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://actero.fr/" />
-  <meta property="twitter:title" content="Actero | Infrastructure IA pour E-commerce" />
-  <meta property="twitter:description"
-    content="Connectez l'exécution, l'itération et la performance dans un seul workflow. Laissez l'IA gérer l'opérationnel." />
-  <meta property="twitter:image" content="https://actero.fr/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://actero.fr/" />
+  <meta name="twitter:title" content="Actero | Agents IA & Automatisation pour E-commerce Shopify" />
+  <meta name="twitter:description"
+    content="Actero déploie des agents IA et des infrastructures d'automatisation pour les boutiques e-commerce Shopify. SAV automatisé, workflows intelligents, croissance accélérée." />
+  <meta name="twitter:image" content="https://actero.fr/og-image.jpg" />
 
   <!-- Amplitude Setup -->
   <script src="https://cdn.eu.amplitude.com/script/8d23fc0b05efe38b235cb209e32af315.js"></script>
