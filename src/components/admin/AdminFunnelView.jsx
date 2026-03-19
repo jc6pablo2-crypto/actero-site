@@ -309,19 +309,6 @@ export function AdminFunnelView() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-                  Message personnalisé (optionnel)
-                </label>
-                <textarea
-                  value={formData.message}
-                  onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-                  rows={3}
-                  placeholder="Un mot pour le client..."
-                  className="w-full px-4 py-3 bg-[#030303] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all resize-none"
-                />
-              </div>
-
               {formError && (
                 <p className="text-sm text-red-400">{formError}</p>
               )}
