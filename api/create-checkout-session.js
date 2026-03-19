@@ -19,6 +19,15 @@ export default async function handler(req, res) {
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       payment_method_types: ['card'],
+      billing_address_collection: 'required',
+      tax_id_collection: { enabled: true },
+      custom_fields: [
+        {
+          key: 'company_name',
+          label: { type: 'custom', custom: 'Nom de l\'entreprise' },
+          type: 'text',
+        },
+      ],
       line_items: [
         {
           // Setup fee (one-time) added to the first invoice
