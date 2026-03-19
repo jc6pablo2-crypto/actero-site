@@ -68,7 +68,7 @@ export const CompanyPage = ({ onNavigate }) => {
               votre <span className="text-zinc-500">croissance.</span>
             </h1>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              Actero redéfinit l'excellence opérationnelle pour le e-commerce. Nous construisons les systèmes qui permettent aux marques de scaler sans augmenter leur complexité humaine.
+              Actero redéfinit l'excellence opérationnelle pour le e-commerce et l'immobilier. Nous construisons les systèmes IA qui permettent aux entreprises ambitieuses de scaler sans augmenter leur complexité humaine.
             </p>
           </div>
 
@@ -85,10 +85,10 @@ export const CompanyPage = ({ onNavigate }) => {
             <div>
               <h2 className="text-3xl font-bold mb-6 tracking-tight">Notre Vision</h2>
               <p className="text-gray-400 text-lg leading-relaxed mb-6">
-                Le e-commerce de demain ne sera pas géré par des armées d'opérateurs, mais par des infrastructures intelligentes et coordonnées.
+                Les entreprises de demain ne seront pas gérées par des armées d'opérateurs, mais par des infrastructures intelligentes et coordonnées.
               </p>
               <p className="text-gray-400 text-lg leading-relaxed">
-                Notre mission est de démocratiser l'accès à l'automatisation de haut niveau, autrefois réservée aux géants tech, pour permettre à chaque marque ambitieuse de se concentrer sur son produit et sa communauté.
+                Notre mission est de démocratiser l'accès à l'automatisation IA de haut niveau — que ce soit pour automatiser le support e-commerce ou déployer des agents IA dans les agences immobilières — pour permettre à chaque entreprise ambitieuse de se concentrer sur ce qui compte.
               </p>
             </div>
           </div>
@@ -112,7 +112,7 @@ export const CompanyPage = ({ onNavigate }) => {
           {/* Team/CTA Section */}
           <div className="bg-[#0a0a0a] rounded-[40px] p-12 border border-white/10 text-center relative overflow-hidden">
              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-white/5 rounded-full blur-[100px] -mt-40"></div>
-             <h2 className="text-3xl md:text-5xl font-bold mb-8 relative z-10">Rejoignez l'ère de l'E-commerce Autonome.</h2>
+             <h2 className="text-3xl md:text-5xl font-bold mb-8 relative z-10">Rejoignez l'ère de l'entreprise autonome.</h2>
              <ButtonColorful onClick={() => onNavigate("/audit")} className="relative z-10">
                Demander une étude d'architecture <ArrowUpRight className="ml-2 w-5 h-5" />
              </ButtonColorful>

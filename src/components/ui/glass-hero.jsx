@@ -4,7 +4,49 @@ import { FadeInUp, ScaleIn } from './scroll-animations';
 import { ButtonColorful } from './button-colorful';
 import { MagneticButton } from './magnetic-button';
 
-export const GlassHero = ({ onNavigate }) => {
+export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange }) => {
+
+    const heroContent = {
+        ecommerce: {
+            badge: { icon: '/shopify-partners.svg', label: 'Partenaire Shopify officiel' },
+            headline: (
+                <>
+                    <span className="block">Transformez votre SAV</span>
+                    <span className="block">en machine de croissance.</span>
+                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                        Récupérez chaque euro perdu.
+                    </span>
+                </>
+            ),
+            subtitle: "Actero automatise le support client et relance vos paniers abandonnés pour les marques Shopify qui veulent scaler sans multiplier les coûts. Résultats mesurables dès le premier mois.",
+            metrics: [
+                { icon: <TrendingUp className="w-5 h-5 text-emerald-400" />, value: "+15%", label: "de revenus récupérés en moyenne" },
+                { icon: <Clock className="w-5 h-5 text-cyan-400" />, value: "7 jours", label: "pour être opérationnel" },
+                { icon: <Shield className="w-5 h-5 text-amber-400" />, value: "0 code", label: "on gère tout pour vous" },
+            ],
+        },
+        immobilier: {
+            badge: { icon: null, label: 'Spécialiste IA pour agences immobilières' },
+            headline: (
+                <>
+                    <span className="block">Automatisez votre agence.</span>
+                    <span className="block">Récupérez chaque prospect.</span>
+                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                        3 agents IA à votre service.
+                    </span>
+                </>
+            ),
+            subtitle: "Prise de rendez-vous, collecte de documents, relance des prospects inactifs — nos agents IA gèrent vos tâches chronophages 24h/24 pour que vous vous concentriez sur la vente.",
+            metrics: [
+                { icon: <TrendingUp className="w-5 h-5 text-emerald-400" />, value: "+30%", label: "de rendez-vous confirmés" },
+                { icon: <Clock className="w-5 h-5 text-cyan-400" />, value: "-50%", label: "de temps administratif" },
+                { icon: <Shield className="w-5 h-5 text-amber-400" />, value: "+10%", label: "de prospects récupérés" },
+            ],
+        },
+    };
+
+    const content = heroContent[vertical];
+
     return (
         <div className="relative min-h-[90vh] flex flex-col items-center justify-center pt-28 pb-20 px-6 overflow-hidden">
 
@@ -60,34 +102,54 @@ export const GlassHero = ({ onNavigate }) => {
 
             <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center">
 
+                {/* Vertical Toggle */}
+                <FadeInUp className="mb-6">
+                    <div className="inline-flex items-center bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-full p-1">
+                        {[
+                            { key: 'ecommerce', label: 'E-commerce' },
+                            { key: 'immobilier', label: 'Immobilier' },
+                        ].map((v) => (
+                            <button
+                                key={v.key}
+                                onClick={() => onVerticalChange?.(v.key)}
+                                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+                                    vertical === v.key
+                                        ? 'bg-white text-black shadow-lg'
+                                        : 'text-gray-400 hover:text-white'
+                                }`}
+                            >
+                                {v.label}
+                            </button>
+                        ))}
+                    </div>
+                </FadeInUp>
+
                 {/* Trust Badge */}
                 <FadeInUp className="mb-8">
                     <div className="inline-flex items-center gap-3 bg-white/[0.06] backdrop-blur-md border border-white/10 text-gray-300 px-5 py-2.5 rounded-full text-sm font-medium">
-                        <div className="flex items-center gap-1.5">
-                            <img src="/shopify-partners.svg" alt="Shopify Partners" className="h-4 w-auto brightness-0 invert opacity-70" />
-                        </div>
-                        <span className="w-px h-4 bg-white/10"></span>
-                        <span>Partenaire Shopify officiel</span>
+                        {content.badge.icon && (
+                            <>
+                                <div className="flex items-center gap-1.5">
+                                    <img src={content.badge.icon} alt="" className="h-4 w-auto brightness-0 invert opacity-70" />
+                                </div>
+                                <span className="w-px h-4 bg-white/10"></span>
+                            </>
+                        )}
+                        <span>{content.badge.label}</span>
                     </div>
                 </FadeInUp>
 
                 {/* Headline */}
                 <FadeInUp delay={0.1} className="text-center max-w-4xl mb-8">
                     <h1 className="text-4xl md:text-6xl lg:text-[4.5rem] font-bold tracking-tight text-white leading-[1.1] md:leading-[1.08]">
-                        <span className="block">Transformez votre SAV</span>
-                        <span className="block">en machine de croissance.</span>
-                        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
-                            Récupérez chaque euro perdu.
-                        </span>
+                        {content.headline}
                     </h1>
                 </FadeInUp>
 
                 {/* Subtitle */}
                 <FadeInUp delay={0.15} className="text-center max-w-2xl mb-10">
                     <p className="text-lg md:text-xl text-gray-400 font-medium leading-relaxed">
-                        Actero automatise le support client et relance vos paniers abandonnés
-                        pour les marques Shopify qui veulent scaler sans multiplier les coûts.
-                        Résultats mesurables dès le premier mois.
+                        {content.subtitle}
                     </p>
                 </FadeInUp>
 
@@ -96,7 +158,7 @@ export const GlassHero = ({ onNavigate }) => {
                     <ButtonColorful
                         onClick={() => onNavigate('/audit')}
                     >
-                        Réserver un audit gratuit
+                        {vertical === 'immobilier' ? 'Demander une démo' : 'Réserver un audit gratuit'}
                     </ButtonColorful>
                     <MagneticButton
                         onClick={() => {
@@ -113,23 +175,7 @@ export const GlassHero = ({ onNavigate }) => {
                 <ScaleIn delay={0.3} className="w-full max-w-3xl">
                     <div className="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl px-6 py-5 md:px-10 md:py-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0">
-                            {[
-                                {
-                                    icon: <TrendingUp className="w-5 h-5 text-emerald-400" />,
-                                    value: "+15%",
-                                    label: "de revenus récupérés en moyenne"
-                                },
-                                {
-                                    icon: <Clock className="w-5 h-5 text-cyan-400" />,
-                                    value: "7 jours",
-                                    label: "pour être opérationnel"
-                                },
-                                {
-                                    icon: <Shield className="w-5 h-5 text-amber-400" />,
-                                    value: "0 code",
-                                    label: "on gère tout pour vous"
-                                }
-                            ].map((item, i) => (
+                            {content.metrics.map((item, i) => (
                                 <div
                                     key={i}
                                     className={`flex items-center gap-4 ${i < 2 ? 'md:border-r md:border-white/[0.06]' : ''} ${i > 0 ? 'md:pl-8' : ''}`}

@@ -18,7 +18,13 @@ import {
   RefreshCw,
   Eye,
   Shield,
-  CalendarCheck
+  CalendarCheck,
+  Calendar,
+  FileText,
+  UserCheck,
+  Building2,
+  Phone,
+  Home
 } from 'lucide-react'
 import { Navbar } from '../components/layout/Navbar'
 import { Footer } from '../components/layout/Footer'
@@ -43,6 +49,7 @@ export const LandingPage = ({ onNavigate }) => {
   };
 
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
+  const [vertical, setVertical] = useState('ecommerce');
 
   useEffect(() => {
     initAmplitude();
@@ -73,7 +80,7 @@ export const LandingPage = ({ onNavigate }) => {
           {/* ============================================ */}
           {/* SECTION 1 — HERO                            */}
           {/* ============================================ */}
-          <GlassHero onNavigate={onNavigate} />
+          <GlassHero onNavigate={onNavigate} vertical={vertical} onVerticalChange={setVertical} />
 
           <div className="relative w-full z-10">
 
@@ -85,18 +92,34 @@ export const LandingPage = ({ onNavigate }) => {
                 <p className="text-xs font-bold text-red-400/80 uppercase tracking-[0.2em] mb-6">
                   Ce que vous perdez chaque mois
                 </p>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">
-                  Votre croissance est freinée<br className="hidden md:block" />
-                  par des problèmes invisibles.
-                </h2>
-                <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed mb-20">
-                  Des paniers abandonnés sans relance. Un support qui noie votre équipe.
-                  <br className="hidden md:block" />
-                  Des milliers d'euros qui s'évaporent chaque mois — sans que personne ne les chiffre.
-                </p>
+                {vertical === 'ecommerce' ? (
+                  <>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">
+                      Votre croissance est freinée<br className="hidden md:block" />
+                      par des problèmes invisibles.
+                    </h2>
+                    <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed mb-20">
+                      Des paniers abandonnés sans relance. Un support qui noie votre équipe.
+                      <br className="hidden md:block" />
+                      Des milliers d'euros qui s'évaporent chaque mois — sans que personne ne les chiffre.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">
+                      Vos agents perdent du temps<br className="hidden md:block" />
+                      sur des tâches à faible valeur.
+                    </h2>
+                    <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed mb-20">
+                      Des prospects jamais relancés. Des documents collectés à la main.
+                      <br className="hidden md:block" />
+                      Des heures englouties en administratif au lieu de conclure des ventes.
+                    </p>
+                  </>
+                )}
 
                 <StaggerContainer className="grid md:grid-cols-3 gap-12 lg:gap-16 text-center">
-                  {[
+                  {(vertical === 'ecommerce' ? [
                     {
                       icon: <ShoppingCart className="w-8 h-8 text-red-400/70" />,
                       stat: "70%",
@@ -115,9 +138,28 @@ export const LandingPage = ({ onNavigate }) => {
                       title: "visibilité sur vos fuites de marge",
                       desc: "Pas de tableau de bord consolidé. Vous ne savez pas combien vous perdez, ni où. Impossible d'optimiser ce qu'on ne mesure pas.",
                     },
-                  ].map((block, i) => (
+                  ] : [
+                    {
+                      icon: <Phone className="w-8 h-8 text-red-400/70" />,
+                      stat: "60%",
+                      title: "des prospects jamais rappelés",
+                      desc: "Un prospect non recontacté dans les 24h a 6 fois moins de chances de signer. Sans relance automatique, chaque lead oublié est un mandat perdu.",
+                    },
+                    {
+                      icon: <Clock className="w-8 h-8 text-red-400/70" />,
+                      stat: "30h+",
+                      title: "perdues en administratif par mois",
+                      desc: "Collecte de documents, relances manuelles, prises de rendez-vous par téléphone. Vos agents passent plus de temps à gérer qu'à vendre.",
+                    },
+                    {
+                      icon: <Eye className="w-8 h-8 text-red-400/70" />,
+                      stat: "0",
+                      title: "suivi des prospects inactifs",
+                      desc: "Pas de système de relance automatisé. Les prospects refroidis tombent dans l'oubli alors qu'un simple suivi pourrait les réactiver.",
+                    },
+                  ]).map((block, i) => (
                     <StaggerItem
-                      key={i}
+                      key={`${vertical}-${i}`}
                       className="flex flex-col items-center group"
                     >
                       <div className="mb-4 opacity-60 group-hover:opacity-100 group-hover:-translate-y-1 transition-all duration-300">
@@ -153,7 +195,7 @@ export const LandingPage = ({ onNavigate }) => {
                 <div className="flex animate-marquee gap-16 items-center whitespace-nowrap">
                   {[...Array(2)].map((_, setIdx) => (
                     <React.Fragment key={setIdx}>
-                      {[
+                      {(vertical === 'ecommerce' ? [
                         { name: "Shopify", icon: "shopify", color: "95BF47" },
                         { name: "Stripe", icon: "stripe", color: "635BFF" },
                         { name: "Klaviyo", src: "/klaviyo.svg" },
@@ -165,7 +207,17 @@ export const LandingPage = ({ onNavigate }) => {
                         { name: "OpenAI", src: "/openai.svg" },
                         { name: "Intercom", icon: "intercom", color: "0058DD" },
                         { name: "Gorgias", icon: "gorgias", color: "1F1F1F" },
-                      ].map((tech, i) => (
+                      ] : [
+                        { name: "n8n", icon: "n8n", color: "FF6D5A" },
+                        { name: "OpenAI", src: "/openai.svg" },
+                        { name: "HubSpot", icon: "hubspot", color: "FF7A59" },
+                        { name: "Google Calendar", icon: "googlecalendar", color: "4285F4" },
+                        { name: "Twilio", icon: "twilio", color: "F22F46" },
+                        { name: "Slack", src: "/slack.svg" },
+                        { name: "Make", icon: "make", color: "5F4CFF" },
+                        { name: "Gmail", icon: "gmail", color: "EA4335" },
+                        { name: "Stripe", icon: "stripe", color: "635BFF" },
+                      ]).map((tech, i) => (
                         <div
                           key={`${setIdx}-${i}`}
                           className="group flex items-center gap-3 text-xl md:text-2xl font-bold text-white/70 hover:text-white transition-all duration-500 select-none flex-shrink-0"
@@ -192,19 +244,33 @@ export const LandingPage = ({ onNavigate }) => {
               <div className="max-w-6xl mx-auto">
                 <FadeInUp className="text-center mb-20">
                   <p className="text-xs font-bold text-emerald-400/80 uppercase tracking-[0.2em] mb-6">
-                    Ce que vous récupérez
+                    {vertical === 'ecommerce' ? 'Ce que vous récupérez' : 'Vos 3 agents IA'}
                   </p>
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">
-                    Quatre leviers concrets<br className="hidden md:block" />
-                    pour reprendre le contrôle.
-                  </h2>
-                  <p className="text-lg text-gray-400 font-medium max-w-2xl mx-auto">
-                    Pas des outils à configurer. Des résultats business déployés et mesurés pour vous.
-                  </p>
+                  {vertical === 'ecommerce' ? (
+                    <>
+                      <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">
+                        Quatre leviers concrets<br className="hidden md:block" />
+                        pour reprendre le contrôle.
+                      </h2>
+                      <p className="text-lg text-gray-400 font-medium max-w-2xl mx-auto">
+                        Pas des outils à configurer. Des résultats business déployés et mesurés pour vous.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">
+                        Trois agents IA qui travaillent<br className="hidden md:block" />
+                        pour votre agence 24h/24.
+                      </h2>
+                      <p className="text-lg text-gray-400 font-medium max-w-2xl mx-auto">
+                        Chaque agent gère une tâche chronophage de votre quotidien. Vous vous concentrez sur la vente.
+                      </p>
+                    </>
+                  )}
                 </FadeInUp>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  {[
+                <div className={`grid ${vertical === 'ecommerce' ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
+                  {(vertical === 'ecommerce' ? [
                     {
                       icon: <Headphones className="w-6 h-6" />,
                       iconColor: "text-emerald-400",
@@ -237,8 +303,33 @@ export const LandingPage = ({ onNavigate }) => {
                       result: "Vos process manuels transformés en flux automatiques",
                       desc: "Synchronisation CRM, tagging client, facturation, reporting. On identifie vos goulots d'étranglement opérationnels et on les supprime.",
                     },
-                  ].map((block, i) => (
-                    <FadeInUp key={i} delay={i * 0.1}>
+                  ] : [
+                    {
+                      icon: <Calendar className="w-6 h-6" />,
+                      iconColor: "text-emerald-400",
+                      iconBg: "bg-emerald-500/10 border-emerald-500/20",
+                      title: "Agent Prise de Rendez-vous",
+                      result: "+30% de rendez-vous confirmés",
+                      desc: "L'agent qualifie chaque prospect entrant (type de bien, budget, localisation), propose des créneaux disponibles et confirme automatiquement les rendez-vous. Synchronisation directe avec votre agenda.",
+                    },
+                    {
+                      icon: <FileText className="w-6 h-6" />,
+                      iconColor: "text-cyan-400",
+                      iconBg: "bg-cyan-500/10 border-cyan-500/20",
+                      title: "Agent Collecte de Documents",
+                      result: "-50% de temps administratif",
+                      desc: "L'agent identifie les documents requis selon le type de transaction (vente, achat, location), envoie les demandes personnalisées et relance automatiquement jusqu'à réception complète du dossier.",
+                    },
+                    {
+                      icon: <UserCheck className="w-6 h-6" />,
+                      iconColor: "text-amber-400",
+                      iconBg: "bg-amber-500/10 border-amber-500/20",
+                      title: "Agent Relance Prospects",
+                      result: "+10% de prospects réactivés",
+                      desc: "L'agent détecte les prospects inactifs depuis 7, 14 ou 30 jours et envoie des relances progressives et personnalisées par email et SMS. Chaque message est adapté au profil et à l'historique du prospect.",
+                    },
+                  ]).map((block, i) => (
+                    <FadeInUp key={`${vertical}-${i}`} delay={i * 0.1}>
                       <div className="bg-[#0a0a0a] rounded-[28px] p-8 md:p-10 border border-white/[0.06] h-full hover:border-white/[0.12] transition-all duration-500 group">
                         <div className="flex items-center gap-4 mb-6">
                           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${block.iconBg} ${block.iconColor}`}>
@@ -276,12 +367,15 @@ export const LandingPage = ({ onNavigate }) => {
                     Vous ne touchez à rien.
                   </h2>
                   <p className="text-lg text-gray-400 font-medium max-w-2xl mx-auto">
-                    Pas de setup technique de votre côté. On audite, on déploie, on optimise. Vous validez les résultats.
+                    {vertical === 'ecommerce'
+                      ? "Pas de setup technique de votre côté. On audite, on déploie, on optimise. Vous validez les résultats."
+                      : "On analyse votre agence, on déploie vos 3 agents IA, et on optimise en continu. Zéro compétence technique requise."
+                    }
                   </p>
                 </FadeInUp>
 
                 <div className="grid md:grid-cols-3 gap-8">
-                  {[
+                  {(vertical === 'ecommerce' ? [
                     {
                       step: "01",
                       icon: <Activity className="w-5 h-5 text-emerald-400" />,
@@ -303,7 +397,29 @@ export const LandingPage = ({ onNavigate }) => {
                       desc: "On mesure les résultats en temps réel et on optimise. Vous suivez tout depuis votre dashboard : ROI, tickets traités, revenus récupérés.",
                       detail: "En continu"
                     },
-                  ].map((block, i) => (
+                  ] : [
+                    {
+                      step: "01",
+                      icon: <Activity className="w-5 h-5 text-emerald-400" />,
+                      title: "Audit de votre agence",
+                      desc: "On analyse vos processus actuels (prise de RDV, collecte documentaire, suivi prospects) et on identifie les gains d'efficacité immédiats.",
+                      detail: "Jour 1-2"
+                    },
+                    {
+                      step: "02",
+                      icon: <Zap className="w-5 h-5 text-cyan-400" />,
+                      title: "Déploiement des 3 agents",
+                      desc: "On configure vos agents IA (RDV, documents, relances), on les connecte à votre CRM et votre agenda, et on valide chaque scénario avec vous.",
+                      detail: "Jour 3-5"
+                    },
+                    {
+                      step: "03",
+                      icon: <BarChart3 className="w-5 h-5 text-amber-400" />,
+                      title: "Optimisation continue",
+                      desc: "On mesure les résultats en temps réel : taux de RDV, documents collectés, prospects réactivés. Les agents s'améliorent en continu.",
+                      detail: "En continu"
+                    },
+                  ]).map((block, i) => (
                     <FadeInUp key={i} delay={i * 0.15}>
                       <div className="relative bg-[#0a0a0a] rounded-[28px] p-8 border border-white/[0.06] h-full hover:border-white/[0.12] transition-all duration-500">
                         <div className="flex items-center justify-between mb-8">
@@ -328,9 +444,10 @@ export const LandingPage = ({ onNavigate }) => {
                       <div>
                         <p className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">Résultat</p>
                         <p className="text-xl md:text-2xl font-bold text-white leading-snug">
-                          Un système qui tourne <span className="text-zinc-400">24h/24</span>, optimise vos marges en continu,
-                          <br className="hidden md:block" />
-                          piloté par un account manager dédié.
+                          {vertical === 'ecommerce'
+                            ? <>Un système qui tourne <span className="text-zinc-400">24h/24</span>, optimise vos marges en continu, <br className="hidden md:block" />piloté par un account manager dédié.</>
+                            : <>3 agents IA qui travaillent <span className="text-zinc-400">24h/24</span> pour votre agence, <br className="hidden md:block" />pilotés par un account manager dédié.</>
+                          }
                         </p>
                       </div>
                       <MagneticButton
@@ -348,7 +465,7 @@ export const LandingPage = ({ onNavigate }) => {
             {/* ============================================ */}
             {/* SECTION 5 — CALCULATEUR DE PERTES            */}
             {/* ============================================ */}
-            <RevenueCalculator />
+            {vertical === 'ecommerce' && <RevenueCalculator />}
 
             {/* ============================================ */}
             {/* SECTION 6 — PREUVES / RÉSULTATS              */}
@@ -371,11 +488,15 @@ export const LandingPage = ({ onNavigate }) => {
                 {/* Metrics */}
                 <FadeInUp className="mb-16">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 max-w-4xl mx-auto">
-                    {[
+                    {(vertical === 'ecommerce' ? [
                       { value: 120, prefix: "+", suffix: "h", label: "Libérées par mois côté support", color: "text-white" },
                       { value: 15, prefix: "+", suffix: "%", label: "De revenus récupérés via relances", color: "text-emerald-400" },
                       { value: 80, prefix: "", suffix: "%", label: "Des demandes traitées sans humain", color: "text-white" },
-                    ].map((stat, i) => (
+                    ] : [
+                      { value: 30, prefix: "+", suffix: "%", label: "De rendez-vous confirmés", color: "text-white" },
+                      { value: 50, prefix: "-", suffix: "%", label: "De temps administratif", color: "text-emerald-400" },
+                      { value: 10, prefix: "+", suffix: "%", label: "De prospects réactivés", color: "text-white" },
+                    ]).map((stat, i) => (
                       <div key={i} className={`flex flex-col items-center justify-center py-6 ${i < 2 ? "md:border-r border-white/5" : ""}`}>
                         <ScrollCounter
                           value={stat.value}
@@ -389,44 +510,85 @@ export const LandingPage = ({ onNavigate }) => {
                   </div>
                 </FadeInUp>
 
-                {/* Case Study Placeholder */}
+                {/* Case Study */}
                 <ScaleIn className="max-w-4xl mx-auto">
                   <div className="bg-[#030303] rounded-[32px] p-8 md:p-12 border border-white/10 shadow-xl relative overflow-hidden">
                     <div className="relative z-10">
-                      <div className="flex items-center gap-3 mb-10">
-                        <div className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-xs font-bold uppercase tracking-widest text-emerald-400 shadow-sm">Exemple de déploiement</div>
-                        <span className="text-white font-bold">Marque e-commerce Beauté — Shopify</span>
-                      </div>
-                      <div className="grid md:grid-cols-2 gap-12 items-center">
-                        <div className="space-y-8">
-                          <div>
-                            <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Problème identifié</p>
-                            <p className="text-xl font-bold text-white leading-tight">Support saturé (60+ tickets/jour) et taux d'abandon panier à 78%.</p>
+                      {vertical === 'ecommerce' ? (
+                        <>
+                          <div className="flex items-center gap-3 mb-10">
+                            <div className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-xs font-bold uppercase tracking-widest text-emerald-400 shadow-sm">Exemple de déploiement</div>
+                            <span className="text-white font-bold">Marque e-commerce Beauté — Shopify</span>
                           </div>
-                          <div>
-                            <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Solution déployée</p>
-                            <p className="text-base text-gray-300 font-medium leading-relaxed">Agent IA support N1 + séquences de relance personnalisées + dashboard de monitoring en temps réel.</p>
-                          </div>
-                          <div className="flex gap-12">
-                            <div>
-                              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Avant</p>
-                              <p className="text-2xl font-bold text-gray-400 line-through">AOV 65 €</p>
+                          <div className="grid md:grid-cols-2 gap-12 items-center">
+                            <div className="space-y-8">
+                              <div>
+                                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Problème identifié</p>
+                                <p className="text-xl font-bold text-white leading-tight">Support saturé (60+ tickets/jour) et taux d'abandon panier à 78%.</p>
+                              </div>
+                              <div>
+                                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Solution déployée</p>
+                                <p className="text-base text-gray-300 font-medium leading-relaxed">Agent IA support N1 + séquences de relance personnalisées + dashboard de monitoring en temps réel.</p>
+                              </div>
+                              <div className="flex gap-12">
+                                <div>
+                                  <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Avant</p>
+                                  <p className="text-2xl font-bold text-gray-400 line-through">AOV 65 €</p>
+                                </div>
+                                <div>
+                                  <p className="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-1">Après 30 jours</p>
+                                  <p className="text-3xl font-bold text-white tracking-tight">AOV 82 €</p>
+                                </div>
+                              </div>
                             </div>
-                            <div>
-                              <p className="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-1">Après 30 jours</p>
-                              <p className="text-3xl font-bold text-white tracking-tight">AOV 82 €</p>
+                            <div className="bg-[#0a0a0a] rounded-3xl p-8 border border-white/5 shadow-sm text-center">
+                              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Impact net en 30 jours</p>
+                              <p className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 to-emerald-600 tracking-tighter mb-2">+ 12 400 €</p>
+                              <p className="text-sm text-gray-500 font-medium mb-6">de revenus supplémentaires récupérés</p>
+                              <button onClick={() => onNavigate("/audit")} className="text-sm font-bold text-white border-b-2 border-white/20 hover:border-white transition-colors pb-0.5 inline-flex items-center gap-1">
+                                Obtenir le même résultat <ArrowRight className="w-3 h-3" />
+                              </button>
                             </div>
                           </div>
-                        </div>
-                        <div className="bg-[#0a0a0a] rounded-3xl p-8 border border-white/5 shadow-sm text-center">
-                          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Impact net en 30 jours</p>
-                          <p className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 to-emerald-600 tracking-tighter mb-2">+ 12 400 €</p>
-                          <p className="text-sm text-gray-500 font-medium mb-6">de revenus supplémentaires récupérés</p>
-                          <button onClick={() => onNavigate("/audit")} className="text-sm font-bold text-white border-b-2 border-white/20 hover:border-white transition-colors pb-0.5 inline-flex items-center gap-1">
-                            Obtenir le même résultat <ArrowRight className="w-3 h-3" />
-                          </button>
-                        </div>
-                      </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="flex items-center gap-3 mb-10">
+                            <div className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-xs font-bold uppercase tracking-widest text-emerald-400 shadow-sm">Exemple de déploiement</div>
+                            <span className="text-white font-bold">Agence immobilière — Île-de-France</span>
+                          </div>
+                          <div className="grid md:grid-cols-2 gap-12 items-center">
+                            <div className="space-y-8">
+                              <div>
+                                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Problème identifié</p>
+                                <p className="text-xl font-bold text-white leading-tight">50% des leads non recontactés sous 24h, collecte documentaire manuelle, zéro relance systématique.</p>
+                              </div>
+                              <div>
+                                <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Solution déployée</p>
+                                <p className="text-base text-gray-300 font-medium leading-relaxed">3 agents IA : qualification + prise de RDV automatique, collecte documentaire intelligente, relance progressive des prospects inactifs.</p>
+                              </div>
+                              <div className="flex gap-12">
+                                <div>
+                                  <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Avant</p>
+                                  <p className="text-2xl font-bold text-gray-400 line-through">12 RDV/mois</p>
+                                </div>
+                                <div>
+                                  <p className="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-1">Après 30 jours</p>
+                                  <p className="text-3xl font-bold text-white tracking-tight">19 RDV/mois</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="bg-[#0a0a0a] rounded-3xl p-8 border border-white/5 shadow-sm text-center">
+                              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Impact en 30 jours</p>
+                              <p className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 to-emerald-600 tracking-tighter mb-2">+58%</p>
+                              <p className="text-sm text-gray-500 font-medium mb-6">de rendez-vous qualifiés supplémentaires</p>
+                              <button onClick={() => onNavigate("/audit")} className="text-sm font-bold text-white border-b-2 border-white/20 hover:border-white transition-colors pb-0.5 inline-flex items-center gap-1">
+                                Obtenir le même résultat <ArrowRight className="w-3 h-3" />
+                              </button>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </ScaleIn>
@@ -445,10 +607,15 @@ export const LandingPage = ({ onNavigate }) => {
                   <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-6 leading-tight">
                     Pas un outil de plus à gérer.
                     <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Votre équipe opérations IA, externalisée.</span>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                      {vertical === 'ecommerce' ? 'Votre équipe opérations IA, externalisée.' : 'Votre assistant digital, clé en main.'}
+                    </span>
                   </h2>
                   <p className="text-lg text-gray-400 font-medium max-w-2xl mx-auto">
-                    Make et Zapier vous laissent tout construire seul. Actero audite, déploie, maintient et optimise — vous ne gérez rien.
+                    {vertical === 'ecommerce'
+                      ? "Make et Zapier vous laissent tout construire seul. Actero audite, déploie, maintient et optimise — vous ne gérez rien."
+                      : "Les CRM classiques vous laissent tout configurer seul. Actero déploie vos agents IA et les optimise — vous vous concentrez sur la vente."
+                    }
                   </p>
                 </FadeInUp>
 
@@ -466,13 +633,19 @@ export const LandingPage = ({ onNavigate }) => {
                   </div>
 
                   <div className="divide-y divide-white/5">
-                    {[
+                    {(vertical === 'ecommerce' ? [
                       { old: "Vous construisez vos flux vous-même", new: "On déploie et on gère pour vous" },
                       { old: "Pas de stratégie, juste des connecteurs", new: "Audit + recommandation + exécution" },
                       { old: "Maintenance et debug à votre charge", new: "Monitoring et auto-réparation 24/7" },
                       { old: "Aucun suivi du retour sur investissement", new: "Dashboard ROI en temps réel" },
                       { old: "Support communautaire / docs", new: "Account manager dédié" },
-                    ].map((row, i) => (
+                    ] : [
+                      { old: "Relances manuelles par téléphone", new: "Relances automatiques multi-canal (email + SMS)" },
+                      { old: "Collecte de documents par email/courrier", new: "Agent IA qui collecte et relance automatiquement" },
+                      { old: "Prise de RDV manuelle", new: "Qualification + planification automatique" },
+                      { old: "Aucun suivi des prospects inactifs", new: "Détection et réactivation intelligente" },
+                      { old: "Pas de visibilité sur la performance", new: "Dashboard temps réel + account manager" },
+                    ]).map((row, i) => (
                       <div key={i} className="grid grid-cols-2 group hover:bg-white/[0.02] transition-colors">
                         <div className="p-6 md:p-8 border-r border-white/5 flex items-center">
                           <p className="text-[15px] font-medium text-gray-500">{row.old}</p>
@@ -514,13 +687,18 @@ export const LandingPage = ({ onNavigate }) => {
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-bold text-emerald-400 mb-6 uppercase tracking-widest">
                           <Zap className="w-3.5 h-3.5" /> Done-for-you
                         </div>
-                        <h3 className="text-3xl font-bold text-white mb-3 tracking-tight">Programme Actero</h3>
+                        <h3 className="text-3xl font-bold text-white mb-3 tracking-tight">
+                          {vertical === 'ecommerce' ? 'Programme Actero' : 'Programme Actero Immobilier'}
+                        </h3>
                         <p className="text-gray-400 font-medium leading-relaxed mb-8">
-                          Un déploiement sur mesure, adapté à votre boutique, vos outils et vos objectifs de croissance. Pas de template. Pas de self-service.
+                          {vertical === 'ecommerce'
+                            ? "Un déploiement sur mesure, adapté à votre boutique, vos outils et vos objectifs de croissance. Pas de template. Pas de self-service."
+                            : "Un déploiement sur mesure avec 3 agents IA configurés pour votre agence. Zéro setup technique. Résultats dès le premier mois."
+                          }
                         </p>
 
                         <div className="space-y-4 mb-8">
-                          {[
+                          {(vertical === 'ecommerce' ? [
                             "Audit complet de votre e-commerce",
                             "Agent IA support client niveau 1",
                             "Relances paniers abandonnés automatisées",
@@ -528,7 +706,15 @@ export const LandingPage = ({ onNavigate }) => {
                             "Dashboard de performance en temps réel",
                             "Account manager dédié",
                             "Optimisation et reporting continus",
-                          ].map((feature, i) => (
+                          ] : [
+                            "Audit complet de votre agence",
+                            "Agent IA prise de rendez-vous",
+                            "Agent IA collecte de documents",
+                            "Agent IA relance de prospects",
+                            "Intégrations CRM + Agenda + Email + SMS",
+                            "Dashboard de performance en temps réel",
+                            "Account manager dédié",
+                          ]).map((feature, i) => (
                             <div key={i} className="flex items-center gap-3">
                               <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />
                               <span className="text-sm font-medium text-gray-300">{feature}</span>
@@ -538,7 +724,10 @@ export const LandingPage = ({ onNavigate }) => {
 
                         <div className="pt-6 border-t border-white/[0.06]">
                           <p className="text-sm text-gray-500 font-medium">
-                            Tarification sur mesure selon la taille de votre boutique et le périmètre d'automatisation. L'audit initial est gratuit.
+                            {vertical === 'ecommerce'
+                              ? "Tarification sur mesure selon la taille de votre boutique et le périmètre d'automatisation. L'audit initial est gratuit."
+                              : "Tarification sur mesure selon la taille de votre agence et le nombre d'agents déployés. La démo est gratuite."
+                            }
                           </p>
                         </div>
                       </div>
@@ -548,7 +737,7 @@ export const LandingPage = ({ onNavigate }) => {
                         <div>
                           <h4 className="text-lg font-bold text-white mb-6">C'est fait pour vous si :</h4>
                           <div className="space-y-5 mb-10">
-                            {[
+                            {(vertical === 'ecommerce' ? [
                               {
                                 icon: <ShoppingCart className="w-5 h-5 text-emerald-400" />,
                                 text: "Vous êtes sur Shopify avec +30K€/mois de CA"
@@ -565,7 +754,24 @@ export const LandingPage = ({ onNavigate }) => {
                                 icon: <Target className="w-5 h-5 text-violet-400" />,
                                 text: "Vous voulez scaler votre CA sans multiplier vos coûts opérationnels"
                               },
-                            ].map((item, i) => (
+                            ] : [
+                              {
+                                icon: <Building2 className="w-5 h-5 text-emerald-400" />,
+                                text: "Vous gérez une agence immobilière avec +5 agents"
+                              },
+                              {
+                                icon: <Phone className="w-5 h-5 text-cyan-400" />,
+                                text: "Vos agents passent trop de temps en tâches administratives"
+                              },
+                              {
+                                icon: <TrendingDown className="w-5 h-5 text-amber-400" />,
+                                text: "Vous perdez des prospects faute de suivi systématique"
+                              },
+                              {
+                                icon: <Target className="w-5 h-5 text-violet-400" />,
+                                text: "Vous voulez augmenter vos mandats sans recruter"
+                              },
+                            ]).map((item, i) => (
                               <div key={i} className="flex items-start gap-4">
                                 <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center flex-shrink-0 mt-0.5">
                                   {item.icon}
@@ -604,7 +810,7 @@ export const LandingPage = ({ onNavigate }) => {
                   <p className="text-gray-400 font-medium">Tout ce que vous devez savoir avant de commencer.</p>
                 </FadeInUp>
                 <div className="space-y-4">
-                  {[
+                  {(vertical === 'ecommerce' ? [
                     {
                       q: "Est-ce que je dois savoir coder ?",
                       a: "Non. Actero est 100% done-for-you. On configure, déploie et maintient tout. Vous n'avez aucune action technique à faire."
@@ -633,7 +839,36 @@ export const LandingPage = ({ onNavigate }) => {
                       q: "Combien ça coûte ?",
                       a: "Chaque projet est sur mesure. Le tarif dépend du périmètre et de la taille de votre boutique. L'audit initial est gratuit et sans engagement — il inclut une estimation du ROI attendu."
                     },
-                  ].map((faq, i) => (
+                  ] : [
+                    {
+                      q: "Est-ce que mes agents doivent être formés ?",
+                      a: "Non. Les agents IA sont déployés et configurés par notre équipe. Vos collaborateurs n'ont rien à installer ni à apprendre. Les agents IA travaillent en autonomie."
+                    },
+                    {
+                      q: "Combien de temps pour voir les premiers résultats ?",
+                      a: "Le déploiement prend 7 jours ouvrés. Dès la première semaine, l'agent RDV qualifie et planifie automatiquement, l'agent documents envoie ses premières demandes, et l'agent relance contacte vos prospects inactifs."
+                    },
+                    {
+                      q: "Est-ce que les données de mes clients sont sécurisées ?",
+                      a: "Oui. Les données sont hébergées en Europe, chiffrées et ne sont jamais partagées avec des tiers. Nos agents IA accèdent uniquement aux informations nécessaires via des connexions sécurisées."
+                    },
+                    {
+                      q: "Quels CRM immobiliers sont compatibles ?",
+                      a: "Nous nous connectons à la plupart des CRM du marché : HubSpot, Salesforce, et les CRM spécialisés immobilier. Si votre outil n'est pas dans la liste, on trouve un moyen de le connecter."
+                    },
+                    {
+                      q: "Comment fonctionnent les relances automatiques ?",
+                      a: "L'agent détecte les prospects inactifs (7, 14, 30 jours sans interaction) et envoie des messages progressifs par email et SMS. Chaque message est personnalisé selon le profil, le type de bien recherché et l'historique des échanges."
+                    },
+                    {
+                      q: "L'agent peut-il gérer les documents pour les ventes ET les achats ?",
+                      a: "Oui. L'agent adapte automatiquement la liste des documents requis selon le type de transaction : vente, achat ou location. Il gère aussi les cas particuliers (SCI, indivision, etc.)."
+                    },
+                    {
+                      q: "Combien ça coûte ?",
+                      a: "Chaque projet est sur mesure. Le tarif dépend de la taille de votre agence et du nombre d'agents IA déployés. La démo initiale est gratuite et sans engagement."
+                    },
+                  ]).map((faq, i) => (
                     <div key={i} className="border border-white/[0.08] rounded-2xl bg-[#030303] overflow-hidden hover:border-white/[0.12] transition-colors">
                       <button onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)} className="w-full px-6 py-5 flex items-center justify-between text-left">
                         <span className="font-bold text-white text-lg pr-4">{faq.q}</span>
@@ -668,13 +903,17 @@ export const LandingPage = ({ onNavigate }) => {
                       </div>
 
                       <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-6">
-                        Chaque jour qui passe,<br className="hidden md:block" />
-                        c'est du chiffre d'affaires en moins.
+                        {vertical === 'ecommerce'
+                          ? <>Chaque jour qui passe,<br className="hidden md:block" />c'est du chiffre d'affaires en moins.</>
+                          : <>Chaque prospect non relancé,<br className="hidden md:block" />c'est un mandat en moins.</>
+                        }
                       </h2>
 
                       <p className="text-lg text-gray-400 font-medium max-w-2xl mx-auto mb-10 leading-relaxed">
-                        En 15 minutes, on analyse votre boutique et on vous montre exactement
-                        combien vous perdez — et ce qu'on peut récupérer pour vous.
+                        {vertical === 'ecommerce'
+                          ? "En 15 minutes, on analyse votre boutique et on vous montre exactement combien vous perdez — et ce qu'on peut récupérer pour vous."
+                          : "En 15 minutes, on analyse votre agence et on vous montre exactement combien de prospects vous perdez — et ce que nos agents IA peuvent récupérer."
+                        }
                       </p>
 
                       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
