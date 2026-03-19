@@ -382,6 +382,16 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                                 </span>
                               </div>
                               <div className="flex items-center gap-4 mt-1">
+                                <button
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(client.id);
+                                  }}
+                                  className="text-xs text-gray-600 font-mono hover:text-gray-400 transition-colors cursor-pointer"
+                                  title="Copier le client_id"
+                                >
+                                  {client.id.slice(0, 8)}…
+                                </button>
+                                <span className="text-xs text-gray-600">•</span>
                                 <span className="text-xs text-gray-500">{client.ownerEmail || '—'}</span>
                                 <span className="text-xs text-gray-600">•</span>
                                 <span className="text-xs text-gray-500 flex items-center gap-1">
