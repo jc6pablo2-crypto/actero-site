@@ -18,14 +18,30 @@ export default async function handler(req, res) {
   try {
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
-      payment_method_types: ['card', 'paypal'],
+      payment_method_types: ['card', 'paypal', 'sepa_debit', 'customer_balance'],
+      payment_method_options: {
+        customer_balance: {
+          funding_type: 'bank_transfer',
+          bank_transfer: {
+            type: 'eu_bank_transfer',
+            eu_bank_transfer: { country: 'FR' },
+          },
+        },
+      },
       billing_address_collection: 'required',
       tax_id_collection: { enabled: true },
+      phone_number_collection: { enabled: true },
       custom_fields: [
         {
           key: 'company_name',
           label: { type: 'custom', custom: 'Nom de l\'entreprise' },
           type: 'text',
+        },
+        {
+          key: 'website',
+          label: { type: 'custom', custom: 'Site web' },
+          type: 'text',
+          optional: true,
         },
       ],
       line_items: [
