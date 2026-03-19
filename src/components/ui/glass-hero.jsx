@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, Shield, Clock, TrendingUp, ShoppingCart, Home, UserCheck, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, Shield, Clock, TrendingUp, ShoppingCart, Home, UserCheck } from 'lucide-react';
 import { FadeInUp, ScaleIn } from './scroll-animations';
 import { ButtonColorful } from './button-colorful';
 import { MagneticButton } from './magnetic-button';
 
-const VERTICALS = [
+export const VERTICALS = [
     {
         id: 'ecommerce',
         badge: 'E-commerce',
@@ -16,6 +16,7 @@ const VERTICALS = [
                 <span className="block">Récupérez chaque vente perdue.</span>
             </>
         ),
+        gradientLine: "from-emerald-400 to-cyan-400",
         subtitle: "Support client IA, relance des paniers abandonnés et dashboard ROI en temps réel — pour les marques Shopify qui veulent scaler sans multiplier les coûts.",
         metrics: [
             { icon: <TrendingUp className="w-5 h-5 text-emerald-400" />, value: "+15%", label: "de revenus récupérés" },
@@ -34,7 +35,8 @@ const VERTICALS = [
                 <span className="block">Répondez en 2 minutes.</span>
             </>
         ),
-        subtitle: "Qualification automatique des leads portails, réponse instantanée aux demandes de visite et matching acquéreur/bien — pour les agences immobilières qui veulent convertir plus sans recruter.",
+        gradientLine: "from-violet-400 to-fuchsia-400",
+        subtitle: "Qualification automatique des leads portails, réponse instantanée aux demandes de visite et matching acquéreur/bien — pour les agences qui veulent convertir plus sans recruter.",
         metrics: [
             { icon: <UserCheck className="w-5 h-5 text-violet-400" />, value: "3x", label: "plus de leads qualifiés" },
             { icon: <Clock className="w-5 h-5 text-cyan-400" />, value: "< 2 min", label: "temps de réponse" },
@@ -43,17 +45,14 @@ const VERTICALS = [
     },
 ];
 
-export const GlassHero = ({ onNavigate }) => {
-    const [activeVertical, setActiveVertical] = useState(0);
+export const GlassHero = ({ onNavigate, activeVertical, onVerticalChange }) => {
     const [isTransitioning, setIsTransitioning] = useState(false);
-
-    // No auto-rotate — user controls the toggle manually
 
     const switchVertical = (idx) => {
         if (idx === activeVertical) return;
         setIsTransitioning(true);
         setTimeout(() => {
-            setActiveVertical(idx);
+            onVerticalChange(idx);
             setIsTransitioning(false);
         }, 300);
     };
@@ -142,7 +141,7 @@ export const GlassHero = ({ onNavigate }) => {
                 <FadeInUp delay={0.1} className="text-center max-w-4xl mb-8">
                     <h1 className={`text-4xl md:text-6xl lg:text-[4.5rem] font-bold tracking-tight text-white leading-[1.1] md:leading-[1.08] transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
                         {v.headline}
-                        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                        <span className={`block text-transparent bg-clip-text bg-gradient-to-r ${v.gradientLine}`}>
                             Résultats mesurables. ROI en temps réel.
                         </span>
                     </h1>
@@ -157,9 +156,7 @@ export const GlassHero = ({ onNavigate }) => {
 
                 {/* CTA Buttons */}
                 <FadeInUp delay={0.2} className="flex flex-col sm:flex-row items-center gap-4 mb-16">
-                    <ButtonColorful
-                        onClick={() => onNavigate('/audit')}
-                    >
+                    <ButtonColorful onClick={() => onNavigate('/audit')}>
                         Réserver un audit gratuit
                     </ButtonColorful>
                     <MagneticButton
@@ -179,7 +176,7 @@ export const GlassHero = ({ onNavigate }) => {
                         <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
                             {v.metrics.map((item, i) => (
                                 <div
-                                    key={i}
+                                    key={`${activeVertical}-${i}`}
                                     className={`flex items-center gap-4 ${i < 2 ? 'md:border-r md:border-white/[0.06]' : ''} ${i > 0 ? 'md:pl-8' : ''}`}
                                 >
                                     <div className="w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center flex-shrink-0">
