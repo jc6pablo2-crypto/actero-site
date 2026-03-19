@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing client parameter' });
   }
 
-  const siteUrl = process.env.SITE_URL || 'https://actero.fr';
+  const siteUrl = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://actero.fr';
 
   try {
     const session = await stripe.checkout.sessions.create({
