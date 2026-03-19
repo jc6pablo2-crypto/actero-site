@@ -12,7 +12,16 @@ import {
   Sparkles,
   MoreVertical,
   Bot,
-  Link2
+  Link2,
+  ShoppingCart,
+  Home,
+  Clock,
+  DollarSign,
+  TrendingUp,
+  Activity,
+  Calendar,
+  Settings,
+  Eye
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { AdminClientSettingsModal } from '../components/admin/AdminClientSettingsModal'
@@ -63,12 +72,83 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const { data: clients = [], isLoading: clientsLoading } = useQuery({
     queryKey: ['admin-clients'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // Fetch clients with settings
+      const { data: clientsData, error } = await supabase
         .from("clients")
-        .select("*")
+        .select("*, client_settings(*)")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data || [];
+
+      // Fetch aggregated metrics for each client
+      const enriched = await Promise.all((clientsData || []).map(async (client) => {
+        // Get total metrics
+        const { data: metrics } = await supabase
+          .from("metrics_daily")
+          .select("hours_saved, money_saved, revenue_recovered, tickets_total, tickets_auto, tickets_escalated")
+          .eq("client_id", client.id);
+
+        // Get event count
+        const { count: eventCount } = await supabase
+          .from("automation_events")
+          .select("id", { count: "exact", head: true })
+          .eq("client_id", client.id);
+
+        // Get last event date
+        const { data: lastEvent } = await supabase
+          .from("automation_events")
+          .select("created_at")
+          .eq("client_id", client.id)
+          .order("created_at", { ascending: false })
+          .limit(1);
+
+        // Get owner email
+        let ownerEmail = null;
+        try {
+          const { data: ownerUser } = await supabase
+            .from("client_users")
+            .select("user_id")
+            .eq("client_id", client.id)
+            .eq("role", "owner")
+            .limit(1)
+            .maybeSingle();
+
+          if (ownerUser?.user_id) {
+            const { data: profile } = await supabase
+              .from("profiles")
+              .select("email")
+              .eq("id", ownerUser.user_id)
+              .maybeSingle();
+            ownerEmail = profile?.email || null;
+          }
+        } catch (e) {
+          // Silently skip if email lookup fails
+        }
+
+        const totals = (metrics || []).reduce((acc, m) => ({
+          hours_saved: acc.hours_saved + (parseFloat(m.hours_saved) || 0),
+          money_saved: acc.money_saved + (parseFloat(m.money_saved) || 0),
+          revenue_recovered: acc.revenue_recovered + (parseFloat(m.revenue_recovered) || 0),
+          tickets_total: acc.tickets_total + (parseInt(m.tickets_total) || 0),
+          tickets_auto: acc.tickets_auto + (parseInt(m.tickets_auto) || 0),
+          tickets_escalated: acc.tickets_escalated + (parseInt(m.tickets_escalated) || 0),
+        }), { hours_saved: 0, money_saved: 0, revenue_recovered: 0, tickets_total: 0, tickets_auto: 0, tickets_escalated: 0 });
+
+        const autoRate = totals.tickets_total > 0
+          ? Math.round((totals.tickets_auto / totals.tickets_total) * 100)
+          : 0;
+
+        return {
+          ...client,
+          ownerEmail,
+          totals,
+          autoRate,
+          eventCount: eventCount || 0,
+          lastEventAt: lastEvent?.[0]?.created_at || null,
+          daysActive: metrics?.length || 0,
+        };
+      }));
+
+      return enriched;
     }
   });
 
@@ -264,37 +344,132 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                   </button>
                 </div>
               ) : (
-                <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-x-auto">
-                  <table className="w-full text-left border-collapse min-w-[800px]">
-                    <thead>
-                      <tr className="border-b border-white/5 bg-[#030303]">
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Entreprise</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Contact</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Status</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/5 text-sm">
-                      {clients.map((client) => (
-                        <tr key={client.id} className="hover:bg-white/5 transition-colors">
-                          <td className="px-6 py-4 font-bold">{client.brand_name}</td>
-                          <td className="px-6 py-4 text-gray-400">—</td>
-                          <td className="px-6 py-4">
-                            <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2 py-1 rounded-md text-[10px] font-bold">ACTIF</span>
-                          </td>
-                          <td className="px-6 py-4 text-right">
+                <div className="space-y-4">
+                  {clients.map((client) => {
+                    const isImmo = client.client_type === 'immobilier';
+                    const statusColor = client.status === 'active'
+                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                      : client.status === 'canceled'
+                      ? 'bg-red-500/10 text-red-400 border-red-500/20'
+                      : 'bg-gray-500/10 text-gray-400 border-gray-500/20';
+                    const statusLabel = client.status === 'active' ? 'Actif' : client.status === 'canceled' ? 'Annulé' : client.status || 'Inactif';
+                    const roi = client.totals.money_saved + client.totals.revenue_recovered;
+
+                    return (
+                      <div key={client.id} className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 hover:border-white/20 transition-all">
+                        {/* Row 1: Header */}
+                        <div className="flex items-start justify-between mb-5">
+                          <div className="flex items-center gap-4">
+                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
+                              isImmo
+                                ? 'bg-violet-500/10 border-violet-500/20 text-violet-400'
+                                : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                            }`}>
+                              {isImmo ? <Home className="w-6 h-6" /> : <ShoppingCart className="w-6 h-6" />}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-3">
+                                <h3 className="text-lg font-bold text-white">{client.brand_name}</h3>
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border ${
+                                  isImmo
+                                    ? 'bg-violet-500/10 text-violet-400 border-violet-500/20'
+                                    : 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
+                                }`}>
+                                  {isImmo ? '🏠 Immobilier' : '🛒 E-commerce'}
+                                </span>
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border ${statusColor}`}>
+                                  {statusLabel}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-4 mt-1">
+                                <span className="text-xs text-gray-500">{client.ownerEmail || '—'}</span>
+                                <span className="text-xs text-gray-600">•</span>
+                                <span className="text-xs text-gray-500 flex items-center gap-1">
+                                  <Calendar className="w-3 h-3" />
+                                  Client depuis {new Date(client.created_at).toLocaleDateString('fr-FR')}
+                                </span>
+                                {client.lastEventAt && (
+                                  <>
+                                    <span className="text-xs text-gray-600">•</span>
+                                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                                      <Activity className="w-3 h-3 text-emerald-500" />
+                                      Dernière activité {new Date(client.lastEventAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
                             <button
                               onClick={() => setSelectedClient(client)}
-                              className="text-gray-500 hover:text-white transition-colors"
-                              title="Configurer"
+                              className="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                              title="Configurer ROI"
                             >
-                              <MoreVertical className="w-5 h-5" />
+                              <Settings className="w-4 h-4" />
                             </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                          </div>
+                        </div>
+
+                        {/* Row 2: KPI Cards */}
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                          <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Clock className="w-3.5 h-3.5 text-cyan-400" />
+                              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Heures éco.</span>
+                            </div>
+                            <p className="text-xl font-bold text-white">{Math.round(client.totals.hours_saved)}h</p>
+                          </div>
+                          <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
+                            <div className="flex items-center gap-2 mb-1">
+                              <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
+                              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">ROI total</span>
+                            </div>
+                            <p className="text-xl font-bold text-white">{Math.round(roi).toLocaleString('fr-FR')}€</p>
+                          </div>
+                          <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                                {isImmo ? 'Leads traités' : 'Tickets traités'}
+                              </span>
+                            </div>
+                            <p className="text-xl font-bold text-white">{client.totals.tickets_total}</p>
+                          </div>
+                          <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
+                            <div className="flex items-center gap-2 mb-1">
+                              <TrendingUp className="w-3.5 h-3.5 text-violet-400" />
+                              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Taux auto</span>
+                            </div>
+                            <p className="text-xl font-bold text-white">{client.autoRate}%</p>
+                          </div>
+                          <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Activity className="w-3.5 h-3.5 text-pink-400" />
+                              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Events</span>
+                            </div>
+                            <p className="text-xl font-bold text-white">{client.eventCount}</p>
+                          </div>
+                        </div>
+
+                        {/* Row 3: Progress bar */}
+                        <div className="mt-4 flex items-center gap-4">
+                          <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all ${isImmo ? 'bg-violet-500' : 'bg-emerald-500'}`}
+                              style={{ width: `${Math.min(client.autoRate, 100)}%` }}
+                            />
+                          </div>
+                          <span className="text-xs text-gray-500 shrink-0">
+                            {client.totals.tickets_auto} auto / {client.totals.tickets_escalated} escaladés
+                          </span>
+                          <span className="text-xs text-gray-600 shrink-0">
+                            {client.daysActive}j actif
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
