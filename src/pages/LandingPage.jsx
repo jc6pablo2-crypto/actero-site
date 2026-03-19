@@ -96,25 +96,31 @@ export const LandingPage = ({ onNavigate }) => {
                   Des milliers d'euros qui s'évaporent chaque mois — sans que personne ne les chiffre.
                 </p>
 
-                <StaggerContainer className="grid md:grid-cols-3 gap-12 lg:gap-16 text-center">
+                <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 text-center">
                   {[
                     {
                       icon: <ShoppingCart className="w-8 h-8 text-red-400/70" />,
                       stat: "70%",
                       title: "des paniers jamais relancés",
-                      desc: "7 acheteurs sur 10 abandonnent leur panier. Sans séquence de relance automatisée, chaque panier oublié est une vente en moins sur votre P&L.",
+                      desc: "7 acheteurs sur 10 abandonnent leur panier. Sans relance automatisée, c'est du CA qui s'évapore chaque jour.",
                     },
                     {
                       icon: <Clock className="w-8 h-8 text-red-400/70" />,
+                      stat: "4h",
+                      title: "pour répondre à un lead immo",
+                      desc: "Temps de réponse moyen dans l'immobilier. À ce rythme, le prospect a déjà contacté 3 autres agences.",
+                    },
+                    {
+                      icon: <MessageSquare className="w-8 h-8 text-red-400/70" />,
                       stat: "40h+",
-                      title: "englouties en support chaque mois",
-                      desc: "\"Où est ma commande ?\", \"Je veux un remboursement.\" Votre équipe traite les mêmes demandes en boucle au lieu de faire croître le business.",
+                      title: "perdues en tâches répétitives",
+                      desc: "\"Où est ma commande ?\", \"Le bien est-il encore dispo ?\" — les mêmes questions en boucle, au lieu de closer des deals.",
                     },
                     {
                       icon: <Eye className="w-8 h-8 text-red-400/70" />,
                       stat: "0",
-                      title: "visibilité sur vos fuites de marge",
-                      desc: "Pas de tableau de bord consolidé. Vous ne savez pas combien vous perdez, ni où. Impossible d'optimiser ce qu'on ne mesure pas.",
+                      title: "visibilité sur vos pertes",
+                      desc: "Pas de dashboard consolidé. Vous ne savez pas combien vous perdez, ni où. Impossible d'optimiser ce qu'on ne mesure pas.",
                     },
                   ].map((block, i) => (
                     <StaggerItem
@@ -166,6 +172,8 @@ export const LandingPage = ({ onNavigate }) => {
                         { name: "OpenAI", src: "/openai.svg" },
                         { name: "Intercom", icon: "intercom", color: "0058DD" },
                         { name: "Gorgias", icon: "gorgias", color: "1F1F1F" },
+                        { name: "SeLoger", src: "/seloger.svg" },
+                        { name: "LeBonCoin", src: "/leboncoin.svg" },
                       ].map((tech, i) => (
                         <div
                           key={`${setIdx}-${i}`}
@@ -200,7 +208,7 @@ export const LandingPage = ({ onNavigate }) => {
                     pour reprendre le contrôle.
                   </h2>
                   <p className="text-lg text-gray-400 font-medium max-w-2xl mx-auto">
-                    Pas des outils à configurer. Des résultats business déployés et mesurés pour vous.
+                    Que vous vendiez des produits ou des biens immobiliers — mêmes résultats, même obsession performance.
                   </p>
                 </FadeInUp>
 
@@ -210,17 +218,17 @@ export const LandingPage = ({ onNavigate }) => {
                       icon: <Headphones className="w-6 h-6" />,
                       iconColor: "text-emerald-400",
                       iconBg: "bg-emerald-500/10 border-emerald-500/20",
-                      title: "Libérez votre équipe du support répétitif",
-                      result: "80% des tickets résolus sans intervention humaine",
-                      desc: "Un agent IA formé sur vos données prend en charge les demandes récurrentes : suivi de commande, retours, remboursements. Votre équipe se concentre enfin sur ce qui fait croître le business.",
+                      title: "Libérez votre équipe des tâches répétitives",
+                      result: "80% des demandes traitées sans intervention humaine",
+                      desc: "Un agent IA formé sur vos données prend en charge les demandes récurrentes — tickets SAV, demandes de visite, infos produits ou biens. Votre équipe se concentre sur ce qui génère du CA.",
                     },
                     {
                       icon: <RefreshCw className="w-6 h-6" />,
                       iconColor: "text-cyan-400",
                       iconBg: "bg-cyan-500/10 border-cyan-500/20",
-                      title: "Récupérez les ventes abandonnées",
-                      result: "Jusqu'à +15% de taux de récupération paniers",
-                      desc: "Des séquences de relance personnalisées par email et SMS, déclenchées au bon moment. L'IA adapte le message au profil et au comportement de chaque client.",
+                      title: "Convertissez plus, perdez moins",
+                      result: "+15% de revenus récupérés / 3x plus de leads qualifiés",
+                      desc: "E-commerce : relance paniers par email IA. Immobilier : qualification instantanée des leads portails et matching acquéreur/bien. Chaque opportunité est exploitée.",
                     },
                     {
                       icon: <BarChart3 className="w-6 h-6" />,
@@ -228,15 +236,15 @@ export const LandingPage = ({ onNavigate }) => {
                       iconBg: "bg-amber-500/10 border-amber-500/20",
                       title: "Détectez les problèmes avant qu'ils ne coûtent",
                       result: "Alertes en temps réel sur vos KPIs critiques",
-                      desc: "Actero surveille votre Shopify et Stripe en continu. Baisse de conversion, anomalie de stock, pic de tickets : vous êtes alerté avant que la marge ne s'évapore.",
+                      desc: "Actero surveille vos outils en continu. Baisse de conversion, leads non traités, pic de demandes : vous êtes alerté avant que la marge ne s'évapore.",
                     },
                     {
                       icon: <Zap className="w-6 h-6" />,
                       iconColor: "text-violet-400",
                       iconBg: "bg-violet-500/10 border-violet-500/20",
-                      title: "Éliminez les tâches manuelles qui freinent votre croissance",
-                      result: "Vos process manuels transformés en flux automatiques",
-                      desc: "Synchronisation CRM, tagging client, facturation, reporting. On identifie vos goulots d'étranglement opérationnels et on les supprime.",
+                      title: "Éliminez les process manuels qui vous freinent",
+                      result: "Vos flux manuels transformés en automatisations IA",
+                      desc: "Synchronisation CRM, relance vendeurs, reporting hebdo, suivi mandats, tagging client. On identifie vos goulots et on les supprime.",
                     },
                   ].map((block, i) => (
                     <FadeInUp key={i} delay={i * 0.1}>
@@ -386,7 +394,7 @@ export const LandingPage = ({ onNavigate }) => {
                       step: "01",
                       icon: <Activity className="w-5 h-5 text-emerald-400" />,
                       title: "Audit & Connexion",
-                      desc: "On analyse votre stack (Shopify, CRM, support) et on identifie vos plus grosses fuites de marge. On connecte vos outils en 15 minutes.",
+                      desc: "On analyse votre stack (Shopify, portails immo, CRM, support) et on identifie vos plus grosses fuites de marge. On connecte vos outils en 15 minutes.",
                       detail: "Jour 1-2"
                     },
                     {
@@ -470,13 +478,14 @@ export const LandingPage = ({ onNavigate }) => {
 
                 {/* Metrics */}
                 <FadeInUp className="mb-16">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 max-w-4xl mx-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-0 max-w-5xl mx-auto">
                     {[
-                      { value: 120, prefix: "+", suffix: "h", label: "Libérées par mois côté support", color: "text-white" },
-                      { value: 15, prefix: "+", suffix: "%", label: "De revenus récupérés via relances", color: "text-emerald-400" },
-                      { value: 80, prefix: "", suffix: "%", label: "Des demandes traitées sans humain", color: "text-white" },
+                      { value: 120, prefix: "+", suffix: "h", label: "Libérées par mois", color: "text-white" },
+                      { value: 15, prefix: "+", suffix: "%", label: "Revenus récupérés (e-com)", color: "text-emerald-400" },
+                      { value: 3, prefix: "x", suffix: "", label: "Plus de leads qualifiés (immo)", color: "text-violet-400" },
+                      { value: 80, prefix: "", suffix: "%", label: "Demandes traitées par IA", color: "text-white" },
                     ].map((stat, i) => (
-                      <div key={i} className={`flex flex-col items-center justify-center py-6 ${i < 2 ? "md:border-r border-white/5" : ""}`}>
+                      <div key={i} className={`flex flex-col items-center justify-center py-6 ${i < 3 ? "md:border-r border-white/5" : ""}`}>
                         <ScrollCounter
                           value={stat.value}
                           prefix={stat.prefix}
@@ -777,7 +786,7 @@ export const LandingPage = ({ onNavigate }) => {
                       </h2>
 
                       <p className="text-lg text-gray-400 font-medium max-w-2xl mx-auto mb-10 leading-relaxed">
-                        En 15 minutes, on analyse votre boutique et on vous montre exactement
+                        En 15 minutes, on analyse votre business et on vous montre exactement
                         combien vous perdez — et ce qu'on peut récupérer pour vous.
                       </p>
 
