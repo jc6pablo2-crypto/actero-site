@@ -18,7 +18,8 @@ import {
   RefreshCw,
   Eye,
   Shield,
-  CalendarCheck
+  CalendarCheck,
+  Home
 } from 'lucide-react'
 import { Navbar } from '../components/layout/Navbar'
 import { Footer } from '../components/layout/Footer'
@@ -90,7 +91,7 @@ export const LandingPage = ({ onNavigate }) => {
                   par des problèmes invisibles.
                 </h2>
                 <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed mb-20">
-                  Des paniers abandonnés sans relance. Un support qui noie votre équipe.
+                  Paniers abandonnés, leads non qualifiés, demandes sans réponse.
                   <br className="hidden md:block" />
                   Des milliers d'euros qui s'évaporent chaque mois — sans que personne ne les chiffre.
                 </p>
@@ -258,6 +259,105 @@ export const LandingPage = ({ onNavigate }) => {
                       </div>
                     </FadeInUp>
                   ))}
+                </div>
+              </div>
+            </section>
+
+            {/* ============================================ */}
+            {/* SECTION 3B — VERTICALES (E-COM + IMMO)       */}
+            {/* ============================================ */}
+            <section id="verticales" className="py-24 md:py-32 bg-transparent px-6 relative z-10 border-t border-white/[0.06]">
+              <div className="max-w-6xl mx-auto">
+                <FadeInUp className="text-center mb-20">
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-6">
+                    Nos verticales
+                  </p>
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6">
+                    Deux industries.<br className="hidden md:block" />
+                    Une seule obsession : vos résultats.
+                  </h2>
+                  <p className="text-lg text-gray-400 font-medium max-w-2xl mx-auto">
+                    Actero déploie des solutions IA sur mesure pour le e-commerce et l'immobilier.
+                  </p>
+                </FadeInUp>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* E-commerce Card */}
+                  <FadeInUp delay={0}>
+                    <div className="bg-[#0a0a0a] rounded-[28px] p-8 md:p-10 border border-white/[0.06] h-full hover:border-emerald-500/20 transition-all duration-500 group relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-emerald-500/10 transition-all duration-700"></div>
+                      <div className="relative z-10">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                            <ShoppingCart className="w-6 h-6 text-emerald-400" />
+                          </div>
+                          <div className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-xs font-bold text-emerald-400 uppercase tracking-widest">
+                            E-commerce
+                          </div>
+                        </div>
+
+                        <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">
+                          Boutiques Shopify & E-commerce
+                        </h3>
+                        <p className="text-gray-400 font-medium leading-relaxed mb-6">
+                          Automatisez votre support client, récupérez les paniers abandonnés et suivez votre ROI en temps réel.
+                        </p>
+
+                        <div className="space-y-3">
+                          {[
+                            "Agent IA support client (suivi commande, retours, SAV)",
+                            "Relance paniers abandonnés par email IA",
+                            "Dashboard ROI en temps réel",
+                            "Intégration Shopify native",
+                          ].map((f, i) => (
+                            <div key={i} className="flex items-center gap-3">
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                              <span className="text-sm text-gray-300">{f}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </FadeInUp>
+
+                  {/* Immobilier Card */}
+                  <FadeInUp delay={0.1}>
+                    <div className="bg-[#0a0a0a] rounded-[28px] p-8 md:p-10 border border-white/[0.06] h-full hover:border-violet-500/20 transition-all duration-500 group relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-48 h-48 bg-violet-500/5 rounded-full blur-[80px] pointer-events-none group-hover:bg-violet-500/10 transition-all duration-700"></div>
+                      <div className="relative z-10">
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="w-12 h-12 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
+                            <Home className="w-6 h-6 text-violet-400" />
+                          </div>
+                          <div className="px-3 py-1 bg-violet-500/10 border border-violet-500/20 rounded-full text-xs font-bold text-violet-400 uppercase tracking-widest">
+                            Immobilier
+                          </div>
+                        </div>
+
+                        <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">
+                          Agences Immobilières
+                        </h3>
+                        <p className="text-gray-400 font-medium leading-relaxed mb-6">
+                          Qualifiez vos leads automatiquement, répondez aux demandes de visite en 2 minutes et boostez votre taux de conversion.
+                        </p>
+
+                        <div className="space-y-3">
+                          {[
+                            "Qualification automatique des leads (SeLoger, LeBonCoin)",
+                            "Réponse instantanée aux demandes de visite",
+                            "Matching acquéreur ↔ bien par IA",
+                            "Relance acquéreurs & vendeurs automatisée",
+                            "Dashboard spécialisé immobilier",
+                          ].map((f, i) => (
+                            <div key={i} className="flex items-center gap-3">
+                              <CheckCircle2 className="w-4 h-4 text-violet-500 flex-shrink-0" />
+                              <span className="text-sm text-gray-300">{f}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </FadeInUp>
                 </div>
               </div>
             </section>
@@ -521,10 +621,10 @@ export const LandingPage = ({ onNavigate }) => {
 
                         <div className="space-y-4 mb-8">
                           {[
-                            "Audit complet de votre e-commerce",
-                            "Agent IA support client niveau 1",
-                            "Relances paniers abandonnés automatisées",
-                            "Intégrations Shopify + CRM + support",
+                            "Audit complet de votre activité",
+                            "Agent IA support client / qualification leads",
+                            "Relances automatisées (paniers / acquéreurs)",
+                            "Intégrations natives (Shopify, SeLoger, CRM...)",
                             "Dashboard de performance en temps réel",
                             "Account manager dédié",
                             "Optimisation et reporting continus",
@@ -554,16 +654,16 @@ export const LandingPage = ({ onNavigate }) => {
                                 text: "Vous êtes sur Shopify avec +30K€/mois de CA"
                               },
                               {
+                                icon: <Home className="w-5 h-5 text-violet-400" />,
+                                text: "Vous êtes une agence immo et croulez sous les demandes de visite"
+                              },
+                              {
                                 icon: <Users className="w-5 h-5 text-cyan-400" />,
-                                text: "Votre équipe support est débordée par des demandes répétitives"
+                                text: "Votre équipe est débordée par des demandes répétitives"
                               },
                               {
-                                icon: <TrendingDown className="w-5 h-5 text-amber-400" />,
-                                text: "Vous perdez des ventes mais ne savez pas combien ni où"
-                              },
-                              {
-                                icon: <Target className="w-5 h-5 text-violet-400" />,
-                                text: "Vous voulez scaler votre CA sans multiplier vos coûts opérationnels"
+                                icon: <Target className="w-5 h-5 text-amber-400" />,
+                                text: "Vous voulez scaler sans multiplier vos coûts opérationnels"
                               },
                             ].map((item, i) => (
                               <div key={i} className="flex items-start gap-4">
@@ -623,7 +723,11 @@ export const LandingPage = ({ onNavigate }) => {
                     },
                     {
                       q: "Quels outils supportez-vous ?",
-                      a: "Shopify, Klaviyo, Gorgias, Zendesk, Intercom, HubSpot, Stripe, Slack, et bien d'autres. Si votre outil n'est pas dans la liste, on trouve un moyen de le connecter."
+                      a: "Shopify, Klaviyo, Gorgias, Zendesk, Intercom, HubSpot, Stripe, Slack, et bien d'autres. Pour l'immobilier : SeLoger, LeBonCoin, Apimo, Hektor, et les principaux CRM agences. Si votre outil n'est pas dans la liste, on trouve un moyen de le connecter."
+                    },
+                    {
+                      q: "Actero fonctionne aussi pour les agences immobilières ?",
+                      a: "Oui. Actero déploie des agents IA spécialisés pour les agences immobilières : qualification automatique des leads portails (SeLoger, LeBonCoin), réponse instantanée aux demandes de visite, matching acquéreur/bien par IA, relance acquéreurs et vendeurs, et un dashboard dédié avec vos KPIs immobilier."
                     },
                     {
                       q: "Quelle est la différence avec Make ou Zapier ?",

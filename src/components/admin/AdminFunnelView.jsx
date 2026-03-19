@@ -31,6 +31,7 @@ export function AdminFunnelView() {
     company_name: '',
     slug: '',
     email: '',
+    client_type: 'ecommerce',
     setup_price: 800,
     monthly_price: 800,
     hourly_cost: '',
@@ -74,6 +75,7 @@ export function AdminFunnelView() {
           company_name: formData.company_name,
           slug: formData.slug,
           email: formData.email,
+          client_type: formData.client_type,
           setup_price: formData.setup_price,
           monthly_price: formData.monthly_price,
           hourly_cost: formData.hourly_cost ? parseFloat(formData.hourly_cost) : 0,
@@ -120,6 +122,7 @@ export function AdminFunnelView() {
         company_name: '',
         slug: '',
         email: '',
+        client_type: 'ecommerce',
         setup_price: 800,
         monthly_price: 800,
         hourly_cost: '',
@@ -247,6 +250,21 @@ export function AdminFunnelView() {
                 />
               </div>
 
+              <div>
+                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                  Type de client *
+                </label>
+                <select
+                  required
+                  value={formData.client_type}
+                  onChange={(e) => setFormData(prev => ({ ...prev, client_type: e.target.value }))}
+                  className="w-full px-4 py-3 bg-[#030303] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all appearance-none cursor-pointer"
+                >
+                  <option value="ecommerce">🛒 E-commerce (Shopify)</option>
+                  <option value="immobilier">🏠 Agence Immobilière</option>
+                </select>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
@@ -358,6 +376,7 @@ export function AdminFunnelView() {
             <thead>
               <tr className="border-b border-white/5 bg-[#030303]">
                 <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Entreprise</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Type</th>
                 <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Email</th>
                 <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Pricing</th>
                 <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Statut</th>
@@ -373,6 +392,15 @@ export function AdminFunnelView() {
                     <td className="px-6 py-4">
                       <div className="font-bold text-white">{client.company_name}</div>
                       <div className="text-xs text-gray-600 mt-0.5">/start/{client.slug}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase border ${
+                        client.client_type === 'immobilier'
+                          ? 'bg-violet-500/10 text-violet-400 border-violet-500/20'
+                          : 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
+                      }`}>
+                        {client.client_type === 'immobilier' ? '🏠 Immo' : '🛒 E-com'}
+                      </span>
                     </td>
                     <td className="px-6 py-4 text-gray-400">{client.email}</td>
                     <td className="px-6 py-4">

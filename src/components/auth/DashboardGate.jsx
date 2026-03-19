@@ -5,6 +5,7 @@ import { fetchUserRole } from '../../lib/auth-utils'
 import { TenantContext } from '../../context/TenantContext'
 import { AdminDashboard } from '../../pages/AdminDashboard'
 import { ClientDashboard } from '../../pages/ClientDashboard'
+import { RealEstateDashboard } from '../../pages/RealEstateDashboard'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_URL !== "REPLACE_ME");
@@ -17,6 +18,7 @@ export const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
   const [session, setSession] = useState(null);
   const [user, setUser] = useState(null);
   const [clientId, setClientId] = useState(null);
+  const [clientType, setClientType] = useState(null);
   const [role, setRole] = useState(null);
   const [loadingTenant, setLoadingTenant] = useState(true);
   const [tenantError, setTenantError] = useState(null);
@@ -95,8 +97,11 @@ export const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
           });
 
           if (mounted) {
+            let resolvedClientId = null;
+
             if (mappingResult) {
-              setClientId(mappingResult.client_id);
+              resolvedClientId = mappingResult.client_id;
+              setClientId(resolvedClientId);
               setRole(mappingResult.role || "client");
             } else {
               const { data: ownedClient } = await supabase
@@ -106,11 +111,27 @@ export const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
                 .maybeSingle();
 
               if (ownedClient) {
-                setClientId(ownedClient.id);
+                resolvedClientId = ownedClient.id;
+                setClientId(resolvedClientId);
                 setRole("client");
               } else {
                 setClientId(null);
                 setRole("client");
+              }
+            }
+
+            // Fetch client_type to route to correct dashboard
+            if (resolvedClientId) {
+              const { data: clientData } = await supabase
+                .from("clients")
+                .select("client_type")
+                .eq("id", resolvedClientId)
+                .maybeSingle();
+
+              if (clientData?.client_type) {
+                setClientType(clientData.client_type);
+              } else {
+                setClientType("ecommerce");
               }
             }
           }
@@ -194,10 +215,12 @@ export const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
 
   return (
     <TenantContext.Provider
-      value={{ session, user, clientId, role, loadingTenant }}
+      value={{ session, user, clientId, clientType, role, loadingTenant }}
     >
       {role === "admin" ? (
         <AdminDashboard onNavigate={onNavigate} onLogout={onLogout} currentRoute={currentRoute} />
+      ) : clientType === "immobilier" ? (
+        <RealEstateDashboard onNavigate={onNavigate} onLogout={onLogout} currentRoute={currentRoute} />
       ) : (
         <ClientDashboard onNavigate={onNavigate} onLogout={onLogout} currentRoute={currentRoute} />
       )}

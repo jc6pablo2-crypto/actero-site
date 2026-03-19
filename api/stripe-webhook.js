@@ -28,14 +28,14 @@ async function getRawBody(req) {
  * After payment: create client account, invite user, link everything
  */
 async function onboardClientAfterPayment(funnelClient) {
-  const { company_name, email, monthly_price, slug } = funnelClient;
+  const { company_name, email, monthly_price, slug, client_type } = funnelClient;
 
   console.log(`[ONBOARD] Starting onboarding for "${company_name}" (${email})`);
 
   // 1. Create client in "clients" table
   const { data: client, error: clientError } = await supabase
     .from('clients')
-    .insert([{ brand_name: company_name }])
+    .insert([{ brand_name: company_name, client_type: client_type || 'ecommerce' }])
     .select()
     .single();
 
