@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  ChevronDown, 
-  Menu, 
-  X, 
-  Bot, 
-  Zap, 
-  Sparkles 
+import {
+  ChevronDown,
+  Menu,
+  X,
+  Bot,
+  Zap,
+  Sparkles,
+  ShoppingCart,
+  Home,
+  ArrowRight
 } from 'lucide-react'
 import { Logo } from './Logo'
 import { ButtonColorful } from '../ui/button-colorful'
@@ -38,13 +41,14 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
           </div>
 
           <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+            {/* Solutions Mega Menu */}
             <div
               className="relative"
               onMouseEnter={() => setIsMegaMenuOpen(true)}
               onMouseLeave={() => setIsMegaMenuOpen(false)}
             >
               <div className="flex items-center gap-1 cursor-pointer py-4 text-sm font-semibold text-gray-400 hover:text-white transition-colors group">
-                Produits
+                Solutions
                 <ChevronDown
                   className={`w-3.5 h-3.5 transition-transform duration-300 ${isMegaMenuOpen ? "rotate-180 text-white" : ""}`}
                 />
@@ -57,61 +61,97 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.98 }}
                     transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[850px] bg-[#030303] border border-white/10 rounded-[28px] shadow-2xl p-6 gap-6 grid grid-cols-3"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[720px] bg-[#030303] border border-white/10 rounded-[28px] shadow-2xl p-6"
                   >
-                    <div
-                      onClick={() => {
-                        setIsMegaMenuOpen(false);
-                        scrollToId("comment-ca-marche");
-                      }}
-                      className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group"
-                    >
-                      <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-                        <Bot className="w-7 h-7" />
+                    {/* Verticals Row */}
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div
+                        onClick={() => {
+                          setIsMegaMenuOpen(false);
+                          onNavigate("/");
+                        }}
+                        className="flex items-start gap-4 p-5 rounded-[20px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-emerald-500/30 transition-all cursor-pointer group"
+                      >
+                        <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 shrink-0 group-hover:scale-105 transition-transform">
+                          <ShoppingCart className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="text-white font-semibold text-base mb-1">E-commerce</h3>
+                          <p className="text-[13px] text-gray-500 leading-relaxed">
+                            SAV automatisé, paniers récupérés, dashboard ROI pour Shopify.
+                          </p>
+                        </div>
                       </div>
-                      <h3 className="text-white font-semibold text-[19px] mb-2">
-                        Agents IA
-                      </h3>
-                      <p className="text-[15px] text-gray-400 font-medium leading-relaxed">
-                        Vos employés virtuels qui ne dorment jamais.
-                      </p>
+
+                      <div
+                        onClick={() => {
+                          setIsMegaMenuOpen(false);
+                          onNavigate("/");
+                        }}
+                        className="flex items-start gap-4 p-5 rounded-[20px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-violet-500/30 transition-all cursor-pointer group"
+                      >
+                        <div className="w-12 h-12 bg-violet-500/10 border border-violet-500/20 rounded-2xl flex items-center justify-center text-violet-400 shrink-0 group-hover:scale-105 transition-transform">
+                          <Home className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="text-white font-semibold text-base mb-1">Immobilier</h3>
+                          <p className="text-[13px] text-gray-500 leading-relaxed">
+                            Qualification leads, réponse instantanée, matching acquéreur/bien.
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
-                    <div
-                      onClick={() => {
-                        setIsMegaMenuOpen(false);
-                        scrollToId("comment-ca-marche");
-                      }}
-                      className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group"
-                    >
-                      <div className="w-14 h-14 bg-[#141416] rounded-2xl flex items-center justify-center mb-6 text-amber-300 shadow-md border border-white/5 group-hover:scale-105 transition-transform">
-                        <Zap className="w-7 h-7 fill-amber-300" />
+                    {/* Capabilities Row */}
+                    <div className="grid grid-cols-3 gap-3">
+                      <div
+                        onClick={() => {
+                          setIsMegaMenuOpen(false);
+                          scrollToId("comment-ca-marche");
+                        }}
+                        className="flex flex-col p-5 rounded-[20px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group"
+                      >
+                        <div className="w-11 h-11 bg-emerald-500 rounded-xl flex items-center justify-center mb-4 text-white shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+                          <Bot className="w-5 h-5" />
+                        </div>
+                        <h3 className="text-white font-semibold text-[15px] mb-1">Agents IA</h3>
+                        <p className="text-[13px] text-gray-500 leading-relaxed">
+                          Employés virtuels 24/7 pour votre business.
+                        </p>
                       </div>
-                      <h3 className="text-white font-semibold text-[19px] mb-2">
-                        Automatisations
-                      </h3>
-                      <p className="text-[15px] text-gray-400 font-medium leading-relaxed">
-                        Connectez Shopify, votre CRM et vos factures.
-                      </p>
-                    </div>
 
-                    <button
-                      onClick={() => {
-                        setIsMegaMenuOpen(false);
-                        onAuditOpen?.();
-                      }}
-                      className="flex flex-col p-6 rounded-[24px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group text-left"
-                    >
-                      <div className="w-14 h-14 bg-[#1e1313] rounded-2xl flex items-center justify-center mb-6 text-orange-400 shadow-md border border-orange-500/10 group-hover:scale-105 transition-transform">
-                        <Sparkles className="w-7 h-7 fill-orange-400" />
+                      <div
+                        onClick={() => {
+                          setIsMegaMenuOpen(false);
+                          scrollToId("comment-ca-marche");
+                        }}
+                        className="flex flex-col p-5 rounded-[20px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group"
+                      >
+                        <div className="w-11 h-11 bg-[#141416] rounded-xl flex items-center justify-center mb-4 text-amber-300 shadow-md border border-white/5 group-hover:scale-105 transition-transform">
+                          <Zap className="w-5 h-5 fill-amber-300" />
+                        </div>
+                        <h3 className="text-white font-semibold text-[15px] mb-1">Automatisations</h3>
+                        <p className="text-[13px] text-gray-500 leading-relaxed">
+                          Connectez vos outils et vos workflows.
+                        </p>
                       </div>
-                      <h3 className="text-white font-semibold text-[19px] mb-2">
-                        Audit IA
-                      </h3>
-                      <p className="text-[15px] text-gray-400 font-medium leading-relaxed">
-                        Analyse gratuite de votre business en temps réel.
-                      </p>
-                    </button>
+
+                      <button
+                        onClick={() => {
+                          setIsMegaMenuOpen(false);
+                          onAuditOpen?.();
+                        }}
+                        className="flex flex-col p-5 rounded-[20px] bg-[#0d0d0d] border border-white/[0.08] hover:bg-[#141414] hover:border-white/20 transition-all cursor-pointer group text-left"
+                      >
+                        <div className="w-11 h-11 bg-[#1e1313] rounded-xl flex items-center justify-center mb-4 text-orange-400 shadow-md border border-orange-500/10 group-hover:scale-105 transition-transform">
+                          <Sparkles className="w-5 h-5 fill-orange-400" />
+                        </div>
+                        <h3 className="text-white font-semibold text-[15px] mb-1">Audit gratuit</h3>
+                        <p className="text-[13px] text-gray-500 leading-relaxed">
+                          Analyse de votre business en temps réel.
+                        </p>
+                      </button>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -172,16 +212,34 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
             transition={{ duration: 0.2 }}
             className="mt-3 bg-[#0d0d0d]/95 backdrop-blur-3xl border border-white/10 rounded-3xl shadow-2xl p-6 space-y-1"
           >
+            {/* Mobile Vertical Cards */}
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); onNavigate("/"); }}
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 hover:bg-emerald-500/10 transition-all"
+              >
+                <ShoppingCart className="w-5 h-5 text-emerald-400" />
+                <span className="text-xs font-bold text-emerald-400">E-commerce</span>
+              </button>
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); onNavigate("/"); }}
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-violet-500/5 border border-violet-500/20 hover:bg-violet-500/10 transition-all"
+              >
+                <Home className="w-5 h-5 text-violet-400" />
+                <span className="text-xs font-bold text-violet-400">Immobilier</span>
+              </button>
+            </div>
+
             {[
               {
-                label: "Produits",
+                label: "Solutions",
                 action: () => {
                   setIsMobileMenuOpen(false);
                   scrollToId("comment-ca-marche");
                 },
               },
               {
-                label: "Tarification",
+                label: "Tarifs",
                 action: () => {
                   setIsMobileMenuOpen(false);
                   onNavigate("/tarifs");
@@ -206,13 +264,6 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
                 action: () => {
                   setIsMobileMenuOpen(false);
                   onNavigate("/demo");
-                },
-              },
-              {
-                label: "Ressources",
-                action: () => {
-                  setIsMobileMenuOpen(false);
-                  onNavigate("/ressources");
                 },
               },
               {
