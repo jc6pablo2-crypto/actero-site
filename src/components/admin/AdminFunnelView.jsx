@@ -278,10 +278,10 @@ export function AdminFunnelView() {
 
               <div className="border-t border-white/10 pt-5 mt-1">
                 <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Configuration ROI (optionnel)</p>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-                      Coût horaire (€/h)
+                      Coût horaire client (€/h)
                     </label>
                     <input
                       type="number"
@@ -295,7 +295,7 @@ export function AdminFunnelView() {
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-                      Temps / ticket (min)
+                      Temps moyen / ticket (min)
                     </label>
                     <input
                       type="number"
@@ -303,20 +303,6 @@ export function AdminFunnelView() {
                       value={formData.avg_ticket_time}
                       onChange={(e) => setFormData(prev => ({ ...prev, avg_ticket_time: e.target.value }))}
                       placeholder="5"
-                      className="w-full px-4 py-3 bg-[#030303] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-                      Prix Actero (€/m)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={formData.actero_monthly_price}
-                      onChange={(e) => setFormData(prev => ({ ...prev, actero_monthly_price: e.target.value }))}
-                      placeholder="800"
                       className="w-full px-4 py-3 bg-[#030303] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
                     />
                   </div>

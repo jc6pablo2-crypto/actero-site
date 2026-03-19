@@ -101,7 +101,7 @@ async function onboardClientAfterPayment(funnelClient) {
       client_id: client.id,
       hourly_cost: funnelClient.hourly_cost || 0,
       avg_ticket_time_min: funnelClient.avg_ticket_time_min || 5,
-      actero_monthly_price: funnelClient.actero_monthly_price || monthly_price || 0,
+      actero_monthly_price: monthly_price || 0,
       currency: 'EUR',
     }, { onConflict: 'client_id' });
 
