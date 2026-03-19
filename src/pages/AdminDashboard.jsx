@@ -21,7 +21,9 @@ import {
   Activity,
   Calendar,
   Settings,
-  Eye
+  Eye,
+  Copy,
+  Check
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { AdminClientSettingsModal } from '../components/admin/AdminClientSettingsModal'
@@ -39,6 +41,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCommandKOpen, setIsCommandKOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
+  const [copiedClientId, setCopiedClientId] = useState(null);
 
   const getAdminTabFromRoute = (route) => {
     if (route === "/admin/clients") return "clients";
@@ -382,15 +385,23 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                                 </span>
                               </div>
                               <div className="flex items-center gap-4 mt-1">
-                                <button
-                                  onClick={() => {
-                                    navigator.clipboard.writeText(client.id);
-                                  }}
-                                  className="text-xs text-gray-600 font-mono hover:text-gray-400 transition-colors cursor-pointer"
-                                  title="Copier le client_id"
-                                >
-                                  {client.id.slice(0, 8)}…
-                                </button>
+                                <span className="flex items-center gap-1.5">
+                                  <span className="text-[11px] text-gray-600 font-mono select-all">{client.id}</span>
+                                  <button
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(client.id);
+                                      setCopiedClientId(client.id);
+                                      setTimeout(() => setCopiedClientId(null), 2000);
+                                    }}
+                                    className="p-0.5 text-gray-600 hover:text-white transition-colors cursor-pointer"
+                                    title="Copier le client_id"
+                                  >
+                                    {copiedClientId === client.id
+                                      ? <Check className="w-3 h-3 text-emerald-400" />
+                                      : <Copy className="w-3 h-3" />
+                                    }
+                                  </button>
+                                </span>
                                 <span className="text-xs text-gray-600">•</span>
                                 <span className="text-xs text-gray-500">{client.ownerEmail || '—'}</span>
                                 <span className="text-xs text-gray-600">•</span>
