@@ -364,7 +364,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               {activeTab === "requests" && "Mes demandes"}
               {activeTab === "architect" && "Architecte IA"}
               {activeTab === "activity" && "Activité temps réel"}
+              {activeTab === "systems" && "Mes Systèmes"}
               {activeTab === "intelligence" && "Intelligence"}
+              {activeTab === "reports" && "Rapports"}
               {activeTab === "upsells" && "Opportunités de croissance"}
             </h1>
 
@@ -521,6 +523,174 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "intelligence" && <IntelligenceView supabase={supabase} setActiveTab={setActiveTab} theme={theme} />}
 
           {activeTab === "activity" && <ActivityView supabase={supabase} theme={theme} />}
+
+          {activeTab === "architect" && (
+            <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
+              <div>
+                <h2 className={`text-3xl font-bold mb-2 tracking-tight ${isLight ? "text-slate-900" : "text-white"}`}>
+                  Architecte IA
+                </h2>
+                <p className={`font-medium text-lg ${isLight ? "text-slate-500" : "text-zinc-500"}`}>
+                  Concevez et planifiez de nouvelles automatisations avec l'intelligence artificielle.
+                </p>
+              </div>
+
+              <div className={`p-8 rounded-2xl border ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"}`}>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isLight ? "bg-violet-50 border border-violet-200" : "bg-violet-500/10 border border-violet-500/20"}`}>
+                    <BrainCircuit className={`w-6 h-6 ${isLight ? "text-violet-600" : "text-violet-400"}`} />
+                  </div>
+                  <div>
+                    <h3 className={`text-lg font-bold ${isLight ? "text-slate-900" : "text-white"}`}>Nouveau projet d'automatisation</h3>
+                    <p className={`text-sm ${isLight ? "text-slate-500" : "text-zinc-500"}`}>Décrivez votre besoin, l'IA propose une architecture</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className={`block text-sm font-bold mb-2 ${isLight ? "text-slate-700" : "text-zinc-300"}`}>
+                      Quel process souhaitez-vous automatiser ?
+                    </label>
+                    <textarea
+                      placeholder="Ex: Je voudrais automatiser la relance des paniers abandonnés avec un email personnalisé 2h après..."
+                      rows={4}
+                      className={`w-full px-4 py-3 rounded-xl border text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-500/50 ${
+                        isLight
+                          ? "bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400"
+                          : "bg-white/5 border-white/10 text-white placeholder-zinc-600"
+                      }`}
+                    />
+                  </div>
+                  <button className="bg-violet-600 hover:bg-violet-500 text-white px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition-all">
+                    <Sparkles className="w-4 h-4" />
+                    Analyser avec l'IA
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[
+                  { title: "Relance paniers abandonnés", desc: "Email automatique 2h après abandon", status: "Suggestion IA" },
+                  { title: "Chatbot SAV intelligent", desc: "Réponses automatiques aux questions fréquentes", status: "Suggestion IA" },
+                  { title: "Reporting hebdomadaire", desc: "Rapport de performance envoyé chaque lundi", status: "Suggestion IA" },
+                ].map((suggestion, i) => (
+                  <div key={i} className={`p-5 rounded-2xl border cursor-pointer transition-all hover:scale-[1.02] ${
+                    isLight
+                      ? "bg-white border-slate-200 hover:border-violet-300 hover:shadow-md"
+                      : "bg-white/[0.02] border-white/[0.06] hover:border-violet-500/30 hover:shadow-lg"
+                  }`}>
+                    <span className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-bold uppercase mb-3 ${
+                      isLight ? "bg-violet-50 text-violet-600" : "bg-violet-500/10 text-violet-400"
+                    }`}>
+                      {suggestion.status}
+                    </span>
+                    <h4 className={`text-sm font-bold mb-1 ${isLight ? "text-slate-900" : "text-white"}`}>{suggestion.title}</h4>
+                    <p className={`text-xs ${isLight ? "text-slate-500" : "text-zinc-500"}`}>{suggestion.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "systems" && (
+            <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
+              <div>
+                <h2 className={`text-3xl font-bold mb-2 tracking-tight ${isLight ? "text-slate-900" : "text-white"}`}>
+                  Mes Systèmes
+                </h2>
+                <p className={`font-medium text-lg ${isLight ? "text-slate-500" : "text-zinc-500"}`}>
+                  Vos automatisations actives et leur état en temps réel.
+                </p>
+              </div>
+
+              <div className={`p-8 rounded-2xl border ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"}`}>
+                <h3 className={`text-lg font-bold mb-6 ${isLight ? "text-slate-900" : "text-white"}`}>Automatisations actives</h3>
+                <div className="space-y-4">
+                  {[
+                    { name: "Agent SAV e-commerce", type: "Agent IA", status: "active" },
+                    { name: "Qualification des leads entrants", type: "Qualification IA", status: "active" },
+                    { name: "Réponse automatique emails", type: "Email IA", status: "active" },
+                    { name: "Synchronisation CRM", type: "Intégration", status: "active" },
+                    { name: "Alertes stock faible", type: "Monitoring", status: "active" },
+                  ].map((auto, i) => (
+                    <div key={i} className={`flex items-center justify-between p-4 rounded-xl border ${
+                      isLight ? "bg-slate-50 border-slate-200" : "bg-white/[0.02] border-white/[0.06]"
+                    }`}>
+                      <div className="flex items-center gap-4">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <div>
+                          <p className={`text-sm font-bold ${isLight ? "text-slate-900" : "text-white"}`}>{auto.name}</p>
+                          <p className={`text-xs ${isLight ? "text-slate-500" : "text-zinc-500"}`}>{auto.type}</p>
+                        </div>
+                      </div>
+                      <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase">
+                        Actif
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "reports" && (
+            <div className="max-w-4xl mx-auto space-y-8 animate-fade-in-up">
+              <div>
+                <h2 className={`text-3xl font-bold mb-2 tracking-tight ${isLight ? "text-slate-900" : "text-white"}`}>
+                  Rapports
+                </h2>
+                <p className={`font-medium text-lg ${isLight ? "text-slate-500" : "text-zinc-500"}`}>
+                  Rapports automatisés et historique de performance.
+                </p>
+              </div>
+
+              <div className={`p-8 rounded-2xl border ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"}`}>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isLight ? "bg-blue-50 border border-blue-200" : "bg-blue-500/10 border border-blue-500/20"}`}>
+                    <Download className={`w-6 h-6 ${isLight ? "text-blue-600" : "text-blue-400"}`} />
+                  </div>
+                  <div>
+                    <h3 className={`text-lg font-bold ${isLight ? "text-slate-900" : "text-white"}`}>Rapports mensuels</h3>
+                    <p className={`text-sm ${isLight ? "text-slate-500" : "text-zinc-500"}`}>Téléchargez vos rapports de performance</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {[
+                    { month: "Mars 2026", status: "En cours", downloadable: false },
+                    { month: "Février 2026", status: "Disponible", downloadable: true },
+                    { month: "Janvier 2026", status: "Disponible", downloadable: true },
+                  ].map((report, i) => (
+                    <div key={i} className={`flex items-center justify-between p-4 rounded-xl border ${
+                      isLight ? "bg-slate-50 border-slate-200" : "bg-white/[0.02] border-white/[0.06]"
+                    }`}>
+                      <div className="flex items-center gap-4">
+                        <FileText className={`w-5 h-5 ${isLight ? "text-slate-400" : "text-zinc-500"}`} />
+                        <div>
+                          <p className={`text-sm font-bold ${isLight ? "text-slate-900" : "text-white"}`}>Rapport {report.month}</p>
+                          <p className={`text-xs ${isLight ? "text-slate-500" : "text-zinc-500"}`}>Performance & métriques IA</p>
+                        </div>
+                      </div>
+                      {report.downloadable ? (
+                        <button className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-colors ${
+                          isLight
+                            ? "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                            : "bg-blue-500/10 text-blue-400 hover:bg-blue-500/20"
+                        }`}>
+                          <Download className="w-3.5 h-3.5" />
+                          Télécharger
+                        </button>
+                      ) : (
+                        <span className={`text-xs font-bold ${isLight ? "text-amber-600" : "text-amber-400"}`}>
+                          {report.status}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
           {activeTab === "requests" && (
             <div className="max-w-4xl mx-auto space-y-6">
