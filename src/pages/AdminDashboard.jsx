@@ -642,12 +642,6 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                       className="pl-9 pr-4 py-2 bg-[#0a0a0a] border border-white/10 rounded-xl text-sm w-full sm:w-64 outline-none focus:border-white/20 transition-all"
                     />
                   </div>
-                  <button
-                    onClick={handleAddClient}
-                    className="bg-white text-black px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-gray-200 transition-colors whitespace-nowrap"
-                  >
-                    <Plus className="w-4 h-4" /> Nouveau client
-                  </button>
                 </div>
               </div>
 
