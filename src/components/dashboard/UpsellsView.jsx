@@ -123,7 +123,7 @@ const StatusBadge = ({ status, theme }) => {
   )
 }
 
-const UpsellCard = ({ upsell, client, metrics, existingUpsell, theme, onActivate, isActivating }) => {
+const UpsellCard = ({ upsell, client, metrics, existingUpsell, theme, onActivate, onCancel, isActivating }) => {
   const isLight = theme === 'light'
   const Icon = ICON_MAP[upsell.icon] || Zap
   const colorStyle = COLOR_STYLES[upsell.color]?.[isLight ? 'light' : 'dark'] || COLOR_STYLES.emerald[isLight ? 'light' : 'dark']
@@ -204,11 +204,21 @@ const UpsellCard = ({ upsell, client, metrics, existingUpsell, theme, onActivate
           Automatisation active
         </div>
       ) : isPending ? (
-        <div className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold ${
-          isLight ? 'bg-amber-50 text-amber-700' : 'bg-amber-500/10 text-amber-400'
-        }`}>
-          <Loader2 className="w-4 h-4 animate-spin" />
-          Activation en cours...
+        <div className="space-y-2">
+          <div className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold ${
+            isLight ? 'bg-amber-50 text-amber-700' : 'bg-amber-500/10 text-amber-400'
+          }`}>
+            <Loader2 className="w-4 h-4 animate-spin" />
+            Activation en cours...
+          </div>
+          <button
+            onClick={() => onCancel(existingUpsell.id)}
+            className={`w-full py-2 rounded-xl text-xs font-medium transition-colors ${
+              isLight ? 'text-slate-400 hover:text-slate-600 hover:bg-slate-50' : 'text-zinc-600 hover:text-zinc-400 hover:bg-white/5'
+            }`}
+          >
+            Annuler et réessayer
+          </button>
         </div>
       ) : (
         <button
@@ -253,7 +263,22 @@ export const UpsellsView = ({ client, metrics, supabase, theme }) => {
         .from('client_upsells')
         .select('*')
         .eq('client_id', client.id)
-      setExistingUpsells(data || [])
+
+      // Auto-cleanup: reset stale pending records (> 30 min)
+      const cleaned = []
+      const thirtyMinAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString()
+      for (const u of (data || [])) {
+        if (u.status === 'pending' && u.created_at < thirtyMinAgo) {
+          fetch('/api/cancel-upsell', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ upsell_id: u.id, client_id: client.id }),
+          }).catch(() => {})
+        } else {
+          cleaned.push(u)
+        }
+      }
+      setExistingUpsells(cleaned)
       setLoading(false)
     }
     fetchUpsells()
@@ -261,6 +286,19 @@ export const UpsellsView = ({ client, metrics, supabase, theme }) => {
 
   const getExistingUpsell = (upsellType) => {
     return existingUpsells.find((u) => u.upsell_type === upsellType)
+  }
+
+  const handleCancel = async (upsellId) => {
+    try {
+      await fetch('/api/cancel-upsell', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ upsell_id: upsellId, client_id: client.id }),
+      })
+      setExistingUpsells((prev) => prev.filter((u) => u.id !== upsellId))
+    } catch (err) {
+      console.error('Cancel failed:', err)
+    }
   }
 
   const handleActivate = async (upsellType, price) => {
@@ -370,6 +408,7 @@ export const UpsellsView = ({ client, metrics, supabase, theme }) => {
               existingUpsell={getExistingUpsell(upsell.id)}
               theme={theme}
               onActivate={handleActivate}
+              onCancel={handleCancel}
               isActivating={activatingId === upsell.id}
             />
           </motion.div>
