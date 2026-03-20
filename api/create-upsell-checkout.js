@@ -102,17 +102,25 @@ export default async function handler(req, res) {
       return res.status(409).json({ error: 'Cet upsell est déjà actif ou en cours d\'activation.' });
     }
 
-    // 3. Fetch latest metrics for pricing
-    const { data: latestMetrics } = await supabase
+    // 3. Fetch aggregated metrics for current month (matches dashboard display)
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    const { data: monthRows } = await supabase
       .from('metrics_daily')
       .select('tasks_executed, estimated_roi, active_automations, time_saved_minutes')
       .eq('client_id', client_id)
-      .order('date', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .gte('date', startOfMonth);
 
-    // 4. Calculate price server-side
-    const calculatedPrice = PRICING[upsell_type](latestMetrics);
+    // Aggregate: sum tasks/roi/time, max automations
+    const aggregatedMetrics = (monthRows || []).reduce((acc, row) => ({
+      tasks_executed: acc.tasks_executed + (Number(row.tasks_executed) || 0),
+      estimated_roi: acc.estimated_roi + (Number(row.estimated_roi) || 0),
+      time_saved_minutes: acc.time_saved_minutes + (Number(row.time_saved_minutes) || 0),
+      active_automations: Math.max(acc.active_automations, Number(row.active_automations) || 0),
+    }), { tasks_executed: 0, estimated_roi: 0, time_saved_minutes: 0, active_automations: 0 });
+
+    // 4. Calculate price server-side using aggregated month data
+    const calculatedPrice = PRICING[upsell_type](aggregatedMetrics);
     const upsellName = UPSELL_NAMES[upsell_type] || upsell_type;
 
     // 5. Create Stripe Checkout session
