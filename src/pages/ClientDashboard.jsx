@@ -30,7 +30,6 @@ import {
   ShoppingCart,
   Mail,
   Ticket,
-  Rocket,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
@@ -44,8 +43,7 @@ import { AnimatedCounter } from '../components/ui/animated-counter'
 import { SkeletonRow } from '../components/ui/skeleton-row'
 import { IntelligenceView } from '../components/dashboard/IntelligenceView'
 import { ActivityView } from '../components/dashboard/ActivityView'
-import { UpsellsView } from '../components/dashboard/UpsellsView'
-import { CopilotPanel } from '../components/dashboard/CopilotPanel'
+import { CopilotChat } from '../components/dashboard/CopilotChat'
 
 export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   // eslint-disable-next-line no-unused-vars
@@ -68,7 +66,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/systems") return "systems";
     if (route === "/client/intelligence") return "intelligence";
     if (route === "/client/reports") return "reports";
-    if (route === "/client/upsells") return "upsells";
+    if (route === "/client/copilot") return "copilot";
     return "overview";
   };
 
@@ -298,8 +296,8 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { id: 'activity', label: 'Activité en direct', icon: Activity },
     { id: 'intelligence', label: 'Intelligence', icon: Lightbulb },
     { id: 'reports', label: 'Rapports', icon: Download },
-    { type: 'section', label: 'Croissance' },
-    { id: 'upsells', label: 'Opportunités', icon: Rocket },
+    { type: 'section', label: 'Intelligence' },
+    { id: 'copilot', label: 'Actero Copilot', icon: Sparkles },
   ];
 
   const isLoading = clientLoading || metricsLoading || dailyMetricsLoading;
@@ -368,7 +366,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               {activeTab === "systems" && "Mes Systèmes"}
               {activeTab === "intelligence" && "Intelligence"}
               {activeTab === "reports" && "Rapports"}
-              {activeTab === "upsells" && "Opportunités de croissance"}
+              {activeTab === "copilot" && "Actero Copilot"}
             </h1>
 
             <div className="hidden lg:flex items-center gap-3">
@@ -496,20 +494,16 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               </div>
 
               <HealthScoreWidget metricsData={dailyMetrics.slice(-7)} eventsData={events} theme={theme} />
-
-              {/* Actero Copilot */}
-              <CopilotPanel
-                client={currentClient}
-                theme={theme}
-                onNavigateToUpsells={() => setActiveTab("upsells")}
-              />
             </div>
           )}
 
-          {activeTab === "upsells" && (
-            <div className="max-w-5xl mx-auto animate-fade-in-up">
-              <UpsellsView client={currentClient} metrics={metrics} supabase={supabase} theme={theme} />
-            </div>
+          {activeTab === "copilot" && (
+            <CopilotChat
+              client={currentClient}
+              metrics={metrics}
+              periodStats={periodStats}
+              theme={theme}
+            />
           )}
 
           {activeTab === "intelligence" && <IntelligenceView supabase={supabase} setActiveTab={setActiveTab} theme={theme} />}
