@@ -13,16 +13,15 @@ import { useEffect } from 'react'
  * (ZendeskWidget.jsx) avec une clé différente.
  */
 const ZENDESK_CLIENT_KEY = 'e80cafd5-3a27-4211-bad2-bbfcb94c9a78'
-const SCRIPT_ID = 'ze-snippet-client'
 
 function cleanupZendesk() {
-  // Supprimer le script
-  const el = document.getElementById(SCRIPT_ID)
+  // Supprimer le script Zendesk
+  const el = document.getElementById('ze-snippet')
   if (el) el.remove()
 
   // Supprimer toutes les iframes et éléments injectés par Zendesk
   document.querySelectorAll(
-    'iframe[title*="Zendesk"], iframe[id*="launcher"], [id*="webWidget"], [id*="Zendesk"], .zEWidget-launcher'
+    'iframe[title*="Zendesk"], iframe[title*="messaging"], iframe[id*="launcher"], [id*="webWidget"], [id*="Zendesk"], .zEWidget-launcher, #zdLauncher, [data-product="web_widget"]'
   ).forEach(node => node.remove())
 
   // Nettoyer les globals Zendesk pour éviter les conflits avec l'autre widget
@@ -31,20 +30,19 @@ function cleanupZendesk() {
   delete window.zESettings
   delete window.$zopim
   delete window.zEmbed
+  delete window.__ZENDESK_CLIENT_I18N_GLOBAL
 }
 
 export const ZendeskClientWidget = () => {
   useEffect(() => {
-    // Éviter les doublons si la page rerender
-    if (document.getElementById(SCRIPT_ID)) return
-    // S'assurer qu'aucun autre widget Zendesk n'est chargé
+    // S'assurer qu'aucun autre widget Zendesk n'est présent
     cleanupZendesk()
 
     const script = document.createElement('script')
-    script.id = SCRIPT_ID
+    script.id = 'ze-snippet'
     script.src = `https://static.zdassets.com/ekr/snippet.js?key=${ZENDESK_CLIENT_KEY}`
     script.async = true
-    document.body.appendChild(script)
+    document.head.appendChild(script)
 
     return () => {
       cleanupZendesk()
