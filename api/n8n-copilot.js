@@ -131,18 +131,42 @@ AUTRES RÈGLES:
 
 // n8n Skills Knowledge Base (from czlonkowski/n8n-skills)
 const N8N_KNOWLEDGE = `
-TYPES DE NODES CORRECTS (IMPORTANT — utilise exactement ces noms):
-- Triggers: n8n-nodes-base.scheduleTrigger, n8n-nodes-base.webhook, n8n-nodes-base.manualTrigger
-- HTTP: n8n-nodes-base.httpRequest
-- Logic: n8n-nodes-base.if, n8n-nodes-base.switch, n8n-nodes-base.merge, n8n-nodes-base.splitInBatches
-- Data: n8n-nodes-base.set, n8n-nodes-base.code, n8n-nodes-base.dateTime, n8n-nodes-base.crypto
-- Communication: n8n-nodes-base.slack, n8n-nodes-base.emailSend, n8n-nodes-base.discord
-- Database: n8n-nodes-base.postgres, n8n-nodes-base.mongoDb, n8n-nodes-base.redis
-- AI: @n8n/n8n-nodes-langchain.agent, @n8n/n8n-nodes-langchain.chainLlm, @n8n/n8n-nodes-langchain.lmChatOpenAi
-- Storage: n8n-nodes-base.googleSheets, n8n-nodes-base.airtable
-- Error: n8n-nodes-base.errorTrigger, n8n-nodes-base.stopAndError
-- Flow: n8n-nodes-base.noOp, n8n-nodes-base.wait, n8n-nodes-base.respondToWebhook
-- Shopify: n8n-nodes-base.shopify, n8n-nodes-base.shopifyTrigger
+⚠️ LISTE BLANCHE STRICTE DES NODES — N'UTILISE AUCUN AUTRE TYPE DE NODE QUE CEUX LISTÉS CI-DESSOUS.
+Si un node n'est pas dans cette liste, NE L'UTILISE PAS. Utilise httpRequest ou code à la place.
+INTERDIT: tout node custom, tout node avec un "?" dans n8n, tout node qui n'est pas listé ici.
+
+NODES AUTORISÉS (avec typeVersion EXACTE):
+- n8n-nodes-base.scheduleTrigger (typeVersion: 1.2)
+- n8n-nodes-base.webhook (typeVersion: 2)
+- n8n-nodes-base.manualTrigger (typeVersion: 1)
+- n8n-nodes-base.httpRequest (typeVersion: 4.2) — UTILISE CE NODE POUR TOUTE API EXTERNE
+- n8n-nodes-base.if (typeVersion: 2)
+- n8n-nodes-base.switch (typeVersion: 3)
+- n8n-nodes-base.merge (typeVersion: 3)
+- n8n-nodes-base.splitInBatches (typeVersion: 3)
+- n8n-nodes-base.set (typeVersion: 3.4)
+- n8n-nodes-base.code (typeVersion: 2) — UTILISE CE NODE POUR TOUTE LOGIQUE COMPLEXE
+- n8n-nodes-base.dateTime (typeVersion: 2)
+- n8n-nodes-base.crypto (typeVersion: 1)
+- n8n-nodes-base.slack (typeVersion: 2.2)
+- n8n-nodes-base.emailSend (typeVersion: 2.1)
+- n8n-nodes-base.discord (typeVersion: 2)
+- n8n-nodes-base.postgres (typeVersion: 2.5)
+- n8n-nodes-base.mongoDb (typeVersion: 1)
+- n8n-nodes-base.redis (typeVersion: 1)
+- n8n-nodes-base.googleSheets (typeVersion: 4.5)
+- n8n-nodes-base.airtable (typeVersion: 2.1)
+- n8n-nodes-base.errorTrigger (typeVersion: 1)
+- n8n-nodes-base.stopAndError (typeVersion: 1)
+- n8n-nodes-base.noOp (typeVersion: 1)
+- n8n-nodes-base.wait (typeVersion: 1.1)
+- n8n-nodes-base.respondToWebhook (typeVersion: 1.1)
+- n8n-nodes-base.shopify (typeVersion: 1)
+- n8n-nodes-base.shopifyTrigger (typeVersion: 1)
+
+RÈGLE D'OR: Pour TOUTE intégration (Shopify API, Supabase, OpenAI, Stripe, etc.) utilise n8n-nodes-base.httpRequest.
+Pour TOUTE logique complexe ou transformation de données, utilise n8n-nodes-base.code.
+NE JAMAIS inventer un type de node qui n'est pas dans la liste ci-dessus.
 
 EXPRESSION SYNTAX:
 - Utilise {{ }} pour les expressions dans les paramètres string
@@ -261,7 +285,7 @@ RÈGLES CRÉATION STRICTES:
 - Retourne un JSON avec: name, nodes, connections, settings
 - CHAQUE node DOIT avoir: id (UUID unique), name, type, typeVersion (CORRECT!), position [x, y], parameters (JAMAIS vides!)
 - Utilise les exemples de nodes ci-dessus comme MODÈLE EXACT — copie le format
-- typeVersion DOIT correspondre à la version réelle du node (ex: httpRequest=4.2, webhook=2, scheduleTrigger=1.2, if=2, code=2, set=3.4)
+- typeVersion DOIT correspondre à la version exacte listée dans la LISTE BLANCHE ci-dessus
 - Le premier node est un trigger positionné à [220, 300]
 - Espacement: +250px horizontal entre chaque node, +200px vertical pour les branches
 - settings: { "executionOrder": "v1" }
@@ -270,7 +294,94 @@ RÈGLES CRÉATION STRICTES:
 - Si le workflow utilise Supabase, utilise les credentials Actero indiquées
 - Noms de nodes descriptifs en français
 - Pour les HTTP Request vers Supabase: TOUJOURS mettre authentication, nodeCredentialType, headers Content-Type
-- Ne retourne JAMAIS un node avec parameters: {} vide (sauf noOp)`;
+- Ne retourne JAMAIS un node avec parameters: {} vide (sauf noOp)
+
+⛔ INTERDICTIONS ABSOLUES:
+- JAMAIS de node qui n'est pas dans la LISTE BLANCHE. Si tu as besoin d'une fonctionnalité qui n'est pas dans la liste, utilise httpRequest ou code.
+- JAMAIS de node "custom" ou avec un type inventé
+- JAMAIS de node sans paramètres remplis (sauf noOp et manualTrigger)
+- Pour appeler une API (Shopify, OpenAI, Stripe, etc.), utilise TOUJOURS httpRequest avec method, url, headers, body
+- Pour transformer des données, utilise TOUJOURS le node code avec du JavaScript fonctionnel
+- Pour Supabase, utilise TOUJOURS httpRequest avec les credentials supabaseApi`;
+
+// ── Node whitelist & validator ──────────────────────────────
+const VALID_NODE_TYPES = new Set([
+  'n8n-nodes-base.scheduleTrigger', 'n8n-nodes-base.webhook', 'n8n-nodes-base.manualTrigger',
+  'n8n-nodes-base.httpRequest',
+  'n8n-nodes-base.if', 'n8n-nodes-base.switch', 'n8n-nodes-base.merge', 'n8n-nodes-base.splitInBatches',
+  'n8n-nodes-base.set', 'n8n-nodes-base.code', 'n8n-nodes-base.dateTime', 'n8n-nodes-base.crypto',
+  'n8n-nodes-base.slack', 'n8n-nodes-base.emailSend', 'n8n-nodes-base.discord',
+  'n8n-nodes-base.postgres', 'n8n-nodes-base.mongoDb', 'n8n-nodes-base.redis',
+  'n8n-nodes-base.googleSheets', 'n8n-nodes-base.airtable',
+  'n8n-nodes-base.errorTrigger', 'n8n-nodes-base.stopAndError',
+  'n8n-nodes-base.noOp', 'n8n-nodes-base.wait', 'n8n-nodes-base.respondToWebhook',
+  'n8n-nodes-base.shopify', 'n8n-nodes-base.shopifyTrigger',
+  '@n8n/n8n-nodes-langchain.agent', '@n8n/n8n-nodes-langchain.chainLlm', '@n8n/n8n-nodes-langchain.lmChatOpenAi',
+]);
+
+const TYPE_VERSIONS = {
+  'n8n-nodes-base.scheduleTrigger': 1.2, 'n8n-nodes-base.webhook': 2, 'n8n-nodes-base.manualTrigger': 1,
+  'n8n-nodes-base.httpRequest': 4.2,
+  'n8n-nodes-base.if': 2, 'n8n-nodes-base.switch': 3, 'n8n-nodes-base.merge': 3, 'n8n-nodes-base.splitInBatches': 3,
+  'n8n-nodes-base.set': 3.4, 'n8n-nodes-base.code': 2, 'n8n-nodes-base.dateTime': 2, 'n8n-nodes-base.crypto': 1,
+  'n8n-nodes-base.slack': 2.2, 'n8n-nodes-base.emailSend': 2.1, 'n8n-nodes-base.discord': 2,
+  'n8n-nodes-base.postgres': 2.5, 'n8n-nodes-base.mongoDb': 1, 'n8n-nodes-base.redis': 1,
+  'n8n-nodes-base.googleSheets': 4.5, 'n8n-nodes-base.airtable': 2.1,
+  'n8n-nodes-base.errorTrigger': 1, 'n8n-nodes-base.stopAndError': 1,
+  'n8n-nodes-base.noOp': 1, 'n8n-nodes-base.wait': 1.1, 'n8n-nodes-base.respondToWebhook': 1.1,
+  'n8n-nodes-base.shopify': 1, 'n8n-nodes-base.shopifyTrigger': 1,
+};
+
+function sanitizeWorkflow(workflow) {
+  if (!workflow || !workflow.nodes) return workflow;
+
+  workflow.nodes = workflow.nodes.map(node => {
+    // Fix missing or invalid type → replace with httpRequest or code
+    if (!node.type || !VALID_NODE_TYPES.has(node.type)) {
+      const origType = node.type || 'unknown';
+      // If it looks like a trigger, replace with manualTrigger
+      if (origType.toLowerCase().includes('trigger')) {
+        node.type = 'n8n-nodes-base.manualTrigger';
+        node.typeVersion = 1;
+        node.parameters = {};
+      }
+      // If it looks like data processing, replace with code node
+      else if (origType.toLowerCase().match(/transform|convert|extract|parse|filter|format/)) {
+        node.type = 'n8n-nodes-base.code';
+        node.typeVersion = 2;
+        node.parameters = {
+          jsCode: `// Remplace le node invalide: ${origType}\nconst items = $input.all();\n// TODO: implémenter la logique de ${node.name}\nreturn items;`
+        };
+      }
+      // Default: replace with httpRequest for API calls or code for logic
+      else {
+        node.type = 'n8n-nodes-base.code';
+        node.typeVersion = 2;
+        node.parameters = {
+          jsCode: `// Remplace le node invalide: ${origType}\nconst items = $input.all();\n// TODO: implémenter la logique de ${node.name}\nreturn items;`
+        };
+      }
+    }
+
+    // Fix typeVersion
+    if (TYPE_VERSIONS[node.type] && (!node.typeVersion || node.typeVersion !== TYPE_VERSIONS[node.type])) {
+      node.typeVersion = TYPE_VERSIONS[node.type];
+    }
+
+    // Ensure required fields
+    if (!node.id) node.id = crypto.randomUUID();
+    if (!node.position) node.position = [220, 300];
+    if (!node.parameters) node.parameters = {};
+
+    return node;
+  });
+
+  // Ensure settings
+  if (!workflow.settings) workflow.settings = { executionOrder: 'v1' };
+  if (!workflow.settings.executionOrder) workflow.settings.executionOrder = 'v1';
+
+  return workflow;
+}
 
 // ── Main handler ───────────────────────────────────────────
 export default async function handler(req, res) {
@@ -389,10 +500,13 @@ DEMANDE: ${prompt}`;
       if (!workflowId || !prompt) return res.status(400).json({ error: 'Missing workflowId/prompt' });
 
       const currentWorkflow = await n8nGet(`/workflows/${workflowId}`);
-      const modified = await askGemini(
+      let modified = await askGemini(
         MODIFY_PROMPT,
         `Workflow actuel:\n${JSON.stringify(currentWorkflow, null, 2)}\n\nModification demandée: ${prompt}`
       );
+
+      // Sanitize modified workflow
+      modified = sanitizeWorkflow(modified);
 
       const origNames = new Set((currentWorkflow.nodes || []).map(n => n.name));
       const newNames = (modified.nodes || []).map(n => n.name);
@@ -413,10 +527,13 @@ DEMANDE: ${prompt}`;
       const { prompt } = req.body;
       if (!prompt) return res.status(400).json({ error: 'Missing prompt' });
 
-      const workflow = await askGemini(
+      let workflow = await askGemini(
         CREATE_PROMPT,
         `Crée un workflow n8n pour: ${prompt}`
       );
+
+      // Sanitize: fix invalid nodes, typeVersions, missing fields
+      workflow = sanitizeWorkflow(workflow);
 
       return res.status(200).json({
         workflow,
@@ -471,12 +588,15 @@ DEMANDE: ${prompt}`;
       const { workflowId, workflow } = req.body;
       if (!workflow) return res.status(400).json({ error: 'Missing workflow' });
 
+      // Sanitize nodes before sending to n8n
+      const sanitized = sanitizeWorkflow(workflow);
+
       // Whitelist only fields accepted by n8n API (tags is read-only on create)
       const clean = {
-        name: workflow.name || 'Nouveau workflow',
-        nodes: workflow.nodes || [],
-        connections: workflow.connections || {},
-        settings: workflow.settings || { executionOrder: 'v1' },
+        name: sanitized.name || 'Nouveau workflow',
+        nodes: sanitized.nodes || [],
+        connections: sanitized.connections || {},
+        settings: sanitized.settings || { executionOrder: 'v1' },
       };
       if (workflow.staticData) clean.staticData = workflow.staticData;
 
