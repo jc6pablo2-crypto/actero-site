@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send, Loader2, Sparkles, ArrowUp } from 'lucide-react'
+import { MessageCircle, X, Send, Loader2, Sparkles, ArrowUp, Volume2, Square } from 'lucide-react'
 
 const QUICK_QUESTIONS_ECOMMERCE = [
   "Comment fonctionne le SAV automatique ?",
@@ -22,9 +22,55 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [playingIdx, setPlayingIdx] = useState(null)
+  const [loadingAudio, setLoadingAudio] = useState(null)
+  const audioRef = useRef(null)
   const chatEndRef = useRef(null)
   const inputRef = useRef(null)
   const isLight = theme === 'light'
+
+  const playMessage = async (text, idx) => {
+    // Stop if already playing
+    if (playingIdx === idx) {
+      audioRef.current?.pause()
+      audioRef.current = null
+      setPlayingIdx(null)
+      return
+    }
+
+    // Stop any current playback
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = null
+    }
+
+    setLoadingAudio(idx)
+    try {
+      const res = await fetch('/api/text-to-speech', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      })
+      if (!res.ok) throw new Error('TTS error')
+
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const audio = new Audio(url)
+      audioRef.current = audio
+
+      audio.onended = () => {
+        setPlayingIdx(null)
+        audioRef.current = null
+        URL.revokeObjectURL(url)
+      }
+
+      audio.play()
+      setPlayingIdx(idx)
+    } catch {
+      // Silent fail — button just won't play
+    }
+    setLoadingAudio(null)
+  }
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -166,22 +212,46 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                       <Sparkles className="w-3.5 h-3.5 text-violet-400" />
                     </div>
                   )}
-                  <div className={`max-w-[80%] px-3 py-2.5 rounded-2xl text-xs leading-relaxed ${
-                    msg.role === 'user'
-                      ? 'bg-violet-600 text-white rounded-br-md'
-                      : isLight
-                        ? 'bg-slate-100 text-slate-700 rounded-bl-md'
-                        : 'bg-white/5 text-gray-300 rounded-bl-md'
-                  }`}>
-                    {msg.content.split('\n').map((line, j) => (
-                      <p key={j} className={j > 0 ? 'mt-1.5' : ''}>
-                        {line.split('**').map((part, k) =>
-                          k % 2 === 1
-                            ? <strong key={k} className={msg.role === 'user' ? 'font-semibold' : `font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>{part}</strong>
-                            : part
+                  <div>
+                    <div className={`max-w-[80%] px-3 py-2.5 rounded-2xl text-xs leading-relaxed ${
+                      msg.role === 'user'
+                        ? 'bg-violet-600 text-white rounded-br-md'
+                        : isLight
+                          ? 'bg-slate-100 text-slate-700 rounded-bl-md'
+                          : 'bg-white/5 text-gray-300 rounded-bl-md'
+                    }`}>
+                      {msg.content.split('\n').map((line, j) => (
+                        <p key={j} className={j > 0 ? 'mt-1.5' : ''}>
+                          {line.split('**').map((part, k) =>
+                            k % 2 === 1
+                              ? <strong key={k} className={msg.role === 'user' ? 'font-semibold' : `font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>{part}</strong>
+                              : part
+                          )}
+                        </p>
+                      ))}
+                    </div>
+                    {/* Voice button for assistant messages */}
+                    {msg.role === 'assistant' && (
+                      <button
+                        onClick={() => playMessage(msg.content, i)}
+                        disabled={loadingAudio === i}
+                        className={`mt-1.5 flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] transition-all ${
+                          playingIdx === i
+                            ? 'bg-violet-500/20 text-violet-400'
+                            : isLight
+                              ? 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'
+                              : 'text-gray-600 hover:bg-white/5 hover:text-gray-400'
+                        }`}
+                      >
+                        {loadingAudio === i ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : playingIdx === i ? (
+                          <><Square className="w-3 h-3" /> Stop</>
+                        ) : (
+                          <><Volume2 className="w-3 h-3" /> Écouter</>
                         )}
-                      </p>
-                    ))}
+                      </button>
+                    )}
                   </div>
                 </motion.div>
               ))}
