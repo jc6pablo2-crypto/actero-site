@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing client_id' });
   }
 
-  const n8nUrl = process.env.N8N_URL;
+  const n8nUrl = process.env.N8N_API_URL || process.env.N8N_URL;
   const n8nApiKey = process.env.N8N_API_KEY;
   const templateId = process.env.N8N_TEMPLATE_WORKFLOW_ID || 'B82qZGLUQ7uFEAP8';
 
