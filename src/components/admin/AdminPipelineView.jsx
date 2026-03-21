@@ -8,12 +8,12 @@ import {
 import { supabase } from '../../lib/supabase'
 
 const STAGES = [
-  { id: 'draft', label: 'Brouillon', icon: FileText, color: 'gray' },
-  { id: 'sent', label: 'Email envoyé', icon: Mail, color: 'blue' },
-  { id: 'paid', label: 'Payé', icon: CreditCard, color: 'emerald' },
-  { id: 'app_installed', label: 'App installée', icon: Download, color: 'violet' },
-  { id: 'deployed', label: 'Workflow déployé', icon: Rocket, color: 'amber' },
-  { id: 'live', label: 'Live', icon: CheckCircle2, color: 'emerald' },
+  { id: 'draft', label: 'Brouillon', icon: FileText, iconClass: 'text-gray-400', bgClass: 'bg-gray-500/10 border-gray-500/20', badgeClass: 'bg-gray-500/10 text-gray-400' },
+  { id: 'sent', label: 'Email envoyé', icon: Mail, iconClass: 'text-blue-400', bgClass: 'bg-blue-500/10 border-blue-500/20', badgeClass: 'bg-blue-500/10 text-blue-400' },
+  { id: 'paid', label: 'Payé', icon: CreditCard, iconClass: 'text-emerald-400', bgClass: 'bg-emerald-500/10 border-emerald-500/20', badgeClass: 'bg-emerald-500/10 text-emerald-400' },
+  { id: 'app_installed', label: 'App installée', icon: Download, iconClass: 'text-violet-400', bgClass: 'bg-violet-500/10 border-violet-500/20', badgeClass: 'bg-violet-500/10 text-violet-400' },
+  { id: 'deployed', label: 'Workflow déployé', icon: Rocket, iconClass: 'text-amber-400', bgClass: 'bg-amber-500/10 border-amber-500/20', badgeClass: 'bg-amber-500/10 text-amber-400' },
+  { id: 'live', label: 'Live', icon: CheckCircle2, iconClass: 'text-emerald-400', bgClass: 'bg-emerald-500/10 border-emerald-500/20', badgeClass: 'bg-emerald-500/10 text-emerald-400' },
 ]
 
 function timeAgo(dateStr) {
@@ -117,9 +117,9 @@ export const AdminPipelineView = () => {
           const StageIcon = stage.icon
           return (
             <React.Fragment key={stage.id}>
-              <div className={`flex items-center gap-2 px-3 py-2 rounded-lg bg-${stage.color}-500/10 border border-${stage.color}-500/20 whitespace-nowrap`}>
-                <StageIcon className={`w-3.5 h-3.5 text-${stage.color}-400`} />
-                <span className={`text-xs font-bold text-${stage.color}-400`}>{count}</span>
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border whitespace-nowrap ${stage.bgClass}`}>
+                <StageIcon className={`w-3.5 h-3.5 ${stage.iconClass}`} />
+                <span className={`text-xs font-bold ${stage.iconClass}`}>{count}</span>
                 <span className="text-[10px] text-gray-400">{stage.label}</span>
               </div>
               {i < STAGES.length - 1 && <ArrowRight className="w-3 h-3 text-gray-600 flex-shrink-0" />}
@@ -136,10 +136,10 @@ export const AdminPipelineView = () => {
           return (
             <div key={stage.id} className="space-y-3">
               <div className="flex items-center gap-2 mb-2">
-                <StageIcon className={`w-4 h-4 text-${stage.color}-400`} />
+                <StageIcon className={`w-4 h-4 ${stage.iconClass}`} />
                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{stage.label}</span>
                 {items.length > 0 && (
-                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded bg-${stage.color}-500/10 text-${stage.color}-400`}>
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${stage.badgeClass}`}>
                     {items.length}
                   </span>
                 )}

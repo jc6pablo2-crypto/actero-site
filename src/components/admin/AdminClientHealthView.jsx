@@ -174,7 +174,11 @@ export const AdminClientHealthView = () => {
       {/* Client list */}
       <div className="space-y-3">
         {clientHealth.map((client, i) => {
-          const scoreColor = client.health.score >= 70 ? 'emerald' : client.health.score >= 40 ? 'amber' : 'red'
+          const scoreClasses = client.health.score >= 70
+            ? { box: 'bg-emerald-500/10 border-emerald-500/20', text: 'text-emerald-400', bar: 'bg-emerald-500' }
+            : client.health.score >= 40
+            ? { box: 'bg-amber-500/10 border-amber-500/20', text: 'text-amber-400', bar: 'bg-amber-500' }
+            : { box: 'bg-red-500/10 border-red-500/20', text: 'text-red-400', bar: 'bg-red-500' }
           return (
             <motion.div
               key={client.id}
@@ -183,8 +187,8 @@ export const AdminClientHealthView = () => {
               transition={{ delay: i * 0.03 }}
               className="bg-[#0a0a0a] border border-white/10 rounded-xl p-4 flex items-center gap-4 hover:border-white/20 transition-colors"
             >
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center border bg-${scoreColor}-500/10 border-${scoreColor}-500/20`}>
-                <span className={`text-lg font-bold font-mono text-${scoreColor}-400`}>{client.health.score}</span>
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${scoreClasses.box}`}>
+                <span className={`text-lg font-bold font-mono ${scoreClasses.text}`}>{client.health.score}</span>
               </div>
 
               <div className="flex-1 min-w-0">
@@ -214,7 +218,7 @@ export const AdminClientHealthView = () => {
                 {/* Health bar */}
                 <div className="w-20 h-2 bg-white/5 rounded-full overflow-hidden hidden lg:block">
                   <div
-                    className={`h-full rounded-full bg-${scoreColor}-500 transition-all`}
+                    className={`h-full rounded-full ${scoreClasses.bar} transition-all`}
                     style={{ width: `${client.health.score}%` }}
                   />
                 </div>

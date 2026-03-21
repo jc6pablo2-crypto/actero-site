@@ -7,7 +7,13 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+function escapeHtml(str) {
+  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function buildReportHtml({ brand_name, period, stats }) {
+  const safeName = escapeHtml(brand_name);
+  const safePeriod = escapeHtml(period);
   return `
 <!DOCTYPE html>
 <html lang="fr">
@@ -21,8 +27,8 @@ function buildReportHtml({ brand_name, period, stats }) {
         </td></tr>
 
         <tr><td style="padding:32px 40px;">
-          <h1 style="font-size:22px;font-weight:700;color:#000;margin:0 0 8px 0;">Rapport mensuel — ${period}</h1>
-          <p style="font-size:15px;color:#666;margin:0 0 28px 0;">Voici les performances de vos automatisations ce mois-ci, ${brand_name}.</p>
+          <h1 style="font-size:22px;font-weight:700;color:#000;margin:0 0 8px 0;">Rapport mensuel — ${safePeriod}</h1>
+          <p style="font-size:15px;color:#666;margin:0 0 28px 0;">Voici les performances de vos automatisations ce mois-ci, ${safeName}.</p>
 
           <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px 0;">
             <tr>
@@ -147,7 +153,7 @@ export default async function handler(req, res) {
     const { error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Actero <onboarding@resend.dev>',
       to: [recipientEmail],
-      subject: `Rapport Actero — ${period}`,
+      subject: `Rapport Actero — ${safePeriod}`,
       html: buildReportHtml({ brand_name: client.brand_name, period, stats }),
     });
 

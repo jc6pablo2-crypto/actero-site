@@ -126,7 +126,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     queryKey: ['admin-overview'],
     queryFn: async () => {
       const [metricsRes, eventsRes, recentEventsRes, funnelRes] = await Promise.all([
-        supabase.from("metrics_daily").select("client_id, date, tickets_total, tickets_auto, hours_saved, revenue_recovered, tasks_executed, time_saved_minutes, estimated_roi, active_automations").order("date", { ascending: false }),
+        supabase.from("metrics_daily").select("client_id, date, tickets_total, tickets_auto, tasks_executed, time_saved_minutes, estimated_roi, active_automations").order("date", { ascending: false }),
         supabase.from("automation_events").select("id, client_id, event_category, time_saved_seconds, revenue_amount, created_at").order("created_at", { ascending: false }),
         supabase.from("automation_events").select("id, client_id, event_category, ticket_type, time_saved_seconds, revenue_amount, created_at, clients(brand_name)").order("created_at", { ascending: false }).limit(8),
         supabase.from("funnel_clients").select("id, company_name, email, status, client_type, created_at, setup_price, monthly_price").order("created_at", { ascending: false }),
@@ -138,8 +138,8 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       const funnel = funnelRes.data || [];
 
       // Aggregate metrics
-      const totalHoursSaved = metrics.reduce((s, m) => s + (Number(m.hours_saved) || 0), 0);
-      const totalRevenue = metrics.reduce((s, m) => s + (Number(m.revenue_recovered) || 0), 0);
+      const totalHoursSaved = Math.round(metrics.reduce((s, m) => s + (Number(m.time_saved_minutes) || 0), 0) / 60);
+      const totalRevenue = metrics.reduce((s, m) => s + (Number(m.estimated_roi) || 0), 0);
       const totalTickets = metrics.reduce((s, m) => s + (Number(m.tickets_total) || 0), 0);
       const totalTicketsAuto = metrics.reduce((s, m) => s + (Number(m.tickets_auto) || 0), 0);
       const totalTasksExecuted = metrics.reduce((s, m) => s + (Number(m.tasks_executed) || 0), 0);
@@ -156,11 +156,11 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         const diff = (today - d) / 86400000;
         return diff > 7 && diff <= 14;
       });
-      const last7Revenue = last7.reduce((s, m) => s + (Number(m.revenue_recovered) || 0), 0);
-      const prev7Revenue = prev7.reduce((s, m) => s + (Number(m.revenue_recovered) || 0), 0);
+      const last7Revenue = last7.reduce((s, m) => s + (Number(m.estimated_roi) || 0), 0);
+      const prev7Revenue = prev7.reduce((s, m) => s + (Number(m.estimated_roi) || 0), 0);
       const revenueTrend = prev7Revenue > 0 ? (((last7Revenue - prev7Revenue) / prev7Revenue) * 100).toFixed(0) : 0;
-      const last7Hours = last7.reduce((s, m) => s + (Number(m.hours_saved) || 0), 0);
-      const prev7Hours = prev7.reduce((s, m) => s + (Number(m.revenue_recovered) || 0), 0);
+      const last7Hours = last7.reduce((s, m) => s + (Number(m.time_saved_minutes) || 0), 0);
+      const prev7Hours = prev7.reduce((s, m) => s + (Number(m.time_saved_minutes) || 0), 0);
       const hoursTrend = prev7Hours > 0 ? (((last7Hours - prev7Hours) / prev7Hours) * 100).toFixed(0) : 0;
 
       // Events by category

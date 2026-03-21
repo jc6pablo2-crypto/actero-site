@@ -84,10 +84,10 @@ export const AdminBillingView = () => {
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'MRR', value: `${(data?.mrr || 0).toLocaleString('fr-FR')}€`, icon: TrendingUp, color: 'emerald' },
-          { label: 'Abonnements actifs', value: data?.activeSubscriptions || 0, icon: CreditCard, color: 'blue' },
-          { label: 'Solde disponible', value: `${(data?.availableBalance || 0).toLocaleString('fr-FR')}€`, icon: DollarSign, color: 'amber' },
-          { label: 'En attente', value: `${(data?.pendingBalance || 0).toLocaleString('fr-FR')}€`, icon: Clock, color: 'violet' },
+          { label: 'MRR', value: `${(data?.mrr || 0).toLocaleString('fr-FR')}€`, icon: TrendingUp, iconClass: 'text-emerald-400' },
+          { label: 'Abonnements actifs', value: data?.activeSubscriptions || 0, icon: CreditCard, iconClass: 'text-blue-400' },
+          { label: 'Solde disponible', value: `${(data?.availableBalance || 0).toLocaleString('fr-FR')}€`, icon: DollarSign, iconClass: 'text-amber-400' },
+          { label: 'En attente', value: `${(data?.pendingBalance || 0).toLocaleString('fr-FR')}€`, icon: Clock, iconClass: 'text-violet-400' },
         ].map((kpi, i) => (
           <motion.div
             key={kpi.label}
@@ -98,7 +98,7 @@ export const AdminBillingView = () => {
           >
             <div className="flex items-center justify-between mb-2">
               <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{kpi.label}</span>
-              <kpi.icon className={`w-4 h-4 text-${kpi.color}-400`} />
+              <kpi.icon className={`w-4 h-4 ${kpi.iconClass}`} />
             </div>
             <span className="text-2xl font-bold text-white font-mono">{kpi.value}</span>
           </motion.div>

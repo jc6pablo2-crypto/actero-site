@@ -2,8 +2,14 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+function escapeHtml(str) {
+  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function buildEmailHtml({ company_name, slug, setup_price, monthly_price, message, client_type }) {
-  const link = `${process.env.SITE_URL || 'https://actero.fr'}/start/${slug}`;
+  const safeName = escapeHtml(company_name);
+  const safeMessage = escapeHtml(message);
+  const link = `${process.env.SITE_URL || 'https://actero.fr'}/start/${encodeURIComponent(slug)}`;
   const isImmo = client_type === 'immobilier';
 
   const benefits = isImmo
@@ -50,7 +56,7 @@ function buildEmailHtml({ company_name, slug, setup_price, monthly_price, messag
           <tr>
             <td style="padding:32px 40px;">
               <h1 style="font-size:24px;font-weight:700;color:#000000;margin:0 0 20px 0;line-height:1.3;">
-                Bonjour ${company_name},
+                Bonjour ${safeName},
               </h1>
 
               <p style="font-size:15px;color:#444444;line-height:1.7;margin:0 0 16px 0;">
@@ -64,7 +70,7 @@ function buildEmailHtml({ company_name, slug, setup_price, monthly_price, messag
               ${message ? `
               <div style="background-color:#f8f8f8;border-radius:12px;padding:16px 20px;margin:0 0 24px 0;">
                 <p style="font-size:14px;color:#555555;line-height:1.6;margin:0;font-style:italic;">
-                  "${message}"
+                  "${safeMessage}"
                 </p>
               </div>
               ` : ''}
