@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import {
   Activity, AlertTriangle, CheckCircle2, XCircle, Clock,
-  Zap, RefreshCw, Wifi, WifiOff, Play, Pause
+  Zap, RefreshCw, Wifi, WifiOff, Play, Pause, Bot
 } from 'lucide-react'
+import { AdminN8nCopilot } from './AdminN8nCopilot'
 
 const statusConfig = {
   active_ok: { label: 'Actif — OK', color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20', icon: CheckCircle2 },
@@ -30,6 +31,8 @@ function timeAgo(dateStr) {
 }
 
 export const AdminMonitoringView = () => {
+  const [showCopilot, setShowCopilot] = useState(false)
+
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['n8n-workflows'],
     queryFn: async () => {
@@ -63,12 +66,24 @@ export const AdminMonitoringView = () => {
           <h2 className="text-2xl font-bold text-white">Monitoring n8n</h2>
           <p className="text-sm text-gray-500 mt-1">Statut en temps réel de tous les workflows</p>
         </div>
-        <button
-          onClick={() => refetch()}
-          className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:border-white/20 transition-all"
-        >
-          <RefreshCw className="w-4 h-4" /> Actualiser
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowCopilot(!showCopilot)}
+            className={`flex items-center gap-2 px-4 py-2 border rounded-xl text-sm font-bold transition-all ${
+              showCopilot
+                ? 'bg-violet-500/10 border-violet-500/30 text-violet-400'
+                : 'bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/20'
+            }`}
+          >
+            <Bot className="w-4 h-4" /> Copilot IA
+          </button>
+          <button
+            onClick={() => refetch()}
+            className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm font-medium text-gray-400 hover:text-white hover:border-white/20 transition-all"
+          >
+            <RefreshCw className="w-4 h-4" /> Actualiser
+          </button>
+        </div>
       </div>
 
       {/* KPI Row */}
@@ -97,6 +112,9 @@ export const AdminMonitoringView = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* Copilot */}
+      {showCopilot && <AdminN8nCopilot />}
 
       {/* Alerts */}
       {alerts.length > 0 && (
