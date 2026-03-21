@@ -31,6 +31,7 @@ import {
   Mail,
   Ticket,
   User,
+  MessageSquare,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
@@ -44,6 +45,7 @@ import { AnimatedCounter } from '../components/ui/animated-counter'
 import { SkeletonRow } from '../components/ui/skeleton-row'
 import { IntelligenceView } from '../components/dashboard/IntelligenceView'
 import { ActivityView } from '../components/dashboard/ActivityView'
+import { SupportTicketsView } from '../components/dashboard/SupportTicketsView'
 import { ClientProfileView } from '../components/client/ClientProfileView'
 
 export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
@@ -61,12 +63,11 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   };
 
   const getTabFromRoute = (route) => {
-    if (route === "/client/requests") return "requests";
-    if (route === "/client/architect") return "architect";
     if (route === "/client/activity") return "activity";
     if (route === "/client/systems") return "systems";
     if (route === "/client/intelligence") return "intelligence";
     if (route === "/client/reports") return "reports";
+    if (route === "/client/support") return "support";
     if (route === "/client/profile") return "profile";
     return "overview";
   };
@@ -142,21 +143,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     enabled: !!supabase && !!currentClient?.id,
   });
 
-  // 4. Fetch Requests
-  // eslint-disable-next-line no-unused-vars
-  const { data: requests = [], isLoading: requestsLoading } = useQuery({
-    queryKey: ["client-requests", currentClient?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("requests")
-        .select("*")
-        .eq("client_id", currentClient.id)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!supabase && !!currentClient?.id,
-  });
+  // (requests query removed — now handled by SupportTicketsView)
 
   // 5. Fetch Events (simplified for health score)
   const { data: events = [] } = useQuery({
@@ -290,13 +277,12 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const sidebarItems = [
     { type: 'section', label: 'Pilotage' },
     { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
-    { id: 'requests', label: 'Requêtes', icon: ClipboardList, badge: requests.length > 0 ? requests.length : null },
-    { id: 'architect', label: 'Architecte IA', icon: BrainCircuit },
     { type: 'section', label: 'Infrastructure' },
     { id: 'systems', label: 'Mes Systèmes', icon: Database },
     { id: 'activity', label: 'Activité en direct', icon: Activity },
     { id: 'intelligence', label: 'Intelligence', icon: Lightbulb },
     { id: 'reports', label: 'Rapports', icon: Download },
+    { id: 'support', label: 'Support & Demandes', icon: MessageSquare },
     { type: 'section', label: 'Compte' },
     { id: 'profile', label: 'Mon Profil', icon: User },
   ];
@@ -361,10 +347,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           <div className="flex items-center gap-6">
             <h1 className={`text-xl font-bold tracking-tight whitespace-nowrap ${isLight ? "text-slate-900" : "text-white"}`}>
               {activeTab === "overview" && "Vue d'ensemble"}
-              {activeTab === "requests" && "Mes demandes"}
-              {activeTab === "architect" && "Architecte IA"}
               {activeTab === "activity" && "Activité temps réel"}
               {activeTab === "intelligence" && "Intelligence"}
+              {activeTab === "support" && "Support & Demandes"}
             </h1>
 
             <div className="hidden lg:flex items-center gap-3">
@@ -495,14 +480,14 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
               <div className={`mt-12 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between shadow-xl ${isLight ? "bg-slate-900 text-white" : "bg-zinc-900"}`}>
                 <div>
-                  <h3 className="text-2xl font-bold mb-2">Un besoin d'évolution ?</h3>
-                  <p className="opacity-60">Ajoutez un nouveau processus à votre infrastructure.</p>
+                  <h3 className="text-2xl font-bold mb-2">Un besoin d'aide ?</h3>
+                  <p className="opacity-60">Contactez notre support ou soumettez une demande.</p>
                 </div>
                 <button
-                   onClick={() => setActiveTab("architect")}
+                   onClick={() => setActiveTab("support")}
                    className="mt-6 md:mt-0 bg-white text-black px-6 py-3.5 rounded-xl font-bold flex items-center gap-2 hover:bg-gray-100 transition-all"
                 >
-                  Consulter l'Architecte IA <ArrowUpRight className="w-5 h-5" />
+                  Support & Demandes <ArrowUpRight className="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -514,30 +499,12 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "profile" && <ClientProfileView theme={theme} />}
 
-          {activeTab === "requests" && (
-            <div className="max-w-4xl mx-auto space-y-6">
-               {requests.length === 0 ? (
-                 <div className="text-center py-20">
-                   <FileText className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                   <h3 className="text-xl font-bold">Aucune demande</h3>
-                   <button onClick={() => setActiveTab("architect")} className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-xl">Nouveau projet</button>
-                 </div>
-               ) : (
-                 requests.map(req => (
-                    <div key={req.id} className={`p-8 rounded-3xl border ${isLight ? "bg-white border-slate-200" : "bg-[#0a0a0a] border-white/10"}`}>
-                       <div className="flex justify-between mb-4">
-                          <span className="bg-amber-500/10 text-amber-500 border border-amber-500/20 px-3 py-1 rounded-full text-xs font-bold uppercase">{req.status || "En attente"}</span>
-                          <span className="opacity-40 text-xs">{new Date(req.created_at).toLocaleDateString()}</span>
-                       </div>
-                       <h3 className="text-2xl font-bold mb-2">{req.title}</h3>
-                       <p className="opacity-60 mb-6">{req.description}</p>
-                       <div className="flex gap-2">
-                          {req.stack && <span className="bg-white/5 border border-white/10 px-3 py-1 rounded-lg text-xs">{req.stack}</span>}
-                       </div>
-                    </div>
-                 ))
-               )}
-            </div>
+          {activeTab === "support" && (
+            <SupportTicketsView
+              supabase={supabase}
+              clientId={currentClient?.id}
+              theme={theme}
+            />
           )}
         </main>
       </div>
