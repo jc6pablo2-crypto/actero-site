@@ -105,25 +105,88 @@ RÈGLES:
 - Quand l'utilisateur demande "quels workflows ont des erreurs", liste-les avec leurs stats dans "message"
 - Sois précis dans l'identification du workflowId`;
 
-const MODIFY_PROMPT = `Tu es un expert n8n. Modifie le workflow JSON selon la demande.
+// n8n Skills Knowledge Base (from czlonkowski/n8n-skills)
+const N8N_KNOWLEDGE = `
+TYPES DE NODES CORRECTS (IMPORTANT — utilise exactement ces noms):
+- Triggers: n8n-nodes-base.scheduleTrigger, n8n-nodes-base.webhook, n8n-nodes-base.manualTrigger
+- HTTP: n8n-nodes-base.httpRequest
+- Logic: n8n-nodes-base.if, n8n-nodes-base.switch, n8n-nodes-base.merge, n8n-nodes-base.splitInBatches
+- Data: n8n-nodes-base.set, n8n-nodes-base.code, n8n-nodes-base.dateTime, n8n-nodes-base.crypto
+- Communication: n8n-nodes-base.slack, n8n-nodes-base.emailSend, n8n-nodes-base.discord
+- Database: n8n-nodes-base.postgres, n8n-nodes-base.mongoDb, n8n-nodes-base.redis
+- AI: @n8n/n8n-nodes-langchain.agent, @n8n/n8n-nodes-langchain.chainLlm, @n8n/n8n-nodes-langchain.lmChatOpenAi
+- Storage: n8n-nodes-base.googleSheets, n8n-nodes-base.airtable
+- Error: n8n-nodes-base.errorTrigger, n8n-nodes-base.stopAndError
+- Flow: n8n-nodes-base.noOp, n8n-nodes-base.wait, n8n-nodes-base.respondToWebhook
+- Shopify: n8n-nodes-base.shopify, n8n-nodes-base.shopifyTrigger
 
-RÈGLES:
+EXPRESSION SYNTAX:
+- Utilise {{ }} pour les expressions dans les paramètres string
+- Variables: $json (données entrantes), $node["NomDuNode"].json, $now, $env
+- IMPORTANT: Pour les webhooks, les données sont sous $json.body (pas $json directement)
+- Référencer un autre node: {{ $node["Mon Node"].json.field }}
+- Date: {{ $now.toISO() }}, {{ $now.minus({days: 7}).toISO() }}
+
+5 PATTERNS ARCHITECTURAUX:
+1. Webhook Processing: Webhook → Validate → Transform → Respond/Notify
+2. HTTP API Integration: Trigger → HTTP Request → Transform → Action → Error Handler
+3. Database Operations: Schedule → Query → Transform → Write → Verify
+4. AI Agent: Trigger → AI Agent (Model + Tools + Memory) → Output
+5. Scheduled Tasks: Schedule → Fetch → Process → Deliver → Log
+
+STRUCTURE D'UN NODE:
+{
+  "id": "uuid-unique",
+  "name": "Nom descriptif",
+  "type": "n8n-nodes-base.httpRequest",
+  "typeVersion": 4.2,
+  "position": [x, y],  // Espacement: +250 horizontal entre nodes
+  "parameters": { ... }
+}
+
+CONNECTIONS FORMAT:
+{
+  "connections": {
+    "Nom du node source": {
+      "main": [[{ "node": "Nom du node cible", "type": "main", "index": 0 }]]
+    }
+  }
+}
+
+ERREURS COURANTES À ÉVITER:
+- Ne PAS utiliser "nodes-base.*", utiliser "n8n-nodes-base.*"
+- Ne PAS oublier typeVersion (requis pour chaque node)
+- Ne PAS hardcoder des credentials dans les paramètres
+- Toujours settings: { executionOrder: "v1" }
+- Pour le Code node: retourner un ARRAY d'objets: return items.map(item => ({ json: { ... } }))
+- Pour Set node: utiliser assignments avec {name, value, type} dans typeVersion 3.4
+`;
+
+const MODIFY_PROMPT = `Tu es un expert n8n senior. Modifie le workflow JSON selon la demande.
+
+${N8N_KNOWLEDGE}
+
+RÈGLES MODIFICATION:
 - Retourne UNIQUEMENT le workflow modifié en JSON valide
-- Ne change pas les credentials ni les IDs de credentials
+- Ne change JAMAIS les credentials ni les IDs de credentials existants
 - Conserve les nodes existants sauf demande explicite de suppression
-- Utilise les types de nodes n8n corrects
-- Positionne les nouveaux nodes visuellement
-- Connecte les nodes logiquement via "connections"`;
+- Positionne les nouveaux nodes visuellement (+250px à droite du dernier)
+- Connecte les nodes logiquement via "connections"
+- Garde le même name, settings et staticData du workflow original`;
 
-const CREATE_PROMPT = `Tu es un expert n8n. Crée un workflow n8n complet en JSON à partir de la description.
+const CREATE_PROMPT = `Tu es un expert n8n senior. Crée un workflow n8n complet et fonctionnel en JSON.
 
-RÈGLES:
-- Retourne un JSON n8n valide avec: name, nodes, connections, settings
-- Chaque node doit avoir: id (UUID), name, type, typeVersion, position [x, y], parameters
-- Le premier node est souvent un trigger (Schedule, Webhook, etc.)
-- Connecte tous les nodes via "connections"
-- Utilise les types corrects: n8n-nodes-base.scheduleTrigger, n8n-nodes-base.httpRequest, n8n-nodes-base.if, n8n-nodes-base.set, n8n-nodes-base.code, etc.
-- settings: { executionOrder: "v1" }`;
+${N8N_KNOWLEDGE}
+
+RÈGLES CRÉATION:
+- Retourne un JSON avec UNIQUEMENT: name, nodes, connections, settings
+- Chaque node DOIT avoir: id (UUID), name, type, typeVersion, position [x, y], parameters
+- Le premier node est toujours un trigger
+- Positionne le trigger à [250, 300], puis +250px horizontal pour chaque node suivant
+- settings: { executionOrder: "v1" }
+- Connecte TOUS les nodes entre eux via "connections"
+- Utilise des noms de nodes descriptifs en français
+- Inclus un error handling basique (try/catch dans les Code nodes, ou IF pour vérifier les données)`;
 
 // ── Main handler ───────────────────────────────────────────
 export default async function handler(req, res) {
