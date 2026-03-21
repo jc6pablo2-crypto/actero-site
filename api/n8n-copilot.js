@@ -294,7 +294,7 @@ DEMANDE: ${prompt}`;
       const { workflowId, workflow } = req.body;
       if (!workflow) return res.status(400).json({ error: 'Missing workflow' });
 
-      // Whitelist only fields accepted by n8n API
+      // Whitelist only fields accepted by n8n API (tags is read-only on create)
       const clean = {
         name: workflow.name || 'Nouveau workflow',
         nodes: workflow.nodes || [],
@@ -302,7 +302,6 @@ DEMANDE: ${prompt}`;
         settings: workflow.settings || { executionOrder: 'v1' },
       };
       if (workflow.staticData) clean.staticData = workflow.staticData;
-      if (workflow.tags) clean.tags = workflow.tags;
 
       let result;
       if (workflowId) {
