@@ -294,8 +294,15 @@ DEMANDE: ${prompt}`;
       const { workflowId, workflow } = req.body;
       if (!workflow) return res.status(400).json({ error: 'Missing workflow' });
 
-      const clean = { ...workflow };
-      delete clean.id; delete clean.createdAt; delete clean.updatedAt; delete clean.versionId;
+      // Whitelist only fields accepted by n8n API
+      const clean = {
+        name: workflow.name || 'Nouveau workflow',
+        nodes: workflow.nodes || [],
+        connections: workflow.connections || {},
+        settings: workflow.settings || { executionOrder: 'v1' },
+      };
+      if (workflow.staticData) clean.staticData = workflow.staticData;
+      if (workflow.tags) clean.tags = workflow.tags;
 
       let result;
       if (workflowId) {
