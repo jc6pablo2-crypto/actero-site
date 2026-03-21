@@ -25,7 +25,11 @@ import {
   Building2,
   ShoppingBag,
   Copy,
-  Check
+  Check,
+  Wifi,
+  GitBranch,
+  Receipt,
+  Heart
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { AdminClientSettingsModal } from '../components/admin/AdminClientSettingsModal'
@@ -36,6 +40,10 @@ import { AdminKanbanBoard } from '../components/admin/AdminKanbanBoard'
 import { AnimatedCounter } from '../components/ui/animated-counter'
 import { IntelligenceView } from '../components/dashboard/IntelligenceView'
 import { AdminFunnelView } from '../components/admin/AdminFunnelView'
+import { AdminMonitoringView } from '../components/admin/AdminMonitoringView'
+import { AdminPipelineView } from '../components/admin/AdminPipelineView'
+import { AdminBillingView } from '../components/admin/AdminBillingView'
+import { AdminClientHealthView } from '../components/admin/AdminClientHealthView'
 
 export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const queryClient = useQueryClient();
@@ -50,6 +58,10 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/admin/leads") return "leads";
     if (route === "/admin/intelligence") return "intelligence";
     if (route === "/admin/funnel") return "funnel";
+    if (route === "/admin/monitoring") return "monitoring";
+    if (route === "/admin/pipeline") return "pipeline";
+    if (route === "/admin/billing") return "billing";
+    if (route === "/admin/health") return "health";
     return "overview";
   };
 
@@ -188,6 +200,12 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const sidebarItems = [
     { id: "overview", label: "Vue Globale", icon: LayoutDashboard },
     { id: "clients", label: "Clients", icon: Users },
+    { id: "health", label: "Santé Clients", icon: Heart },
+    { id: "pipeline", label: "Pipeline", icon: GitBranch },
+    { type: 'section', label: 'Opérations' },
+    { id: "monitoring", label: "Monitoring n8n", icon: Wifi },
+    { id: "billing", label: "Facturation", icon: Receipt },
+    { type: 'section', label: 'Outils' },
     { id: "requests", label: "Demandes IA", icon: Sparkles, badge: requests.length > 0 ? requests.length : null, badgeColor: "bg-emerald-100 text-emerald-700" },
     { id: "intelligence", label: "Intelligence", icon: Bot },
     { id: "leads", label: "Leads AI", icon: Users, badge: leads.length > 0 ? leads.length : null, badgeColor: "bg-blue-100 text-blue-700" },
@@ -281,6 +299,14 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             </div>
           )}
           
+          {activeTab === "monitoring" && <AdminMonitoringView />}
+
+          {activeTab === "pipeline" && <AdminPipelineView />}
+
+          {activeTab === "billing" && <AdminBillingView />}
+
+          {activeTab === "health" && <AdminClientHealthView />}
+
           {activeTab === "intelligence" && (
             <div className="max-w-6xl mx-auto">
               <IntelligenceView supabase={supabase} theme="dark" />

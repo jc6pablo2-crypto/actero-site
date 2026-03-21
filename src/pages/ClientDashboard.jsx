@@ -30,6 +30,7 @@ import {
   ShoppingCart,
   Mail,
   Ticket,
+  User,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
@@ -43,6 +44,7 @@ import { AnimatedCounter } from '../components/ui/animated-counter'
 import { SkeletonRow } from '../components/ui/skeleton-row'
 import { IntelligenceView } from '../components/dashboard/IntelligenceView'
 import { ActivityView } from '../components/dashboard/ActivityView'
+import { ClientProfileView } from '../components/client/ClientProfileView'
 
 export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   // eslint-disable-next-line no-unused-vars
@@ -65,6 +67,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/systems") return "systems";
     if (route === "/client/intelligence") return "intelligence";
     if (route === "/client/reports") return "reports";
+    if (route === "/client/profile") return "profile";
     return "overview";
   };
 
@@ -294,6 +297,8 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { id: 'activity', label: 'Activité en direct', icon: Activity },
     { id: 'intelligence', label: 'Intelligence', icon: Lightbulb },
     { id: 'reports', label: 'Rapports', icon: Download },
+    { type: 'section', label: 'Compte' },
+    { id: 'profile', label: 'Mon Profil', icon: User },
   ];
 
   const isLoading = clientLoading || metricsLoading || dailyMetricsLoading;
@@ -506,6 +511,8 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "intelligence" && <IntelligenceView supabase={supabase} setActiveTab={setActiveTab} theme={theme} />}
 
           {activeTab === "activity" && <ActivityView supabase={supabase} theme={theme} />}
+
+          {activeTab === "profile" && <ClientProfileView theme={theme} />}
 
           {activeTab === "requests" && (
             <div className="max-w-4xl mx-auto space-y-6">
