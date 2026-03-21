@@ -511,7 +511,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       </div>
 
       {/* Copilot Chat Bubble */}
-      {currentClient?.id && <ClientCopilotBubble clientId={currentClient.id} theme={theme} />}
+      {currentClient?.id && <ClientCopilotBubble clientId={currentClient.id} clientType={currentClient.client_type} theme={theme} />}
     </div>
   );
 };
