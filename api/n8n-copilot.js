@@ -79,30 +79,51 @@ CONTEXTE:
 - Le template SAV e-commerce est l'ID "${TEMPLATE_ID}"
 
 ACTIONS POSSIBLES:
-1. "modify" — Modifier un workflow existant
-2. "create" — Créer un nouveau workflow from scratch
-3. "duplicate" — Dupliquer le template SAV pour un client
-4. "delete" — Supprimer un workflow
-5. "toggle" — Activer/désactiver un workflow
-6. "info" — Répondre à une question (pas d'action n8n)
+1. "gather_create" — L'utilisateur veut créer un workflow mais il manque des infos. Pose des questions QCM pour tout clarifier AVANT de créer.
+2. "gather_modify" — L'utilisateur veut modifier un workflow mais il manque des infos. Pose des questions QCM pour clarifier.
+3. "create" — Tu as TOUTES les infos nécessaires (via les réponses QCM précédentes). Crée le workflow.
+4. "modify" — Tu as TOUTES les infos nécessaires. Modifie le workflow.
+5. "duplicate" — Dupliquer le template SAV pour un client
+6. "delete" — Supprimer un workflow
+7. "toggle" — Activer/désactiver un workflow
+8. "info" — Répondre à une question (pas d'action n8n)
 
 RETOURNE CE JSON:
 {
-  "intent": "modify|create|duplicate|delete|toggle|info",
+  "intent": "gather_create|gather_modify|create|modify|duplicate|delete|toggle|info",
   "workflowId": "ID si applicable (null sinon)",
   "workflowName": "nom du workflow si identifiable",
   "clientName": "nom du client si mentionné",
-  "description": "description courte de ce qu'il faut faire",
-  "message": "message à afficher à l'utilisateur pour confirmer l'action",
-  "activate": true/false (pour toggle, default false)
+  "description": "description complète de ce qu'il faut faire",
+  "message": "message à afficher à l'utilisateur",
+  "activate": true/false (pour toggle, default false),
+  "questions": [
+    {
+      "id": "q1",
+      "question": "La question à poser",
+      "options": ["Option A", "Option B", "Option C", "Option D"]
+    }
+  ]
 }
 
-RÈGLES:
+RÈGLES POUR LES QUESTIONS (gather_create / gather_modify):
+- TOUJOURS utiliser intent "gather_create" ou "gather_modify" quand l'utilisateur demande de créer ou modifier un workflow pour la PREMIÈRE fois (pas assez d'infos)
+- Pose entre 3 et 6 questions QCM maximum
+- Chaque question a 2 à 5 options claires
+- Les questions doivent couvrir: le trigger (quand déclencher?), les actions (que faire?), les services (quels outils?), le client (pour qui?), la fréquence, les notifications
+- Mets "questions" dans le JSON avec un array de questions
+- Le "message" doit être une phrase d'introduction du style "Pour créer ce workflow, j'ai besoin de quelques précisions :"
+- Si le message SUIVANT contient les réponses aux questions → utilise intent "create" ou "modify" avec toutes les infos
+
+RÈGLES POUR CREATE/MODIFY:
+- Utilise "create" ou "modify" SEULEMENT quand tu as reçu les réponses aux questions QCM
+- Ou si l'utilisateur donne TOUTES les infos en un seul message (trigger, action, service, fréquence, etc.)
+
+AUTRES RÈGLES:
 - Si l'utilisateur mentionne un client, cherche le workflow associé par nom
 - Si l'utilisateur veut déployer/onboarder un client → intent "duplicate"
 - Si l'utilisateur pose une question → intent "info" et remplis "message" avec la réponse détaillée
-- Tu as accès aux statistiques d'exécution de chaque workflow (succès, erreurs, dernière exécution). Utilise-les pour répondre aux questions sur les erreurs, la santé, les performances.
-- Quand l'utilisateur demande "quels workflows ont des erreurs", liste-les avec leurs stats dans "message"
+- Tu as accès aux statistiques d'exécution. Utilise-les pour répondre aux questions sur les erreurs/santé/performances.
 - Sois précis dans l'identification du workflowId`;
 
 // n8n Skills Knowledge Base (from czlonkowski/n8n-skills)

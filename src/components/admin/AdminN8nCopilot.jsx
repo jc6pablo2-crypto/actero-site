@@ -30,6 +30,8 @@ export const AdminN8nCopilot = () => {
   const [loading, setLoading] = useState(false)
   const [pendingAction, setPendingAction] = useState(null)
   const [applying, setApplying] = useState(false)
+  const [qcmAnswers, setQcmAnswers] = useState({})
+  const [activeQcm, setActiveQcm] = useState(null) // { questions, gatherType, workflowId, baseDescription }
   const chatEndRef = useRef(null)
   const inputRef = useRef(null)
 
@@ -64,6 +66,18 @@ export const AdminN8nCopilot = () => {
 
       if (intent.intent === 'info') {
         addMsg('assistant', intent.message, { type: 'info' })
+      }
+      else if (intent.intent === 'gather_create' || intent.intent === 'gather_modify') {
+        const qcmData = {
+          questions: intent.questions || [],
+          gatherType: intent.intent === 'gather_create' ? 'create' : 'modify',
+          workflowId: intent.workflowId,
+          workflowName: intent.workflowName,
+          baseDescription: intent.description,
+        }
+        setActiveQcm(qcmData)
+        setQcmAnswers({})
+        addMsg('assistant', intent.message, { type: 'questions', ...qcmData })
       }
       else if (intent.intent === 'modify') {
         addMsg('assistant', `${intent.message}\n\nAnalyse du workflow en cours...`)
@@ -162,8 +176,27 @@ export const AdminN8nCopilot = () => {
     setApplying(false)
   }
 
+  const handleQcmSubmit = async () => {
+    if (!activeQcm) return
+    const answersText = activeQcm.questions.map((q, i) => {
+      const selected = qcmAnswers[q.id || `q${i}`]
+      return `${q.question} → ${selected || 'Non répondu'}`
+    }).join('\n')
+
+    const fullPrompt = `${activeQcm.baseDescription}\n\nRéponses aux questions:\n${answersText}`
+
+    addMsg('user', Object.values(qcmAnswers).join(' · '))
+    setActiveQcm(null)
+    setQcmAnswers({})
+
+    // Now trigger the actual create/modify with full context
+    await handleSend(fullPrompt)
+  }
+
   const handleCancel = () => {
     setPendingAction(null)
+    setActiveQcm(null)
+    setQcmAnswers({})
     addMsg('assistant', 'Action annulée.', { type: 'info' })
   }
 
@@ -253,6 +286,45 @@ export const AdminN8nCopilot = () => {
                     </div>
                   )}
 
+                  {/* QCM Questions */}
+                  {msg.data?.type === 'questions' && msg.data.questions?.length > 0 && (
+                    <div className="mt-4 space-y-4">
+                      {msg.data.questions.map((q, qi) => {
+                        const qId = q.id || `q${qi}`
+                        return (
+                          <div key={qId} className="space-y-2">
+                            <p className="text-xs font-semibold text-white">{q.question}</p>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                              {(q.options || []).map((opt, oi) => {
+                                const isSelected = qcmAnswers[qId] === opt
+                                return (
+                                  <button
+                                    key={oi}
+                                    onClick={() => setQcmAnswers(prev => ({ ...prev, [qId]: opt }))}
+                                    className={`text-left px-3 py-2 rounded-lg text-xs transition-all border ${
+                                      isSelected
+                                        ? 'bg-violet-500/20 border-violet-500/40 text-violet-300 font-medium'
+                                        : 'bg-white/[0.02] border-white/5 text-gray-400 hover:bg-white/[0.05] hover:border-white/10'
+                                    }`}
+                                  >
+                                    <span className={`inline-flex items-center justify-center w-4 h-4 rounded-full border text-[9px] font-bold mr-2 ${
+                                      isSelected
+                                        ? 'bg-violet-500 border-violet-400 text-white'
+                                        : 'border-gray-600 text-gray-500'
+                                    }`}>
+                                      {String.fromCharCode(65 + oi)}
+                                    </span>
+                                    {opt}
+                                  </button>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+
                   {msg.data?.type === 'delete' && (
                     <div className="mt-3 inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20">
                       <Trash2 className="w-3.5 h-3.5 text-red-400" />
@@ -299,6 +371,36 @@ export const AdminN8nCopilot = () => {
           <div ref={chatEndRef} />
         </div>
       </div>
+
+      {/* QCM Submit bar */}
+      <AnimatePresence>
+        {activeQcm && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
+            className="border-t border-white/5"
+          >
+            <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
+              <div className="flex-1 text-xs text-gray-500">
+                {Object.keys(qcmAnswers).length}/{activeQcm.questions.length} réponses
+              </div>
+              <button
+                onClick={handleQcmSubmit}
+                disabled={Object.keys(qcmAnswers).length < activeQcm.questions.length}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-white text-black hover:bg-gray-100 transition-all disabled:opacity-30"
+              >
+                <Zap className="w-4 h-4" />
+                Générer le workflow
+              </button>
+              <button
+                onClick={handleCancel}
+                className="px-4 py-2.5 rounded-xl border border-white/10 text-sm font-medium text-gray-400 hover:bg-white/5 transition-all"
+              >
+                Annuler
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Confirm/Cancel bar */}
       <AnimatePresence>
