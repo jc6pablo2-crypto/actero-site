@@ -47,6 +47,7 @@ import { IntelligenceView } from '../components/dashboard/IntelligenceView'
 import { ActivityView } from '../components/dashboard/ActivityView'
 import { SupportTicketsView } from '../components/dashboard/SupportTicketsView'
 import { ClientProfileView } from '../components/client/ClientProfileView'
+import { ClientCopilotBubble } from '../components/client/ClientCopilotBubble'
 
 export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   // eslint-disable-next-line no-unused-vars
@@ -508,6 +509,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
         </main>
       </div>
+
+      {/* Copilot Chat Bubble */}
+      {currentClient?.id && <ClientCopilotBubble clientId={currentClient.id} theme={theme} />}
     </div>
   );
 };
