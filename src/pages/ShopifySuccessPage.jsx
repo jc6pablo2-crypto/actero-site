@@ -20,7 +20,7 @@ export function ShopifySuccessPage({ onNavigate }) {
     setError(null);
 
     try {
-      const res = await fetch("/api/deploy-workflow", {
+      const res = await fetch("/api/request-deployment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ client_id: clientId, shop_domain: shop }),
@@ -29,7 +29,7 @@ export function ShopifySuccessPage({ onNavigate }) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Erreur lors du déploiement");
+        throw new Error(data.error || "Erreur lors de la demande");
       }
 
       setActivated(true);
@@ -98,10 +98,10 @@ export function ShopifySuccessPage({ onNavigate }) {
               <CheckCircle className="w-7 h-7 text-emerald-500" />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">
-              Automations activées !
+              Demande envoyée !
             </h3>
             <p className="text-sm text-gray-500 leading-relaxed mb-5">
-              Votre agent IA SAV est opérationnel. Il traite déjà vos tickets et surveille les paniers abandonnés.
+              Notre équipe configure vos automations sur-mesure. Vous serez notifié dès qu'elles seront actives.
             </p>
             <button
               onClick={() => onNavigate("/login")}

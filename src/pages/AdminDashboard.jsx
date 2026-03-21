@@ -36,6 +36,7 @@ import { AdminKanbanBoard } from '../components/admin/AdminKanbanBoard'
 import { AdminRequestsView } from '../components/admin/AdminRequestsView'
 import { AnimatedCounter } from '../components/ui/animated-counter'
 import { AdminFunnelView } from '../components/admin/AdminFunnelView'
+import { AdminDeploymentsView } from '../components/admin/AdminDeploymentsView'
 
 export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const queryClient = useQueryClient();
@@ -49,6 +50,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/admin/requests") return "requests";
     if (route === "/admin/leads") return "leads";
     if (route === "/admin/funnel") return "funnel";
+    if (route === "/admin/deployments") return "deployments";
     return "overview";
   };
 
@@ -93,6 +95,18 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data || [];
+    }
+  });
+
+  const { data: pendingDeployments = 0 } = useQuery({
+    queryKey: ['pending-deployments-count'],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("deployment_requests")
+        .select("id", { count: 'exact', head: true })
+        .eq("status", "pending");
+      if (error) throw error;
+      return count || 0;
     }
   });
 
@@ -190,6 +204,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { id: "requests", label: "Demandes clients", icon: Sparkles, badge: requests.length > 0 ? requests.length : null, badgeColor: "bg-emerald-100 text-emerald-700" },
     { id: "leads", label: "Leads AI", icon: Users, badge: leads.length > 0 ? leads.length : null, badgeColor: "bg-blue-100 text-blue-700" },
     { id: "funnel", label: "Nouveau client", icon: UserPlus },
+    { id: "deployments", label: "Automations", icon: Zap, badge: pendingDeployments > 0 ? pendingDeployments : null, badgeColor: "bg-amber-100 text-amber-700" },
   ];
 
   const handleAddClient = async () => {
@@ -276,6 +291,12 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "funnel" && (
             <div className="max-w-6xl mx-auto">
               <AdminFunnelView />
+            </div>
+          )}
+
+          {activeTab === "deployments" && (
+            <div className="max-w-6xl mx-auto">
+              <AdminDeploymentsView />
             </div>
           )}
           
