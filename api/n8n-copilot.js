@@ -2,7 +2,7 @@
 
 const N8N_URL = process.env.N8N_API_URL;
 const N8N_KEY = process.env.N8N_API_KEY;
-const GEMINI_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_KEY = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
 
 const SYSTEM_PROMPT = `Tu es un expert n8n. L'utilisateur te demande de modifier un workflow n8n.
 
