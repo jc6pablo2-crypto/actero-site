@@ -29,7 +29,8 @@ export function AdminDeploymentsView() {
             id,
             brand_name,
             client_type,
-            status
+            status,
+            contact_email
           )
         `)
         .order('created_at', { ascending: false })
@@ -50,12 +51,34 @@ export function AdminDeploymentsView() {
     },
   })
 
-  const updateStatus = async (id, status) => {
+  const [sendingEmailId, setSendingEmailId] = useState(null)
+
+  const updateStatus = async (id, status, client) => {
     const updates = { status }
     if (status === 'deployed') {
       updates.deployed_at = new Date().toISOString()
     }
     await supabase.from('deployment_requests').update(updates).eq('id', id)
+
+    // Send notification email when deployed
+    if (status === 'deployed' && client?.contact_email) {
+      setSendingEmailId(id)
+      try {
+        await fetch('/api/send-deployment-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: client.contact_email,
+            company_name: client.brand_name,
+          }),
+        })
+      } catch (err) {
+        console.error('Failed to send deployment email:', err)
+      } finally {
+        setSendingEmailId(null)
+      }
+    }
+
     queryClient.invalidateQueries({ queryKey: ['deployment-requests'] })
   }
 
@@ -166,6 +189,13 @@ export function AdminDeploymentsView() {
                         onCopy={copyToClipboard}
                       />
                       <InfoRow
+                        label="Email client"
+                        value={client?.contact_email || '—'}
+                        copyable={!!client?.contact_email}
+                        copiedId={copiedId}
+                        onCopy={copyToClipboard}
+                      />
+                      <InfoRow
                         label="Type client"
                         value={client?.client_type === 'immobilier' ? '🏠 Immobilier' : '🛒 E-commerce'}
                       />
@@ -233,14 +263,14 @@ export function AdminDeploymentsView() {
                       {req.status === 'pending' && (
                         <>
                           <button
-                            onClick={() => updateStatus(req.id, 'in_progress')}
+                            onClick={() => updateStatus(req.id, 'in_progress', client)}
                             className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2"
                           >
                             <Play className="w-3.5 h-3.5" />
                             Prendre en charge
                           </button>
                           <button
-                            onClick={() => updateStatus(req.id, 'rejected')}
+                            onClick={() => updateStatus(req.id, 'rejected', client)}
                             className="px-4 py-2 bg-white/5 hover:bg-white/10 text-gray-400 rounded-xl text-xs font-bold transition-colors flex items-center gap-2"
                           >
                             <XCircle className="w-3.5 h-3.5" />
@@ -250,11 +280,21 @@ export function AdminDeploymentsView() {
                       )}
                       {req.status === 'in_progress' && (
                         <button
-                          onClick={() => updateStatus(req.id, 'deployed')}
-                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2"
+                          onClick={() => updateStatus(req.id, 'deployed', client)}
+                          disabled={sendingEmailId === req.id}
+                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-colors flex items-center gap-2 disabled:opacity-60"
                         >
-                          <CheckCircle className="w-3.5 h-3.5" />
-                          Marquer comme déployé
+                          {sendingEmailId === req.id ? (
+                            <>
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              Envoi de l'email...
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle className="w-3.5 h-3.5" />
+                              Déployé — Notifier le client
+                            </>
+                          )}
                         </button>
                       )}
                       {req.status === 'deployed' && (
