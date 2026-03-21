@@ -97,7 +97,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     }
   });
 
-  const { data: requests = [], isLoading: requestsLoading } = useQuery({
+  const { data: requests = [], isLoading: requestsLoading, refetch: refetchRequests } = useQuery({
     queryKey: ['admin-requests'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -782,7 +782,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "requests" && (
             <div className="max-w-6xl mx-auto animate-fade-in-up">
-              <AdminKanbanBoard requests={requests} />
+              <AdminKanbanBoard requests={requests} onRefresh={refetchRequests} />
             </div>
           )}
 
