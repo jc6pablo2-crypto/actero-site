@@ -183,31 +183,91 @@ ERREURS COURANTES À ÉVITER:
 - Pour Set node: utiliser assignments avec {name, value, type} dans typeVersion 3.4
 `;
 
-const MODIFY_PROMPT = `Tu es un expert n8n senior. Modifie le workflow JSON selon la demande.
+// Real node examples from production workflows
+const NODE_EXAMPLES = `
+EXEMPLES DE NODES RÉELS PRODUCTION-READY (copie ce format EXACTEMENT):
+
+1. Schedule Trigger (toutes les 5 min):
+{"name":"Schedule Trigger","type":"n8n-nodes-base.scheduleTrigger","typeVersion":1.2,"position":[220,300],"parameters":{"rule":{"interval":[{"field":"minutes","minutesInterval":5}]}},"id":"uuid-1"}
+
+2. Webhook Trigger:
+{"name":"Webhook","type":"n8n-nodes-base.webhook","typeVersion":2,"position":[220,300],"parameters":{"path":"mon-webhook","httpMethod":"POST","responseMode":"responseNode","options":{}},"id":"uuid-2"}
+
+3. HTTP Request (GET Supabase):
+{"name":"Fetch Data","type":"n8n-nodes-base.httpRequest","typeVersion":4.2,"position":[470,300],"parameters":{"method":"GET","url":"https://ejgdwjjcpjtwaqcxptke.supabase.co/rest/v1/automation_events?limit=100","authentication":"predefinedCredentialType","nodeCredentialType":"supabaseApi","sendHeaders":true,"headerParameters":{"parameters":[{"name":"Content-Type","value":"application/json"}]},"options":{"response":{"response":{"responseFormat":"json"}}}},"credentials":{"supabaseApi":{"id":"NswS61zLLGuXpo97","name":"Supabase account"}},"id":"uuid-3"}
+
+4. HTTP Request (POST Supabase):
+{"name":"Insert Data","type":"n8n-nodes-base.httpRequest","typeVersion":4.2,"position":[720,300],"parameters":{"method":"POST","url":"https://ejgdwjjcpjtwaqcxptke.supabase.co/rest/v1/automation_events","authentication":"predefinedCredentialType","nodeCredentialType":"supabaseApi","sendHeaders":true,"headerParameters":{"parameters":[{"name":"Content-Type","value":"application/json"},{"name":"Prefer","value":"return=representation"}]},"sendBody":true,"specifyBody":"json","jsonBody":"={{ JSON.stringify($json) }}","options":{"response":{"response":{"responseFormat":"json"}}}},"credentials":{"supabaseApi":{"id":"NswS61zLLGuXpo97","name":"Supabase account"}},"id":"uuid-4"}
+
+5. IF Condition:
+{"name":"Vérifier données","type":"n8n-nodes-base.if","typeVersion":2,"position":[470,300],"parameters":{"conditions":{"options":{"caseSensitive":true,"leftValue":"","typeValidation":"strict"},"conditions":[{"id":"uuid","leftValue":"={{ $json.status }}","rightValue":"active","operator":{"type":"string","operation":"equals"}}],"combinator":"and"}},"id":"uuid-5"}
+
+6. Code Node (JavaScript):
+{"name":"Traiter données","type":"n8n-nodes-base.code","typeVersion":2,"position":[720,300],"parameters":{"jsCode":"const items = $input.all();\\nconst results = items.map(item => ({\\n  json: {\\n    client_id: item.json.client_id,\\n    processed: true,\\n    timestamp: new Date().toISOString()\\n  }\\n}));\\nreturn results;"},"id":"uuid-6"}
+
+7. Set Node (mapping):
+{"name":"Préparer données","type":"n8n-nodes-base.set","typeVersion":3.4,"position":[720,300],"parameters":{"mode":"manual","duplicateItem":false,"assignments":{"assignments":[{"id":"uuid","name":"client_id","value":"={{ $json.client_id }}","type":"string"},{"id":"uuid","name":"status","value":"active","type":"string"}]}},"id":"uuid-7"}
+
+8. Slack Notification:
+{"name":"Notifier Slack","type":"n8n-nodes-base.slack","typeVersion":2.2,"position":[970,300],"parameters":{"resource":"message","operation":"post","channel":{"__rl":true,"value":"#notifications","mode":"name"},"text":"={{ $json.message }}","otherOptions":{}},"credentials":{"slackApi":{"id":"SLACK_CRED_ID","name":"Slack"}},"id":"uuid-8"}
+
+9. Email Send:
+{"name":"Envoyer Email","type":"n8n-nodes-base.emailSend","typeVersion":2.1,"position":[970,300],"parameters":{"fromEmail":"noreply@actero.fr","toEmail":"={{ $json.email }}","subject":"Notification","emailType":"text","message":"={{ $json.message }}"},"credentials":{"smtp":{"id":"SMTP_CRED_ID","name":"SMTP"}},"id":"uuid-9"}
+
+10. Split In Batches:
+{"name":"Boucle","type":"n8n-nodes-base.splitInBatches","typeVersion":3,"position":[470,300],"parameters":{"batchSize":1,"options":{}},"id":"uuid-10"}
+
+11. Respond To Webhook:
+{"name":"Répondre","type":"n8n-nodes-base.respondToWebhook","typeVersion":1.1,"position":[970,300],"parameters":{"respondWith":"json","responseBody":"={{ JSON.stringify({ success: true, data: $json }) }}","options":{"responseCode":200}},"id":"uuid-11"}
+
+12. No Operation (pour branching):
+{"name":"Ne rien faire","type":"n8n-nodes-base.noOp","typeVersion":1,"position":[720,500],"parameters":{},"id":"uuid-12"}
+
+CONNECTIONS FORMAT:
+{"NomNodeSource":{"main":[[{"node":"NomNodeCible","type":"main","index":0}]]}}
+Pour IF avec 2 branches: {"Vérifier":{"main":[[{"node":"SiVrai","type":"main","index":0}],[{"node":"SiFaux","type":"main","index":0}]]}}
+
+SUPABASE CREDENTIALS ACTERO (à utiliser pour tous les nodes Supabase):
+{"supabaseApi":{"id":"NswS61zLLGuXpo97","name":"Supabase account"}}
+
+SUPABASE URL: https://ejgdwjjcpjtwaqcxptke.supabase.co/rest/v1/
+`;
+
+const MODIFY_PROMPT = `Tu es un ingénieur n8n expert. Modifie le workflow JSON selon la demande.
 
 ${N8N_KNOWLEDGE}
+
+${NODE_EXAMPLES}
 
 RÈGLES MODIFICATION:
-- Retourne UNIQUEMENT le workflow modifié en JSON valide
+- Retourne UNIQUEMENT le workflow modifié en JSON valide (name, nodes, connections, settings)
 - Ne change JAMAIS les credentials ni les IDs de credentials existants
 - Conserve les nodes existants sauf demande explicite de suppression
-- Positionne les nouveaux nodes visuellement (+250px à droite du dernier)
-- Connecte les nodes logiquement via "connections"
-- Garde le même name, settings et staticData du workflow original`;
+- CHAQUE node DOIT avoir: id, name, type, typeVersion, position, parameters (JAMAIS vides)
+- Positionne les nouveaux nodes à +250px horizontal du dernier
+- Connecte les nodes via "connections" avec le format exact montré ci-dessus
+- Garde le même name, settings du workflow original`;
 
-const CREATE_PROMPT = `Tu es un expert n8n senior. Crée un workflow n8n complet et fonctionnel en JSON.
+const CREATE_PROMPT = `Tu es un ingénieur n8n expert. Crée un workflow n8n COMPLET, FONCTIONNEL et PRODUCTION-READY.
 
 ${N8N_KNOWLEDGE}
 
-RÈGLES CRÉATION:
-- Retourne un JSON avec UNIQUEMENT: name, nodes, connections, settings
-- Chaque node DOIT avoir: id (UUID), name, type, typeVersion, position [x, y], parameters
-- Le premier node est toujours un trigger
-- Positionne le trigger à [250, 300], puis +250px horizontal pour chaque node suivant
-- settings: { executionOrder: "v1" }
-- Connecte TOUS les nodes entre eux via "connections"
-- Utilise des noms de nodes descriptifs en français
-- Inclus un error handling basique (try/catch dans les Code nodes, ou IF pour vérifier les données)`;
+${NODE_EXAMPLES}
+
+RÈGLES CRÉATION STRICTES:
+- Retourne un JSON avec: name, nodes, connections, settings
+- CHAQUE node DOIT avoir: id (UUID unique), name, type, typeVersion (CORRECT!), position [x, y], parameters (JAMAIS vides!)
+- Utilise les exemples de nodes ci-dessus comme MODÈLE EXACT — copie le format
+- typeVersion DOIT correspondre à la version réelle du node (ex: httpRequest=4.2, webhook=2, scheduleTrigger=1.2, if=2, code=2, set=3.4)
+- Le premier node est un trigger positionné à [220, 300]
+- Espacement: +250px horizontal entre chaque node, +200px vertical pour les branches
+- settings: { "executionOrder": "v1" }
+- TOUS les nodes doivent être connectés via "connections"
+- Les paramètres de chaque node doivent être COMPLETS et fonctionnels
+- Si le workflow utilise Supabase, utilise les credentials Actero indiquées
+- Noms de nodes descriptifs en français
+- Pour les HTTP Request vers Supabase: TOUJOURS mettre authentication, nodeCredentialType, headers Content-Type
+- Ne retourne JAMAIS un node avec parameters: {} vide (sauf noOp)`;
 
 // ── Main handler ───────────────────────────────────────────
 export default async function handler(req, res) {
