@@ -29,10 +29,7 @@ import {
   Wifi,
   GitBranch,
   Receipt,
-  Heart,
-  Crosshair,
-  MailPlus,
-  PieChart
+  Heart
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { AdminClientSettingsModal } from '../components/admin/AdminClientSettingsModal'
@@ -47,9 +44,6 @@ import { AdminMonitoringView } from '../components/admin/AdminMonitoringView'
 import { AdminPipelineView } from '../components/admin/AdminPipelineView'
 import { AdminBillingView } from '../components/admin/AdminBillingView'
 import { AdminClientHealthView } from '../components/admin/AdminClientHealthView'
-import { AdminProspectionView } from '../components/admin/AdminProspectionView'
-import { AdminCampaignView } from '../components/admin/AdminCampaignView'
-import { AdminAcquisitionView } from '../components/admin/AdminAcquisitionView'
 
 export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const queryClient = useQueryClient();
@@ -68,9 +62,6 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/admin/pipeline") return "pipeline";
     if (route === "/admin/billing") return "billing";
     if (route === "/admin/health") return "health";
-    if (route === "/admin/prospection") return "prospection";
-    if (route === "/admin/campaigns") return "campaigns";
-    if (route === "/admin/acquisition") return "acquisition";
     return "overview";
   };
 
@@ -214,10 +205,6 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { type: 'section', label: 'Opérations' },
     { id: "monitoring", label: "Monitoring n8n", icon: Wifi },
     { id: "billing", label: "Facturation", icon: Receipt },
-    { type: 'section', label: 'Marketing' },
-    { id: "prospection", label: "Prospection", icon: Crosshair },
-    { id: "campaigns", label: "Campagnes", icon: MailPlus },
-    { id: "acquisition", label: "Acquisition", icon: PieChart },
     { type: 'section', label: 'Outils' },
     { id: "requests", label: "Demandes IA", icon: Sparkles, badge: requests.length > 0 ? requests.length : null, badgeColor: "bg-emerald-100 text-emerald-700" },
     { id: "intelligence", label: "Intelligence", icon: Bot },
@@ -319,12 +306,6 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "billing" && <AdminBillingView />}
 
           {activeTab === "health" && <AdminClientHealthView />}
-
-          {activeTab === "prospection" && <AdminProspectionView />}
-
-          {activeTab === "campaigns" && <AdminCampaignView />}
-
-          {activeTab === "acquisition" && <AdminAcquisitionView />}
 
           {activeTab === "intelligence" && (
             <div className="max-w-6xl mx-auto">
