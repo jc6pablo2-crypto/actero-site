@@ -101,31 +101,43 @@ export const AdminProspectionView = () => {
     if (!trustpilotStore.trim()) return
     setScrapingTrustpilot(true)
 
-    // Simulate scraping delay
-    await new Promise(r => setTimeout(r, 1500 + Math.random() * 1000))
+    try {
+      const res = await fetch('/api/scrape-reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ storeName: trustpilotStore.trim() })
+      })
+      const data = await res.json()
 
-    const numReviews = Math.floor(Math.random() * 4) + 3
-    const selectedReviews = [...FAKE_TRUSTPILOT_REVIEWS]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, numReviews)
+      if (data.error) {
+        alert('Erreur : ' + data.error)
+        setScrapingTrustpilot(false)
+        return
+      }
 
-    const allPainPoints = selectedReviews.flatMap(r => r.painPoints)
-    const painPointCounts = {}
-    allPainPoints.forEach(p => { painPointCounts[p] = (painPointCounts[p] || 0) + 1 })
-    const sortedPainPoints = Object.entries(painPointCounts)
-      .sort((a, b) => b[1] - a[1])
-      .map(([point, count]) => ({ point, count }))
+      const painPointCounts = data.painPoints || {}
+      const sortedPainPoints = Object.entries(painPointCounts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([point, count]) => ({ point, count }))
 
-    const avgStars = (selectedReviews.reduce((s, r) => s + r.stars, 0) / selectedReviews.length).toFixed(1)
+      const reviews = data.reviews || []
+      const avgStars = reviews.length > 0
+        ? (reviews.reduce((s, r) => s + r.stars, 0) / reviews.length).toFixed(1)
+        : data.averageRating || 0
 
-    setTrustpilotResults({
-      storeName: trustpilotStore.trim(),
-      totalNegativeReviews: Math.floor(Math.random() * 40) + 15,
-      reviews: selectedReviews,
+      setTrustpilotResults({
+        storeName: data.storeName || trustpilotStore.trim(),
+        totalNegativeReviews: data.negativeReviews || reviews.length,
+        reviews,
       painPoints: sortedPainPoints,
       avgNegativeRating: avgStars,
+      source: data.source || 'google',
       scrapedAt: new Date().toISOString(),
     })
+    } catch (e) {
+      console.error('Scrape error:', e)
+      alert('Erreur lors du scraping. Vérifiez votre clé SerpAPI.')
+    }
     setScrapingTrustpilot(false)
   }
 
