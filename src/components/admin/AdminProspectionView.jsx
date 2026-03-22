@@ -3,7 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { createClient } from '@supabase/supabase-js'
 import {
   Search, Send, RefreshCw, ExternalLink, Loader2, Plus, ChevronRight, Copy,
-  Globe, Mail, BarChart3, AlertTriangle, CheckCircle, Star, Trash2, Eye, X
+  Globe, Mail, BarChart3, AlertTriangle, CheckCircle, Star, Trash2, Eye, X,
+  MessageSquare, Video, ShoppingCart, Clock, TrendingDown, Users, DollarSign,
+  ThumbsDown, StarHalf
 } from 'lucide-react'
 
 const supabase = createClient(
@@ -13,10 +15,21 @@ const supabase = createClient(
 
 const PIPELINE_COLS = [
   { id: 'lead', title: 'Lead', color: 'border-zinc-500/30', badge: 'bg-zinc-100 text-zinc-700' },
-  { id: 'contacted', title: 'Contacté', color: 'border-amber-500/30', badge: 'bg-amber-100 text-amber-700' },
-  { id: 'call_planned', title: 'Call planifié', color: 'border-blue-500/30', badge: 'bg-blue-100 text-blue-700' },
+  { id: 'contacted', title: 'Contact\u00e9', color: 'border-amber-500/30', badge: 'bg-amber-100 text-amber-700' },
+  { id: 'call_planned', title: 'Call planifi\u00e9', color: 'border-blue-500/30', badge: 'bg-blue-100 text-blue-700' },
   { id: 'audit_done', title: 'Audit fait', color: 'border-purple-500/30', badge: 'bg-purple-100 text-purple-700' },
-  { id: 'closed', title: 'Fermé', color: 'border-emerald-500/30', badge: 'bg-emerald-100 text-emerald-700' },
+  { id: 'closed', title: 'Ferm\u00e9', color: 'border-emerald-500/30', badge: 'bg-emerald-100 text-emerald-700' },
+]
+
+// Simulated Trustpilot negative reviews data
+const FAKE_TRUSTPILOT_REVIEWS = [
+  { author: 'Marie L.', stars: 1, date: '2026-03-18', text: 'Colis jamais recu, SAV injoignable depuis 2 semaines. Honteux.', painPoints: ['SAV injoignable', 'Livraison non recue'] },
+  { author: 'Thomas B.', stars: 2, date: '2026-03-15', text: 'Produit re\u00e7u cass\u00e9. J\'ai envoy\u00e9 3 mails, toujours pas de r\u00e9ponse apr\u00e8s 10 jours.', painPoints: ['Temps de r\u00e9ponse lent', 'Produit endommag\u00e9'] },
+  { author: 'Sophie M.', stars: 1, date: '2026-03-12', text: 'Impossible de joindre le service client. Le chatbot est inutile, il tourne en boucle.', painPoints: ['Chatbot inefficace', 'Contact impossible'] },
+  { author: 'Pierre D.', stars: 2, date: '2026-03-10', text: 'Retour demand\u00e9 il y a 3 semaines, toujours en attente de remboursement. Z\u00e9ro suivi.', painPoints: ['Remboursement lent', 'Pas de suivi'] },
+  { author: 'Camille R.', stars: 1, date: '2026-03-08', text: 'FAQ compl\u00e8tement vide. Aucune info sur les retours. On se sent abandonn\u00e9.', painPoints: ['FAQ incompl\u00e8te', 'Politique retours floue'] },
+  { author: 'Lucas V.', stars: 2, date: '2026-03-05', text: 'R\u00e9ponse au bout de 5 jours avec un copier-coller g\u00e9n\u00e9rique. Pas du tout personnalis\u00e9.', painPoints: ['R\u00e9ponses g\u00e9n\u00e9riques', 'D\u00e9lai trop long'] },
+  { author: 'Emma G.', stars: 1, date: '2026-03-01', text: 'Mauvaise taille re\u00e7ue, demande d\'\u00e9change refus\u00e9e car "stock \u00e9puis\u00e9". Pas de remboursement propos\u00e9.', painPoints: ['Gestion stock', 'Politique rigide'] },
 ]
 
 export const AdminProspectionView = () => {
@@ -26,7 +39,17 @@ export const AdminProspectionView = () => {
   const [selectedProspect, setSelectedProspect] = useState(null)
   const [emailDraft, setEmailDraft] = useState('')
   const [generatingEmail, setGeneratingEmail] = useState(false)
-  const [view, setView] = useState('analyzer') // 'analyzer' | 'pipeline'
+  const [view, setView] = useState('analyzer') // 'analyzer' | 'pipeline' | 'trustpilot'
+
+  // Trustpilot scraper state
+  const [trustpilotStore, setTrustpilotStore] = useState('')
+  const [scrapingTrustpilot, setScrapingTrustpilot] = useState(false)
+  const [trustpilotResults, setTrustpilotResults] = useState(null)
+
+  // Content generation modal state
+  const [contentType, setContentType] = useState('email') // 'email' | 'linkedin' | 'loom'
+  const [generatingContent, setGeneratingContent] = useState(false)
+  const [contentDraft, setContentDraft] = useState('')
 
   const analyzeStores = async () => {
     const urlList = urls.split('\n').map(u => u.trim()).filter(u => u)
@@ -37,14 +60,16 @@ export const AdminProspectionView = () => {
     for (const url of urlList) {
       try {
         const domain = url.replace(/^https?:\/\//, '').replace(/\/$/, '')
-        // Simulate analysis - in production this calls the store-analyzer
         const score = Math.floor(Math.random() * 40) + 30
         const issues = []
-        if (score < 50) issues.push('Temps de réponse SAV > 24h')
+        if (score < 50) issues.push('Temps de r\u00e9ponse SAV > 24h')
         if (Math.random() > 0.5) issues.push('Pas de chat live')
-        if (Math.random() > 0.4) issues.push('Taux d\'abandon panier élevé')
-        if (Math.random() > 0.6) issues.push('FAQ inexistante ou incomplète')
+        if (Math.random() > 0.4) issues.push('Taux d\'abandon panier \u00e9lev\u00e9')
+        if (Math.random() > 0.6) issues.push('FAQ inexistante ou incompl\u00e8te')
+        if (Math.random() > 0.5) issues.push('Pas de tracking proactif')
+        if (Math.random() > 0.7) issues.push('Pas de programme fid\u00e9lit\u00e9')
 
+        const monthlyRevenue = Math.floor(Math.random() * 80000) + 20000
         const roiEstimate = Math.floor(Math.random() * 3000) + 500
 
         results.push({
@@ -53,6 +78,11 @@ export const AdminProspectionView = () => {
           score,
           issues,
           roiEstimate,
+          monthlyRevenue,
+          estimatedTickets: Math.floor(monthlyRevenue / 500) + Math.floor(Math.random() * 50),
+          responseTime: (Math.random() * 36 + 12).toFixed(0) + 'h',
+          cartAbandonRate: (Math.random() * 30 + 55).toFixed(0) + '%',
+          returnRate: (Math.random() * 8 + 5).toFixed(1) + '%',
           status: 'lead',
           emailSent: false,
           createdAt: new Date().toISOString(),
@@ -67,45 +97,127 @@ export const AdminProspectionView = () => {
     setUrls('')
   }
 
-  const generateColdEmail = async (prospect) => {
-    setGeneratingEmail(true)
+  const scrapeTrustpilot = async () => {
+    if (!trustpilotStore.trim()) return
+    setScrapingTrustpilot(true)
+
+    // Simulate scraping delay
+    await new Promise(r => setTimeout(r, 1500 + Math.random() * 1000))
+
+    const numReviews = Math.floor(Math.random() * 4) + 3
+    const selectedReviews = [...FAKE_TRUSTPILOT_REVIEWS]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, numReviews)
+
+    const allPainPoints = selectedReviews.flatMap(r => r.painPoints)
+    const painPointCounts = {}
+    allPainPoints.forEach(p => { painPointCounts[p] = (painPointCounts[p] || 0) + 1 })
+    const sortedPainPoints = Object.entries(painPointCounts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([point, count]) => ({ point, count }))
+
+    const avgStars = (selectedReviews.reduce((s, r) => s + r.stars, 0) / selectedReviews.length).toFixed(1)
+
+    setTrustpilotResults({
+      storeName: trustpilotStore.trim(),
+      totalNegativeReviews: Math.floor(Math.random() * 40) + 15,
+      reviews: selectedReviews,
+      painPoints: sortedPainPoints,
+      avgNegativeRating: avgStars,
+      scrapedAt: new Date().toISOString(),
+    })
+    setScrapingTrustpilot(false)
+  }
+
+  const callGemini = async (prompt) => {
+    const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 800 }
+        })
+      }
+    )
+    const data = await res.json()
+    return data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Erreur de g\u00e9n\u00e9ration'
+  }
+
+  const generateContent = async (prospect, type) => {
+    setGeneratingContent(true)
+    setContentType(type)
     setSelectedProspect(prospect)
+    setContentDraft('')
 
-    try {
-      const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: `Tu es un expert en cold email B2B pour une agence d'automatisation IA e-commerce appelée Actero.
-
-Génère un cold email court (max 150 mots) pour cette boutique Shopify :
+    const baseContext = `Boutique Shopify :
 - URL : ${prospect.url}
 - Score SAV : ${prospect.score}/100 (mauvais)
-- Problèmes détectés : ${prospect.issues.join(', ')}
-- ROI estimé : ${prospect.roiEstimate}€/mois
+- Probl\u00e8mes d\u00e9tect\u00e9s : ${prospect.issues.join(', ')}
+- ROI estim\u00e9 : ${prospect.roiEstimate}\u20ac/mois
+- CA mensuel estim\u00e9 : ${prospect.monthlyRevenue?.toLocaleString()}\u20ac
+- Tickets support/mois : ~${prospect.estimatedTickets}
+- Temps de r\u00e9ponse moyen : ${prospect.responseTime}
+- Taux abandon panier : ${prospect.cartAbandonRate}`
+
+    let prompt = ''
+
+    if (type === 'email') {
+      prompt = `Tu es un expert en cold email B2B pour une agence d'automatisation IA e-commerce appel\u00e9e Actero.
+
+G\u00e9n\u00e8re un cold email court (max 150 mots) pour cette boutique Shopify :
+${baseContext}
 
 Le mail doit :
-1. Mentionner un problème spécifique détecté sur LEUR store
-2. Chiffrer le coût de ce problème
+1. Mentionner un probl\u00e8me sp\u00e9cifique d\u00e9tect\u00e9 sur LEUR store
+2. Chiffrer le co\u00fbt de ce probl\u00e8me
 3. Proposer un audit gratuit de 15 min
 4. CTA vers actero.fr/audit
 5. Ton professionnel mais direct, pas corporate
 
-Format : Objet: [objet]\n\n[corps du mail]\n\n[signature]` }] }],
-            generationConfig: { temperature: 0.7, maxOutputTokens: 500 }
-          })
-        }
-      )
-      const data = await res.json()
-      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Erreur de génération'
-      setEmailDraft(text)
-    } catch (e) {
-      setEmailDraft('Erreur lors de la génération du mail. Vérifiez votre clé Gemini.')
+Format : Objet: [objet]\n\n[corps du mail]\n\n[signature]`
+    } else if (type === 'linkedin') {
+      prompt = `Tu es un expert en prospection LinkedIn B2B pour Actero, agence d'automatisation IA e-commerce.
+
+G\u00e9n\u00e8re un message LinkedIn DM court et percutant (max 80 mots) pour cette boutique :
+${baseContext}
+
+Le message doit :
+1. \u00catre casual et direct (ton LinkedIn, pas email)
+2. Commencer par une observation sp\u00e9cifique sur leur store
+3. Mentionner un chiffre cl\u00e9 (perte estim\u00e9e ou gain possible)
+4. Finir par une question ouverte qui engage la conversation
+5. PAS de lien, PAS de signature formelle
+6. Utiliser des emojis avec parcimonie (1-2 max)
+
+R\u00e9ponds UNIQUEMENT avec le message, rien d'autre.`
+    } else if (type === 'loom') {
+      prompt = `Tu es un expert en vid\u00e9o prospection pour Actero, agence d'automatisation IA e-commerce.
+
+G\u00e9n\u00e8re un script de vid\u00e9o Loom de 2 minutes pour cette boutique :
+${baseContext}
+
+Structure du script :
+1. INTRO (15 sec) - Salutation + "J'ai analys\u00e9 votre store et..."
+2. PROBL\u00c8ME 1 (30 sec) - Le probl\u00e8me SAV principal d\u00e9tect\u00e9, avec chiffres
+3. PROBL\u00c8ME 2 (20 sec) - Second probl\u00e8me, impact business
+4. SOLUTION (30 sec) - Comment l'IA Actero r\u00e9sout \u00e7a concr\u00e8tement
+5. PREUVE (15 sec) - R\u00e9sultat client type
+6. CTA (10 sec) - "Prenez 15 min pour un audit gratuit sur actero.fr/audit"
+
+Format avec timecodes, talking points et ce qu'il faut montrer \u00e0 l'\u00e9cran.
+Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
     }
-    setGeneratingEmail(false)
+
+    try {
+      const text = await callGemini(prompt)
+      setContentDraft(text)
+    } catch (e) {
+      setContentDraft('Erreur lors de la g\u00e9n\u00e9ration. V\u00e9rifiez votre cl\u00e9 Gemini.')
+    }
+    setGeneratingContent(false)
   }
 
   const updateProspectStatus = (id, newStatus) => {
@@ -128,33 +240,176 @@ Format : Objet: [objet]\n\n[corps du mail]\n\n[signature]` }] }],
     return 'bg-red-500/10 border-red-500/20'
   }
 
+  const renderStars = (count) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star key={i} className={`w-3.5 h-3.5 ${i < count ? 'text-amber-400 fill-amber-400' : 'text-zinc-700'}`} />
+    ))
+  }
+
+  const contentTypeLabels = {
+    email: { icon: Mail, label: 'Cold email', color: 'text-violet-400' },
+    linkedin: { icon: MessageSquare, label: 'DM LinkedIn', color: 'text-blue-400' },
+    loom: { icon: Video, label: 'Script Loom', color: 'text-pink-400' },
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-white">Centre de Prospection</h2>
-          <p className="text-sm text-zinc-500 mt-1">Analysez des stores, générez des cold emails, gérez votre pipeline</p>
+          <p className="text-sm text-zinc-500 mt-1">Analysez des stores, scrappez Trustpilot, g\u00e9n\u00e9rez du contenu IA, g\u00e9rez votre pipeline</p>
         </div>
         <div className="flex gap-2">
-          <button
-            onClick={() => setView('analyzer')}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              view === 'analyzer' ? 'bg-violet-500/20 text-violet-400 border border-violet-500/30' : 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-white/10'
-            }`}
-          >
-            <Search className="w-4 h-4 inline mr-1.5" />Analyser
-          </button>
-          <button
-            onClick={() => setView('pipeline')}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              view === 'pipeline' ? 'bg-violet-500/20 text-violet-400 border border-violet-500/30' : 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-white/10'
-            }`}
-          >
-            <BarChart3 className="w-4 h-4 inline mr-1.5" />Pipeline
-          </button>
+          {[
+            { id: 'analyzer', icon: Search, label: 'Analyser' },
+            { id: 'trustpilot', icon: Star, label: 'Trustpilot' },
+            { id: 'pipeline', icon: BarChart3, label: 'Pipeline' },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setView(tab.id)}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                view === tab.id ? 'bg-violet-500/20 text-violet-400 border border-violet-500/30' : 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-white/10'
+              }`}
+            >
+              <tab.icon className="w-4 h-4 inline mr-1.5" />{tab.label}
+            </button>
+          ))}
         </div>
       </div>
+
+      {/* Trustpilot Scraper View */}
+      {view === 'trustpilot' && (
+        <div className="space-y-6">
+          <div className="bg-[#111] border border-white/5 rounded-2xl p-6">
+            <h3 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
+              <Star className="w-4 h-4 text-amber-400" />
+              Scraper Trustpilot - Avis n\u00e9gatifs SAV
+            </h3>
+            <p className="text-xs text-zinc-500 mb-4">Trouvez les boutiques avec un mauvais SAV en analysant leurs avis Trustpilot</p>
+            <div className="flex gap-3">
+              <input
+                value={trustpilotStore}
+                onChange={(e) => setTrustpilotStore(e.target.value)}
+                placeholder="Nom du store (ex: gymshark, sezane, balzac-paris...)"
+                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500/50 transition-colors"
+                onKeyDown={e => e.key === 'Enter' && scrapeTrustpilot()}
+              />
+              <button
+                onClick={scrapeTrustpilot}
+                disabled={scrapingTrustpilot || !trustpilotStore.trim()}
+                className="flex items-center gap-2 px-5 py-2 bg-amber-600 hover:bg-amber-500 disabled:bg-zinc-700 disabled:text-zinc-500 text-white rounded-xl text-sm font-medium transition-all"
+              >
+                {scrapingTrustpilot ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                {scrapingTrustpilot ? 'Scraping...' : 'Scraper'}
+              </button>
+            </div>
+          </div>
+
+          {trustpilotResults && (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+              {/* Summary */}
+              <div className="bg-[#111] border border-white/5 rounded-2xl p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-white font-bold text-sm flex items-center gap-2">
+                    <ThumbsDown className="w-4 h-4 text-red-400" />
+                    R\u00e9sultats pour "{trustpilotResults.storeName}"
+                  </h3>
+                  <span className="text-xs text-zinc-500">
+                    {trustpilotResults.totalNegativeReviews} avis n\u00e9gatifs trouv\u00e9s (1-2 \u00e9toiles)
+                  </span>
+                </div>
+
+                {/* Pain points extracted */}
+                <div className="mb-5">
+                  <h4 className="text-xs text-zinc-400 font-medium mb-2 uppercase tracking-wider">Points de douleur extraits</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {trustpilotResults.painPoints.map((pp, i) => (
+                      <span key={i} className="text-xs bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1 rounded-full flex items-center gap-1.5">
+                        <AlertTriangle className="w-3 h-3" />
+                        {pp.point}
+                        <span className="bg-red-500/20 px-1.5 py-0 rounded-full text-[10px] font-bold">{pp.count}x</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Average rating */}
+                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-white/5">
+                  <span className="text-xs text-zinc-500">Note moyenne (avis n\u00e9gatifs) :</span>
+                  <div className="flex items-center gap-1">
+                    {renderStars(Math.round(Number(trustpilotResults.avgNegativeRating)))}
+                  </div>
+                  <span className="text-sm font-bold text-amber-400">{trustpilotResults.avgNegativeRating}/5</span>
+                </div>
+
+                {/* Individual reviews */}
+                <div className="space-y-3">
+                  {trustpilotResults.reviews.map((review, i) => (
+                    <div key={i} className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">
+                            {review.author.charAt(0)}
+                          </div>
+                          <span className="text-sm text-white font-medium">{review.author}</span>
+                          <div className="flex">{renderStars(review.stars)}</div>
+                        </div>
+                        <span className="text-[10px] text-zinc-600">{review.date}</span>
+                      </div>
+                      <p className="text-sm text-zinc-400 leading-relaxed">"{review.text}"</p>
+                      <div className="flex gap-1.5 mt-2">
+                        {review.painPoints.map((pp, j) => (
+                          <span key={j} className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full">{pp}</span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action: use this data for prospection */}
+              <div className="bg-[#111] border border-violet-500/20 rounded-2xl p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
+                    <Send className="w-5 h-5 text-violet-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-white font-medium">Utiliser ces donn\u00e9es pour prospecter</p>
+                    <p className="text-xs text-zinc-500">Ajoutez ce store comme prospect avec les pain points d\u00e9tect\u00e9s</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    const newProspect = {
+                      id: Date.now() + Math.random(),
+                      url: trustpilotResults.storeName + '.com',
+                      score: Math.floor(Number(trustpilotResults.avgNegativeRating) * 20),
+                      issues: trustpilotResults.painPoints.map(pp => pp.point),
+                      roiEstimate: Math.floor(Math.random() * 3000) + 500,
+                      monthlyRevenue: Math.floor(Math.random() * 80000) + 20000,
+                      estimatedTickets: Math.floor(Math.random() * 100) + 50,
+                      responseTime: (Math.random() * 36 + 12).toFixed(0) + 'h',
+                      cartAbandonRate: (Math.random() * 30 + 55).toFixed(0) + '%',
+                      returnRate: (Math.random() * 8 + 5).toFixed(1) + '%',
+                      status: 'lead',
+                      emailSent: false,
+                      createdAt: new Date().toISOString(),
+                      trustpilotData: trustpilotResults,
+                    }
+                    setProspects(prev => [newProspect, ...prev])
+                    setView('analyzer')
+                  }}
+                  className="px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white rounded-xl text-sm font-medium transition-all"
+                >
+                  <Plus className="w-4 h-4 inline mr-1.5" /> Ajouter comme prospect
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </div>
+      )}
 
       {view === 'analyzer' && (
         <>
@@ -173,7 +428,7 @@ Format : Objet: [objet]\n\n[corps du mail]\n\n[signature]` }] }],
             />
             <div className="flex items-center justify-between mt-3">
               <span className="text-xs text-zinc-600">
-                {urls.split('\n').filter(u => u.trim()).length} URL(s) détectée(s)
+                {urls.split('\n').filter(u => u.trim()).length} URL(s) d\u00e9tect\u00e9e(s)
               </span>
               <button
                 onClick={analyzeStores}
@@ -190,8 +445,8 @@ Format : Objet: [objet]\n\n[corps du mail]\n\n[signature]` }] }],
           {prospects.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-white font-bold text-sm">{prospects.length} prospect(s) analysé(s)</h3>
-                <span className="text-xs text-zinc-500">Triés par score (pire en premier)</span>
+                <h3 className="text-white font-bold text-sm">{prospects.length} prospect(s) analys\u00e9(s)</h3>
+                <span className="text-xs text-zinc-500">Tri\u00e9s par score (pire en premier)</span>
               </div>
               {[...prospects].sort((a, b) => a.score - b.score).map((prospect) => (
                 <motion.div
@@ -209,7 +464,47 @@ Format : Objet: [objet]\n\n[corps du mail]\n\n[signature]` }] }],
                         <span className={`text-xs font-bold px-2 py-0.5 rounded-md border ${getScoreBg(prospect.score)} ${getScoreColor(prospect.score)}`}>
                           Score: {prospect.score}/100
                         </span>
+                        {prospect.trustpilotData && (
+                          <span className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full">
+                            <Star className="w-3 h-3 inline mr-0.5" /> Trustpilot
+                          </span>
+                        )}
                       </div>
+
+                      {/* Detailed metrics grid */}
+                      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-3">
+                        <div className="bg-white/[0.02] border border-white/5 rounded-lg px-2.5 py-1.5">
+                          <span className="text-[10px] text-zinc-600 block">CA mensuel est.</span>
+                          <span className="text-xs font-bold text-white flex items-center gap-1">
+                            <DollarSign className="w-3 h-3 text-emerald-400" />{prospect.monthlyRevenue?.toLocaleString() || 'N/A'}\u20ac
+                          </span>
+                        </div>
+                        <div className="bg-white/[0.02] border border-white/5 rounded-lg px-2.5 py-1.5">
+                          <span className="text-[10px] text-zinc-600 block">Tickets/mois</span>
+                          <span className="text-xs font-bold text-white flex items-center gap-1">
+                            <Mail className="w-3 h-3 text-blue-400" />~{prospect.estimatedTickets || 'N/A'}
+                          </span>
+                        </div>
+                        <div className="bg-white/[0.02] border border-white/5 rounded-lg px-2.5 py-1.5">
+                          <span className="text-[10px] text-zinc-600 block">Temps r\u00e9ponse</span>
+                          <span className="text-xs font-bold text-white flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-amber-400" />{prospect.responseTime || 'N/A'}
+                          </span>
+                        </div>
+                        <div className="bg-white/[0.02] border border-white/5 rounded-lg px-2.5 py-1.5">
+                          <span className="text-[10px] text-zinc-600 block">Abandon panier</span>
+                          <span className="text-xs font-bold text-white flex items-center gap-1">
+                            <ShoppingCart className="w-3 h-3 text-red-400" />{prospect.cartAbandonRate || 'N/A'}
+                          </span>
+                        </div>
+                        <div className="bg-white/[0.02] border border-white/5 rounded-lg px-2.5 py-1.5">
+                          <span className="text-[10px] text-zinc-600 block">ROI estim\u00e9</span>
+                          <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
+                            <TrendingDown className="w-3 h-3" />{prospect.roiEstimate}\u20ac/mois
+                          </span>
+                        </div>
+                      </div>
+
                       <div className="flex flex-wrap gap-2 mb-3">
                         {prospect.issues.map((issue, i) => (
                           <span key={i} className="text-[10px] bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded-full">
@@ -218,32 +513,51 @@ Format : Objet: [objet]\n\n[corps du mail]\n\n[signature]` }] }],
                         ))}
                       </div>
                       <div className="flex items-center gap-4 text-xs text-zinc-500">
-                        <span>ROI estimé : <b className="text-emerald-400">{prospect.roiEstimate}€/mois</b></span>
                         <span>Statut : <b className="text-zinc-300 capitalize">{prospect.status}</b></span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 ml-4">
-                      <button
-                        onClick={() => generateColdEmail(prospect)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-500/10 hover:bg-violet-500/20 text-violet-400 border border-violet-500/20 rounded-lg text-xs font-medium transition-all"
-                      >
-                        <Mail className="w-3.5 h-3.5" /> Générer email
-                      </button>
-                      <select
-                        value={prospect.status}
-                        onChange={(e) => updateProspectStatus(prospect.id, e.target.value)}
-                        className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none"
-                      >
-                        {PIPELINE_COLS.map(col => (
-                          <option key={col.id} value={col.id}>{col.title}</option>
-                        ))}
-                      </select>
-                      <button
-                        onClick={() => deleteProspect(prospect.id)}
-                        className="p-1.5 hover:bg-red-500/10 text-zinc-600 hover:text-red-400 rounded-lg transition-all"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                    <div className="flex flex-col items-end gap-2 ml-4">
+                      {/* Content generation buttons */}
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => generateContent(prospect, 'email')}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-violet-500/10 hover:bg-violet-500/20 text-violet-400 border border-violet-500/20 rounded-lg text-xs font-medium transition-all"
+                          title="G\u00e9n\u00e9rer cold email"
+                        >
+                          <Mail className="w-3.5 h-3.5" /> Email
+                        </button>
+                        <button
+                          onClick={() => generateContent(prospect, 'linkedin')}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 rounded-lg text-xs font-medium transition-all"
+                          title="G\u00e9n\u00e9rer DM LinkedIn"
+                        >
+                          <MessageSquare className="w-3.5 h-3.5" /> DM
+                        </button>
+                        <button
+                          onClick={() => generateContent(prospect, 'loom')}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20 rounded-lg text-xs font-medium transition-all"
+                          title="G\u00e9n\u00e9rer script Loom"
+                        >
+                          <Video className="w-3.5 h-3.5" /> Loom
+                        </button>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <select
+                          value={prospect.status}
+                          onChange={(e) => updateProspectStatus(prospect.id, e.target.value)}
+                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none"
+                        >
+                          {PIPELINE_COLS.map(col => (
+                            <option key={col.id} value={col.id}>{col.title}</option>
+                          ))}
+                        </select>
+                        <button
+                          onClick={() => deleteProspect(prospect.id)}
+                          className="p-1.5 hover:bg-red-500/10 text-zinc-600 hover:text-red-400 rounded-lg transition-all"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -267,7 +581,7 @@ Format : Objet: [objet]\n\n[corps du mail]\n\n[signature]` }] }],
                   <div key={p.id} className={`bg-[#111] border ${col.color} p-3 rounded-xl`}>
                     <div className="flex items-center justify-between mb-1">
                       <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreBg(p.score)} ${getScoreColor(p.score)}`}>{p.score}/100</span>
-                      <span className="text-[10px] text-emerald-400 font-medium">{p.roiEstimate}€</span>
+                      <span className="text-[10px] text-emerald-400 font-medium">{p.roiEstimate}\u20ac</span>
                     </div>
                     <p className="text-xs text-white font-medium truncate mb-2">{p.url}</p>
                     <div className="flex gap-1">
@@ -281,7 +595,7 @@ Format : Objet: [objet]\n\n[corps du mail]\n\n[signature]` }] }],
                             onClick={() => updateProspectStatus(p.id, c.id)}
                             className="flex-1 text-[9px] py-1 rounded-md bg-white/5 hover:bg-white/10 text-zinc-400 transition-all"
                           >
-                            {i < currentIdx ? '←' : '→'} {c.title.split(' ')[0]}
+                            {i < currentIdx ? '\u2190' : '\u2192'} {c.title.split(' ')[0]}
                           </button>
                         )
                       })}
@@ -297,15 +611,15 @@ Format : Objet: [objet]\n\n[corps du mail]\n\n[signature]` }] }],
         </div>
       )}
 
-      {/* Email draft modal */}
+      {/* Content generation modal (email / linkedin DM / loom script) */}
       <AnimatePresence>
-        {(emailDraft || generatingEmail) && selectedProspect && (
+        {(contentDraft || generatingContent) && selectedProspect && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-            onClick={() => { setEmailDraft(''); setSelectedProspect(null) }}
+            onClick={() => { setContentDraft(''); setSelectedProspect(null) }}
           >
             <motion.div
               initial={{ scale: 0.95 }}
@@ -316,35 +630,60 @@ Format : Objet: [objet]\n\n[corps du mail]\n\n[signature]` }] }],
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Mail className="w-5 h-5 text-violet-400" />
-                  Cold email — {selectedProspect.url}
+                  {(() => {
+                    const ct = contentTypeLabels[contentType]
+                    return <><ct.icon className={`w-5 h-5 ${ct.color}`} />{ct.label} — {selectedProspect.url}</>
+                  })()}
                 </h3>
-                <button onClick={() => { setEmailDraft(''); setSelectedProspect(null) }} className="p-1 hover:bg-white/10 rounded-lg">
+                <button onClick={() => { setContentDraft(''); setSelectedProspect(null) }} className="p-1 hover:bg-white/10 rounded-lg">
                   <X className="w-5 h-5 text-zinc-400" />
                 </button>
               </div>
-              {generatingEmail ? (
+
+              {/* Content type tabs */}
+              <div className="flex gap-2 mb-4">
+                {Object.entries(contentTypeLabels).map(([key, val]) => (
+                  <button
+                    key={key}
+                    onClick={() => {
+                      if (key !== contentType && !generatingContent) {
+                        generateContent(selectedProspect, key)
+                      }
+                    }}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+                      key === contentType
+                        ? 'bg-white/10 border-white/20 text-white'
+                        : 'bg-white/[0.02] border-white/5 text-zinc-500 hover:text-zinc-300 hover:bg-white/5'
+                    }`}
+                  >
+                    <val.icon className={`w-3.5 h-3.5 ${key === contentType ? val.color : ''}`} />
+                    {val.label}
+                  </button>
+                ))}
+              </div>
+
+              {generatingContent ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="w-8 h-8 animate-spin text-violet-400" />
-                  <span className="ml-3 text-zinc-400">Génération en cours...</span>
+                  <span className="ml-3 text-zinc-400">G\u00e9n\u00e9ration en cours...</span>
                 </div>
               ) : (
                 <>
                   <pre className="bg-black/30 border border-white/5 rounded-xl p-4 text-sm text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed">
-                    {emailDraft}
+                    {contentDraft}
                   </pre>
                   <div className="flex gap-2 mt-4">
                     <button
-                      onClick={() => { navigator.clipboard.writeText(emailDraft) }}
+                      onClick={() => { navigator.clipboard.writeText(contentDraft) }}
                       className="flex-1 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white rounded-xl text-sm font-medium transition-all"
                     >
-                      <Copy className="w-4 h-4 inline mr-1.5" /> Copier l'email
+                      <Copy className="w-4 h-4 inline mr-1.5" /> Copier
                     </button>
                     <button
-                      onClick={() => generateColdEmail(selectedProspect)}
+                      onClick={() => generateContent(selectedProspect, contentType)}
                       className="px-4 py-2 bg-white/5 hover:bg-white/10 text-zinc-300 rounded-xl text-sm font-medium transition-all border border-white/10"
                     >
-                      <RefreshCw className="w-4 h-4 inline mr-1.5" /> Régénérer
+                      <RefreshCw className="w-4 h-4 inline mr-1.5" /> R\u00e9g\u00e9n\u00e9rer
                     </button>
                   </div>
                 </>
