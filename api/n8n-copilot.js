@@ -11,31 +11,50 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// ── Gemini helper ──────────────────────────────────────────
+// ── Gemini helper with fallback ──────────────────────────────
+const GEMINI_MODELS = [
+  'gemini-3-flash',
+  'gemini-2.5-flash-preview-05-20',
+  'gemini-2.0-flash',
+];
+
 async function askGemini(systemPrompt, userPrompt, jsonMode = true) {
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: systemPrompt }] },
-        contents: [{ parts: [{ text: userPrompt }] }],
-        generationConfig: {
-          temperature: 0.05,
-          ...(jsonMode ? { responseMimeType: 'application/json' } : {}),
-        },
-      }),
+  let lastError = null;
+  for (const model of GEMINI_MODELS) {
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            contents: [{ parts: [{ text: userPrompt }] }],
+            generationConfig: {
+              temperature: 0.05,
+              ...(jsonMode ? { responseMimeType: 'application/json' } : {}),
+            },
+          }),
+        }
+      );
+      if (!res.ok) {
+        const errText = await res.text();
+        lastError = new Error(`Gemini ${model} ${res.status}: ${errText.substring(0, 200)}`);
+        continue; // try next model
+      }
+      const data = await res.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) {
+        lastError = new Error(`Réponse vide de ${model}`);
+        continue;
+      }
+      return jsonMode ? JSON.parse(text) : text;
+    } catch (e) {
+      lastError = e;
+      continue; // try next model
     }
-  );
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Gemini ${res.status}: ${errText}`);
   }
-  const data = await res.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) throw new Error('Réponse Gemini vide');
-  return jsonMode ? JSON.parse(text) : text;
+  throw lastError || new Error('Tous les modèles Gemini ont échoué');
 }
 
 // ── n8n helpers ────────────────────────────────────────────
