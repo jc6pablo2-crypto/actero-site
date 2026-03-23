@@ -199,17 +199,43 @@ const WorkflowCard = ({ workflow, index, onToggle, togglingId }) => {
   )
 }
 
+// Filter workflows to show only client-relevant ones
+// Excludes: templates, internal Actero workflows, prospection tools
+const INTERNAL_KEYWORDS = [
+  '[template]', 'template', 'actero –', 'actero —', 'actero -',
+  'increment client metrics', 'metrics error log', 'cleanup client',
+  'process automation events', 'execution engine',
+  'prospection', 'email prospection', 'lead machine',
+  'tally', 'demo', 'temp -', 'test',
+]
+
+function isClientWorkflow(wf, clientName) {
+  const name = (wf.name || '').toLowerCase()
+  // Exclude internal/template workflows
+  if (INTERNAL_KEYWORDS.some(kw => name.includes(kw))) return false
+  // If clientName is provided, check if workflow contains it
+  if (clientName) {
+    const cn = clientName.toLowerCase()
+    if (name.includes(cn)) return true
+  }
+  // Include SAV, paniers, relance, collecte, rdv workflows that are NOT templates
+  if (/^(sav|shopify|panier|relance|collecte|rdv|agent)/i.test(wf.name)) return true
+  return false
+}
+
 export const ClientSystemsView = ({ clientName, theme }) => {
   const queryClient = useQueryClient()
   const [confirmDialog, setConfirmDialog] = useState({ open: false, workflow: null })
   const [toast, setToast] = useState({ visible: false, message: '' })
   const [togglingId, setTogglingId] = useState(null)
 
-  const { data: workflows = [], isLoading, isError } = useQuery({
+  const { data: allWorkflows = [], isLoading, isError } = useQuery({
     queryKey: ['client-workflows'],
     queryFn: fetchWorkflows,
     refetchInterval: 30000,
   })
+
+  const workflows = allWorkflows.filter(wf => isClientWorkflow(wf, clientName))
 
   const mutation = useMutation({
     mutationFn: toggleWorkflow,
