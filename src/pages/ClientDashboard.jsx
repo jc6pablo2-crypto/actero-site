@@ -32,6 +32,7 @@ import {
   Ticket,
   User,
   MessageSquare,
+  MessageCircle,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
@@ -48,6 +49,8 @@ import { ActivityView } from '../components/dashboard/ActivityView'
 import { SupportTicketsView } from '../components/dashboard/SupportTicketsView'
 import { ClientProfileView } from '../components/client/ClientProfileView'
 import { ClientCopilotBubble } from '../components/client/ClientCopilotBubble'
+import { ClientConversationsView } from '../components/client/ClientConversationsView'
+import { ClientSystemsView } from '../components/client/ClientSystemsView'
 
 export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   // eslint-disable-next-line no-unused-vars
@@ -65,6 +68,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   const getTabFromRoute = (route) => {
     if (route === "/client/activity") return "activity";
+    if (route === "/client/conversations") return "conversations";
     if (route === "/client/systems") return "systems";
     if (route === "/client/intelligence") return "intelligence";
     if (route === "/client/reports") return "reports";
@@ -281,6 +285,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { type: 'section', label: 'Infrastructure' },
     { id: 'systems', label: 'Mes Systèmes', icon: Database },
     { id: 'activity', label: 'Activité en direct', icon: Activity },
+    { id: 'conversations', label: 'Conversations IA', icon: MessageCircle },
     { id: 'intelligence', label: 'Intelligence', icon: Lightbulb },
     { id: 'reports', label: 'Rapports', icon: Download },
     { id: 'support', label: 'Support & Demandes', icon: MessageSquare },
@@ -349,6 +354,8 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             <h1 className={`text-xl font-bold tracking-tight whitespace-nowrap ${isLight ? "text-slate-900" : "text-white"}`}>
               {activeTab === "overview" && "Vue d'ensemble"}
               {activeTab === "activity" && "Activité temps réel"}
+              {activeTab === "systems" && "Mes Systèmes"}
+              {activeTab === "conversations" && "Conversations IA"}
               {activeTab === "intelligence" && "Intelligence"}
               {activeTab === "support" && "Support & Demandes"}
             </h1>
@@ -498,12 +505,21 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "activity" && <ActivityView supabase={supabase} theme={theme} />}
 
+          {activeTab === "conversations" && <ClientConversationsView clientId={currentClient?.id} />}
+
           {activeTab === "profile" && <ClientProfileView theme={theme} />}
 
           {activeTab === "support" && (
             <SupportTicketsView
               supabase={supabase}
               clientId={currentClient?.id}
+              theme={theme}
+            />
+          )}
+
+          {activeTab === "systems" && (
+            <ClientSystemsView
+              clientName={currentClient?.brand_name}
               theme={theme}
             />
           )}
