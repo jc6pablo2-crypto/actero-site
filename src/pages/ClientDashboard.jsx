@@ -304,15 +304,11 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   })
 
   const sidebarItems = [
-    { type: 'section', label: 'Pilotage' },
     { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
-    { type: 'section', label: 'Infrastructure' },
+    { id: 'activity', label: 'Activite', icon: Activity },
     { id: 'systems', label: 'Mes Systemes', icon: Database },
     { id: 'knowledge', label: 'Base de connaissances', icon: BookOpen },
-    { id: 'activity', label: 'Activite en direct', icon: Activity },
-    { id: 'intelligence', label: 'Intelligence', icon: Lightbulb },
-    { id: 'reports', label: 'Rapports', icon: Download },
-    { id: 'support', label: 'Support & Demandes', icon: MessageSquare },
+    { id: 'support', label: 'Support', icon: MessageSquare },
     { id: 'referral', label: 'Parrainage', icon: Gift },
     { type: 'section', label: 'Compte' },
     { id: 'profile', label: 'Mon Profil', icon: User },
