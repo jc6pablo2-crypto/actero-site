@@ -9,6 +9,8 @@ import {
   ArrowUpRight,
   Plus,
   HelpCircle,
+  Gift,
+  Sparkles,
 } from "lucide-react";
 import { Logo } from "../components/layout/Logo";
 import { Navbar } from "../components/layout/Navbar";
@@ -19,9 +21,26 @@ import { OnboardingTimer } from "../components/landing/OnboardingTimer";
 
 export const AuditPage = ({ onNavigate }) => {
   const [openFaq, setOpenFaq] = useState(null);
+  const [referralCode, setReferralCode] = useState(null);
+  const [referrerName, setReferrerName] = useState(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    // Check for referral code in URL or cookie
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('referral_code') || document.cookie.split('; ').find(c => c.startsWith('actero_referral_code='))?.split('=')[1];
+    if (code) {
+      setReferralCode(code);
+      // Fetch referrer name
+      fetch('/api/referral/track-click', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code })
+      })
+        .then(r => r.json())
+        .then(d => { if (d.referrer_name) setReferrerName(d.referrer_name); })
+        .catch(() => {});
+    }
   }, []);
 
   const auditFaqs = [
@@ -48,16 +67,52 @@ export const AuditPage = ({ onNavigate }) => {
       <Navbar onNavigate={onNavigate} onAuditOpen={() => onNavigate("/audit")} trackEvent={trackEvent} />
 
       <main className="pt-32 pb-24 relative z-10 flex-grow px-6">
+        {/* Referral banner */}
+        {referralCode && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-5xl mx-auto mb-8"
+          >
+            <div className="relative overflow-hidden rounded-2xl border border-violet-500/30 bg-gradient-to-r from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 p-6">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/10 rounded-full blur-3xl" />
+              <div className="relative flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-violet-500/20 border border-violet-500/30 flex items-center justify-center flex-shrink-0">
+                  <Gift className="w-6 h-6 text-violet-400" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    {referrerName && (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-violet-500/20 border border-violet-500/30 text-violet-300 text-xs font-bold">
+                        <Sparkles className="w-3 h-3" />
+                        Recommandé par {referrerName}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-lg font-bold text-white">
+                    Vos frais de setup de <span className="line-through text-gray-500">800€</span> sont <span className="text-emerald-400">offerts</span>
+                  </h3>
+                  <p className="text-sm text-gray-400 mt-1">
+                    Grâce à votre parrain, vous bénéficiez d'une installation gratuite. Réservez votre audit pour en profiter.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         <div className="max-w-5xl mx-auto">
           <FadeInUp>
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div className="space-y-10">
                 <div>
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6 leading-[1.1]">
-                    Audit stratégique offert.
+                    {referralCode ? "Audit offert par votre parrain." : "Audit stratégique offert."}
                   </h1>
                   <p className="text-xl text-gray-400 font-medium leading-relaxed">
-                    15 minutes pour identifier précisément où vous perdez de la marge, sans aucun engagement.
+                    {referralCode
+                      ? "15 minutes pour découvrir comment automatiser votre business — frais d'installation offerts."
+                      : "15 minutes pour identifier précisément où vous perdez de la marge, sans aucun engagement."}
                   </p>
                 </div>
 
