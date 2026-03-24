@@ -75,8 +75,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   const getTabFromRoute = (route) => {
     if (route === "/client/activity") return "activity";
-    if (route === "/client/conversations") return "conversations";
-    if (route === "/client/escalations") return "escalations";
     if (route === "/client/systems") return "systems";
     if (route === "/client/knowledge") return "knowledge";
     if (route === "/client/intelligence") return "intelligence";
@@ -309,8 +307,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { type: 'section', label: 'Pilotage' },
     { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
     { type: 'section', label: 'Infrastructure' },
-    { id: 'conversations', label: 'Conversations IA', icon: MessageCircle },
-    { id: 'escalations', label: 'Escalades', icon: AlertTriangle, badge: pendingEscalations.length > 0 ? pendingEscalations.length : null, badgeColor: 'bg-red-500/20 text-red-400' },
     { id: 'systems', label: 'Mes Systemes', icon: Database },
     { id: 'knowledge', label: 'Base de connaissances', icon: BookOpen },
     { id: 'activity', label: 'Activite en direct', icon: Activity },
@@ -384,8 +380,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               {activeTab === "overview" && "Vue d'ensemble"}
               {activeTab === "activity" && "Activite temps reel"}
               {activeTab === "systems" && "Mes Systemes"}
-              {activeTab === "conversations" && "Conversations IA"}
-              {activeTab === "escalations" && "Escalades"}
               {activeTab === "knowledge" && "Base de connaissances"}
               {activeTab === "intelligence" && "Intelligence"}
               {activeTab === "support" && "Support & Demandes"}
@@ -545,8 +539,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "activity" && <ActivityView supabase={supabase} theme={theme} />}
 
-          {activeTab === "conversations" && <ClientConversationsView clientId={currentClient?.id} />}
-
           {activeTab === "profile" && <ClientProfileView theme={theme} />}
 
           {activeTab === "support" && (
@@ -580,12 +572,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             />
           )}
 
-          {activeTab === "escalations" && (
-            <ClientEscalationsView
-              clientId={currentClient?.id}
-              theme={theme}
-            />
-          )}
         </main>
       </div>
 

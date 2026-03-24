@@ -119,13 +119,11 @@ export const ReferralLanding = ({ code, onNavigate }) => {
           >
             <div className="inline-block bg-gradient-to-r from-amber-500/10 to-emerald-500/10 border border-amber-500/20 rounded-2xl px-8 py-5">
               <p className="text-lg md:text-xl font-medium">
-                Frais de setup de{' '}
-                <span className="line-through text-gray-500">800&#8364;</span>{' '}
-                <span className="text-emerald-400 font-bold">offerts</span>{' '}
+                <span className="text-emerald-400 font-bold">Frais de setup offerts</span>{' '}
                 grace a votre parrain
               </p>
               <p className="text-sm text-gray-400 mt-1">
-                Soit 800&#8364; d'economie immediate sur votre demarrage
+                Economie immediate sur votre demarrage
               </p>
             </div>
           </motion.div>
