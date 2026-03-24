@@ -53,7 +53,9 @@ function MainRouter() {
 
   const navigate = (path) => {
     window.history.pushState({}, "", path);
-    setCurrentRoute(path);
+    // Strip query params for route matching
+    const pathname = path.split("?")[0].split("#")[0];
+    setCurrentRoute(pathname);
     window.scrollTo(0, 0);
   };
 
