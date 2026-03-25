@@ -33,7 +33,7 @@ const J30Badge = ({ eligibilityDate }) => {
   const { daysLeft, isEligible, label } = getJ30Countdown(eligibilityDate)
   if (daysLeft === null) return <span className="text-[10px] text-gray-600">\u2014</span>
   if (isEligible) {
-    return <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-green-500/10 text-green-400 border border-green-500/20">\u00c9ligible</span>
+    return <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-green-500/10 text-green-400 border border-green-500/20">Éligible</span>
   }
   return (
     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
@@ -162,7 +162,7 @@ export const AdminAmbassadorsView = () => {
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, status, notes_admin }),
       })
-      if (!res.ok) throw new Error('Erreur mise \u00e0 jour')
+      if (!res.ok) throw new Error('Erreur mise à jour')
       return res.json()
     },
     onSuccess: () => {
@@ -180,7 +180,7 @@ export const AdminAmbassadorsView = () => {
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, status, status_note, admin_note, client_id }),
       })
-      if (!res.ok) throw new Error('Erreur mise \u00e0 jour')
+      if (!res.ok) throw new Error('Erreur mise à jour')
       return res.json()
     },
     onSuccess: () => {
@@ -200,7 +200,7 @@ export const AdminAmbassadorsView = () => {
       })
       if (!res.ok) {
         const err = await res.json().catch(() => ({}))
-        throw new Error(err.error || 'Erreur cr\u00e9ation commission')
+        throw new Error(err.error || 'Erreur création commission')
       }
       return res.json()
     },
@@ -220,7 +220,7 @@ export const AdminAmbassadorsView = () => {
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, status, admin_note, client_payment_date }),
       })
-      if (!res.ok) throw new Error('Erreur mise \u00e0 jour')
+      if (!res.ok) throw new Error('Erreur mise à jour')
       return res.json()
     },
     onSuccess: () => {
@@ -242,7 +242,7 @@ export const AdminAmbassadorsView = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['admin-ambassador-commissions'] })
-      if (data.processed > 0) alert(`${data.processed} commission(s) pass\u00e9e(s) en \u00e9ligible`)
+      if (data.processed > 0) alert(`${data.processed} commission(s) passée(s) en éligible`)
     },
   })
 
@@ -376,9 +376,9 @@ export const AdminAmbassadorsView = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: 'Ambassadeurs actifs', value: activeAmbassadors, total: totalAmbassadors, icon: Users, color: 'emerald' },
-          { label: 'Leads total', value: totalLeads, sub: `${wonLeads} gagn\u00e9s`, icon: Briefcase, color: 'blue' },
+          { label: 'Leads total', value: totalLeads, sub: `${wonLeads} gagnés`, icon: Briefcase, color: 'blue' },
           { label: 'Commissions total', value: `${totalCommissions.toLocaleString('fr-FR')}`, suffix: 'EUR', icon: DollarSign, color: 'violet' },
-          { label: 'Commissions pay\u00e9es', value: `${paidCommissions.toLocaleString('fr-FR')}`, suffix: 'EUR', icon: TrendingUp, color: 'amber' },
+          { label: 'Commissions payées', value: `${paidCommissions.toLocaleString('fr-FR')}`, suffix: 'EUR', icon: TrendingUp, color: 'amber' },
         ].map((kpi, i) => (
           <motion.div
             key={kpi.label}
@@ -420,7 +420,7 @@ export const AdminAmbassadorsView = () => {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-white">{app.first_name} {app.last_name}</p>
                   <p className="text-xs text-gray-500">{app.email}{app.phone ? ` | ${app.phone}` : ''}</p>
-                  {app.network_type && <p className="text-xs text-gray-600 mt-0.5">R\u00e9seau: {app.network_type}</p>}
+                  {app.network_type && <p className="text-xs text-gray-600 mt-0.5">Réseau: {app.network_type}</p>}
                   {app.message && <p className="text-xs text-gray-600 mt-1 line-clamp-2">{app.message}</p>}
                   <p className="text-[10px] text-gray-600 mt-1">{new Date(app.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                 </div>
@@ -530,7 +530,7 @@ export const AdminAmbassadorsView = () => {
                       </div>
                       <div>
                         <p className="text-lg font-bold font-mono text-emerald-400">{amb.stats?.won_count || 0}</p>
-                        <p className="text-[10px] text-gray-500">Gagn\u00e9s</p>
+                        <p className="text-[10px] text-gray-500">Gagnés</p>
                       </div>
                       <div>
                         <p className="text-lg font-bold font-mono text-violet-400">{(amb.stats?.commissions_total || 0).toLocaleString('fr-FR')}</p>
@@ -538,7 +538,7 @@ export const AdminAmbassadorsView = () => {
                       </div>
                       <div>
                         <p className="text-lg font-bold font-mono text-amber-400">{(amb.stats?.commissions_paid || 0).toLocaleString('fr-FR')}</p>
-                        <p className="text-[10px] text-gray-500">Pay\u00e9</p>
+                        <p className="text-[10px] text-gray-500">Payé</p>
                       </div>
                     </div>
                     <div className="relative flex-shrink-0">
@@ -571,7 +571,7 @@ export const AdminAmbassadorsView = () => {
                               onClick={() => updateAmbassadorMutation.mutate({ id: amb.id, status: 'inactive' })}
                               className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/5 transition-colors"
                             >
-                              D\u00e9sactiver
+                              Désactiver
                             </button>
                           )}
                         </div>
@@ -584,7 +584,7 @@ export const AdminAmbassadorsView = () => {
             {filteredAmbassadors.length === 0 && (
               <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl p-16 text-center">
                 <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-500">Aucun ambassadeur trouv\u00e9</p>
+                <p className="text-gray-500">Aucun ambassadeur trouvé</p>
               </div>
             )}
           </div>
@@ -621,7 +621,7 @@ export const AdminAmbassadorsView = () => {
                 <option key={a.id} value={a.id}>{a.name}</option>
               ))}
             </select>
-            <span className="text-[10px] text-gray-600">{filteredLeads.length} r\u00e9sultat{filteredLeads.length > 1 ? 's' : ''}</span>
+            <span className="text-[10px] text-gray-600">{filteredLeads.length} résultat{filteredLeads.length > 1 ? 's' : ''}</span>
           </div>
 
           <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden">
@@ -696,7 +696,7 @@ export const AdminAmbassadorsView = () => {
                               </button>
                             )}
                             {commissions.find(c => c.lead_id === lead.id) && (
-                              <span className="text-[10px] font-bold text-emerald-400/60 px-2 py-1">Commission cr\u00e9\u00e9e</span>
+                              <span className="text-[10px] font-bold text-emerald-400/60 px-2 py-1">Commission créée</span>
                             )}
                           </div>
                         </td>
@@ -705,7 +705,7 @@ export const AdminAmbassadorsView = () => {
                   })}
                   {filteredLeads.length === 0 && (
                     <tr>
-                      <td colSpan={9} className="px-5 py-16 text-center text-gray-500 text-sm">Aucun lead trouv\u00e9</td>
+                      <td colSpan={9} className="px-5 py-16 text-center text-gray-500 text-sm">Aucun lead trouvé</td>
                     </tr>
                   )}
                 </tbody>
@@ -736,7 +736,7 @@ export const AdminAmbassadorsView = () => {
                   <option key={key} value={key}>{cfg.label}</option>
                 ))}
               </select>
-              <span className="text-[10px] text-gray-600">{filteredCommissions.length} r\u00e9sultat{filteredCommissions.length > 1 ? 's' : ''}</span>
+              <span className="text-[10px] text-gray-600">{filteredCommissions.length} résultat{filteredCommissions.length > 1 ? 's' : ''}</span>
             </div>
             <button
               onClick={() => processEligibilityMutation.mutate()}
@@ -744,7 +744,7 @@ export const AdminAmbassadorsView = () => {
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-bold hover:bg-cyan-500/20 transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${processEligibilityMutation.isPending ? 'animate-spin' : ''}`} />
-              Traiter \u00e9ligibilit\u00e9 J+30
+              Traiter éligibilité J+30
             </button>
           </div>
           <div className="bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden">
@@ -807,7 +807,7 @@ export const AdminAmbassadorsView = () => {
                                     onClick={() => updateCommissionMutation.mutate({ id: comm.id, status: 'paid' })}
                                     className="w-full text-left px-4 py-2 text-xs text-emerald-400 hover:bg-white/5 transition-colors"
                                   >
-                                    Marquer pay\u00e9
+                                    Marquer payé
                                   </button>
                                 )}
                                 {comm.status !== 'cancelled' && comm.status !== 'paid' && (
@@ -827,7 +827,7 @@ export const AdminAmbassadorsView = () => {
                   })}
                   {filteredCommissions.length === 0 && (
                     <tr>
-                      <td colSpan={7} className="px-5 py-16 text-center text-gray-500 text-sm">Aucune commission trouv\u00e9e</td>
+                      <td colSpan={7} className="px-5 py-16 text-center text-gray-500 text-sm">Aucune commission trouvée</td>
                     </tr>
                   )}
                 </tbody>
@@ -855,7 +855,7 @@ export const AdminAmbassadorsView = () => {
               onClick={e => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-white">Cr\u00e9er une commission</h3>
+                <h3 className="text-lg font-bold text-white">Créer une commission</h3>
                 <button onClick={() => setShowCommissionModal(null)} className="text-gray-500 hover:text-white transition-colors">
                   <X className="w-5 h-5" />
                 </button>
@@ -898,7 +898,7 @@ export const AdminAmbassadorsView = () => {
                   disabled={createCommissionMutation.isPending}
                   className="w-full py-2.5 rounded-xl bg-white text-black font-bold text-sm hover:bg-gray-200 transition-colors disabled:opacity-50"
                 >
-                  {createCommissionMutation.isPending ? 'Cr\u00e9ation...' : 'Cr\u00e9er la commission'}
+                  {createCommissionMutation.isPending ? 'Création...' : 'Créer la commission'}
                 </button>
               </div>
             </motion.div>

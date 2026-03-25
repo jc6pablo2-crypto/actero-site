@@ -74,7 +74,7 @@ const CopyButton = ({ text }) => {
       className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm font-bold text-gray-300 hover:bg-white/10 transition-all"
     >
       {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-      {copied ? 'Copi\u00e9 !' : 'Copier'}
+      {copied ? 'Copié !' : 'Copier'}
     </button>
   )
 }
@@ -84,7 +84,7 @@ const J30Badge = ({ eligibilityDate }) => {
   const { daysLeft, isEligible, label } = getJ30Countdown(eligibilityDate)
   if (daysLeft === null) return <span className="text-xs text-gray-600">\u2014</span>
   if (isEligible) {
-    return <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-green-500/20 text-green-400">\u00c9ligible</span>
+    return <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-green-500/20 text-green-400">Éligible</span>
   }
   return (
     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
@@ -123,7 +123,7 @@ const LeadTimeline = ({ events }) => {
     return (
       <div className="text-center py-6">
         <Clock className="w-8 h-8 text-gray-700 mx-auto mb-2" />
-        <p className="text-sm text-gray-600">Aucun \u00e9v\u00e9nement pour ce lead.</p>
+        <p className="text-sm text-gray-600">Aucun événement pour ce lead.</p>
       </div>
     )
   }
@@ -303,7 +303,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
         setLeadForm({ prospect_name: '', company_name: '', company_niche: '', prospect_email: '', prospect_phone: '', message: '' })
       }, 1500)
     } catch (_err) {
-      setLeadError('Erreur de connexion. Veuillez r\u00e9essayer.')
+      setLeadError('Erreur de connexion. Veuillez réessayer.')
     } finally {
       setLeadSubmitting(false)
     }
@@ -340,7 +340,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
     { id: 'link', label: 'Mon Lien', icon: Link2 },
     { id: 'leads', label: 'Mes Recommandations', icon: Users },
     { id: 'commissions', label: 'Mes Commissions', icon: DollarSign },
-    { id: 'rules', label: 'R\u00e8gles', icon: BookOpen },
+    { id: 'rules', label: 'Règles', icon: BookOpen },
     { id: 'profile', label: 'Mon Profil', icon: User },
   ]
 
@@ -380,7 +380,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
   const handleShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'Actero', text: 'D\u00e9couvrez Actero, la plateforme IA pour automatiser votre business.', url: ambassadorLink })
+        await navigator.share({ title: 'Actero', text: 'Découvrez Actero, la plateforme IA pour automatiser votre business.', url: ambassadorLink })
       } catch (_e) { /* user cancelled */ }
     } else {
       await navigator.clipboard.writeText(ambassadorLink)
@@ -410,11 +410,11 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                   <Lightbulb className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white mb-1">Comment \u00e7a marche</h3>
+                  <h3 className="text-sm font-bold text-white mb-1">Comment ça marche</h3>
                   <p className="text-xs text-gray-400 leading-relaxed">
                     <strong className="text-gray-300">1.</strong> Partagez votre lien unique &rarr;{' '}
-                    <strong className="text-gray-300">2.</strong> On s'occupe de la vente &rarr;{' '}
-                    <strong className="text-gray-300">3.</strong> Vous \u00eates r\u00e9compens\u00e9 30j apr\u00e8s le paiement client.
+                    <strong className="text-gray-300">2.</strong> On s’occupe de la vente &rarr;{' '}
+                    <strong className="text-gray-300">3.</strong> Vous êtes récompensé 30j après le paiement client.
                   </p>
                 </div>
               </div>
@@ -439,12 +439,12 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
 
             {/* KPIs */}
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-              <KPICard label="Leads envoy\u00e9s" value={totalLeads} icon={Send} />
+              <KPICard label="Leads envoyés" value={totalLeads} icon={Send} />
               <KPICard label="En cours" value={leadsInProgress} icon={Target} accent="blue" />
-              <KPICard label="Leads sign\u00e9s" value={leadsWon} icon={Award} accent="green" />
-              <KPICard label="Total gagn\u00e9" value={`${totalEarned.toLocaleString('fr-FR')} \u20AC`} icon={DollarSign} />
+              <KPICard label="Leads signés" value={leadsWon} icon={Award} accent="green" />
+              <KPICard label="Total gagné" value={`${totalEarned.toLocaleString('fr-FR')} \u20AC`} icon={DollarSign} />
               <KPICard
-                label="Prochaine r\u00e9compense"
+                label="Prochaine récompense"
                 value={nextRewardEstimate > 0 ? `${nextRewardEstimate.toLocaleString('fr-FR')} \u20AC` : '\u2014'}
                 icon={Gift}
                 accent="amber"
@@ -489,7 +489,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                     </div>
                     <div>
                       <p className="text-sm font-bold text-white">Mes commissions</p>
-                      <p className="text-xs text-gray-500">Suivez vos r\u00e9compenses</p>
+                      <p className="text-xs text-gray-500">Suivez vos récompenses</p>
                     </div>
                   </div>
                   <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors" />
@@ -534,14 +534,14 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
 
               <div className="p-5 rounded-xl bg-emerald-500/5 border border-emerald-500/10">
                 <p className="text-sm text-gray-300 font-medium leading-relaxed">
-                  Partagez ce lien \u00e0 vos contacts professionnels. D\u00e8s qu'ils prennent rendez-vous via ce lien, le lead vous est automatiquement attribu\u00e9.
+                  Partagez ce lien à vos contacts professionnels. Dès qu’ils prennent rendez-vous via ce lien, le lead vous est automatiquement attribué.
                 </p>
               </div>
 
               <div className="p-5 rounded-xl bg-white/5 border border-white/10">
                 <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Conditions de commission</p>
                 <p className="text-sm text-gray-400 font-medium leading-relaxed">
-                  La r\u00e9compense est vers\u00e9e 30 jours apr\u00e8s le paiement effectif du client. Le montant d\u00e9pend de la valeur du contrat sign\u00e9.
+                  La récompense est versée 30 jours après le paiement effectif du client. Le montant dépend de la valeur du contrat signé.
                 </p>
               </div>
             </div>
@@ -677,8 +677,8 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                         <div className="w-14 h-14 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
                           <Check className="w-7 h-7 text-emerald-400" />
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-2">Recommandation envoy\u00e9e !</h3>
-                        <p className="text-sm text-gray-500">Notre \u00e9quipe va traiter votre lead.</p>
+                        <h3 className="text-xl font-bold text-white mb-2">Recommandation envoyée !</h3>
+                        <p className="text-sm text-gray-500">Notre équipe va traiter votre lead.</p>
                       </div>
                     ) : (
                       <>
@@ -713,7 +713,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                               value={leadForm.company_name}
                               onChange={(e) => setLeadForm((p) => ({ ...p, company_name: e.target.value }))}
                               className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
-                              placeholder="Nom de l'entreprise"
+                              placeholder="Nom de l’entreprise"
                             />
                           </div>
                           <div>
@@ -723,12 +723,12 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                               onChange={(e) => setLeadForm((p) => ({ ...p, company_niche: e.target.value }))}
                               className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all appearance-none"
                             >
-                              <option value="" className="bg-[#111]">S\u00e9lectionner</option>
+                              <option value="" className="bg-[#111]">Sélectionner</option>
                               <option value="E-commerce" className="bg-[#111]">E-commerce</option>
                               <option value="Immobilier" className="bg-[#111]">Immobilier</option>
                               <option value="SaaS" className="bg-[#111]">SaaS</option>
                               <option value="Finance" className="bg-[#111]">Finance</option>
-                              <option value="Sant\u00e9" className="bg-[#111]">Sant\u00e9</option>
+                              <option value="Santé" className="bg-[#111]">Santé</option>
                               <option value="Autre" className="bg-[#111]">Autre</option>
                             </select>
                           </div>
@@ -744,7 +744,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                               />
                             </div>
                             <div>
-                              <label className="block text-sm font-bold text-gray-300 mb-1.5">T\u00e9l\u00e9phone</label>
+                              <label className="block text-sm font-bold text-gray-300 mb-1.5">Téléphone</label>
                               <input
                                 type="tel"
                                 value={leadForm.prospect_phone}
@@ -791,14 +791,14 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
           <div className="space-y-8">
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">Mes Commissions</h1>
-              <p className="text-gray-400 font-medium">Suivi de vos r\u00e9compenses.</p>
+              <p className="text-gray-400 font-medium">Suivi de vos récompenses.</p>
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <KPICard label="En attente" value={`${commissionsPending.toLocaleString('fr-FR')} \u20AC`} icon={Clock} accent="amber" />
-              <KPICard label="Valid\u00e9es" value={`${commissionsValidated.toLocaleString('fr-FR')} \u20AC`} icon={Check} accent="green" />
-              <KPICard label="Pay\u00e9es" value={`${commissionsPaid.toLocaleString('fr-FR')} \u20AC`} icon={DollarSign} />
-              <KPICard label="Total cumul\u00e9" value={`${commissionsTotal.toLocaleString('fr-FR')} \u20AC`} icon={TrendingUp} accent="cyan" />
+              <KPICard label="Validées" value={`${commissionsValidated.toLocaleString('fr-FR')} \u20AC`} icon={Check} accent="green" />
+              <KPICard label="Payées" value={`${commissionsPaid.toLocaleString('fr-FR')} \u20AC`} icon={DollarSign} />
+              <KPICard label="Total cumulé" value={`${commissionsTotal.toLocaleString('fr-FR')} \u20AC`} icon={TrendingUp} accent="cyan" />
             </div>
 
             {commissions.length === 0 ? (
@@ -808,7 +808,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">Aucune commission</h3>
                 <p className="text-gray-500 font-medium max-w-sm mx-auto">
-                  Les commissions apparaissent ici lorsqu'un de vos leads est sign\u00e9.
+                  Les commissions apparaissent ici lorsqu’un de vos leads est signé.
                 </p>
               </div>
             ) : (
@@ -835,10 +835,10 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                         <span>Paiement client : {new Date(c.client_payment_date).toLocaleDateString('fr-FR')}</span>
                       )}
                       {c.eligibility_date && (
-                        <span>\u00c9ligibilit\u00e9 : {new Date(c.eligibility_date).toLocaleDateString('fr-FR')}</span>
+                        <span>Éligibilité : {new Date(c.eligibility_date).toLocaleDateString('fr-FR')}</span>
                       )}
                       {c.paid_at && (
-                        <span className="text-emerald-400/80">Pay\u00e9 le : {new Date(c.paid_at).toLocaleDateString('fr-FR')}</span>
+                        <span className="text-emerald-400/80">Payé le : {new Date(c.paid_at).toLocaleDateString('fr-FR')}</span>
                       )}
                     </div>
                   </div>
@@ -855,7 +855,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
         return (
           <div className="space-y-8">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">R\u00e8gles du programme</h1>
+              <h1 className="text-3xl font-bold text-white mb-2">Règles du programme</h1>
               <p className="text-gray-400 font-medium">Tout ce que vous devez savoir.</p>
             </div>
 
@@ -863,23 +863,23 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
               {[
                 {
                   title: 'Attribution',
-                  content: 'Les leads sont attribu\u00e9s via votre lien ou code unique, ou par recommandation manuelle valid\u00e9e par Actero. Chaque lead est v\u00e9rifi\u00e9 avant attribution d\u00e9finitive.',
+                  content: 'Les leads sont attribués via votre lien ou code unique, ou par recommandation manuelle validée par Actero. Chaque lead est vérifié avant attribution définitive.',
                 },
                 {
-                  title: 'Quand la r\u00e9compense est due',
-                  content: 'La r\u00e9compense est due uniquement si le prospect recommand\u00e9 devient client ET effectue un paiement. La simple recommandation ne suffit pas.',
+                  title: 'Quand la récompense est due',
+                  content: 'La récompense est due uniquement si le prospect recommandé devient client ET effectue un paiement. La simple recommandation ne suffit pas.',
                 },
                 {
-                  title: 'D\u00e9lai de paiement (J+30)',
-                  content: 'La r\u00e9compense est vers\u00e9e 30 jours apr\u00e8s l\'encaissement effectif du paiement client. Ce d\u00e9lai permet de couvrir les \u00e9ventuelles p\u00e9riodes de r\u00e9tractation.',
+                  title: 'Délai de paiement (J+30)',
+                  content: 'La récompense est versée 30 jours après l\'encaissement effectif du paiement client. Ce délai permet de couvrir les éventuelles périodes de rétractation.',
                 },
                 {
-                  title: 'Cas o\u00f9 aucune r\u00e9compense n\'est due',
-                  content: 'Aucune commission n\'est vers\u00e9e si : le client ne paie pas, le client est rembours\u00e9 int\u00e9gralement, le lead n\'est pas valid\u00e9 par Actero, ou le lead a d\u00e9j\u00e0 \u00e9t\u00e9 soumis par un autre ambassadeur.',
+                  title: 'Cas où aucune récompense n\'est due',
+                  content: 'Aucune commission n\'est versée si : le client ne paie pas, le client est remboursé intégralement, le lead n\'est pas validé par Actero, ou le lead a déjà été soumis par un autre ambassadeur.',
                 },
                 {
-                  title: 'R\u00e8gle du premier arriv\u00e9',
-                  content: 'Un lead ne peut \u00eatre attribu\u00e9 qu\'\u00e0 un seul ambassadeur. En cas de doublon, c\'est le premier ambassadeur ayant soumis le lead qui est retenu (premier arriv\u00e9, premier servi).',
+                  title: 'Règle du premier arrivé',
+                  content: 'Un lead ne peut être attribué qu\'à un seul ambassadeur. En cas de doublon, c\'est le premier ambassadeur ayant soumis le lead qui est retenu (premier arrivé, premier servi).',
                 },
               ].map((rule, i) => (
                 <div key={i} className="p-6 rounded-2xl bg-[#111] border border-white/10">
@@ -899,14 +899,14 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
           <div className="space-y-8">
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">Mon Profil</h1>
-              <p className="text-gray-400 font-medium">G\u00e9rez vos informations personnelles.</p>
+              <p className="text-gray-400 font-medium">Gérez vos informations personnelles.</p>
             </div>
 
             {profileForm && (
               <form onSubmit={handleProfileSave} className="max-w-xl space-y-6">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-bold text-gray-300 mb-2">Pr\u00e9nom</label>
+                    <label className="block text-sm font-bold text-gray-300 mb-2">Prénom</label>
                     <input
                       type="text"
                       value={profileForm.first_name}
@@ -933,11 +933,11 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                     disabled
                     className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-500 cursor-not-allowed"
                   />
-                  <p className="text-xs text-gray-600 mt-1">L'email ne peut pas \u00eatre modifi\u00e9.</p>
+                  <p className="text-xs text-gray-600 mt-1">L'email ne peut pas être modifié.</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-300 mb-2">T\u00e9l\u00e9phone</label>
+                  <label className="block text-sm font-bold text-gray-300 mb-2">Téléphone</label>
                   <input
                     type="tel"
                     value={profileForm.phone}
@@ -986,14 +986,14 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                     disabled={profileSaving}
                     className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black font-bold rounded-xl transition-all"
                   >
-                    {profileSaving ? 'Enregistrement...' : profileSaved ? 'Enregistr\u00e9 !' : 'Enregistrer'}
+                    {profileSaving ? 'Enregistrement...' : profileSaved ? 'Enregistré !' : 'Enregistrer'}
                   </button>
                   <button
                     type="button"
                     onClick={handleLogout}
                     className="flex items-center gap-2 px-6 py-3 bg-red-500/10 text-red-400 font-bold rounded-xl hover:bg-red-500/20 transition-all border border-red-500/20"
                   >
-                    <LogOut className="w-4 h-4" /> D\u00e9connexion
+                    <LogOut className="w-4 h-4" /> Déconnexion
                   </button>
                 </div>
               </form>
