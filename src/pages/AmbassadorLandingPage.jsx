@@ -552,7 +552,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                       className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all appearance-none"
                     >
                       <option value="" className="bg-[#111]">Sélectionner</option>
-                      <option value="ecommerce" className="bg-[#111]">E-commerce</option>
+                      <option value="e_commerce" className="bg-[#111]">E-commerce</option>
                       <option value="immobilier" className="bg-[#111]">Immobilier</option>
                       <option value="tech" className="bg-[#111]">Tech</option>
                       <option value="finance" className="bg-[#111]">Finance</option>

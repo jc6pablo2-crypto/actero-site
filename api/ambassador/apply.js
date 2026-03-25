@@ -140,6 +140,10 @@ export default async function handler(req, res) {
     }
 
     // 4. Create ambassador record
+    // Valid network_type values for the check constraint
+    const validNetworkTypes = ['e_commerce', 'immobilier', 'tech', 'finance', 'autre'];
+    const cleanNetworkType = network_type ? (validNetworkTypes.includes(network_type) ? network_type : null) : null;
+
     const { data: ambassador, error: insertError } = await supabase
       .from('ambassadors')
       .insert({
@@ -148,7 +152,7 @@ export default async function handler(req, res) {
         last_name: last_name.trim(),
         email: cleanEmail,
         phone: phone?.trim() || null,
-        network_type: network_type || null,
+        network_type: cleanNetworkType,
         ambassador_code: ambassadorCode,
         status: 'active',
       })
