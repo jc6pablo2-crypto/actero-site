@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Lock } from 'lucide-react'
 import { Logo } from '../layout/Logo'
+import { ButtonColorful } from '../ui/button-colorful'
 import { supabase } from '../../lib/supabase'
 
 export const LoginPage = ({ onNavigate }) => {
@@ -135,7 +136,7 @@ export const LoginPage = ({ onNavigate }) => {
               <Logo light={true} className="w-7 h-7 text-white" />
             </div>
             <h1 className="text-white text-2xl font-bold tracking-tight">
-              {isForgot ? "Réinitialiser" : "Welcome Back"}
+              {isForgot ? "Réinitialiser" : "Bon retour parmi nous"}
             </h1>
             <p className="text-zinc-500 text-sm mt-1.5">
               {isForgot ? "Entrez votre email pour recevoir un lien." : (
@@ -145,7 +146,7 @@ export const LoginPage = ({ onNavigate }) => {
                     onClick={() => onNavigate("/audit")}
                     className="text-white font-semibold hover:text-zinc-300 transition-colors"
                   >
-                    Sing up
+                    Contactez-nous
                   </button>
                 </>
               )}
@@ -174,7 +175,7 @@ export const LoginPage = ({ onNavigate }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-11 pr-4 py-3.5 bg-[#111] border border-white/[0.08] rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/20 transition-all"
-                placeholder="email address"
+                placeholder="adresse email"
               />
             </div>
 
@@ -188,26 +189,39 @@ export const LoginPage = ({ onNavigate }) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-11 pr-4 py-3.5 bg-[#111] border border-white/[0.08] rounded-xl text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/20 transition-all"
-                  placeholder="Password"
+                  placeholder="Mot de passe"
                 />
               </div>
             )}
 
             {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3.5 rounded-xl text-sm font-bold text-white bg-[#3b82f6] hover:bg-[#2563eb] disabled:opacity-50 transition-all"
-            >
-              {loading ? (
-                <svg className="animate-spin h-5 w-5 text-white mx-auto" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-              ) : (
-                isForgot ? "Envoyer le lien" : "Login"
-              )}
-            </button>
+            {isForgot ? (
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3.5 rounded-xl text-sm font-semibold text-zinc-300 bg-[#27272a] hover:bg-[#3f3f46] hover:text-white transition-colors disabled:opacity-50"
+              >
+                {loading ? (
+                  <svg className="animate-spin h-5 w-5 text-zinc-400 mx-auto" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                ) : "Envoyer le lien"}
+              </button>
+            ) : (
+              <ButtonColorful
+                type="submit"
+                disabled={loading}
+                className="w-full disabled:opacity-50"
+              >
+                {loading ? (
+                  <svg className="animate-spin h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                ) : "Se connecter"}
+              </ButtonColorful>
+            )}
           </form>
 
           {/* Forgot password */}
@@ -225,7 +239,7 @@ export const LoginPage = ({ onNavigate }) => {
             <>
               <div className="flex items-center gap-4 my-6">
                 <div className="flex-1 h-px bg-white/[0.06]" />
-                <span className="text-[10px] text-zinc-600 font-medium uppercase tracking-widest">or</span>
+                <span className="text-[10px] text-zinc-600 font-medium uppercase tracking-widest">ou</span>
                 <div className="flex-1 h-px bg-white/[0.06]" />
               </div>
 
