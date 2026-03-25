@@ -37,26 +37,11 @@ export default async function handler(req, res) {
   if (!email || !isValidEmail(email)) {
     return res.status(400).json({ error: 'Un email valide est requis.' });
   }
-  if (phone && !/^[+\d\s()-]{6,20}$/.test(phone)) {
-    return res.status(400).json({ error: 'Numéro de téléphone invalide.' });
-  }
 
   const cleanEmail = email.trim().toLowerCase();
 
   try {
-    // Check for duplicate application
-    const { data: existing } = await supabase
-      .from('ambassador_applications')
-      .select('id, status')
-      .eq('email', cleanEmail)
-      .neq('status', 'rejected')
-      .maybeSingle();
-
-    if (existing) {
-      return res.status(409).json({ error: 'Une candidature avec cet email existe déjà.' });
-    }
-
-    // Check if already an ambassador
+    // Check if already an active ambassador
     const { data: existingAmbassador } = await supabase
       .from('ambassadors')
       .select('id')
@@ -67,27 +52,43 @@ export default async function handler(req, res) {
       return res.status(409).json({ error: 'Cet email est déjà associé à un compte ambassadeur. Connectez-vous.' });
     }
 
-    // 1. Save application
-    const { data: application, error: appError } = await supabase
-      .from('ambassador_applications')
-      .insert({
-        first_name: first_name.trim(),
-        last_name: last_name.trim(),
-        email: cleanEmail,
-        phone: phone?.trim() || null,
-        network_type: network_type || null,
-        message: message?.trim() || null,
-        status: 'approved',
-      })
-      .select()
-      .single();
+    // STEP 1: Create or find auth user
+    let userId;
 
-    if (appError) {
-      console.error('Insert application error:', appError);
-      return res.status(500).json({ error: 'Erreur lors de la soumission.' });
+    // First try to find existing auth user
+    const listRes = await fetch(`${supabaseUrl}/auth/v1/admin/users?page=1&per_page=100`, {
+      headers: { 'Authorization': `Bearer ${supabaseServiceKey}`, 'apikey': supabaseServiceKey },
+    });
+    const listData = await listRes.json();
+    const existingUser = listData?.users?.find(u => u.email === cleanEmail);
+
+    if (existingUser) {
+      userId = existingUser.id;
+      // Update role to ambassador
+      await fetch(`${supabaseUrl}/auth/v1/admin/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${supabaseServiceKey}`, 'apikey': supabaseServiceKey, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ app_metadata: { role: 'ambassador' } }),
+      });
+      console.log('Found existing auth user:', userId);
+    } else {
+      // Create new auth user
+      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+        email: cleanEmail,
+        email_confirm: true,
+        app_metadata: { role: 'ambassador' },
+        user_metadata: { full_name: `${first_name.trim()} ${last_name.trim()}` },
+      });
+
+      if (authError) {
+        console.error('Auth user creation error:', authError);
+        return res.status(500).json({ error: 'Erreur création compte: ' + authError.message });
+      }
+      userId = authData.user.id;
+      console.log('Created new auth user:', userId);
     }
 
-    // 2. Generate unique ambassador code
+    // STEP 2: Generate unique ambassador code
     let ambassadorCode;
     let codeExists = true;
     while (codeExists) {
@@ -100,50 +101,7 @@ export default async function handler(req, res) {
       codeExists = !!codeCheck;
     }
 
-    // 3. Create Supabase auth user (or get existing)
-    let userId;
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-      email: cleanEmail,
-      email_confirm: true,
-      app_metadata: { role: 'ambassador' },
-      user_metadata: { full_name: `${first_name.trim()} ${last_name.trim()}` },
-    });
-
-    if (authError) {
-      // If user already exists in auth, find them via REST API
-      if (authError.message?.includes('already') || authError.message?.includes('exists') || authError.message?.includes('unique') || authError.message?.includes('registered')) {
-        // Direct REST call to find user by email
-        const listRes = await fetch(`${supabaseUrl}/auth/v1/admin/users?page=1&per_page=50`, {
-          headers: { 'Authorization': `Bearer ${supabaseServiceKey}`, 'apikey': supabaseServiceKey },
-        });
-        const listData = await listRes.json();
-        const existingUser = listData?.users?.find(u => u.email === cleanEmail);
-
-        if (existingUser) {
-          userId = existingUser.id;
-          // Update role
-          await fetch(`${supabaseUrl}/auth/v1/admin/users/${userId}`, {
-            method: 'PUT',
-            headers: { 'Authorization': `Bearer ${supabaseServiceKey}`, 'apikey': supabaseServiceKey, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ app_metadata: { role: 'ambassador' } }),
-          });
-        } else {
-          console.error('Auth user not found after conflict:', authError);
-          return res.status(500).json({ error: 'Erreur création compte.' });
-        }
-      } else {
-        console.error('Auth user creation error:', authError);
-        return res.status(500).json({ error: 'Erreur création compte: ' + authError.message });
-      }
-    } else {
-      userId = authData.user.id;
-    }
-
-    // 4. Create ambassador record
-    // Valid network_type values for the check constraint
-    const validNetworkTypes = ['e_commerce', 'immobilier', 'tech', 'finance', 'autre'];
-    const cleanNetworkType = network_type ? (validNetworkTypes.includes(network_type) ? network_type : null) : null;
-
+    // STEP 3: Create ambassador record (no network_type to avoid check constraint)
     const { data: ambassador, error: insertError } = await supabase
       .from('ambassadors')
       .insert({
@@ -152,7 +110,6 @@ export default async function handler(req, res) {
         last_name: last_name.trim(),
         email: cleanEmail,
         phone: phone?.trim() || null,
-        network_type: cleanNetworkType,
         ambassador_code: ambassadorCode,
         status: 'active',
       })
@@ -160,34 +117,50 @@ export default async function handler(req, res) {
       .single();
 
     if (insertError) {
-      console.error('Ambassador insert error:', insertError);
-      // Only delete user if we just created it
-      if (authData?.user?.id) await supabase.auth.admin.deleteUser(authData.user.id);
-      return res.status(500).json({ error: 'Erreur création ambassadeur' });
+      console.error('Ambassador insert error:', JSON.stringify(insertError));
+      return res.status(500).json({ error: 'Erreur création ambassadeur: ' + insertError.message });
     }
 
-    // 5. Generate password setup link
-    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
-      type: 'magiclink',
+    // STEP 4: Save application record
+    await supabase.from('ambassador_applications').insert({
+      first_name: first_name.trim(),
+      last_name: last_name.trim(),
       email: cleanEmail,
-      options: {
-        redirectTo: 'https://actero.fr/ambassador/setup-password',
-      },
+      phone: phone?.trim() || null,
+      network_type: network_type || null,
+      message: message?.trim() || null,
+      status: 'approved',
     });
 
-    const setupUrl = linkData?.properties?.action_link || 'https://actero.fr/ambassador/login';
+    // STEP 5: Create profile
+    await supabase.from('profiles').upsert({
+      id: userId,
+      role: 'ambassador',
+    }, { onConflict: 'id' });
 
-    // 6. Send welcome email with password setup CTA
+    // STEP 6: Generate password setup link
+    let setupUrl = 'https://actero.fr/ambassador/login';
+    try {
+      const { data: linkData } = await supabase.auth.admin.generateLink({
+        type: 'magiclink',
+        email: cleanEmail,
+        options: { redirectTo: 'https://actero.fr/ambassador/setup-password' },
+      });
+      if (linkData?.properties?.action_link) {
+        setupUrl = linkData.properties.action_link;
+      }
+    } catch (e) {
+      console.error('Magic link generation failed (non-blocking):', e);
+    }
+
+    // STEP 7: Send welcome email
     const resendKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.RESEND_FROM_EMAIL || 'Actero <notifications@actero.fr>';
     if (resendKey) {
       try {
         await fetch('https://api.resend.com/emails', {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${resendKey}`,
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Authorization': `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
             from: fromEmail,
             to: cleanEmail,
@@ -199,32 +172,25 @@ export default async function handler(req, res) {
                 </div>
                 <h1 style="color: #fff; text-align: center; margin-bottom: 8px; font-size: 28px;">Bienvenue ${first_name.trim()} !</h1>
                 <p style="color: #9ca3af; text-align: center; margin-bottom: 32px; font-size: 16px;">Votre compte ambassadeur a été créé avec succès.</p>
-
                 <div style="background: #111; border: 1px solid #222; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
                   <p style="color: #9ca3af; margin: 0 0 8px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">Votre code ambassadeur</p>
                   <p style="color: #10b981; font-size: 32px; font-weight: bold; margin: 0; font-family: monospace; letter-spacing: 4px;">${ambassadorCode}</p>
                 </div>
-
                 <div style="background: #111; border: 1px solid #222; border-radius: 12px; padding: 24px; margin-bottom: 32px;">
                   <p style="color: #9ca3af; margin: 0 0 8px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">Votre lien de parrainage</p>
                   <p style="margin: 0;"><a href="https://actero.fr/audit?ref=${ambassadorCode}" style="color: #10b981; font-size: 14px; word-break: break-all;">actero.fr/audit?ref=${ambassadorCode}</a></p>
                 </div>
-
-                <p style="color: #d1d5db; text-align: center; margin-bottom: 24px; line-height: 1.6;">Pour accéder à votre espace ambassadeur, commencez par créer votre mot de passe :</p>
-
+                <p style="color: #d1d5db; text-align: center; margin-bottom: 24px; line-height: 1.6;">Pour accéder à votre espace ambassadeur, créez votre mot de passe :</p>
                 <div style="text-align: center; margin-bottom: 32px;">
-                  <a href="${setupUrl}" style="display: inline-block; background: #10b981; color: #000; font-weight: bold; font-size: 16px; padding: 14px 40px; border-radius: 12px; text-decoration: none; letter-spacing: 0.5px;">Créer mon mot de passe</a>
+                  <a href="${setupUrl}" style="display: inline-block; background: #10b981; color: #000; font-weight: bold; font-size: 16px; padding: 14px 40px; border-radius: 12px; text-decoration: none;">Créer mon mot de passe</a>
                 </div>
-
-                <div style="border-top: 1px solid #222; padding-top: 24px; margin-top: 16px;">
+                <div style="border-top: 1px solid #222; padding-top: 24px;">
                   <p style="color: #6b7280; font-size: 13px; text-align: center; line-height: 1.6;">
                     Partagez votre lien à votre réseau professionnel.<br/>
                     Si un contact devient client Actero, vous touchez une récompense.<br/>
                     Zéro effort commercial. On gère tout.
                   </p>
                 </div>
-
-                <p style="color: #4b5563; font-size: 12px; text-align: center; margin-top: 24px;">— L'équipe Actero</p>
               </div>
             `,
           }),
@@ -234,13 +200,8 @@ export default async function handler(req, res) {
       }
     }
 
-    // 7. Create profile for ambassador
-    await supabase.from('profiles').upsert({
-      id: userId,
-      role: 'ambassador',
-    }, { onConflict: 'id' });
-
-    return res.status(200).json({ success: true, application_id: application.id });
+    console.log('Ambassador created successfully:', ambassadorCode, cleanEmail);
+    return res.status(200).json({ success: true, ambassador_code: ambassadorCode });
   } catch (err) {
     console.error('Apply error:', err);
     return res.status(500).json({ error: 'Erreur serveur.' });
