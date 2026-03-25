@@ -1,14 +1,12 @@
 // ─── Ambassador Status Labels & Colors ───
 
 export const LEAD_STATUS_MAP = {
-  submitted: { label: 'Soumis', color: 'bg-gray-500/20 text-gray-400', border: 'border-gray-500/20', dot: 'bg-gray-400' },
-  contacted: { label: 'Contacté', color: 'bg-blue-500/20 text-blue-400', border: 'border-blue-500/20', dot: 'bg-blue-400' },
-  qualified: { label: 'Qualifié', color: 'bg-purple-500/20 text-purple-400', border: 'border-purple-500/20', dot: 'bg-purple-400' },
-  audit_booked: { label: 'Audit planifié', color: 'bg-indigo-500/20 text-indigo-400', border: 'border-indigo-500/20', dot: 'bg-indigo-400' },
-  audit_done: { label: 'Audit réalisé', color: 'bg-cyan-500/20 text-cyan-400', border: 'border-cyan-500/20', dot: 'bg-cyan-400' },
-  closing_in_progress: { label: 'Closing en cours', color: 'bg-amber-500/20 text-amber-400', border: 'border-amber-500/20', dot: 'bg-amber-400' },
-  won: { label: 'Gagné', color: 'bg-green-500/20 text-green-400', border: 'border-green-500/20', dot: 'bg-green-400' },
-  lost: { label: 'Perdu', color: 'bg-red-500/20 text-red-400', border: 'border-red-500/20', dot: 'bg-red-400' },
+  submitted: { label: 'Soumis', color: 'bg-gray-500/20 text-gray-400', border: 'border-gray-500/20', dot: 'bg-gray-400', step: 1 },
+  audit_booked: { label: 'A réservé un audit', color: 'bg-blue-500/20 text-blue-400', border: 'border-blue-500/20', dot: 'bg-blue-400', step: 2 },
+  second_call: { label: 'A réservé un 2e appel', color: 'bg-purple-500/20 text-purple-400', border: 'border-purple-500/20', dot: 'bg-purple-400', step: 3 },
+  client_paid: { label: 'Client a payé', color: 'bg-emerald-500/20 text-emerald-400', border: 'border-emerald-500/20', dot: 'bg-emerald-400', step: 4 },
+  won: { label: 'Commission versée', color: 'bg-green-500/20 text-green-400', border: 'border-green-500/20', dot: 'bg-green-400', step: 5 },
+  lost: { label: 'Perdu', color: 'bg-red-500/20 text-red-400', border: 'border-red-500/20', dot: 'bg-red-400', step: 0 },
 }
 
 export const COMMISSION_STATUS_MAP = {
@@ -37,12 +35,10 @@ export const APPLICATION_STATUS_MAP = {
 // Lead event type labels for timeline
 export const LEAD_EVENT_LABELS = {
   submitted: 'Lead soumis',
-  contacted: 'Contact établi',
-  qualified: 'Lead qualifié',
-  audit_booked: 'Audit planifié',
-  audit_done: 'Audit réalisé',
-  closing: 'Closing en cours',
-  won: 'Lead gagné',
+  audit_booked: 'Audit réservé',
+  second_call: '2e appel réservé',
+  client_paid: 'Client a payé — J+30 démarre',
+  won: 'Commission versée',
   lost: 'Lead perdu',
   note_added: 'Note ajoutée',
 }
@@ -60,34 +56,27 @@ export const COMMISSION_EVENT_LABELS = {
 
 // Lead status pipeline order for progress display
 export const LEAD_PIPELINE = [
-  'submitted', 'contacted', 'qualified', 'audit_booked', 'audit_done', 'closing_in_progress', 'won',
+  'submitted', 'audit_booked', 'second_call', 'client_paid', 'won',
 ]
 
 /**
- * Calculate J+30 countdown info
- * @param {string} eligibilityDate - ISO date string
- * @returns {{ daysLeft: number, isEligible: boolean, label: string }}
+ * Calculate J+30 countdown info from client_paid_at date
  */
-export function getJ30Countdown(eligibilityDate) {
-  if (!eligibilityDate) return { daysLeft: null, isEligible: false, label: 'Date non définie' }
+export function getJ30Countdown(clientPaidAt) {
+  if (!clientPaidAt) return { daysLeft: null, isEligible: false, label: 'En attente de paiement' }
   const now = new Date()
-  const target = new Date(eligibilityDate)
+  const paidDate = new Date(clientPaidAt)
+  const target = new Date(paidDate.getTime() + 30 * 24 * 60 * 60 * 1000)
   const diff = target - now
   const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24))
-  if (daysLeft <= 0) return { daysLeft: 0, isEligible: true, label: 'Éligible' }
-  return { daysLeft, isEligible: false, label: `J-${daysLeft}` }
+  if (daysLeft <= 0) return { daysLeft: 0, isEligible: true, label: 'Éligible au paiement' }
+  return { daysLeft, isEligible: false, label: `J+30 : ${daysLeft}j restants` }
 }
 
-/**
- * Validate email format
- */
 export function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
-/**
- * Validate phone format (loose)
- */
 export function isValidPhone(phone) {
   if (!phone) return true
   return /^[+\d\s()-]{6,20}$/.test(phone)

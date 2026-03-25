@@ -13,7 +13,7 @@ async function checkAdmin(req) {
   return isAdmin ? user : null;
 }
 
-const VALID_STATUSES = ['submitted', 'contacted', 'qualified', 'audit_booked', 'audit_done', 'closing_in_progress', 'won', 'lost'];
+const VALID_STATUSES = ['submitted', 'audit_booked', 'second_call', 'client_paid', 'won', 'lost'];
 
 export default async function handler(req, res) {
   res.setHeader('X-RateLimit-Limit', '60');
@@ -52,6 +52,7 @@ export default async function handler(req, res) {
 
     const updates = {};
     if (status) updates.status = status;
+    if (status === 'client_paid') updates.client_paid_at = new Date().toISOString();
     if (status_note !== undefined) updates.status_note = status_note;
     if (admin_note !== undefined) updates.admin_note = admin_note;
     if (client_id !== undefined) updates.client_id = client_id;
@@ -71,7 +72,7 @@ export default async function handler(req, res) {
 
       // Log event for status change
       if (status) {
-        const eventType = status === 'closing_in_progress' ? 'closing' : status;
+        const eventType = status;
         await supabase.from('ambassador_lead_events').insert({
           lead_id: id,
           event_type: eventType,
