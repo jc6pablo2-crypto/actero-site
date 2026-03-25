@@ -470,18 +470,35 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
               <p className="text-xs text-gray-600 mt-3">Code : {ambCode}</p>
             </div>
 
+            {/* Reward tiers */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className={`p-5 rounded-2xl border text-center ${leadsWon < 3 ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-white/[0.02] border-white/5'}`}>
+                <p className="text-[10px] font-bold text-emerald-400/60 uppercase tracking-widest mb-1">1er et 2e client</p>
+                <p className="text-3xl font-bold text-emerald-400">150\u20AC</p>
+                <p className="text-xs text-gray-500 mt-1">par client sign\u00e9</p>
+                {leadsWon < 3 && <p className="text-[10px] text-emerald-400/80 mt-2 font-bold">Palier actuel</p>}
+              </div>
+              <div className={`p-5 rounded-2xl border text-center relative overflow-hidden ${leadsWon >= 3 ? 'bg-amber-500/5 border-amber-500/20' : 'bg-white/[0.02] border-white/5'}`}>
+                {leadsWon >= 3 && <p className="absolute top-2 right-2 text-[9px] font-bold text-amber-400 bg-amber-500/20 px-2 py-0.5 rounded-full">Actif</p>}
+                <p className="text-[10px] font-bold text-amber-400/60 uppercase tracking-widest mb-1">\u00C0 partir du 3e client</p>
+                <p className="text-3xl font-bold text-amber-400">300\u20AC</p>
+                <p className="text-xs text-gray-500 mt-1">par client sign\u00e9</p>
+                {leadsWon < 3 && <p className="text-[10px] text-gray-600 mt-2">Encore {3 - leadsWon} client{3 - leadsWon > 1 ? 's' : ''} pour d\u00e9bloquer</p>}
+              </div>
+            </div>
+
             {/* KPIs */}
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-              <KPICard label="Leads envoyés" value={totalLeads} icon={Send} />
+              <KPICard label="Leads envoy\u00e9s" value={totalLeads} icon={Send} />
               <KPICard label="En cours" value={leadsInProgress} icon={Target} accent="blue" />
-              <KPICard label="Leads signés" value={leadsWon} icon={Award} accent="green" />
-              <KPICard label="Total gagné" value={`${totalEarned.toLocaleString('fr-FR')} \u20AC`} icon={DollarSign} />
+              <KPICard label="Leads sign\u00e9s" value={leadsWon} icon={Award} accent="green" />
+              <KPICard label="Total gagn\u00e9" value={`${totalEarned.toLocaleString('fr-FR')} \u20AC`} icon={DollarSign} />
               <KPICard
-                label="Prochaine récompense"
-                value={nextRewardEstimate > 0 ? `${nextRewardEstimate.toLocaleString('fr-FR')} \u20AC` : '\u2014'}
+                label="Prochaine r\u00e9compense"
+                value={leadsWon >= 3 ? '300 \u20AC' : '150 \u20AC'}
                 icon={Gift}
                 accent="amber"
-                subtitle={nextRewardEstimate > 0 ? 'En attente de validation' : 'Recommandez pour gagner'}
+                subtitle={leadsWon >= 3 ? 'Palier 300\u20AC actif' : `${leadsWon}/3 pour palier 300\u20AC`}
               />
               <KPICard
                 label="Taux de conversion"

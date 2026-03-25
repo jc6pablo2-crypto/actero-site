@@ -330,15 +330,24 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                 Une récompense pour chaque client signé grâce à vous
               </h2>
               <p className="text-xl text-gray-400 font-medium leading-relaxed mb-10">
-                Le montant de la récompense dépend de la valeur du contrat signé. Plus le deal est important, plus votre récompense est élevée.
+                Plus vous recommandez, plus vous gagnez. Les récompenses augmentent à partir du 3e client.
               </p>
-              <div className="p-8 rounded-3xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <Gift className="w-8 h-8 text-emerald-400" />
-                  <span className="text-2xl font-bold text-white">Récompense variable</span>
+              <div className="grid md:grid-cols-2 gap-6 mb-8">
+                <div className="p-8 rounded-3xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/5 border border-emerald-500/20 text-center">
+                  <p className="text-xs font-bold text-emerald-400/60 uppercase tracking-widest mb-3">1er et 2e client</p>
+                  <p className="text-5xl font-bold text-emerald-400 mb-2">150€</p>
+                  <p className="text-sm text-gray-400 font-medium">par client signé</p>
                 </div>
-                <p className="text-gray-400 font-medium">
-                  Versée 30 jours après le paiement effectif du client. Aucune limite de recommandations.
+                <div className="p-8 rounded-3xl bg-gradient-to-br from-amber-500/10 to-orange-500/5 border border-amber-500/20 text-center relative overflow-hidden">
+                  <div className="absolute top-3 right-3 px-2 py-0.5 bg-amber-500/20 border border-amber-500/30 rounded-full text-[10px] font-bold text-amber-400 uppercase tracking-wider">Bonus</div>
+                  <p className="text-xs font-bold text-amber-400/60 uppercase tracking-widest mb-3">À partir du 3e client</p>
+                  <p className="text-5xl font-bold text-amber-400 mb-2">300€</p>
+                  <p className="text-sm text-gray-400 font-medium">par client signé</p>
+                </div>
+              </div>
+              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
+                <p className="text-sm text-gray-400 font-medium">
+                  Versée <span className="text-white font-bold">30 jours</span> après le paiement effectif du client. Aucune limite de recommandations.
                 </p>
               </div>
             </FadeInUp>
