@@ -19,6 +19,9 @@ import { StartPage } from "./pages/StartPage";
 import { SuccessPage } from "./pages/SuccessPage";
 import { CancelPage } from "./pages/CancelPage";
 import { ReferralLanding } from "./pages/ReferralLanding";
+import { AmbassadorLandingPage } from "./pages/AmbassadorLandingPage";
+import { AmbassadorLogin } from "./pages/AmbassadorLogin";
+import { AmbassadorDashboard } from "./pages/AmbassadorDashboard";
 import { CursorGlow } from "./components/ui/cursor-glow";
 import { CommandPalette } from "./components/ui/command-palette";
 
@@ -90,6 +93,11 @@ function MainRouter() {
   }
   else if (currentRoute === "/success") page = <SuccessPage onNavigate={navigate} />;
   else if (currentRoute === "/cancel") page = <CancelPage onNavigate={navigate} />;
+  else if (currentRoute === "/ambassadeurs") page = <AmbassadorLandingPage onNavigate={navigate} />;
+  else if (currentRoute === "/ambassador/login") page = <AmbassadorLogin onNavigate={navigate} />;
+  else if (currentRoute.startsWith("/ambassador")) {
+    page = <AmbassadorDashboard currentRoute={currentRoute} onNavigate={navigate} />;
+  }
   else if (currentRoute === "/app" || currentRoute.startsWith("/admin") || currentRoute.startsWith("/client")) {
     page = <DashboardGate currentRoute={currentRoute} onNavigate={navigate} onLogout={handleLogout} />;
   } else if (currentRoute === "/payment/success") {
