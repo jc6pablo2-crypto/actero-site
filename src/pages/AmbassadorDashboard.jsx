@@ -292,10 +292,30 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
       })
       const data = await res.json()
       if (!res.ok) {
-        setLeadError(data.error || 'Erreur lors de l\'envoi.')
+        setLeadError(data.error || 'Erreur lors de l\u2019envoi.')
         return
       }
       setLeads((prev) => [data, ...prev])
+
+      // Send email to prospect if email is provided
+      if (leadForm.prospect_email) {
+        try {
+          await fetch('/api/ambassador/send-prospect-email.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${session?.access_token}`,
+            },
+            body: JSON.stringify({
+              prospect_name: leadForm.prospect_name,
+              prospect_email: leadForm.prospect_email,
+              company_name: leadForm.company_name,
+              ambassador_code: ambassador?.ambassador_code || ambassador?.code,
+            }),
+          })
+        } catch (_) { /* non-blocking */ }
+      }
+
       setLeadSuccess(true)
       setTimeout(() => {
         setShowLeadModal(false)
@@ -421,11 +441,15 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
               </div>
             </div>
 
-            {/* Code + Link */}
+            {/* Link */}
             <div className="p-6 rounded-2xl bg-[#111] border border-white/10">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Votre code ambassadeur</p>
-              <div className="flex items-center gap-4 flex-wrap">
-                <span className="text-2xl font-bold text-emerald-400 font-mono">{ambCode || '\u2014'}</span>
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Votre lien de parrainage</p>
+              {ambassadorLink && (
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5 mb-4">
+                  <span className="text-sm text-emerald-400 font-mono truncate flex-1">{ambassadorLink}</span>
+                </div>
+              )}
+              <div className="flex items-center gap-3 flex-wrap">
                 {ambassadorLink && <CopyButton text={ambassadorLink} />}
                 {ambassadorLink && (
                   <button
@@ -436,6 +460,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                   </button>
                 )}
               </div>
+              <p className="text-xs text-gray-600 mt-3">Code : {ambCode}</p>
             </div>
 
             {/* KPIs */}
