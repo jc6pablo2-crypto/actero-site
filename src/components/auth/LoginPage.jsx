@@ -25,11 +25,24 @@ export const LoginPage = ({ onNavigate }) => {
         if (error) throw error;
         setSuccess("Lien de réinitialisation envoyé par e-mail.");
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data: signInData, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (error) throw error;
+
+        // Check role to redirect to correct dashboard
+        const userId = signInData?.user?.id;
+        if (userId) {
+          const { data: profile } = await supabase.from('profiles').select('role').eq('id', userId).maybeSingle();
+          if (profile?.role === 'ambassador') {
+            onNavigate("/ambassador/overview");
+            return;
+          } else if (profile?.role === 'admin') {
+            onNavigate("/admin");
+            return;
+          }
+        }
         onNavigate("/app");
       }
     } catch (_err) {
