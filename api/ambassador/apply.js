@@ -100,7 +100,8 @@ export default async function handler(req, res) {
       codeExists = !!codeCheck;
     }
 
-    // 3. Create Supabase auth user with magic link (no password)
+    // 3. Create Supabase auth user (or get existing)
+    let userId;
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email: cleanEmail,
       email_confirm: true,
@@ -109,15 +110,33 @@ export default async function handler(req, res) {
     });
 
     if (authError) {
-      console.error('Auth user creation error:', authError);
-      return res.status(500).json({ error: 'Erreur création compte: ' + authError.message });
+      // If user already exists in auth, find them
+      if (authError.message?.includes('already been registered') || authError.message?.includes('already exists')) {
+        const { data: { users } } = await supabase.auth.admin.listUsers({ filter: cleanEmail });
+        const existingUser = users?.find(u => u.email === cleanEmail);
+        if (existingUser) {
+          userId = existingUser.id;
+          // Update their role to ambassador
+          await supabase.auth.admin.updateUser(userId, {
+            app_metadata: { role: 'ambassador' },
+          });
+        } else {
+          console.error('Auth user creation error:', authError);
+          return res.status(500).json({ error: 'Erreur création compte.' });
+        }
+      } else {
+        console.error('Auth user creation error:', authError);
+        return res.status(500).json({ error: 'Erreur création compte: ' + authError.message });
+      }
+    } else {
+      userId = authData.user.id;
     }
 
     // 4. Create ambassador record
     const { data: ambassador, error: insertError } = await supabase
       .from('ambassadors')
       .insert({
-        user_id: authData.user.id,
+        user_id: userId,
         first_name: first_name.trim(),
         last_name: last_name.trim(),
         email: cleanEmail,
@@ -131,7 +150,8 @@ export default async function handler(req, res) {
 
     if (insertError) {
       console.error('Ambassador insert error:', insertError);
-      await supabase.auth.admin.deleteUser(authData.user.id);
+      // Only delete user if we just created it
+      if (authData?.user?.id) await supabase.auth.admin.deleteUser(authData.user.id);
       return res.status(500).json({ error: 'Erreur création ambassadeur' });
     }
 
@@ -205,7 +225,7 @@ export default async function handler(req, res) {
 
     // 7. Create profile for ambassador
     await supabase.from('profiles').upsert({
-      id: authData.user.id,
+      id: userId,
       role: 'ambassador',
     }, { onConflict: 'id' });
 
