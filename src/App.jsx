@@ -19,6 +19,7 @@ import { StartPage } from "./pages/StartPage";
 import { SuccessPage } from "./pages/SuccessPage";
 import { CancelPage } from "./pages/CancelPage";
 import { ReferralLanding } from "./pages/ReferralLanding";
+import { PartnerLandingPage } from "./pages/PartnerLandingPage";
 import { AmbassadorLandingPage } from "./pages/AmbassadorLandingPage";
 import { AmbassadorLogin } from "./pages/AmbassadorLogin";
 import { AmbassadorDashboard } from "./pages/AmbassadorDashboard";
@@ -95,6 +96,7 @@ function MainRouter() {
   }
   else if (currentRoute === "/success") page = <SuccessPage onNavigate={navigate} />;
   else if (currentRoute === "/cancel") page = <CancelPage onNavigate={navigate} />;
+  else if (currentRoute === "/partner") page = <PartnerLandingPage onNavigate={navigate} />;
   else if (currentRoute === "/ambassadeurs") page = <AmbassadorLandingPage onNavigate={navigate} />;
   else if (currentRoute === "/ambassador/login") page = <AmbassadorLogin onNavigate={navigate} />;
   else if (currentRoute === "/ambassador/setup-password") page = <AmbassadorSetupPassword />;
