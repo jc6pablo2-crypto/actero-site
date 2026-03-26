@@ -307,7 +307,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
     { id: 'activity', label: 'Activite', icon: Activity },
     { id: 'systems', label: 'Mes Systemes', icon: Database },
-    { id: 'knowledge', label: 'Base de connaissances', icon: BookOpen },
     { id: 'support', label: 'Support', icon: MessageSquare },
     { id: 'referral', label: 'Parrainage', icon: Gift },
     { type: 'section', label: 'Compte' },
