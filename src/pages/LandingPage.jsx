@@ -45,6 +45,9 @@ import { initAmplitude, trackEvent } from '../lib/analytics'
 import { BeforeAfterSlider } from '../components/landing/BeforeAfterSlider'
 import { TicketReplay } from '../components/landing/TicketReplay'
 import { ROISimulator } from '../components/landing/ROISimulator'
+import { AgentCarousel } from '../components/landing/AgentCarousel'
+import { ChatMockup } from '../components/landing/ChatMockup'
+import { IntegrationGrid } from '../components/landing/IntegrationGrid'
 
 export const LandingPage = ({ onNavigate }) => {
   const scrollToId = (id) => {
@@ -215,59 +218,22 @@ export const LandingPage = ({ onNavigate }) => {
             </section>
 
             {/* ============================================ */}
-            {/* LOGO MARQUEE — Intégrations                 */}
+            {/* INTÉGRATIONS — Grille de cards              */}
             {/* ============================================ */}
-            <section className="py-16 bg-transparent relative z-10 overflow-hidden">
-              <FadeInUp className="text-center mb-10">
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em]">
-                  Se connecte à vos outils en quelques clics
-                </p>
-              </FadeInUp>
-              <div className="relative">
-                <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#030303] to-transparent z-10 pointer-events-none"></div>
-                <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#030303] to-transparent z-10 pointer-events-none"></div>
-                <div className="flex animate-marquee gap-16 items-center whitespace-nowrap">
-                  {[...Array(2)].map((_, setIdx) => (
-                    <React.Fragment key={setIdx}>
-                      {(vertical === 'ecommerce' ? [
-                        { name: "Shopify", icon: "shopify", color: "95BF47" },
-                        { name: "Stripe", icon: "stripe", color: "635BFF" },
-                        { name: "Klaviyo", src: "/klaviyo.svg" },
-                        { name: "Make", icon: "make", color: "5F4CFF" },
-                        { name: "n8n", icon: "n8n", color: "FF6D5A" },
-                        { name: "HubSpot", icon: "hubspot", color: "FF7A59" },
-                        { name: "Zendesk", icon: "zendesk", color: "17494D" },
-                        { name: "Slack", src: "/slack.svg" },
-                        { name: "OpenAI", src: "/openai.svg" },
-                        { name: "Intercom", icon: "intercom", color: "0058DD" },
-                        { name: "Gorgias", icon: "gorgias", color: "1F1F1F" },
-                      ] : [
-                        { name: "n8n", icon: "n8n", color: "FF6D5A" },
-                        { name: "OpenAI", src: "/openai.svg" },
-                        { name: "HubSpot", icon: "hubspot", color: "FF7A59" },
-                        { name: "Google Calendar", icon: "googlecalendar", color: "4285F4" },
-                        { name: "Twilio", icon: "twilio", color: "F22F46" },
-                        { name: "Slack", src: "/slack.svg" },
-                        { name: "Make", icon: "make", color: "5F4CFF" },
-                        { name: "Gmail", icon: "gmail", color: "EA4335" },
-                        { name: "Stripe", icon: "stripe", color: "635BFF" },
-                      ]).map((tech, i) => (
-                        <div
-                          key={`${setIdx}-${i}`}
-                          className="group flex items-center gap-3 text-xl md:text-2xl font-bold text-white/70 hover:text-white transition-all duration-500 select-none flex-shrink-0"
-                        >
-                          <img
-                            src={tech.src ? tech.src : `https://cdn.simpleicons.org/${tech.icon}/${tech.color}`}
-                            alt={tech.name}
-                            className="w-10 h-10 md:w-12 md:h-12 object-contain group-hover:scale-110 transition-all duration-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]"
-                            loading="lazy"
-                          />
-                          <span className="text-white font-bold">{tech.name}</span>
-                        </div>
-                      ))}
-                    </React.Fragment>
-                  ))}
-                </div>
+            <section className="py-20 bg-transparent relative z-10 px-6">
+              <div className="max-w-6xl mx-auto">
+                <FadeInUp className="text-center mb-10">
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-3">
+                    Intégrations
+                  </p>
+                  <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                    Connecté à vos outils en quelques clics
+                  </h2>
+                  <p className="text-gray-500 font-medium text-sm">
+                    {vertical === 'ecommerce' ? '+12 intégrations disponibles' : '+10 intégrations disponibles'}
+                  </p>
+                </FadeInUp>
+                <IntegrationGrid vertical={vertical} />
               </div>
             </section>
 
@@ -303,8 +269,9 @@ export const LandingPage = ({ onNavigate }) => {
                   )}
                 </FadeInUp>
 
-                <div className={`grid ${vertical === 'ecommerce' ? 'md:grid-cols-2' : 'md:grid-cols-3'} gap-6`}>
-                  {(vertical === 'ecommerce' ? [
+                <AgentCarousel
+                  vertical={vertical}
+                  agents={vertical === 'ecommerce' ? [
                     {
                       icon: <Headphones className="w-6 h-6" />,
                       iconColor: "text-emerald-400",
@@ -369,34 +336,29 @@ export const LandingPage = ({ onNavigate }) => {
                       result: "+10% de prospects réactivés",
                       desc: "L'agent détecte les prospects inactifs depuis 7, 14 ou 30 jours et envoie des relances progressives et personnalisées par email et SMS. Chaque message est adapté au profil et à l'historique du prospect.",
                     },
-                  ]).map((block, i) => (
-                    <FadeInUp key={`${vertical}-${i}`} delay={i * 0.1}>
-                      <div className="bg-[#0a0a0a] rounded-[28px] p-8 md:p-10 border border-white/[0.06] h-full hover:border-white/[0.12] transition-all duration-500 group">
-                        <div className="flex items-center justify-between mb-4">
-                          <span className={`text-[11px] font-black tracking-[0.2em] uppercase px-2.5 py-1 rounded-lg ${vertical === 'immobilier' ? 'text-violet-400 bg-violet-500/10' : 'text-emerald-400 bg-emerald-500/10'}`}>
-                            Agent {block.agentName}
-                          </span>
-                          <span className={`w-2 h-2 rounded-full animate-pulse ${vertical === 'immobilier' ? 'bg-violet-400' : 'bg-emerald-400'}`}></span>
-                        </div>
-                        <div className="flex items-center gap-4 mb-6">
-                          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${block.iconBg} ${block.iconColor}`}>
-                            {block.icon}
-                          </div>
-                          <h3 className="text-xl font-bold text-white">{block.title}</h3>
-                        </div>
-                        <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 mb-5">
-                          <p className={`text-sm font-bold flex items-center gap-2 ${vertical === 'immobilier' ? 'text-violet-400' : 'text-emerald-400'}`}>
-                            <Target className="w-4 h-4 flex-shrink-0" />
-                            {block.result}
-                          </p>
-                        </div>
-                        <p className="text-gray-400 font-medium leading-relaxed">
-                          {block.desc}
-                        </p>
-                      </div>
-                    </FadeInUp>
-                  ))}
-                </div>
+                  ]}
+                />
+              </div>
+            </section>
+
+            {/* ============================================ */}
+            {/* SECTION — AGENT EN ACTION (Chat Mockup)      */}
+            {/* ============================================ */}
+            <section className="py-24 md:py-32 bg-transparent px-6 relative z-10">
+              <div className="max-w-6xl mx-auto">
+                <FadeInUp className="text-center mb-16">
+                  <p className={`text-xs font-bold uppercase tracking-[0.2em] mb-4 ${vertical === 'immobilier' ? 'text-violet-400/80' : 'text-emerald-400/80'}`}>
+                    En action 24h/24
+                  </p>
+                  <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white mb-4">
+                    Votre agent IA répond<br className="hidden md:block" />
+                    en quelques secondes.
+                  </h2>
+                  <p className="text-lg text-gray-400 font-medium max-w-xl mx-auto">
+                    Chaque message est traité instantanément, 24h/24, 7j/7 — sans intervention humaine.
+                  </p>
+                </FadeInUp>
+                <ChatMockup vertical={vertical} />
               </div>
             </section>
 
