@@ -119,6 +119,8 @@ async function onboardClientAfterPayment(funnelClient) {
     .eq('slug', slug);
 
   console.log(`[ONBOARD] Onboarding complete for "${company_name}". Client will receive invite email.`);
+
+  return client.id;
 }
 
 export default async function handler(req, res) {
@@ -146,6 +148,8 @@ export default async function handler(req, res) {
     case 'checkout.session.completed': {
       const session = event.data.object;
       const clientSlug = session.metadata?.client;
+      let funnelClient = null;
+      let onboardedClientId = null;
 
       if (clientSlug) {
         // 1. Update funnel_clients with Stripe info
@@ -165,16 +169,17 @@ export default async function handler(req, res) {
         }
 
         // 2. Fetch funnel client data and auto-onboard
-        const { data: funnelClient, error: fetchError } = await supabase
+        const { data: fetchedClient, error: fetchError } = await supabase
           .from('funnel_clients')
           .select('*')
           .eq('slug', clientSlug)
           .single();
 
+        funnelClient = fetchedClient;
         if (fetchError || !funnelClient) {
           console.error('Failed to fetch funnel client:', fetchError);
         } else {
-          await onboardClientAfterPayment(funnelClient);
+          onboardedClientId = await onboardClientAfterPayment(funnelClient);
         }
       }
 
@@ -198,6 +203,30 @@ export default async function handler(req, res) {
         } catch (refErr) {
           console.error('[REFERRAL] Validation call failed:', refErr.message);
         }
+      }
+
+      // 4. Dispatch vers n8n — séquence onboarding Customer.io
+      try {
+        await fetch('https://n8n.srv1403284.hstgr.cloud/webhook/onboarding-stripe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            stripe_customer_id: session.customer,
+            stripe_subscription_id: session.subscription,
+            customer_email: funnelClient?.email || session.customer_details?.email || session.customer_email,
+            customer_name: session.customer_details?.name || funnelClient?.company_name || '',
+            company_name: funnelClient?.company_name || session.metadata?.company_name || '',
+            website: funnelClient?.website || session.metadata?.website || '',
+            plan: funnelClient?.plan || session.metadata?.plan || 'starter',
+            vertical: funnelClient?.client_type || session.metadata?.vertical || 'ecommerce',
+            setup_amount: session.amount_total ? session.amount_total / 100 : 0,
+            client_id: onboardedClientId || null,
+            paid_at: new Date().toISOString(),
+          }),
+        });
+        console.log('[n8n] Onboarding dispatch OK');
+      } catch (err) {
+        console.error('[n8n] Onboarding dispatch failed:', err.message);
       }
       break;
     }

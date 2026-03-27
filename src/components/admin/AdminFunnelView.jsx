@@ -89,10 +89,14 @@ export function AdminFunnelView() {
 
       if (insertError) throw insertError
 
-      // 2. Send email via API
+      // 2. Send email via API (pass JWT for auth)
+      const { data: { session } } = await supabase.auth.getSession()
       const emailRes = await fetch('/api/send-funnel-email', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token && { Authorization: `Bearer ${session.access_token}` }),
+        },
         body: JSON.stringify({
           id: client.id,
           company_name: formData.company_name,
@@ -106,8 +110,9 @@ export function AdminFunnelView() {
       })
 
       if (!emailRes.ok) {
-        const errData = await emailRes.json()
-        console.error('Email send failed:', errData)
+        let errMsg = `Email send failed (${emailRes.status})`
+        try { const errData = await emailRes.json(); errMsg = errData.error || errMsg } catch {}
+        console.error(errMsg)
         // Client created but email failed — don't throw, just warn
       } else {
         // 3. Update status to sent
@@ -141,9 +146,13 @@ export function AdminFunnelView() {
   const handleResendEmail = async (client) => {
     setSendingId(client.id)
     try {
+      const { data: { session } } = await supabase.auth.getSession()
       const res = await fetch('/api/send-funnel-email', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token && { Authorization: `Bearer ${session.access_token}` }),
+        },
         body: JSON.stringify({
           id: client.id,
           company_name: client.company_name,
