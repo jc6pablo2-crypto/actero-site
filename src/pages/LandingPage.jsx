@@ -309,6 +309,7 @@ export const LandingPage = ({ onNavigate }) => {
                       icon: <Headphones className="w-6 h-6" />,
                       iconColor: "text-emerald-400",
                       iconBg: "bg-emerald-500/10 border-emerald-500/20",
+                      agentName: "SARA",
                       title: "Libérez votre équipe du support répétitif",
                       result: "80% des tickets résolus sans intervention humaine",
                       desc: "Un agent IA formé sur vos données prend en charge les demandes récurrentes : suivi de commande, retours, remboursements. Votre équipe se concentre enfin sur ce qui fait croître le business.",
@@ -317,6 +318,7 @@ export const LandingPage = ({ onNavigate }) => {
                       icon: <RefreshCw className="w-6 h-6" />,
                       iconColor: "text-cyan-400",
                       iconBg: "bg-cyan-500/10 border-cyan-500/20",
+                      agentName: "ALEX",
                       title: "Récupérez les ventes abandonnées",
                       result: "Jusqu'à +15% de taux de récupération paniers",
                       desc: "Des séquences de relance personnalisées par email et SMS, déclenchées au bon moment. L'IA adapte le message au profil et au comportement de chaque client.",
@@ -325,6 +327,7 @@ export const LandingPage = ({ onNavigate }) => {
                       icon: <BarChart3 className="w-6 h-6" />,
                       iconColor: "text-amber-400",
                       iconBg: "bg-amber-500/10 border-amber-500/20",
+                      agentName: "NOVA",
                       title: "Détectez les problèmes avant qu'ils ne coûtent",
                       result: "Alertes en temps réel sur vos KPIs critiques",
                       desc: "Actero surveille votre Shopify et Stripe en continu. Baisse de conversion, anomalie de stock, pic de tickets : vous êtes alerté avant que la marge ne s'évapore.",
@@ -333,6 +336,7 @@ export const LandingPage = ({ onNavigate }) => {
                       icon: <Zap className="w-6 h-6" />,
                       iconColor: "text-violet-400",
                       iconBg: "bg-violet-500/10 border-violet-500/20",
+                      agentName: "MAX",
                       title: "Éliminez les tâches manuelles qui freinent votre croissance",
                       result: "Vos process manuels transformés en flux automatiques",
                       desc: "Synchronisation CRM, tagging client, facturation, reporting. On identifie vos goulots d'étranglement opérationnels et on les supprime.",
@@ -342,6 +346,7 @@ export const LandingPage = ({ onNavigate }) => {
                       icon: <Calendar className="w-6 h-6" />,
                       iconColor: "text-violet-400",
                       iconBg: "bg-violet-500/10 border-violet-500/20",
+                      agentName: "LÉA",
                       title: "Agent Prise de Rendez-vous",
                       result: "+30% de rendez-vous confirmés",
                       desc: "L'agent qualifie chaque prospect entrant (type de bien, budget, localisation), propose des créneaux disponibles et confirme automatiquement les rendez-vous. Synchronisation directe avec votre agenda.",
@@ -350,6 +355,7 @@ export const LandingPage = ({ onNavigate }) => {
                       icon: <FileText className="w-6 h-6" />,
                       iconColor: "text-purple-400",
                       iconBg: "bg-purple-500/10 border-purple-500/20",
+                      agentName: "DOC",
                       title: "Agent Collecte de Documents",
                       result: "-50% de temps administratif",
                       desc: "L'agent identifie les documents requis selon le type de transaction (vente, achat, location), envoie les demandes personnalisées et relance automatiquement jusqu'à réception complète du dossier.",
@@ -358,6 +364,7 @@ export const LandingPage = ({ onNavigate }) => {
                       icon: <UserCheck className="w-6 h-6" />,
                       iconColor: "text-fuchsia-400",
                       iconBg: "bg-fuchsia-500/10 border-fuchsia-500/20",
+                      agentName: "REX",
                       title: "Agent Relance Prospects",
                       result: "+10% de prospects réactivés",
                       desc: "L'agent détecte les prospects inactifs depuis 7, 14 ou 30 jours et envoie des relances progressives et personnalisées par email et SMS. Chaque message est adapté au profil et à l'historique du prospect.",
@@ -365,6 +372,12 @@ export const LandingPage = ({ onNavigate }) => {
                   ]).map((block, i) => (
                     <FadeInUp key={`${vertical}-${i}`} delay={i * 0.1}>
                       <div className="bg-[#0a0a0a] rounded-[28px] p-8 md:p-10 border border-white/[0.06] h-full hover:border-white/[0.12] transition-all duration-500 group">
+                        <div className="flex items-center justify-between mb-4">
+                          <span className={`text-[11px] font-black tracking-[0.2em] uppercase px-2.5 py-1 rounded-lg ${vertical === 'immobilier' ? 'text-violet-400 bg-violet-500/10' : 'text-emerald-400 bg-emerald-500/10'}`}>
+                            Agent {block.agentName}
+                          </span>
+                          <span className={`w-2 h-2 rounded-full animate-pulse ${vertical === 'immobilier' ? 'bg-violet-400' : 'bg-emerald-400'}`}></span>
+                        </div>
                         <div className="flex items-center gap-4 mb-6">
                           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${block.iconBg} ${block.iconColor}`}>
                             {block.icon}
@@ -750,6 +763,7 @@ export const LandingPage = ({ onNavigate }) => {
                             "Dashboard de performance en temps réel",
                             "Account manager dédié",
                             "Optimisation et reporting continus",
+                            "Alertes WhatsApp & Slack en temps réel",
                           ] : [
                             "Audit complet de votre agence",
                             "Agent IA prise de rendez-vous",
@@ -758,6 +772,7 @@ export const LandingPage = ({ onNavigate }) => {
                             "Intégrations CRM + Agenda + Email + SMS",
                             "Dashboard de performance en temps réel",
                             "Account manager dédié",
+                            "Alertes WhatsApp & Slack en temps réel",
                           ]).map((feature, i) => (
                             <div key={i} className="flex items-center gap-3">
                               <CheckCircle2 className={`w-5 h-5 flex-shrink-0 ${vertical === 'immobilier' ? 'text-violet-500' : 'text-emerald-500'}`} />
@@ -767,10 +782,18 @@ export const LandingPage = ({ onNavigate }) => {
                         </div>
 
                         <div className="pt-6 border-t border-white/[0.06]">
+                          <div className="flex items-baseline gap-2 mb-2">
+                            <span className="text-xs font-bold uppercase tracking-widest text-gray-500">À partir de</span>
+                          </div>
+                          <div className="flex items-baseline gap-2 mb-3">
+                            <span className={`text-4xl font-bold tracking-tight ${vertical === 'immobilier' ? 'text-violet-400' : 'text-emerald-400'}`}>800€</span>
+                            <span className="text-gray-400 font-medium text-lg">/mois</span>
+                            <span className="text-gray-600 text-sm font-medium">HT</span>
+                          </div>
                           <p className="text-sm text-gray-500 font-medium">
                             {vertical === 'ecommerce'
-                              ? "Tarification sur mesure selon la taille de votre boutique et le périmètre d'automatisation. L'audit initial est gratuit."
-                              : "Tarification sur mesure selon la taille de votre agence et le nombre d'agents déployés. La démo est gratuite."
+                              ? "Tarif selon la taille de votre boutique et le périmètre. L'audit initial est gratuit et sans engagement."
+                              : "Tarif selon la taille de votre agence et le nombre d'agents déployés. La démo est gratuite."
                             }
                           </p>
                         </div>
@@ -881,7 +904,7 @@ export const LandingPage = ({ onNavigate }) => {
                     },
                     {
                       q: "Combien ça coûte ?",
-                      a: "Chaque projet est sur mesure. Le tarif dépend du périmètre et de la taille de votre boutique. L'audit initial est gratuit et sans engagement — il inclut une estimation du ROI attendu."
+                      a: "À partir de 800€/mois HT selon le périmètre d'automatisation. L'audit initial est gratuit et inclut une estimation du ROI attendu avant tout engagement."
                     },
                   ] : [
                     {
@@ -910,7 +933,7 @@ export const LandingPage = ({ onNavigate }) => {
                     },
                     {
                       q: "Combien ça coûte ?",
-                      a: "Chaque projet est sur mesure. Le tarif dépend de la taille de votre agence et du nombre d'agents IA déployés. La démo initiale est gratuite et sans engagement."
+                      a: "À partir de 800€/mois HT selon le périmètre d'automatisation. L'audit initial est gratuit et inclut une estimation du ROI attendu avant tout engagement."
                     },
                   ]).map((faq, i) => (
                     <div key={i} className="border border-white/[0.08] rounded-2xl bg-[#030303] overflow-hidden hover:border-white/[0.12] transition-colors">

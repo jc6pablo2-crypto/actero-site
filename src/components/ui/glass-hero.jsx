@@ -155,6 +155,14 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                     </div>
                 </FadeInUp>
 
+                {/* Made in France */}
+                <FadeInUp className="mb-3">
+                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-500 px-3 py-1.5 rounded-full border border-white/[0.06] bg-white/[0.02]">
+                    <span>🇫🇷</span>
+                    <span>Made in France</span>
+                  </div>
+                </FadeInUp>
+
                 {/* Trust Badge */}
                 <FadeInUp className="mb-10">
                     <div className={`inline-flex items-center gap-3 backdrop-blur-md border px-5 py-2 rounded-full text-sm font-medium transition-all duration-500 ${
