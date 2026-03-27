@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Shield, Clock, TrendingUp, UserPlus } from 'lucide-react';
+import { ArrowRight, Shield, Clock, TrendingUp, UserPlus, ShoppingBag, Building2 } from 'lucide-react';
 import { FadeInUp, ScaleIn } from './scroll-animations';
 import { ButtonColorful } from './button-colorful';
 import { MagneticButton } from './magnetic-button';
@@ -13,7 +13,7 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                 <>
                     <span className="block">Transformez votre SAV</span>
                     <span className="block">en machine de croissance.</span>
-                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-300">
                         Récupérez chaque euro perdu.
                     </span>
                 </>
@@ -24,6 +24,10 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                 { icon: <Clock className="w-5 h-5 text-cyan-400" />, value: "7 jours", label: "pour être opérationnel" },
                 { icon: <Shield className="w-5 h-5 text-amber-400" />, value: "0 code", label: "on gère tout pour vous" },
             ],
+            accentColor: 'emerald',
+            gradientFrom: 'from-emerald-500/20',
+            gradientTo: 'to-cyan-500/20',
+            glowColor: 'rgba(16,185,129,0.12)',
         },
         immobilier: {
             badge: { icon: null, label: 'Spécialiste IA pour agences immobilières' },
@@ -31,7 +35,7 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                 <>
                     <span className="block">Automatisez votre agence.</span>
                     <span className="block">Récupérez chaque prospect.</span>
-                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-400">
+                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-400 to-fuchsia-400">
                         3 agents IA à votre service.
                     </span>
                 </>
@@ -42,82 +46,109 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                 { icon: <Clock className="w-5 h-5 text-purple-400" />, value: "-50%", label: "de temps administratif" },
                 { icon: <Shield className="w-5 h-5 text-fuchsia-400" />, value: "+10%", label: "de prospects récupérés" },
             ],
+            accentColor: 'violet',
+            gradientFrom: 'from-violet-500/20',
+            gradientTo: 'to-purple-500/20',
+            glowColor: 'rgba(139,92,246,0.14)',
         },
     };
 
     const content = heroContent[vertical];
+    const isEcommerce = vertical === 'ecommerce';
 
     return (
-        <div className="relative min-h-[90vh] flex flex-col items-center justify-center pt-28 pb-20 px-6 overflow-hidden">
+        <div className="relative min-h-[100vh] flex flex-col items-center justify-center pt-24 pb-20 px-6 overflow-hidden">
 
-            {/* Background — Cyan Aurora */}
+            {/* ── Geometric grid background ── */}
             <div className="absolute inset-0 z-0 bg-[#030303] overflow-hidden">
+                {/* Fine grid lines */}
+                <svg
+                    className="absolute inset-0 w-full h-full opacity-[0.04]"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <defs>
+                        <pattern id="hero-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                            <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" strokeWidth="0.5" />
+                        </pattern>
+                        <pattern id="hero-grid-large" width="180" height="180" patternUnits="userSpaceOnUse">
+                            <path d="M 180 0 L 0 0 0 180" fill="none" stroke="white" strokeWidth="1" />
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#hero-grid)" />
+                    <rect width="100%" height="100%" fill="url(#hero-grid-large)" />
+                </svg>
+
+                {/* Central radial fade — makes center readable */}
                 <div
-                    className="absolute top-[8%] left-[-10%] w-[120%] h-[35%] pointer-events-none opacity-50"
+                    className="absolute inset-0 pointer-events-none"
                     style={{
-                        background: 'linear-gradient(90deg, transparent 0%, rgba(6,182,212,0.1) 25%, rgba(6,182,212,0.16) 50%, rgba(6,182,212,0.1) 75%, transparent 100%)',
-                        borderRadius: '50%',
+                        background: 'radial-gradient(ellipse 80% 70% at 50% 40%, rgba(3,3,3,0.95) 0%, rgba(3,3,3,0.7) 50%, transparent 100%)',
+                    }}
+                />
+
+                {/* Accent glow — changes with vertical */}
+                <div
+                    className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[900px] h-[500px] pointer-events-none transition-all duration-700"
+                    style={{
+                        background: `radial-gradient(ellipse at center, ${content.glowColor} 0%, transparent 70%)`,
                         filter: 'blur(60px)',
-                        transform: 'rotate(-3deg)',
-                        animation: 'aurora-drift-1 12s ease-in-out infinite alternate',
                     }}
                 />
-                <div
-                    className="absolute top-[18%] left-[-5%] w-[110%] h-[20%] pointer-events-none opacity-40"
-                    style={{
-                        background: 'linear-gradient(90deg, transparent 5%, rgba(6,182,212,0.12) 30%, rgba(6,182,212,0.18) 50%, rgba(6,182,212,0.1) 70%, transparent 95%)',
-                        borderRadius: '50%',
-                        filter: 'blur(50px)',
-                        transform: 'rotate(2deg)',
-                        animation: 'aurora-drift-2 15s ease-in-out infinite alternate',
-                    }}
-                />
-                <div
-                    className="absolute top-[30%] left-[5%] w-[90%] h-[15%] pointer-events-none opacity-30"
-                    style={{
-                        background: 'linear-gradient(90deg, transparent 10%, rgba(6,182,212,0.14) 35%, rgba(6,182,212,0.1) 65%, transparent 100%)',
-                        borderRadius: '50%',
-                        filter: 'blur(45px)',
-                        transform: 'rotate(-1deg)',
-                        animation: 'aurora-drift-3 18s ease-in-out infinite alternate',
-                    }}
-                />
-                <div className="absolute top-[-5%] left-1/2 -translate-x-1/2 w-[80%] h-[40%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(6,182,212,0.06)_0%,transparent_70%)] pointer-events-none" />
-                <div className="absolute inset-x-0 bottom-0 h-96 bg-gradient-to-t from-[#030303] to-transparent pointer-events-none" />
-                <style>{`
-                    @keyframes aurora-drift-1 {
-                        0%   { transform: rotate(-3deg) translateX(-3%) translateY(0); }
-                        100% { transform: rotate(-1deg) translateX(3%) translateY(-8px); }
-                    }
-                    @keyframes aurora-drift-2 {
-                        0%   { transform: rotate(2deg) translateX(2%) translateY(0); }
-                        100% { transform: rotate(0deg) translateX(-2%) translateY(10px); }
-                    }
-                    @keyframes aurora-drift-3 {
-                        0%   { transform: rotate(-1deg) translateX(0) translateY(0); }
-                        100% { transform: rotate(1deg) translateX(4%) translateY(-5px); }
-                    }
-                `}</style>
+
+                {/* Corner accent lines (decorative) */}
+                <svg className="absolute top-0 left-0 w-64 h-64 opacity-[0.06]" viewBox="0 0 256 256">
+                    <line x1="0" y1="0" x2="256" y2="0" stroke="white" strokeWidth="1" />
+                    <line x1="0" y1="0" x2="0" y2="256" stroke="white" strokeWidth="1" />
+                    <line x1="40" y1="0" x2="40" y2="40" stroke="white" strokeWidth="0.5" />
+                    <line x1="80" y1="0" x2="80" y2="40" stroke="white" strokeWidth="0.5" />
+                    <line x1="0" y1="40" x2="40" y2="40" stroke="white" strokeWidth="0.5" />
+                    <line x1="0" y1="80" x2="40" y2="80" stroke="white" strokeWidth="0.5" />
+                </svg>
+                <svg className="absolute top-0 right-0 w-64 h-64 opacity-[0.06]" viewBox="0 0 256 256">
+                    <line x1="256" y1="0" x2="0" y2="0" stroke="white" strokeWidth="1" />
+                    <line x1="256" y1="0" x2="256" y2="256" stroke="white" strokeWidth="1" />
+                    <line x1="216" y1="0" x2="216" y2="40" stroke="white" strokeWidth="0.5" />
+                    <line x1="176" y1="0" x2="176" y2="40" stroke="white" strokeWidth="0.5" />
+                    <line x1="256" y1="40" x2="216" y2="40" stroke="white" strokeWidth="0.5" />
+                    <line x1="256" y1="80" x2="216" y2="80" stroke="white" strokeWidth="0.5" />
+                </svg>
+
+                {/* Bottom fade */}
+                <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#030303] to-transparent pointer-events-none" />
             </div>
 
+            {/* ── Content ── */}
             <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center">
 
-                {/* Vertical Toggle */}
-                <FadeInUp className="mb-6">
-                    <div className="inline-flex items-center bg-white/[0.04] backdrop-blur-md border border-white/10 rounded-full p-1">
+                {/* ── Vertical Toggle — very prominent ── */}
+                <FadeInUp className="mb-10">
+                    <div className="relative inline-flex items-center bg-white/[0.05] backdrop-blur-xl border border-white/10 rounded-2xl p-1.5 gap-1.5 shadow-2xl">
+                        {/* Sliding indicator */}
+                        <div
+                            className={`absolute top-1.5 bottom-1.5 rounded-xl transition-all duration-300 ease-out ${
+                                isEcommerce
+                                    ? 'left-1.5 right-[calc(50%+0.375rem)]'
+                                    : 'left-[calc(50%+0.375rem)] right-1.5'
+                            } ${isEcommerce ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-violet-500/10 border border-violet-500/20'}`}
+                        />
                         {[
-                            { key: 'ecommerce', label: 'E-commerce' },
-                            { key: 'immobilier', label: 'Immobilier' },
+                            { key: 'ecommerce', label: 'E-commerce', icon: <ShoppingBag className="w-4 h-4" /> },
+                            { key: 'immobilier', label: 'Immobilier', icon: <Building2 className="w-4 h-4" /> },
                         ].map((v) => (
                             <button
                                 key={v.key}
                                 onClick={() => onVerticalChange?.(v.key)}
-                                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+                                className={`relative z-10 flex items-center gap-2.5 px-7 py-3 rounded-xl text-sm font-semibold tracking-wide transition-all duration-300 ${
                                     vertical === v.key
-                                        ? 'bg-white text-black shadow-lg'
-                                        : 'text-gray-400 hover:text-white'
+                                        ? v.key === 'ecommerce'
+                                            ? 'text-emerald-300'
+                                            : 'text-violet-300'
+                                        : 'text-zinc-500 hover:text-zinc-300'
                                 }`}
                             >
+                                <span className={`transition-all duration-300 ${vertical === v.key ? (v.key === 'ecommerce' ? 'text-emerald-400' : 'text-violet-400') : 'text-zinc-600'}`}>
+                                    {v.icon}
+                                </span>
                                 {v.label}
                             </button>
                         ))}
@@ -125,13 +156,15 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                 </FadeInUp>
 
                 {/* Trust Badge */}
-                <FadeInUp className="mb-8">
-                    <div className="inline-flex items-center gap-3 bg-white/[0.06] backdrop-blur-md border border-white/10 text-gray-300 px-5 py-2.5 rounded-full text-sm font-medium">
+                <FadeInUp className="mb-10">
+                    <div className={`inline-flex items-center gap-3 backdrop-blur-md border px-5 py-2 rounded-full text-sm font-medium transition-all duration-500 ${
+                        isEcommerce
+                            ? 'bg-emerald-500/[0.06] border-emerald-500/20 text-emerald-300/80'
+                            : 'bg-violet-500/[0.06] border-violet-500/20 text-violet-300/80'
+                    }`}>
                         {content.badge.icon && (
                             <>
-                                <div className="flex items-center gap-1.5">
-                                    <img src={content.badge.icon} alt="" className="h-4 w-auto brightness-0 invert opacity-70" />
-                                </div>
+                                <img src={content.badge.icon} alt="" className="h-4 w-auto brightness-0 invert opacity-70" />
                                 <span className="w-px h-4 bg-white/10"></span>
                             </>
                         )}
@@ -139,16 +172,16 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                     </div>
                 </FadeInUp>
 
-                {/* Headline */}
-                <FadeInUp delay={0.1} className="text-center max-w-4xl mb-8">
-                    <h1 className="text-4xl md:text-6xl lg:text-[4.5rem] font-bold tracking-tight text-white leading-[1.1] md:leading-[1.08]">
+                {/* ── Headline — very large ── */}
+                <FadeInUp delay={0.1} className="text-center max-w-5xl mb-8">
+                    <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6rem] font-bold tracking-tight text-white leading-[1.0] md:leading-[1.02]" style={{ letterSpacing: '-0.03em' }}>
                         {content.headline}
                     </h1>
                 </FadeInUp>
 
                 {/* Subtitle */}
                 <FadeInUp delay={0.15} className="text-center max-w-2xl mb-10">
-                    <p className="text-lg md:text-xl text-gray-400 font-medium leading-relaxed">
+                    <p className="text-base md:text-lg text-zinc-400 font-medium leading-relaxed">
                         {content.subtitle}
                     </p>
                 </FadeInUp>
@@ -165,7 +198,7 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                             const el = document.getElementById('comment-ca-marche');
                             if (el) el.scrollIntoView({ behavior: 'smooth' });
                         }}
-                        className="text-sm font-semibold text-gray-400 hover:text-white transition-colors flex items-center gap-2 px-6 py-3"
+                        className="text-sm font-semibold text-zinc-400 hover:text-white transition-colors flex items-center gap-2 px-6 py-3"
                     >
                         Voir comment ça marche <ArrowRight className="w-4 h-4" />
                     </MagneticButton>
@@ -182,9 +215,13 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                     </button>
                 </FadeInUp>
 
-                {/* Proof Metrics Bar */}
+                {/* ── Proof Metrics Bar ── */}
                 <ScaleIn delay={0.3} className="w-full max-w-3xl">
-                    <div className="bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl px-6 py-5 md:px-10 md:py-6">
+                    <div className={`border rounded-2xl px-6 py-5 md:px-10 md:py-6 transition-all duration-500 ${
+                        isEcommerce
+                            ? 'bg-white/[0.02] border-white/[0.06] backdrop-blur-xl'
+                            : 'bg-white/[0.02] border-white/[0.06] backdrop-blur-xl'
+                    }`}>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0">
                             {content.metrics.map((item, i) => (
                                 <div
@@ -195,8 +232,8 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                                         {item.icon}
                                     </div>
                                     <div>
-                                        <p className="text-white font-bold text-lg leading-tight">{item.value}</p>
-                                        <p className="text-gray-500 text-sm font-medium">{item.label}</p>
+                                        <p className="text-white font-bold text-xl leading-tight tracking-tight">{item.value}</p>
+                                        <p className="text-zinc-500 text-sm font-medium">{item.label}</p>
                                     </div>
                                 </div>
                             ))}
