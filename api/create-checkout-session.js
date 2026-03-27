@@ -18,12 +18,23 @@ export default async function handler(req, res) {
   }
 
   try {
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Fetch funnel client data to get custom pricing
+    const { data: funnelClient } = await supabase
+      .from('funnel_clients')
+      .select('setup_price, monthly_price, company_name, client_type')
+      .eq('slug', client)
+      .maybeSingle();
+
+    const setupPrice = funnelClient?.setup_price ?? 800;
+    const monthlyPrice = funnelClient?.monthly_price ?? 800;
+
     // Check if referral code is valid
     let hasValidReferral = false;
     let referrerClientId = null;
 
-    if (referral_code && supabaseUrl && supabaseServiceKey) {
-      const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    if (referral_code) {
       const { data: referrer } = await supabase
         .from('clients')
         .select('id, referral_code')
@@ -36,33 +47,31 @@ export default async function handler(req, res) {
       }
     }
 
-    // Build line items — remove setup fee if referral is valid
+    // Build line items — remove setup fee if referral is valid or price is 0
     const lineItems = [];
 
-    if (!hasValidReferral) {
+    if (!hasValidReferral && setupPrice > 0) {
       lineItems.push({
-        // Setup fee (one-time) added to the first invoice
         price_data: {
           currency: 'eur',
           product_data: {
             name: 'Actero — Setup',
             description: 'Frais de mise en place unique',
           },
-          unit_amount: 80000, // 800€ in cents
+          unit_amount: Math.round(setupPrice * 100),
         },
         quantity: 1,
       });
     }
 
     lineItems.push({
-      // Monthly subscription
       price_data: {
         currency: 'eur',
         product_data: {
           name: 'Actero — Abonnement mensuel',
           description: 'Automatisation IA du support client',
         },
-        unit_amount: 80000, // 800€/month in cents
+        unit_amount: Math.round(monthlyPrice * 100),
         recurring: {
           interval: 'month',
         },
