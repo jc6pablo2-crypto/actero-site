@@ -48,6 +48,12 @@ import { ROISimulator } from '../components/landing/ROISimulator'
 import { AgentCarousel } from '../components/landing/AgentCarousel'
 import { ChatMockup } from '../components/landing/ChatMockup'
 import { IntegrationGrid } from '../components/landing/IntegrationGrid'
+import { ProcessSteps } from '../components/landing/ProcessSteps'
+import { AnnouncementBar } from '../components/layout/AnnouncementBar'
+import { StickyCTA } from '../components/ui/StickyCTA'
+import { LiveTicker } from '../components/ui/LiveTicker'
+import { ReadingProgress } from '../components/ui/ReadingProgress'
+import { GlowCard } from '../components/ui/GlowCard'
 
 export const LandingPage = ({ onNavigate }) => {
   const scrollToId = (id) => {
@@ -95,6 +101,8 @@ export const LandingPage = ({ onNavigate }) => {
         schemaData={landingSchema}
       />
     <div className="relative min-h-screen bg-[#030303] font-sans text-white selection:bg-emerald-500/20 selection:text-white">
+      <ReadingProgress vertical={vertical} />
+      <StickyCTA onNavigate={onNavigate} vertical={vertical} />
       {/* GLOBAL BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <img
@@ -106,6 +114,7 @@ export const LandingPage = ({ onNavigate }) => {
       </div>
 
       <div className="relative z-10 w-full">
+        <AnnouncementBar onNavigate={onNavigate} vertical={vertical} />
         {/* NAVBAR */}
         <Navbar
           onNavigate={onNavigate}
@@ -234,6 +243,9 @@ export const LandingPage = ({ onNavigate }) => {
                   </p>
                 </FadeInUp>
                 <IntegrationGrid vertical={vertical} />
+                <div className="flex justify-center mt-10">
+                  <LiveTicker vertical={vertical} />
+                </div>
               </div>
             </section>
 
@@ -388,69 +400,7 @@ export const LandingPage = ({ onNavigate }) => {
                   </p>
                 </FadeInUp>
 
-                <div className="grid md:grid-cols-3 gap-8">
-                  {(vertical === 'ecommerce' ? [
-                    {
-                      step: "01",
-                      icon: <Activity className="w-5 h-5 text-emerald-400" />,
-                      title: "Audit & Connexion",
-                      desc: "On analyse votre stack (Shopify, CRM, support) et on identifie vos plus grosses fuites de marge. On connecte vos outils en 15 minutes.",
-                      detail: "Jour 1-2"
-                    },
-                    {
-                      step: "02",
-                      icon: <Zap className="w-5 h-5 text-cyan-400" />,
-                      title: "Déploiement des agents",
-                      desc: "On configure vos agents IA et vos workflows sur mesure. Chaque automatisation est testée et validée avec vous avant la mise en production.",
-                      detail: "Jour 3-5"
-                    },
-                    {
-                      step: "03",
-                      icon: <BarChart3 className="w-5 h-5 text-amber-400" />,
-                      title: "Optimisation continue",
-                      desc: "On mesure les résultats en temps réel et on optimise. Vous suivez tout depuis votre dashboard : ROI, tickets traités, revenus récupérés.",
-                      detail: "En continu"
-                    },
-                  ] : [
-                    {
-                      step: "01",
-                      icon: <Activity className="w-5 h-5 text-violet-400" />,
-                      title: "Audit de votre agence",
-                      desc: "On analyse vos processus actuels (prise de RDV, collecte documentaire, suivi prospects) et on identifie les gains d'efficacité immédiats.",
-                      detail: "Jour 1-2"
-                    },
-                    {
-                      step: "02",
-                      icon: <Zap className="w-5 h-5 text-purple-400" />,
-                      title: "Déploiement des 3 agents",
-                      desc: "On configure vos agents IA (RDV, documents, relances), on les connecte à votre CRM et votre agenda, et on valide chaque scénario avec vous.",
-                      detail: "Jour 3-5"
-                    },
-                    {
-                      step: "03",
-                      icon: <BarChart3 className="w-5 h-5 text-fuchsia-400" />,
-                      title: "Optimisation continue",
-                      desc: "On mesure les résultats en temps réel : taux de RDV, documents collectés, prospects réactivés. Les agents s'améliorent en continu.",
-                      detail: "En continu"
-                    },
-                  ]).map((block, i) => (
-                    <FadeInUp key={i} delay={i * 0.15}>
-                      <div className="relative bg-[#0a0a0a] rounded-[28px] p-8 border border-white/[0.06] h-full hover:border-white/[0.12] transition-all duration-500">
-                        <div className="flex items-center justify-between mb-8">
-                          <div className="flex items-center gap-3">
-                            {block.icon}
-                            <span className="text-xs font-bold uppercase tracking-widest text-gray-500">Étape {block.step}</span>
-                          </div>
-                          <span className="text-xs font-bold text-white/40 bg-white/[0.04] px-3 py-1 rounded-full">{block.detail}</span>
-                        </div>
-                        <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">{block.title}</h3>
-                        <p className="text-gray-400 font-medium leading-relaxed">
-                          {block.desc}
-                        </p>
-                      </div>
-                    </FadeInUp>
-                  ))}
-                </div>
+                <ProcessSteps vertical={vertical} onNavigate={onNavigate} />
 
                 <FadeInUp delay={0.5} className="mt-10">
                   <div className="bg-gradient-to-br from-white/[0.04] to-white/[0.01] rounded-[28px] p-8 md:p-10 border border-white/[0.08]">
@@ -638,7 +588,8 @@ export const LandingPage = ({ onNavigate }) => {
                   </p>
                 </FadeInUp>
 
-                <SlideInLeft className="bg-[#0a0a0a] rounded-[32px] border border-white/10 overflow-hidden shadow-sm">
+                <SlideInLeft>
+                <GlowCard color={vertical === 'immobilier' ? 'violet' : 'white'} glowSize={300} className="bg-[#0a0a0a] rounded-[32px] border border-white/10 overflow-hidden shadow-sm">
                   <div className="grid grid-cols-2 border-b border-white/5 bg-white/5">
                     <div className="p-6 md:p-8 border-r border-white/5">
                       <p className="text-lg font-bold tracking-tight text-gray-400 line-through">Outils en self-service</p>
@@ -676,6 +627,7 @@ export const LandingPage = ({ onNavigate }) => {
                       </div>
                     ))}
                   </div>
+                </GlowCard>
                 </SlideInLeft>
               </div>
             </section>
