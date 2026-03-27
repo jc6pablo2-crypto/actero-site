@@ -167,38 +167,38 @@ export const LandingPage = ({ onNavigate }) => {
                   {(vertical === 'ecommerce' ? [
                     {
                       icon: <ShoppingCart className="w-8 h-8 text-red-400/70" />,
-                      stat: "70%",
+                      statValue: 70, statSuffix: "%",
                       title: "des paniers jamais relancés",
                       desc: "7 acheteurs sur 10 abandonnent leur panier. Sans séquence de relance automatisée, chaque panier oublié est une vente en moins sur votre P&L.",
                     },
                     {
                       icon: <Clock className="w-8 h-8 text-red-400/70" />,
-                      stat: "40h+",
+                      statValue: 40, statSuffix: "h+",
                       title: "englouties en support chaque mois",
                       desc: "\"Où est ma commande ?\", \"Je veux un remboursement.\" Votre équipe traite les mêmes demandes en boucle au lieu de faire croître le business.",
                     },
                     {
                       icon: <Eye className="w-8 h-8 text-red-400/70" />,
-                      stat: "0",
+                      statValue: 0, statSuffix: "",
                       title: "visibilité sur vos fuites de marge",
                       desc: "Pas de tableau de bord consolidé. Vous ne savez pas combien vous perdez, ni où. Impossible d'optimiser ce qu'on ne mesure pas.",
                     },
                   ] : [
                     {
                       icon: <Phone className="w-8 h-8 text-red-400/70" />,
-                      stat: "60%",
+                      statValue: 60, statSuffix: "%",
                       title: "des prospects jamais rappelés",
                       desc: "Un prospect non recontacté dans les 24h a 6 fois moins de chances de signer. Sans relance automatique, chaque lead oublié est un mandat perdu.",
                     },
                     {
                       icon: <Clock className="w-8 h-8 text-red-400/70" />,
-                      stat: "30h+",
+                      statValue: 30, statSuffix: "h+",
                       title: "perdues en administratif par mois",
                       desc: "Collecte de documents, relances manuelles, prises de rendez-vous par téléphone. Vos agents passent plus de temps à gérer qu'à vendre.",
                     },
                     {
                       icon: <Eye className="w-8 h-8 text-red-400/70" />,
-                      stat: "0",
+                      statValue: 0, statSuffix: "",
                       title: "suivi des prospects inactifs",
                       desc: "Pas de système de relance automatisé. Les prospects refroidis tombent dans l'oubli alors qu'un simple suivi pourrait les réactiver.",
                     },
@@ -211,7 +211,7 @@ export const LandingPage = ({ onNavigate }) => {
                         {block.icon}
                       </div>
                       <p className="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">
-                        {block.stat}
+                        <ScrollCounter value={block.statValue} suffix={block.statSuffix} />
                       </p>
                       <h3 className="text-lg font-bold text-white mb-3">
                         {block.title}
@@ -225,10 +225,13 @@ export const LandingPage = ({ onNavigate }) => {
               </FadeInUp>
             </section>
 
+            {/* Section separator */}
+            <div className="mx-auto max-w-5xl px-6"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" /></div>
+
             {/* ============================================ */}
             {/* INTÉGRATIONS — Grille de cards              */}
             {/* ============================================ */}
-            <section className="py-20 bg-transparent relative z-10 px-6">
+            <section className="py-20 bg-white/[0.018] relative z-10 px-6">
               <div className="max-w-6xl mx-auto">
                 <FadeInUp className="text-center mb-10">
                   <p className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-3">
@@ -352,10 +355,13 @@ export const LandingPage = ({ onNavigate }) => {
               </div>
             </section>
 
+            {/* Section separator */}
+            <div className="mx-auto max-w-5xl px-6"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" /></div>
+
             {/* ============================================ */}
             {/* SECTION — AGENT EN ACTION (Chat Mockup)      */}
             {/* ============================================ */}
-            <section className="py-24 md:py-32 bg-transparent px-6 relative z-10">
+            <section className="py-24 md:py-32 bg-white/[0.018] px-6 relative z-10">
               <div className="max-w-6xl mx-auto">
                 <FadeInUp className="text-center mb-16">
                   <p className={`text-xs font-bold uppercase tracking-[0.2em] mb-4 ${vertical === 'immobilier' ? 'text-violet-400/80' : 'text-emerald-400/80'}`}>
@@ -377,6 +383,9 @@ export const LandingPage = ({ onNavigate }) => {
             {/* SECTION — BEFORE / AFTER                     */}
             {/* ============================================ */}
             {vertical === 'ecommerce' && <BeforeAfterSlider />}
+
+            {/* Section separator */}
+            <div className="mx-auto max-w-5xl px-6"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" /></div>
 
             {/* ============================================ */}
             {/* SECTION 4 — COMMENT ÇA MARCHE               */}
@@ -435,10 +444,13 @@ export const LandingPage = ({ onNavigate }) => {
             {/* ============================================ */}
             {vertical === 'ecommerce' && <ROISimulator onNavigate={onNavigate} />}
 
+            {/* Section separator */}
+            <div className="mx-auto max-w-5xl px-6"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" /></div>
+
             {/* ============================================ */}
             {/* SECTION 6 — PREUVES / RÉSULTATS              */}
             {/* ============================================ */}
-            <section id="proof" className="py-24 bg-transparent px-6 relative z-10">
+            <section id="proof" className="py-24 bg-white/[0.018] px-6 relative z-10">
               <div className="max-w-6xl mx-auto">
                 <FadeInUp className="text-center mb-16">
                   <p className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-6">
@@ -647,7 +659,8 @@ export const LandingPage = ({ onNavigate }) => {
                 </FadeInUp>
 
                 <FadeInUp delay={0.1}>
-                  <div className="bg-[#0d0d0d] rounded-[32px] border border-white/[0.12] overflow-hidden relative">
+                  <div className={`p-[1px] rounded-[32px] ${vertical === 'immobilier' ? 'shimmer-border-violet' : 'shimmer-border-emerald'}`}>
+                  <div className="bg-[#0d0d0d] rounded-[31px] overflow-hidden relative">
                     {/* Glow */}
                     <div className={`absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full blur-[120px] pointer-events-none ${vertical === 'immobilier' ? 'bg-violet-500/10' : 'bg-emerald-500/10'}`}></div>
 
@@ -776,14 +789,18 @@ export const LandingPage = ({ onNavigate }) => {
                       </div>
                     </div>
                   </div>
+                  </div>
                 </FadeInUp>
               </div>
             </section>
 
+            {/* Section separator */}
+            <div className="mx-auto max-w-5xl px-6"><div className="h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" /></div>
+
             {/* ============================================ */}
             {/* SECTION 9 — FAQ                              */}
             {/* ============================================ */}
-            <section id="faq" className="py-24 bg-transparent px-6 relative z-10">
+            <section id="faq" className="py-24 bg-white/[0.018] px-6 relative z-10">
               <div className="max-w-3xl mx-auto">
                 <FadeInUp className="text-center mb-16">
                   <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-4">Questions fréquentes</h2>

@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  ChevronDown, 
-  Menu, 
-  X, 
-  Bot, 
-  Zap, 
-  Sparkles 
+import {
+  ChevronDown,
+  Menu,
+  X,
+  Bot,
+  Zap,
+  Sparkles
 } from 'lucide-react'
 import { Logo } from './Logo'
 import { ButtonColorful } from '../ui/button-colorful'
@@ -14,6 +14,13 @@ import { ButtonColorful } from '../ui/button-colorful'
 export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const scrollToId = (id) => {
     const el = document.getElementById(id);
@@ -22,8 +29,14 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
 
   return (
     <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50">
-      <nav className="w-full bg-[#0d0d0d]/70 backdrop-blur-3xl border border-white/10 shadow-2xl rounded-full transition-all duration-300">
-        <div className="px-6 md:px-8 h-14 md:h-[60px] flex justify-between items-center">
+      <nav className={`w-full backdrop-blur-3xl border shadow-2xl rounded-full transition-all duration-500 ${
+        scrolled
+          ? 'bg-[#080808]/92 border-white/[0.14] shadow-black/60'
+          : 'bg-[#0d0d0d]/70 border-white/10'
+      }`}>
+        <div className={`px-6 md:px-8 flex justify-between items-center transition-all duration-500 ${
+          scrolled ? 'h-12 md:h-[52px]' : 'h-14 md:h-[60px]'
+        }`}>
           <div
             className="flex items-center gap-2 cursor-pointer group"
             onClick={() => onNavigate("/")}
