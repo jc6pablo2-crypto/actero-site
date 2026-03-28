@@ -29,7 +29,7 @@ export default async function handler(req, res) {
   try {
     const redirectUri = process.env.GORGIAS_REDIRECT_URI || 'https://actero.fr/api/integrations/oauth/gorgias/callback';
 
-    const tokenRes = await fetch('https://acme.gorgias.com/oauth/token', {
+    const tokenRes = await fetch('https://partner-login.gorgias.com/oauth/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
