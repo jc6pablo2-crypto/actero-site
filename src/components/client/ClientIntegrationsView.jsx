@@ -8,21 +8,33 @@ import {
 import { supabase } from '../../lib/supabase'
 import { INTEGRATIONS, ALL_INTEGRATIONS, getIntegrationById } from '../../config/integrations'
 
-// Placeholder icon: colored circle with first letter
 const ProviderIcon = ({ provider, connected, size = 40 }) => {
   const config = getIntegrationById(provider.id || provider) || provider;
+  const hasIcon = !!config.icon;
   return (
     <div
-      className="rounded-xl flex items-center justify-center font-bold text-white shrink-0 transition-all"
+      className="rounded-xl flex items-center justify-center shrink-0 transition-all overflow-hidden"
       style={{
         width: size,
         height: size,
-        backgroundColor: connected ? config.color : '#3f3f46',
-        fontSize: size * 0.4,
-        opacity: connected ? 1 : 0.6,
+        opacity: connected ? 1 : 0.5,
       }}
     >
-      {config.name?.[0] || '?'}
+      {hasIcon ? (
+        <img
+          src={config.icon}
+          alt={config.name}
+          className="w-full h-full object-contain"
+          style={{ filter: connected ? 'none' : 'grayscale(100%)' }}
+        />
+      ) : (
+        <div
+          className="w-full h-full rounded-xl flex items-center justify-center font-bold text-white"
+          style={{ backgroundColor: connected ? config.color : '#3f3f46', fontSize: size * 0.4 }}
+        >
+          {config.name?.[0] || '?'}
+        </div>
+      )}
     </div>
   );
 };
@@ -93,20 +105,40 @@ const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain
                   </span>
                 )}
               </>
+            ) : provider.authType === 'oauth' && provider.id !== 'shopify' ? (
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-500 bg-zinc-800 cursor-not-allowed">
+                <Plug className="w-3 h-3" /> Bientôt
+              </span>
+            ) : provider.authType === 'oauth' ? (
+              <a
+                href={`/api/shopify/install?shop=${encodeURIComponent(provider.id === 'shopify' ? 'votre-boutique.myshopify.com' : '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const shop = prompt('Entrez votre domaine Shopify (ex: ma-boutique.myshopify.com)');
+                  if (shop?.trim()) {
+                    window.open(`/api/shopify/install?shop=${encodeURIComponent(shop.trim())}`, '_blank');
+                  }
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                  isLight
+                    ? 'text-white bg-[#96BF48] hover:bg-[#7ea33d]'
+                    : 'text-white bg-[#96BF48] hover:bg-[#7ea33d]'
+                }`}
+              >
+                <ExternalLink className="w-3 h-3" /> Installer l'app
+              </a>
             ) : (
               <button
                 onClick={() => onConnect(provider)}
-                disabled={provider.authType === 'oauth' && provider.id !== 'shopify'}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                  provider.authType === 'oauth' && provider.id !== 'shopify'
-                    ? 'text-zinc-500 bg-zinc-800 cursor-not-allowed'
-                    : isLight
-                      ? 'text-white bg-slate-900 hover:bg-slate-800'
-                      : 'text-white bg-white/10 hover:bg-white/15 border border-white/10'
+                  isLight
+                    ? 'text-white bg-slate-900 hover:bg-slate-800'
+                    : 'text-white bg-white/10 hover:bg-white/15 border border-white/10'
                 }`}
               >
-                <Plug className="w-3 h-3" />
-                {provider.authType === 'oauth' && provider.id !== 'shopify' ? 'Bientôt' : 'Connecter'}
+                <Plug className="w-3 h-3" /> Connecter
               </button>
             )}
           </div>

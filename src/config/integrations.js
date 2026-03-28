@@ -4,6 +4,7 @@ export const INTEGRATIONS = {
       id: 'shopify',
       name: 'Shopify',
       description: 'Synchronisation commandes, clients et produits',
+      icon: '/integrations/shopify.svg',
       authType: 'oauth',
       category: 'ecommerce',
       docsUrl: 'https://help.shopify.com/en/manual/apps',
@@ -14,6 +15,7 @@ export const INTEGRATIONS = {
       id: 'gorgias',
       name: 'Gorgias',
       description: 'Helpdesk e-commerce — tickets SAV, macros, automatisations',
+      icon: '/integrations/gorgias.svg',
       authType: 'api_key',
       category: 'ecommerce',
       apiKeyInstructions: 'Dans Gorgias, allez dans Settings → REST API → copiez votre API Key et votre Domain.',
@@ -29,6 +31,7 @@ export const INTEGRATIONS = {
       id: 'zendesk',
       name: 'Zendesk',
       description: 'Helpdesk — tickets, chat, base de connaissances',
+      icon: '/integrations/zendesk.svg',
       authType: 'api_key',
       category: 'ecommerce',
       apiKeyFields: [
@@ -44,6 +47,7 @@ export const INTEGRATIONS = {
       id: 'klaviyo',
       name: 'Klaviyo',
       description: 'Email & SMS marketing — segments, flows, automatisations',
+      icon: '/integrations/klaviyo.svg',
       authType: 'api_key',
       category: 'ecommerce',
       apiKeyFields: [
@@ -57,6 +61,7 @@ export const INTEGRATIONS = {
       id: 'freshdesk',
       name: 'Freshdesk',
       description: 'Helpdesk — tickets, automatisations, base de connaissances',
+      icon: '/integrations/freshdesk.svg',
       authType: 'api_key',
       category: 'ecommerce',
       apiKeyFields: [
@@ -71,6 +76,7 @@ export const INTEGRATIONS = {
       id: 'trustpilot',
       name: 'Trustpilot',
       description: 'Monitoring des avis clients en temps réel',
+      icon: '/integrations/trustpilot.svg',
       authType: 'api_key',
       category: 'ecommerce',
       apiKeyFields: [
@@ -87,6 +93,7 @@ export const INTEGRATIONS = {
       id: 'apimo',
       name: 'Apimo',
       description: 'CRM immobilier — biens, mandats, contacts, matching',
+      icon: '/integrations/apimo.svg',
       authType: 'api_key',
       category: 'immobilier',
       apiKeyFields: [
@@ -101,6 +108,7 @@ export const INTEGRATIONS = {
       id: 'hektor',
       name: 'Hektor',
       description: 'CRM immobilier — gestion des biens et contacts',
+      icon: '/integrations/hektor.svg',
       authType: 'api_key',
       category: 'immobilier',
       apiKeyFields: [
@@ -113,6 +121,7 @@ export const INTEGRATIONS = {
       id: 'netty',
       name: 'Netty',
       description: 'Logiciel immobilier — diffusion, CRM, site web',
+      icon: '/integrations/netty.svg',
       authType: 'api_key',
       category: 'immobilier',
       apiKeyFields: [
@@ -127,6 +136,7 @@ export const INTEGRATIONS = {
       id: 'slack',
       name: 'Slack',
       description: 'Recevez les alertes et notifications dans votre Slack',
+      icon: '/integrations/slack.svg',
       authType: 'api_key',
       category: 'general',
       apiKeyFields: [
@@ -141,6 +151,7 @@ export const INTEGRATIONS = {
       id: 'google_sheets',
       name: 'Google Sheets',
       description: 'Export automatique de vos données vers Google Sheets',
+      icon: '/integrations/google-sheets.svg',
       authType: 'oauth',
       category: 'general',
       docsUrl: 'https://developers.google.com/sheets/api',
@@ -150,6 +161,7 @@ export const INTEGRATIONS = {
       id: 'calendly',
       name: 'Calendly',
       description: 'Prise de rendez-vous automatique pour vos prospects',
+      icon: '/integrations/calendly.svg',
       authType: 'api_key',
       category: 'general',
       apiKeyFields: [
