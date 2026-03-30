@@ -5,17 +5,17 @@ export function CancelPage({ onNavigate }) {
   const client = params.get("client");
 
   return (
-    <div className="min-h-screen bg-[#0A0E1A] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-white flex items-center justify-center px-4">
       <div className="text-center max-w-md w-full">
         <div className="w-20 h-20 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-8">
           <XCircle className="w-10 h-10 text-red-500" />
         </div>
 
-        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+        <h1 className="text-3xl sm:text-4xl font-bold text-[#262626] mb-4">
           Paiement annulé
         </h1>
 
-        <p className="text-gray-400 text-lg mb-10 leading-relaxed">
+        <p className="text-[#716D5C] text-lg mb-10 leading-relaxed">
           Pas de souci — vous pouvez reprendre à tout moment.
         </p>
 
@@ -32,7 +32,7 @@ export function CancelPage({ onNavigate }) {
 
           <button
             onClick={() => onNavigate("/")}
-            className="text-sm text-gray-500 hover:text-gray-300 transition-colors cursor-pointer"
+            className="text-sm text-[#716D5C] hover:text-[#716D5C] transition-colors cursor-pointer"
           >
             Retour au site
           </button>

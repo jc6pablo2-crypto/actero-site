@@ -24,7 +24,7 @@ const ProviderIcon = ({ provider, connected, size = 40 }) => {
         />
       ) : (
         <div
-          className="w-full h-full rounded-xl flex items-center justify-center font-bold text-white"
+          className="w-full h-full rounded-xl flex items-center justify-center font-bold text-[#262626]"
           style={{ backgroundColor: config.color || '#3f3f46', fontSize: size * 0.4 }}
         >
           {config.name?.[0] || '?'}
@@ -38,7 +38,7 @@ const STATUS_BADGES = {
   active: { label: 'Connecté', className: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
   expired: { label: 'Expiré', className: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
   error: { label: 'Erreur', className: 'bg-red-500/20 text-red-400 border-red-500/30' },
-  revoked: { label: 'Révoqué', className: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30' },
+  revoked: { label: 'Révoqué', className: 'bg-gray-100 text-[#716D5C] border-gray-200' },
   pending: { label: 'En attente', className: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
 };
 
@@ -51,8 +51,8 @@ const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain
   return (
     <div className={`relative rounded-2xl border p-5 transition-all hover:border-white/20 ${
       isLight
-        ? `bg-white border-slate-200 ${isConnected ? 'ring-1 ring-emerald-200' : ''}`
-        : `bg-[#0E1424] border-white/10 ${isConnected ? 'ring-1 ring-emerald-500/20' : ''}`
+        ? `bg-white border-gray-200 ${isConnected ? 'ring-1 ring-emerald-200' : ''}`
+        : `bg-[#F9F7F1] border-gray-200 ${isConnected ? 'ring-1 ring-emerald-500/20' : ''}`
     }`}>
       {provider.popular && (
         <div className="absolute -top-2.5 right-4">
@@ -66,7 +66,7 @@ const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain
         <ProviderIcon provider={provider} connected={isConnected} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h4 className={`font-bold text-sm ${isLight ? 'text-slate-900' : 'text-white'}`}>{provider.name}</h4>
+            <h4 className={`font-bold text-sm ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>{provider.name}</h4>
             {badge && (
               <motion.span
                 initial={{ scale: 0.8, opacity: 0 }}
@@ -77,7 +77,7 @@ const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain
               </motion.span>
             )}
           </div>
-          <p className={`text-xs ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>{provider.description}</p>
+          <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>{provider.description}</p>
 
           {isShopify && shopifyDomain && (
             <p className="text-xs text-emerald-400 mt-1">{shopifyDomain}</p>
@@ -101,7 +101,7 @@ const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain
                 )}
               </>
             ) : provider.authType === 'coming_soon' ? (
-              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-500 bg-zinc-800 cursor-not-allowed">
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-[#716D5C] bg-gray-50 cursor-not-allowed">
                 <Plug className="w-3 h-3" /> Bientôt
               </span>
             ) : provider.authType === 'oauth' ? (
@@ -186,28 +186,28 @@ const ConnectModal = ({ provider, onClose, onSuccess, isLight }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" onClick={onClose} />
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
         className={`relative w-full max-w-md mx-4 rounded-2xl border shadow-2xl p-6 max-h-[85vh] overflow-y-auto ${
-          isLight ? 'bg-white border-slate-200' : 'bg-[#0E1424] border-white/10'
+          isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'
         }`}
       >
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <ProviderIcon provider={provider} connected={false} size={36} />
             <div>
-              <h3 className={`font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+              <h3 className={`font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>
                 Connecter {provider.name}
               </h3>
-              <p className={`text-xs ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>
+              <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
                 Entrez vos identifiants pour activer l'intégration
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+          <button onClick={onClose} className="text-[#716D5C] hover:text-[#262626] transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -235,7 +235,7 @@ const ConnectModal = ({ provider, onClose, onSuccess, isLight }) => {
         <div className="space-y-4 mb-5">
           {provider.apiKeyFields?.map(field => (
             <div key={field.key}>
-              <label className={`block text-xs font-bold mb-1.5 ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>
+              <label className={`block text-xs font-bold mb-1.5 ${isLight ? 'text-slate-700' : 'text-[#716D5C]'}`}>
                 {field.label}
               </label>
               <input
@@ -245,8 +245,8 @@ const ConnectModal = ({ provider, onClose, onSuccess, isLight }) => {
                 placeholder={field.placeholder}
                 className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all ${
                   isLight
-                    ? 'bg-slate-50 border border-slate-200 text-slate-900 focus:ring-2 focus:ring-blue-500/40'
-                    : 'bg-[#0A0E1A] border border-white/10 text-white focus:ring-2 focus:ring-zinc-400'
+                    ? 'bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:ring-2 focus:ring-blue-500/40'
+                    : 'bg-white border border-gray-200 text-[#262626] focus:ring-2 focus:ring-zinc-400'
                 }`}
               />
             </div>
@@ -279,8 +279,8 @@ const ConnectModal = ({ provider, onClose, onSuccess, isLight }) => {
             disabled={!allFieldsFilled || testing}
             className={`flex-1 flex justify-center items-center gap-2 py-3 rounded-xl text-sm font-bold transition-colors disabled:opacity-50 ${
               isLight
-                ? 'bg-slate-100 text-slate-900 hover:bg-slate-200'
-                : 'bg-white/10 text-white hover:bg-white/15 border border-white/10'
+                ? 'bg-gray-100 text-[#262626] hover:bg-gray-200'
+                : 'bg-gray-50 text-[#262626] hover:bg-white/15 border border-gray-200'
             }`}
           >
             {testing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
@@ -289,7 +289,7 @@ const ConnectModal = ({ provider, onClose, onSuccess, isLight }) => {
           <button
             onClick={handleSave}
             disabled={!testResult?.ok || saving}
-            className="flex-1 flex justify-center items-center gap-2 py-3 rounded-xl text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 transition-colors"
+            className="flex-1 flex justify-center items-center gap-2 py-3 rounded-xl text-sm font-bold text-[#262626] bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 transition-colors"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
             Sauvegarder
@@ -302,23 +302,23 @@ const ConnectModal = ({ provider, onClose, onSuccess, isLight }) => {
 
 const DisconnectModal = ({ provider, onClose, onConfirm, disconnecting, isLight }) => (
   <div className="fixed inset-0 z-50 flex items-center justify-center">
-    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+    <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" onClick={onClose} />
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       className={`relative w-full max-w-sm mx-4 rounded-2xl border shadow-2xl p-6 ${
-        isLight ? 'bg-white border-slate-200' : 'bg-[#0E1424] border-white/10'
+        isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'
       }`}
     >
-      <h3 className={`font-bold mb-2 ${isLight ? 'text-slate-900' : 'text-white'}`}>Déconnecter {provider}?</h3>
-      <p className={`text-sm mb-5 ${isLight ? 'text-slate-500' : 'text-zinc-400'}`}>
+      <h3 className={`font-bold mb-2 ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>Déconnecter {provider}?</h3>
+      <p className={`text-sm mb-5 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
         Vos automatisations liées à {provider} seront désactivées.
       </p>
       <div className="flex gap-3">
         <button
           onClick={onClose}
           className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors ${
-            isLight ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' : 'bg-white/10 text-white hover:bg-white/15'
+            isLight ? 'bg-gray-100 text-slate-700 hover:bg-gray-200' : 'bg-gray-50 text-[#262626] hover:bg-white/15'
           }`}
         >
           Annuler
@@ -326,7 +326,7 @@ const DisconnectModal = ({ provider, onClose, onConfirm, disconnecting, isLight 
         <button
           onClick={onConfirm}
           disabled={disconnecting}
-          className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-500 disabled:opacity-50 transition-colors"
+          className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-bold text-[#262626] bg-red-600 hover:bg-red-500 disabled:opacity-50 transition-colors"
         >
           {disconnecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
           Déconnecter
@@ -442,15 +442,15 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+          <h2 className={`text-2xl font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>
             Intégrations
           </h2>
-          <p className={`text-sm mt-1 ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>
+          <p className={`text-sm mt-1 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
             {connectedCount} intégration{connectedCount !== 1 ? 's' : ''} connectée{connectedCount !== 1 ? 's' : ''}
           </p>
         </div>
         <div className={`relative max-w-xs w-full ${isLight ? '' : ''}`}>
-          <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${isLight ? 'text-slate-400' : 'text-zinc-500'}`} />
+          <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`} />
           <input
             type="text"
             value={search}
@@ -458,8 +458,8 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
             placeholder="Rechercher..."
             className={`w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none transition-all ${
               isLight
-                ? 'bg-white border border-slate-200 text-slate-900 focus:ring-2 focus:ring-blue-500/40'
-                : 'bg-[#0E1424] border border-white/10 text-white focus:ring-2 focus:ring-zinc-400'
+                ? 'bg-white border border-gray-200 text-[#262626] focus:ring-2 focus:ring-blue-500/40'
+                : 'bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:ring-2 focus:ring-zinc-400'
             }`}
           />
         </div>
@@ -491,7 +491,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
 
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className={`w-6 h-6 animate-spin ${isLight ? 'text-slate-400' : 'text-zinc-400'}`} />
+          <Loader2 className={`w-6 h-6 animate-spin ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`} />
         </div>
       ) : (
         categories.map(cat => {
@@ -513,7 +513,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
 
           return (
             <div key={cat.key}>
-              <h3 className={`text-sm font-bold mb-4 ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>
+              <h3 className={`text-sm font-bold mb-4 ${isLight ? 'text-slate-700' : 'text-[#716D5C]'}`}>
                 {cat.label}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -539,24 +539,24 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
       <AnimatePresence>
         {oauthPromptProvider && (
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOauthPromptProvider(null)} />
+            <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" onClick={() => setOauthPromptProvider(null)} />
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               className={`relative w-full max-w-sm mx-4 rounded-2xl border shadow-2xl p-6 ${
-                isLight ? 'bg-white border-slate-200' : 'bg-[#0E1424] border-white/10'
+                isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'
               }`}
             >
               <div className="flex items-center gap-3 mb-5">
                 <ProviderIcon provider={oauthPromptProvider} connected={false} size={36} />
                 <div>
-                  <h3 className={`font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                  <h3 className={`font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>
                     Connecter {oauthPromptProvider.name}
                   </h3>
                 </div>
               </div>
-              <label className={`block text-xs font-bold mb-2 ${isLight ? 'text-slate-700' : 'text-zinc-400'}`}>
+              <label className={`block text-xs font-bold mb-2 ${isLight ? 'text-slate-700' : 'text-[#716D5C]'}`}>
                 {oauthPromptProvider.oauthPromptLabel}
               </label>
               <input
@@ -568,12 +568,12 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
                 placeholder={oauthPromptProvider.oauthPromptPlaceholder || 'ma-boutique'}
                 className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all ${
                   isLight
-                    ? 'bg-slate-50 border border-slate-200 text-slate-900 focus:ring-2 focus:ring-blue-500/40'
-                    : 'bg-[#0A0E1A] border border-white/10 text-white focus:ring-2 focus:ring-zinc-400'
+                    ? 'bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:ring-2 focus:ring-blue-500/40'
+                    : 'bg-white border border-gray-200 text-[#262626] focus:ring-2 focus:ring-zinc-400'
                 }`}
               />
               {oauthPromptProvider.oauthPromptHint && (
-                <p className={`text-xs mt-1.5 mb-4 ${isLight ? 'text-slate-400' : 'text-zinc-500'}`}>
+                <p className={`text-xs mt-1.5 mb-4 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
                   {oauthPromptProvider.oauthPromptHint}
                 </p>
               )}
@@ -582,7 +582,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
                 <button
                   onClick={() => setOauthPromptProvider(null)}
                   className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors ${
-                    isLight ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' : 'bg-white/10 text-white hover:bg-white/15'
+                    isLight ? 'bg-gray-100 text-slate-700 hover:bg-gray-200' : 'bg-gray-50 text-[#262626] hover:bg-white/15'
                   }`}
                 >
                   Annuler
@@ -590,7 +590,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
                 <button
                   onClick={handleOAuthPromptSubmit}
                   disabled={!oauthPromptValue.trim()}
-                  className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-50 transition-colors"
+                  className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-bold text-[#262626] disabled:opacity-50 transition-colors"
                   style={{ backgroundColor: oauthPromptProvider.color || '#10b981' }}
                 >
                   <ExternalLink className="w-4 h-4" /> Connecter

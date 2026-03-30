@@ -127,18 +127,18 @@ export const ROIGlowChart = ({ theme = "dark", metrics, growthPct, dailyMetrics 
 
   return (
     <div
-      className={`rounded-2xl border p-6 shadow-sm flex flex-col h-full relative overflow-hidden group transition-colors duration-300 ${isLight ? "bg-white border-slate-200" : "bg-[#0E1424] border-white/10"
+      className={`rounded-2xl border p-6 shadow-sm flex flex-col h-full relative overflow-hidden group transition-colors duration-300 ${isLight ? "bg-white border-gray-200" : "bg-[#F9F7F1] border-gray-200"
         }`}
     >
       {!hasData ? (
         <div className="flex-1 flex flex-col items-center justify-center text-center p-8 relative z-10">
-          <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 border border-white/5">
-            <TrendingUp className="w-6 h-6 text-gray-500 opacity-50" />
+          <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mb-4 border border-gray-100">
+            <TrendingUp className="w-6 h-6 text-[#716D5C] opacity-50" />
           </div>
-          <h3 className={`text-sm font-bold uppercase tracking-widest mb-1 ${isLight ? "text-slate-400" : "text-gray-400"}`}>
+          <h3 className={`text-sm font-bold uppercase tracking-widest mb-1 ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`}>
             Croissance du ROI
           </h3>
-          <p className="text-xs text-gray-500 max-w-[200px] mt-2">
+          <p className="text-xs text-[#716D5C] max-w-[200px] mt-2">
             La courbe de rentabilité s'affichera ici dès les premières économies générées.
           </p>
         </div>
@@ -152,29 +152,29 @@ export const ROIGlowChart = ({ theme = "dark", metrics, growthPct, dailyMetrics 
           <div className="flex items-center justify-between mb-8 relative z-10">
             <div>
               <h3
-                className={`text-sm font-bold uppercase tracking-widest mb-1 ${isLight ? "text-slate-400" : "text-gray-400"}`}
+                className={`text-sm font-bold uppercase tracking-widest mb-1 ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`}
               >
                 Croissance du ROI
               </h3>
               <div className="flex items-baseline gap-2">
                 <span
-                  className={`text-3xl font-bold tracking-tighter ${isPositive ? "text-emerald-500" : isNegative ? "text-rose-500" : isLight ? "text-slate-900" : "text-white"}`}
+                  className={`text-3xl font-bold tracking-tighter ${isPositive ? "text-emerald-500" : isNegative ? "text-rose-500" : isLight ? "text-[#262626]" : "text-[#262626]"}`}
                 >
                   {formattedGrowth}
                 </span>
-                <span className={`text-sm font-bold flex items-center ${isPositive ? "text-emerald-500" : isNegative ? "text-rose-500" : "text-gray-400"}`}>
+                <span className={`text-sm font-bold flex items-center ${isPositive ? "text-emerald-500" : isNegative ? "text-rose-500" : "text-[#716D5C]"}`}>
                   {isPositive ? <ArrowUpRight className="w-4 h-4" /> : isNegative ? <TrendingDown className="w-4 h-4" /> : <span className="mr-1">=</span>} vs mois dernier
                 </span>
               </div>
             </div>
             <div
               className={`p-3 rounded-xl border ${isLight
-                ? "bg-slate-50 border-slate-100"
-                : "bg-white/5 border-white/5"
+                ? "bg-[#F9F7F1] border-gray-100"
+                : "bg-gray-50 border-gray-100"
                 }`}
             >
               <DollarSign
-                className={`w-5 h-5 ${isLight ? "text-blue-600" : "text-emerald-400"}`}
+                className={`w-5 h-5 ${isLight ? "text-[#003725]" : "text-emerald-400"}`}
               />
             </div>
           </div>

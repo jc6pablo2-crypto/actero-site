@@ -20,7 +20,7 @@ export const AdminActivityHeatmap = () => {
   const getColor = (intensity) => {
     switch (intensity) {
       case 0:
-        return "bg-white/5 border-white/5";
+        return "bg-gray-50 border-gray-100";
       case 1:
         return "bg-emerald-900/40 border-emerald-800/50";
       case 2:
@@ -30,22 +30,22 @@ export const AdminActivityHeatmap = () => {
       case 4:
         return "bg-emerald-400 border-emerald-300 shadow-[0_0_10px_rgba(52,211,153,0.4)]";
       default:
-        return "bg-white/5 border-white/5";
+        return "bg-gray-50 border-gray-100";
     }
   };
 
   return (
-    <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-6 shadow-sm mt-6">
+    <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-6 shadow-sm mt-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-sm font-bold text-white uppercase tracking-widest flex items-center gap-2">
+          <h3 className="text-sm font-bold text-[#262626] uppercase tracking-widest flex items-center gap-2">
             Activité Globale
           </h3>
-          <p className="text-xs text-zinc-500 mt-1">
+          <p className="text-xs text-[#716D5C] mt-1">
             Intensité d'exécution des workflows par les clients (30 derniers jours)
           </p>
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-medium">
+        <div className="flex items-center gap-1.5 text-xs text-[#716D5C] font-medium">
           Moins{" "}
           <div className="flex gap-1">
             {[0, 1, 2, 3, 4].map((v) => (

@@ -163,7 +163,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
         description="Devenez partenaire Actero et proposez l'automatisation IA à vos clients e-commerce et immobilier. Commission attractive, support dédié."
         canonical="/partner"
       />
-    <div className="relative min-h-screen bg-[#0A0E1A] font-sans text-white selection:bg-indigo-500/20 selection:text-white">
+    <div className="relative min-h-screen bg-white font-sans text-[#262626] selection:bg-indigo-500/20 selection:text-[#262626]">
       {/* BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/20 via-[#030303] to-[#030303]" />
@@ -190,7 +190,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                   Actero
                 </span>
               </h1>
-              <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-3xl mx-auto leading-relaxed mb-4">
+              <p className="text-xl md:text-2xl text-[#716D5C] font-medium max-w-3xl mx-auto leading-relaxed mb-4">
                 Recommandez nos solutions IA à vos clients et générez une nouvelle source de revenus sans gérer la vente ni la technique.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
@@ -213,19 +213,19 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
                   Pour qui est ce programme ?
                 </h2>
-                <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+                <p className="text-[#716D5C] text-lg max-w-2xl mx-auto">
                   Si vous avez un réseau professionnel, ce programme est fait pour vous.
                 </p>
               </FadeInUp>
               <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {targets.map((t, i) => (
                   <StaggerItem key={i}>
-                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-indigo-500/20 transition-all group h-full">
+                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-gray-200 hover:border-indigo-500/20 transition-all group h-full">
                       <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center mb-4 group-hover:bg-indigo-500/20 transition-colors">
                         <t.icon className="w-6 h-6 text-indigo-400" />
                       </div>
                       <h3 className="text-lg font-bold mb-2">{t.title}</h3>
-                      <p className="text-sm text-gray-500 leading-relaxed">{t.desc}</p>
+                      <p className="text-sm text-[#716D5C] leading-relaxed">{t.desc}</p>
                     </div>
                   </StaggerItem>
                 ))}
@@ -242,17 +242,17 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
                   Comment ça marche
                 </h2>
-                <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+                <p className="text-[#716D5C] text-lg max-w-2xl mx-auto">
                   Un process simple en 3 étapes.
                 </p>
               </FadeInUp>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {steps.map((s, i) => (
                   <ScaleIn key={i} delay={i * 0.15}>
-                    <div className="relative p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] text-center h-full">
+                    <div className="relative p-8 rounded-2xl bg-white/[0.02] border border-gray-200 text-center h-full">
                       <div className="text-5xl font-black text-indigo-500/20 mb-4">{s.num}</div>
                       <h3 className="text-lg font-bold mb-3">{s.title}</h3>
-                      <p className="text-sm text-gray-500 leading-relaxed">{s.desc}</p>
+                      <p className="text-sm text-[#716D5C] leading-relaxed">{s.desc}</p>
                       {i < steps.length - 1 && (
                         <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2">
                           <ArrowRight className="w-6 h-6 text-indigo-500/30" />
@@ -278,12 +278,12 @@ export const PartnerLandingPage = ({ onNavigate }) => {
               <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {benefits.map((b, i) => (
                   <StaggerItem key={i}>
-                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-indigo-500/20 transition-all group h-full">
+                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-gray-200 hover:border-indigo-500/20 transition-all group h-full">
                       <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center mb-4 group-hover:bg-indigo-500/20 transition-colors">
                         <b.icon className="w-6 h-6 text-indigo-400" />
                       </div>
                       <h3 className="text-lg font-bold mb-2">{b.title}</h3>
-                      <p className="text-sm text-gray-500 leading-relaxed">{b.desc}</p>
+                      <p className="text-sm text-[#716D5C] leading-relaxed">{b.desc}</p>
                     </div>
                   </StaggerItem>
                 ))}
@@ -300,7 +300,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
                   Ce que vous n'avez pas à faire
                 </h2>
-                <p className="text-gray-500 text-lg">
+                <p className="text-[#716D5C] text-lg">
                   Zéro charge opérationnelle de votre côté.
                 </p>
               </FadeInUp>
@@ -311,7 +311,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                       <div className="w-8 h-8 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0">
                         <XIcon className="w-4 h-4 text-red-400" />
                       </div>
-                      <span className="text-base font-medium text-gray-300">{item}</span>
+                      <span className="text-base font-medium text-[#716D5C]">{item}</span>
                     </div>
                   </StaggerItem>
                 ))}
@@ -328,19 +328,19 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
                   Pourquoi Actero
                 </h2>
-                <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+                <p className="text-[#716D5C] text-lg max-w-2xl mx-auto">
                   Une équipe spécialisée, des résultats prouvés.
                 </p>
               </FadeInUp>
               <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {whyActero.map((w, i) => (
                   <StaggerItem key={i}>
-                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-violet-500/20 transition-all group h-full">
+                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-gray-200 hover:border-violet-500/20 transition-all group h-full">
                       <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center mb-4 group-hover:bg-violet-500/20 transition-colors">
                         <w.icon className="w-6 h-6 text-violet-400" />
                       </div>
                       <h3 className="text-lg font-bold mb-2">{w.title}</h3>
-                      <p className="text-sm text-gray-500 leading-relaxed">{w.desc}</p>
+                      <p className="text-sm text-[#716D5C] leading-relaxed">{w.desc}</p>
                     </div>
                   </StaggerItem>
                 ))}
@@ -361,7 +361,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
               <div className="space-y-3">
                 {faqItems.map((faq, i) => (
                   <FadeInUp key={i} delay={i * 0.05}>
-                    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+                    <div className="rounded-xl border border-gray-200 bg-white/[0.02] overflow-hidden">
                       <button
                         onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
                         className="w-full flex items-center justify-between px-6 py-5 text-left group"
@@ -371,7 +371,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                           animate={{ rotate: openFaqIndex === i ? 180 : 0 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <ChevronDown className="w-5 h-5 text-gray-500 group-hover:text-indigo-400 transition-colors flex-shrink-0" />
+                          <ChevronDown className="w-5 h-5 text-[#716D5C] group-hover:text-indigo-400 transition-colors flex-shrink-0" />
                         </motion.div>
                       </button>
                       <AnimatePresence>
@@ -382,7 +382,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.25 }}
                           >
-                            <div className="px-6 pb-5 text-sm text-gray-400 leading-relaxed">
+                            <div className="px-6 pb-5 text-sm text-[#716D5C] leading-relaxed">
                               {faq.a}
                             </div>
                           </motion.div>
@@ -404,7 +404,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
                   Postulez maintenant
                 </h2>
-                <p className="text-gray-500 text-lg">
+                <p className="text-[#716D5C] text-lg">
                   Remplissez le formulaire et notre équipe vous recontactera sous 48h.
                 </p>
               </FadeInUp>
@@ -414,7 +414,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                   <div className="text-center p-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
                     <CheckCircle2 className="w-16 h-16 text-indigo-400 mx-auto mb-6" />
                     <h3 className="text-2xl font-bold mb-3">Candidature envoyée !</h3>
-                    <p className="text-gray-400">
+                    <p className="text-[#716D5C]">
                       Merci pour votre intérêt. Notre équipe vous contactera très prochainement.
                     </p>
                   </div>
@@ -424,26 +424,26 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-1.5">Prénom *</label>
+                        <label className="block text-sm font-medium text-[#716D5C] mb-1.5">Prénom *</label>
                         <input
                           type="text"
                           name="first_name"
                           value={formData.first_name}
                           onChange={handleFormChange}
                           required
-                          className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors"
+                          className="w-full px-4 py-3 bg-[#F9F7F1] border border-gray-200 rounded-xl text-[#262626] placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors"
                           placeholder="Votre prénom"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-1.5">Nom *</label>
+                        <label className="block text-sm font-medium text-[#716D5C] mb-1.5">Nom *</label>
                         <input
                           type="text"
                           name="last_name"
                           value={formData.last_name}
                           onChange={handleFormChange}
                           required
-                          className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors"
+                          className="w-full px-4 py-3 bg-[#F9F7F1] border border-gray-200 rounded-xl text-[#262626] placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors"
                           placeholder="Votre nom"
                         />
                       </div>
@@ -451,52 +451,52 @@ export const PartnerLandingPage = ({ onNavigate }) => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-1.5">Email *</label>
+                        <label className="block text-sm font-medium text-[#716D5C] mb-1.5">Email *</label>
                         <input
                           type="email"
                           name="email"
                           value={formData.email}
                           onChange={handleFormChange}
                           required
-                          className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors"
+                          className="w-full px-4 py-3 bg-[#F9F7F1] border border-gray-200 rounded-xl text-[#262626] placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors"
                           placeholder="vous@entreprise.com"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-1.5">Téléphone</label>
+                        <label className="block text-sm font-medium text-[#716D5C] mb-1.5">Téléphone</label>
                         <input
                           type="tel"
                           name="phone"
                           value={formData.phone}
                           onChange={handleFormChange}
-                          className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors"
+                          className="w-full px-4 py-3 bg-[#F9F7F1] border border-gray-200 rounded-xl text-[#262626] placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors"
                           placeholder="+33 6 00 00 00 00"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-400 mb-1.5">Nom de la société *</label>
+                      <label className="block text-sm font-medium text-[#716D5C] mb-1.5">Nom de la société *</label>
                       <input
                         type="text"
                         name="company_name"
                         value={formData.company_name}
                         onChange={handleFormChange}
                         required
-                        className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors"
+                        className="w-full px-4 py-3 bg-[#F9F7F1] border border-gray-200 rounded-xl text-[#262626] placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors"
                         placeholder="Nom de votre entreprise"
                       />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-1.5">Type d'activité *</label>
+                        <label className="block text-sm font-medium text-[#716D5C] mb-1.5">Type d'activité *</label>
                         <select
                           name="activity_type"
                           value={formData.activity_type}
                           onChange={handleFormChange}
                           required
-                          className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white outline-none focus:border-indigo-500/40 transition-colors appearance-none cursor-pointer"
+                          className="w-full px-4 py-3 bg-[#F9F7F1] border border-gray-200 rounded-xl text-[#262626] outline-none focus:border-indigo-500/40 transition-colors appearance-none cursor-pointer"
                         >
                           <option value="" disabled className="bg-[#111]">Sélectionnez</option>
                           {activityOptions.map((opt) => (
@@ -505,12 +505,12 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-1.5">Nombre de clients potentiels</label>
+                        <label className="block text-sm font-medium text-[#716D5C] mb-1.5">Nombre de clients potentiels</label>
                         <select
                           name="potential_clients"
                           value={formData.potential_clients}
                           onChange={handleFormChange}
-                          className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white outline-none focus:border-indigo-500/40 transition-colors appearance-none cursor-pointer"
+                          className="w-full px-4 py-3 bg-[#F9F7F1] border border-gray-200 rounded-xl text-[#262626] outline-none focus:border-indigo-500/40 transition-colors appearance-none cursor-pointer"
                         >
                           <option value="" className="bg-[#111]">Sélectionnez</option>
                           {clientsOptions.map((opt) => (
@@ -521,13 +521,13 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-400 mb-1.5">Message libre</label>
+                      <label className="block text-sm font-medium text-[#716D5C] mb-1.5">Message libre</label>
                       <textarea
                         name="message"
                         value={formData.message}
                         onChange={handleFormChange}
                         rows={4}
-                        className="w-full px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors resize-none"
+                        className="w-full px-4 py-3 bg-[#F9F7F1] border border-gray-200 rounded-xl text-[#262626] placeholder-gray-600 outline-none focus:border-indigo-500/40 transition-colors resize-none"
                         placeholder="Parlez-nous de votre activité et de vos clients potentiels..."
                       />
                     </div>

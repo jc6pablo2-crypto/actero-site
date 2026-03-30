@@ -53,7 +53,7 @@ export const AdminAcquisitionView = () => {
 
   // Detailed funnel metrics with conversion rates
   const funnelStages = [
-    { label: 'Visiteurs site', count: 340, color: 'text-zinc-400', bg: 'bg-zinc-500/10', description: 'Trafic actero.fr' },
+    { label: 'Visiteurs site', count: 340, color: 'text-[#716D5C]', bg: 'bg-gray-50', description: 'Trafic actero.fr' },
     { label: 'Leads (formulaire)', count: funnelClients.filter(f => ['draft', 'nouveau'].includes(f.status)).length || 28, color: 'text-blue-400', bg: 'bg-blue-500/10', description: 'Formulaire rempli ou lead importé' },
     { label: 'Email envoyé', count: funnelClients.filter(f => f.status === 'sent').length || 22, color: 'text-cyan-400', bg: 'bg-cyan-500/10', description: 'Premier email ou DM envoyé' },
     { label: 'Email ouvert', count: 16, color: 'text-amber-400', bg: 'bg-amber-500/10', description: 'Au moins un email ouvert' },
@@ -106,8 +106,8 @@ export const AdminAcquisitionView = () => {
     switch (status) {
       case 'active': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
       case 'prospect': return 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-      case 'inactive': return 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
-      default: return 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20'
+      case 'inactive': return 'bg-gray-50 text-[#716D5C] border-gray-200'
+      default: return 'bg-gray-50 text-[#716D5C] border-gray-200'
     }
   }
 
@@ -116,8 +116,8 @@ export const AdminAcquisitionView = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-white">Tableau de bord Acquisition</h2>
-          <p className="text-sm text-zinc-500 mt-1">Suivi en temps réel de vos efforts marketing, conversion et partenariats</p>
+          <h2 className="text-2xl font-bold text-[#262626]">Tableau de bord Acquisition</h2>
+          <p className="text-sm text-[#716D5C] mt-1">Suivi en temps réel de vos efforts marketing, conversion et partenariats</p>
         </div>
         <div className="flex gap-2">
           {[
@@ -128,7 +128,7 @@ export const AdminAcquisitionView = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                activeTab === tab.id ? 'bg-violet-500/20 text-violet-400 border border-violet-500/30' : 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-white/10'
+                activeTab === tab.id ? 'bg-violet-500/20 text-violet-400 border border-violet-500/30' : 'bg-gray-50 text-[#716D5C] border border-gray-200 hover:bg-gray-50'
               }`}
             >
               <tab.icon className="w-4 h-4 inline mr-1.5" />{tab.label}
@@ -153,7 +153,7 @@ export const AdminAcquisitionView = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-[#111] border border-white/5 rounded-2xl p-5"
+                className="bg-[#111] border border-gray-100 rounded-2xl p-5"
               >
                 <div className="flex items-center justify-between mb-3">
                   <kpi.icon className={`w-5 h-5 ${kpi.color}`} />
@@ -163,16 +163,16 @@ export const AdminAcquisitionView = () => {
                     {kpi.trendUp ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}{kpi.trend}
                   </span>
                 </div>
-                <span className="text-3xl font-bold text-white">{kpi.value}</span>
-                <p className="text-xs text-zinc-500 mt-1 uppercase tracking-wider font-medium">{kpi.label}</p>
+                <span className="text-3xl font-bold text-[#262626]">{kpi.value}</span>
+                <p className="text-xs text-[#716D5C] mt-1 uppercase tracking-wider font-medium">{kpi.label}</p>
               </motion.div>
             ))}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Enhanced Funnel visualization */}
-            <div className="bg-[#111] border border-white/5 rounded-2xl p-6">
-              <h3 className="text-white font-bold text-sm mb-4 flex items-center gap-2">
+            <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+              <h3 className="text-[#262626] font-bold text-sm mb-4 flex items-center gap-2">
                 <Activity className="w-4 h-4 text-violet-400" />
                 Funnel de conversion détaillé
               </h3>
@@ -188,7 +188,7 @@ export const AdminAcquisitionView = () => {
                       {/* Conversion rate between stages */}
                       {convRate !== null && (
                         <div className="flex items-center justify-center my-0.5">
-                          <div className="flex items-center gap-1 text-[9px] text-zinc-600">
+                          <div className="flex items-center gap-1 text-[9px] text-[#716D5C]">
                             <ChevronRight className="w-3 h-3" />
                             <span className={convRate >= 50 ? 'text-emerald-500' : convRate >= 25 ? 'text-amber-500' : 'text-red-500'}>
                               {convRate}% conversion
@@ -199,12 +199,12 @@ export const AdminAcquisitionView = () => {
                       <div className="group">
                         <div className="flex items-center justify-between mb-0.5">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-zinc-400 font-medium">{stage.label}</span>
-                            <span className="text-[9px] text-zinc-600 hidden group-hover:inline">{stage.description}</span>
+                            <span className="text-xs text-[#716D5C] font-medium">{stage.label}</span>
+                            <span className="text-[9px] text-[#716D5C] hidden group-hover:inline">{stage.description}</span>
                           </div>
                           <span className={`text-sm font-bold ${stage.color}`}>{stage.count}</span>
                         </div>
-                        <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-2 bg-gray-50 rounded-full overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${width}%` }}
@@ -217,15 +217,15 @@ export const AdminAcquisitionView = () => {
                   )
                 })}
               </div>
-              <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
-                <span className="text-xs text-zinc-500">Conversion globale (visiteur → client)</span>
+              <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                <span className="text-xs text-[#716D5C]">Conversion globale (visiteur → client)</span>
                 <span className="text-lg font-bold text-emerald-400">{conversionRate}%</span>
               </div>
             </div>
 
             {/* Sources breakdown */}
-            <div className="bg-[#111] border border-white/5 rounded-2xl p-6">
-              <h3 className="text-white font-bold text-sm mb-4 flex items-center gap-2">
+            <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+              <h3 className="text-[#262626] font-bold text-sm mb-4 flex items-center gap-2">
                 <Globe className="w-4 h-4 text-blue-400" />
                 Leads par source
               </h3>
@@ -235,23 +235,23 @@ export const AdminAcquisitionView = () => {
                   return (
                     <div key={i} className="flex items-center gap-3">
                       <div className={`w-2 h-2 rounded-full ${src.color}`} />
-                      <span className="text-xs text-zinc-400 flex-1">{src.name}</span>
+                      <span className="text-xs text-[#716D5C] flex-1">{src.name}</span>
                       <div className="flex items-center gap-4">
                         <div className="text-right">
-                          <span className="text-xs text-zinc-500">Leads</span>
-                          <span className="text-sm font-bold text-white ml-2">{src.leads}</span>
+                          <span className="text-xs text-[#716D5C]">Leads</span>
+                          <span className="text-sm font-bold text-[#262626] ml-2">{src.leads}</span>
                         </div>
                         <div className="text-right min-w-[60px]">
-                          <span className="text-xs text-zinc-500">Conv.</span>
+                          <span className="text-xs text-[#716D5C]">Conv.</span>
                           <span className="text-sm font-bold text-emerald-400 ml-2">{src.converted}</span>
                         </div>
                         <div className="text-right min-w-[40px]">
-                          <span className={`text-[10px] font-bold ${srcConv >= 10 ? 'text-emerald-400' : srcConv >= 5 ? 'text-amber-400' : 'text-zinc-500'}`}>
+                          <span className={`text-[10px] font-bold ${srcConv >= 10 ? 'text-emerald-400' : srcConv >= 5 ? 'text-amber-400' : 'text-[#716D5C]'}`}>
                             {srcConv}%
                           </span>
                         </div>
                         <div className="w-16">
-                          <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                          <div className="h-1.5 bg-gray-50 rounded-full overflow-hidden">
                             <div
                               className={`h-full rounded-full ${src.color}`}
                               style={{ width: `${(src.leads / totalLeads) * 100}%` }}
@@ -263,37 +263,37 @@ export const AdminAcquisitionView = () => {
                   )
                 })}
               </div>
-              <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
-                <span className="text-xs text-zinc-500">Total leads</span>
-                <span className="text-lg font-bold text-white">{totalLeads}</span>
+              <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                <span className="text-xs text-[#716D5C]">Total leads</span>
+                <span className="text-lg font-bold text-[#262626]">{totalLeads}</span>
               </div>
             </div>
           </div>
 
           {/* Recent conversions */}
-          <div className="bg-[#111] border border-white/5 rounded-2xl p-6">
-            <h3 className="text-white font-bold text-sm mb-4 flex items-center gap-2">
+          <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+            <h3 className="text-[#262626] font-bold text-sm mb-4 flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-emerald-400" />
               Derniers clients signés
             </h3>
             {activeClients.length === 0 ? (
-              <div className="text-center py-8 text-zinc-600 text-sm">
+              <div className="text-center py-8 text-[#716D5C] text-sm">
                 Aucun client actif pour le moment. Lancez vos campagnes !
               </div>
             ) : (
               <div className="space-y-2">
                 {activeClients.slice(0, 10).map((client) => (
-                  <div key={client.id} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+                  <div key={client.id} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 text-xs font-bold">
                         {client.brand_name?.charAt(0) || '?'}
                       </div>
                       <div>
-                        <span className="text-sm text-white font-medium">{client.brand_name}</span>
-                        <span className="text-xs text-zinc-500 ml-2 capitalize">{client.type || 'e-commerce'}</span>
+                        <span className="text-sm text-[#262626] font-medium">{client.brand_name}</span>
+                        <span className="text-xs text-[#716D5C] ml-2 capitalize">{client.type || 'e-commerce'}</span>
                       </div>
                     </div>
-                    <span className="text-xs text-zinc-500">
+                    <span className="text-xs text-[#716D5C]">
                       {new Date(client.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
                     </span>
                   </div>
@@ -303,8 +303,8 @@ export const AdminAcquisitionView = () => {
           </div>
 
           {/* Weekly objectives */}
-          <div className="bg-[#111] border border-white/5 rounded-2xl p-6">
-            <h3 className="text-white font-bold text-sm mb-4 flex items-center gap-2">
+          <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+            <h3 className="text-[#262626] font-bold text-sm mb-4 flex items-center gap-2">
               <Target className="w-4 h-4 text-amber-400" />
               Objectifs hebdomadaires
             </h3>
@@ -329,12 +329,12 @@ export const AdminAcquisitionView = () => {
                           strokeLinecap="round"
                         />
                       </svg>
-                      <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white">
+                      <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-[#262626]">
                         {pct}%
                       </span>
                     </div>
-                    <span className="text-xs text-zinc-400 block">{obj.label}</span>
-                    <span className="text-[10px] text-zinc-600">{obj.current}/{obj.target}</span>
+                    <span className="text-xs text-[#716D5C] block">{obj.label}</span>
+                    <span className="text-[10px] text-[#716D5C]">{obj.current}/{obj.target}</span>
                   </div>
                 )
               })}
@@ -354,20 +354,20 @@ export const AdminAcquisitionView = () => {
               { label: 'Clients référés', value: partners.reduce((s, p) => s + p.clientsReferred, 0), icon: Users, color: 'text-blue-400' },
               { label: 'Revenu partenariats', value: `${partners.reduce((s, p) => s + (p.totalRevenue || 0), 0).toLocaleString()}€`, icon: DollarSign, color: 'text-violet-400' },
             ].map((stat, i) => (
-              <div key={i} className="bg-[#111] border border-white/5 rounded-2xl p-4">
+              <div key={i} className="bg-[#111] border border-gray-100 rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <stat.icon className={`w-4 h-4 ${stat.color}`} />
-                  <span className="text-xs text-zinc-500 font-medium">{stat.label}</span>
+                  <span className="text-xs text-[#716D5C] font-medium">{stat.label}</span>
                 </div>
-                <span className="text-2xl font-bold text-white">{stat.value}</span>
+                <span className="text-2xl font-bold text-[#262626]">{stat.value}</span>
               </div>
             ))}
           </div>
 
           {/* Partners table */}
-          <div className="bg-[#111] border border-white/5 rounded-2xl overflow-hidden">
-            <div className="flex items-center justify-between p-5 border-b border-white/5">
-              <h3 className="text-white font-bold text-sm flex items-center gap-2">
+          <div className="bg-[#111] border border-gray-100 rounded-2xl overflow-hidden">
+            <div className="flex items-center justify-between p-5 border-b border-gray-100">
+              <h3 className="text-[#262626] font-bold text-sm flex items-center gap-2">
                 <Building2 className="w-4 h-4 text-violet-400" />
                 CRM Partenaires Agences Shopify
               </h3>
@@ -380,7 +380,7 @@ export const AdminAcquisitionView = () => {
             </div>
 
             {/* Table header */}
-            <div className="grid grid-cols-12 gap-3 px-5 py-3 bg-white/[0.02] border-b border-white/5 text-[10px] text-zinc-500 font-medium uppercase tracking-wider">
+            <div className="grid grid-cols-12 gap-3 px-5 py-3 bg-white/[0.02] border-b border-gray-100 text-[10px] text-[#716D5C] font-medium uppercase tracking-wider">
               <div className="col-span-3">Agence</div>
               <div className="col-span-2">Contact</div>
               <div className="col-span-1">Statut</div>
@@ -392,22 +392,22 @@ export const AdminAcquisitionView = () => {
 
             {/* Table rows */}
             {partners.map(partner => (
-              <div key={partner.id} className="grid grid-cols-12 gap-3 px-5 py-3.5 border-b border-white/5 hover:bg-white/[0.02] transition-colors items-center">
+              <div key={partner.id} className="grid grid-cols-12 gap-3 px-5 py-3.5 border-b border-gray-100 hover:bg-white/[0.02] transition-colors items-center">
                 <div className="col-span-3">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-400 text-xs font-bold">
                       {partner.name.charAt(0)}
                     </div>
                     <div>
-                      <p className="text-sm text-white font-medium">{partner.name}</p>
-                      {partner.notes && <p className="text-[10px] text-zinc-600 truncate max-w-[180px]">{partner.notes}</p>}
+                      <p className="text-sm text-[#262626] font-medium">{partner.name}</p>
+                      {partner.notes && <p className="text-[10px] text-[#716D5C] truncate max-w-[180px]">{partner.notes}</p>}
                     </div>
                   </div>
                 </div>
                 <div className="col-span-2">
-                  <p className="text-xs text-zinc-300">{partner.contact}</p>
+                  <p className="text-xs text-[#716D5C]">{partner.contact}</p>
                   {partner.phone && (
-                    <p className="text-[10px] text-zinc-600 flex items-center gap-1 mt-0.5">
+                    <p className="text-[10px] text-[#716D5C] flex items-center gap-1 mt-0.5">
                       <Phone className="w-3 h-3" />{partner.phone}
                     </p>
                   )}
@@ -421,7 +421,7 @@ export const AdminAcquisitionView = () => {
                   <span className="text-sm font-bold text-amber-400">{partner.commission}%</span>
                 </div>
                 <div className="col-span-1 text-center">
-                  <span className="text-sm font-bold text-white">{partner.clientsReferred}</span>
+                  <span className="text-sm font-bold text-[#262626]">{partner.clientsReferred}</span>
                 </div>
                 <div className="col-span-2">
                   <span className="text-sm font-bold text-emerald-400">{(partner.totalRevenue || 0).toLocaleString()}€</span>
@@ -429,13 +429,13 @@ export const AdminAcquisitionView = () => {
                 <div className="col-span-2 flex items-center gap-1 justify-end">
                   <button
                     onClick={() => setEditingPartner({ ...partner })}
-                    className="p-1.5 hover:bg-white/5 text-zinc-500 hover:text-white rounded-lg transition-all"
+                    className="p-1.5 hover:bg-gray-50 text-[#716D5C] hover:text-[#262626] rounded-lg transition-all"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => deletePartner(partner.id)}
-                    className="p-1.5 hover:bg-red-500/10 text-zinc-600 hover:text-red-400 rounded-lg transition-all"
+                    className="p-1.5 hover:bg-red-500/10 text-[#716D5C] hover:text-red-400 rounded-lg transition-all"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -444,17 +444,17 @@ export const AdminAcquisitionView = () => {
             ))}
 
             {partners.length === 0 && (
-              <div className="text-center py-12 text-zinc-600 text-sm">
+              <div className="text-center py-12 text-[#716D5C] text-sm">
                 Aucun partenaire. Ajoutez votre première agence partenaire.
               </div>
             )}
           </div>
 
           {/* Tips */}
-          <div className="bg-[#111] border border-white/5 rounded-2xl p-4">
-            <p className="text-xs text-zinc-500 flex items-center gap-2">
+          <div className="bg-[#111] border border-gray-100 rounded-2xl p-4">
+            <p className="text-xs text-[#716D5C] flex items-center gap-2">
               <Handshake className="w-4 h-4 text-emerald-400" />
-              <span><b className="text-zinc-300">Stratégie :</b> Les agences Shopify sont votre meilleur canal. Proposez 10-15% de commission sur le MRR généré par les clients référés.</span>
+              <span><b className="text-[#716D5C]">Stratégie :</b> Les agences Shopify sont votre meilleur canal. Proposez 10-15% de commission sur le MRR généré par les clients référés.</span>
             </p>
           </div>
         </div>
@@ -467,7 +467,7 @@ export const AdminAcquisitionView = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => setShowAddPartner(false)}
           >
             <motion.div
@@ -475,51 +475,51 @@ export const AdminAcquisitionView = () => {
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={e => e.stopPropagation()}
-              className="bg-[#111] border border-white/10 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
+              className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white">Nouveau partenaire</h3>
-                <button onClick={() => setShowAddPartner(false)} className="p-1 hover:bg-white/10 rounded-lg">
-                  <X className="w-5 h-5 text-zinc-400" />
+                <h3 className="text-lg font-bold text-[#262626]">Nouveau partenaire</h3>
+                <button onClick={() => setShowAddPartner(false)} className="p-1 hover:bg-gray-50 rounded-lg">
+                  <X className="w-5 h-5 text-[#716D5C]" />
                 </button>
               </div>
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs text-zinc-500 font-medium block mb-1">Nom de l'agence</label>
+                  <label className="text-xs text-[#716D5C] font-medium block mb-1">Nom de l'agence</label>
                   <input
                     value={newPartner.name}
                     onChange={e => setNewPartner(p => ({ ...p, name: e.target.value }))}
                     placeholder="Ex: Agence Pixel"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-zinc-500 font-medium block mb-1">Email contact</label>
+                    <label className="text-xs text-[#716D5C] font-medium block mb-1">Email contact</label>
                     <input
                       value={newPartner.contact}
                       onChange={e => setNewPartner(p => ({ ...p, contact: e.target.value }))}
                       placeholder="email@agence.com"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-zinc-500 font-medium block mb-1">Téléphone</label>
+                    <label className="text-xs text-[#716D5C] font-medium block mb-1">Téléphone</label>
                     <input
                       value={newPartner.phone}
                       onChange={e => setNewPartner(p => ({ ...p, phone: e.target.value }))}
                       placeholder="+33 6 ..."
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
                     />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-zinc-500 font-medium block mb-1">Statut</label>
+                    <label className="text-xs text-[#716D5C] font-medium block mb-1">Statut</label>
                     <select
                       value={newPartner.status}
                       onChange={e => setNewPartner(p => ({ ...p, status: e.target.value }))}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-zinc-300 focus:outline-none"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#716D5C] focus:outline-none"
                     >
                       <option value="prospect">Prospect</option>
                       <option value="active">Actif</option>
@@ -527,28 +527,28 @@ export const AdminAcquisitionView = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs text-zinc-500 font-medium block mb-1">Commission (%)</label>
+                    <label className="text-xs text-[#716D5C] font-medium block mb-1">Commission (%)</label>
                     <input
                       type="number"
                       value={newPartner.commission}
                       onChange={e => setNewPartner(p => ({ ...p, commission: Number(e.target.value) }))}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500/50"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] focus:outline-none focus:border-violet-500/50"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="text-xs text-zinc-500 font-medium block mb-1">Notes</label>
+                  <label className="text-xs text-[#716D5C] font-medium block mb-1">Notes</label>
                   <input
                     value={newPartner.notes}
                     onChange={e => setNewPartner(p => ({ ...p, notes: e.target.value }))}
                     placeholder="Spécialité, contexte..."
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
                   />
                 </div>
                 <button
                   onClick={addPartner}
                   disabled={!newPartner.name.trim()}
-                  className="w-full px-4 py-3 bg-violet-600 hover:bg-violet-500 disabled:bg-zinc-700 disabled:text-zinc-500 text-white rounded-xl text-sm font-medium transition-all"
+                  className="w-full px-4 py-3 bg-violet-600 hover:bg-violet-500 disabled:bg-gray-200 disabled:text-[#716D5C] text-white rounded-xl text-sm font-medium transition-all"
                 >
                   <Plus className="w-4 h-4 inline mr-1.5" /> Ajouter le partenaire
                 </button>
@@ -565,7 +565,7 @@ export const AdminAcquisitionView = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => setEditingPartner(null)}
           >
             <motion.div
@@ -573,48 +573,48 @@ export const AdminAcquisitionView = () => {
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={e => e.stopPropagation()}
-              className="bg-[#111] border border-white/10 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
+              className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white">Modifier — {editingPartner.name}</h3>
-                <button onClick={() => setEditingPartner(null)} className="p-1 hover:bg-white/10 rounded-lg">
-                  <X className="w-5 h-5 text-zinc-400" />
+                <h3 className="text-lg font-bold text-[#262626]">Modifier — {editingPartner.name}</h3>
+                <button onClick={() => setEditingPartner(null)} className="p-1 hover:bg-gray-50 rounded-lg">
+                  <X className="w-5 h-5 text-[#716D5C]" />
                 </button>
               </div>
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs text-zinc-500 font-medium block mb-1">Nom</label>
+                  <label className="text-xs text-[#716D5C] font-medium block mb-1">Nom</label>
                   <input
                     value={editingPartner.name}
                     onChange={e => setEditingPartner(p => ({ ...p, name: e.target.value }))}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500/50"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] focus:outline-none focus:border-violet-500/50"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-zinc-500 font-medium block mb-1">Email</label>
+                    <label className="text-xs text-[#716D5C] font-medium block mb-1">Email</label>
                     <input
                       value={editingPartner.contact}
                       onChange={e => setEditingPartner(p => ({ ...p, contact: e.target.value }))}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500/50"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] focus:outline-none focus:border-violet-500/50"
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-zinc-500 font-medium block mb-1">Téléphone</label>
+                    <label className="text-xs text-[#716D5C] font-medium block mb-1">Téléphone</label>
                     <input
                       value={editingPartner.phone}
                       onChange={e => setEditingPartner(p => ({ ...p, phone: e.target.value }))}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500/50"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] focus:outline-none focus:border-violet-500/50"
                     />
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="text-xs text-zinc-500 font-medium block mb-1">Statut</label>
+                    <label className="text-xs text-[#716D5C] font-medium block mb-1">Statut</label>
                     <select
                       value={editingPartner.status}
                       onChange={e => setEditingPartner(p => ({ ...p, status: e.target.value }))}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-zinc-300 focus:outline-none"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#716D5C] focus:outline-none"
                     >
                       <option value="prospect">Prospect</option>
                       <option value="active">Actif</option>
@@ -622,40 +622,40 @@ export const AdminAcquisitionView = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs text-zinc-500 font-medium block mb-1">Commission (%)</label>
+                    <label className="text-xs text-[#716D5C] font-medium block mb-1">Commission (%)</label>
                     <input
                       type="number"
                       value={editingPartner.commission}
                       onChange={e => setEditingPartner(p => ({ ...p, commission: Number(e.target.value) }))}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500/50"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] focus:outline-none focus:border-violet-500/50"
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-zinc-500 font-medium block mb-1">Clients réf.</label>
+                    <label className="text-xs text-[#716D5C] font-medium block mb-1">Clients réf.</label>
                     <input
                       type="number"
                       value={editingPartner.clientsReferred}
                       onChange={e => setEditingPartner(p => ({ ...p, clientsReferred: Number(e.target.value) }))}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500/50"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] focus:outline-none focus:border-violet-500/50"
                     />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-zinc-500 font-medium block mb-1">Revenu total (€)</label>
+                    <label className="text-xs text-[#716D5C] font-medium block mb-1">Revenu total (€)</label>
                     <input
                       type="number"
                       value={editingPartner.totalRevenue}
                       onChange={e => setEditingPartner(p => ({ ...p, totalRevenue: Number(e.target.value) }))}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500/50"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] focus:outline-none focus:border-violet-500/50"
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-zinc-500 font-medium block mb-1">Notes</label>
+                    <label className="text-xs text-[#716D5C] font-medium block mb-1">Notes</label>
                     <input
                       value={editingPartner.notes}
                       onChange={e => setEditingPartner(p => ({ ...p, notes: e.target.value }))}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-violet-500/50"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] focus:outline-none focus:border-violet-500/50"
                     />
                   </div>
                 </div>

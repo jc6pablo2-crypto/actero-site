@@ -214,8 +214,8 @@ export const AdminN8nCopilot = () => {
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-violet-600/10 border border-violet-500/20 flex items-center justify-center mb-6">
                 <Bot className="w-7 h-7 text-violet-400" />
               </div>
-              <h2 className="text-xl font-bold text-white mb-2">Actero Copilot for n8n</h2>
-              <p className="text-sm text-gray-500 mb-8 text-center max-w-md">
+              <h2 className="text-xl font-bold text-[#262626] mb-2">Actero Copilot for n8n</h2>
+              <p className="text-sm text-[#716D5C] mb-8 text-center max-w-md">
                 Créez, modifiez, supprimez et déployez vos workflows n8n en langage naturel.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2 w-full max-w-2xl">
@@ -223,9 +223,9 @@ export const AdminN8nCopilot = () => {
                   <button
                     key={i}
                     onClick={() => handleSend(s.text)}
-                    className="text-left p-3 rounded-xl border border-white/5 bg-white/[0.02] text-xs text-gray-400 hover:bg-white/[0.05] hover:border-white/10 hover:text-gray-300 transition-all flex items-start gap-2.5"
+                    className="text-left p-3 rounded-xl border border-gray-100 bg-white/[0.02] text-xs text-[#716D5C] hover:bg-[#F9F7F1] hover:border-gray-200 hover:text-[#716D5C] transition-all flex items-start gap-2.5"
                   >
-                    <s.icon className="w-4 h-4 mt-0.5 text-gray-600 flex-shrink-0" />
+                    <s.icon className="w-4 h-4 mt-0.5 text-[#716D5C] flex-shrink-0" />
                     <span className="leading-relaxed">{s.text}</span>
                   </button>
                 ))}
@@ -246,7 +246,7 @@ export const AdminN8nCopilot = () => {
                 <div className="flex-shrink-0 mt-1">
                   {msg.role === 'user' ? (
                     <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
-                      <span className="text-xs font-bold text-white">P</span>
+                      <span className="text-xs font-bold text-[#262626]">P</span>
                     </div>
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500/30 to-violet-600/20 border border-violet-500/20 flex items-center justify-center">
@@ -257,14 +257,14 @@ export const AdminN8nCopilot = () => {
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <p className={`text-xs font-bold mb-1.5 ${msg.role === 'user' ? 'text-white' : 'text-violet-400'}`}>
+                  <p className={`text-xs font-bold mb-1.5 ${msg.role === 'user' ? 'text-[#262626]' : 'text-violet-400'}`}>
                     {msg.role === 'user' ? 'Vous' : 'Actero Copilot'}
                   </p>
-                  <div className="text-sm text-gray-300 leading-relaxed space-y-1.5">
+                  <div className="text-sm text-[#716D5C] leading-relaxed space-y-1.5">
                     {msg.content.split('\n').map((line, j) => (
                       <p key={j}>
                         {line.split('**').map((part, k) =>
-                          k % 2 === 1 ? <strong key={k} className="text-white font-semibold">{part}</strong> : part
+                          k % 2 === 1 ? <strong key={k} className="text-[#262626] font-semibold">{part}</strong> : part
                         )}
                       </p>
                     ))}
@@ -293,7 +293,7 @@ export const AdminN8nCopilot = () => {
                         const qId = q.id || `q${qi}`
                         return (
                           <div key={qId} className="space-y-2">
-                            <p className="text-xs font-semibold text-white">{q.question}</p>
+                            <p className="text-xs font-semibold text-[#262626]">{q.question}</p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                               {(q.options || []).map((opt, oi) => {
                                 const isSelected = qcmAnswers[qId] === opt
@@ -304,13 +304,13 @@ export const AdminN8nCopilot = () => {
                                     className={`text-left px-3 py-2 rounded-lg text-xs transition-all border ${
                                       isSelected
                                         ? 'bg-violet-500/20 border-violet-500/40 text-violet-300 font-medium'
-                                        : 'bg-white/[0.02] border-white/5 text-gray-400 hover:bg-white/[0.05] hover:border-white/10'
+                                        : 'bg-white/[0.02] border-gray-100 text-[#716D5C] hover:bg-[#F9F7F1] hover:border-gray-200'
                                     }`}
                                   >
                                     <span className={`inline-flex items-center justify-center w-4 h-4 rounded-full border text-[9px] font-bold mr-2 ${
                                       isSelected
                                         ? 'bg-violet-500 border-violet-400 text-white'
-                                        : 'border-gray-600 text-gray-500'
+                                        : 'border-gray-600 text-[#716D5C]'
                                     }`}>
                                       {String.fromCharCode(65 + oi)}
                                     </span>
@@ -377,10 +377,10 @@ export const AdminN8nCopilot = () => {
         {activeQcm && (
           <motion.div
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
-            className="border-t border-white/5"
+            className="border-t border-gray-100"
           >
             <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-              <div className="flex-1 text-xs text-gray-500">
+              <div className="flex-1 text-xs text-[#716D5C]">
                 {Object.keys(qcmAnswers).length}/{activeQcm.questions.length} réponses
               </div>
               <button
@@ -393,7 +393,7 @@ export const AdminN8nCopilot = () => {
               </button>
               <button
                 onClick={handleCancel}
-                className="px-4 py-2.5 rounded-xl border border-white/10 text-sm font-medium text-gray-400 hover:bg-white/5 transition-all"
+                className="px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-[#716D5C] hover:bg-gray-50 transition-all"
               >
                 Annuler
               </button>
@@ -407,7 +407,7 @@ export const AdminN8nCopilot = () => {
         {pendingAction && cfg && (
           <motion.div
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
-            className="border-t border-white/5"
+            className="border-t border-gray-100"
           >
             <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
               <button
@@ -425,7 +425,7 @@ export const AdminN8nCopilot = () => {
               <button
                 onClick={handleCancel}
                 disabled={applying}
-                className="px-4 py-2.5 rounded-xl border border-white/10 text-sm font-medium text-gray-400 hover:bg-white/5 transition-all disabled:opacity-50"
+                className="px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-[#716D5C] hover:bg-gray-50 transition-all disabled:opacity-50"
               >
                 Annuler
               </button>
@@ -435,9 +435,9 @@ export const AdminN8nCopilot = () => {
       </AnimatePresence>
 
       {/* Input — ChatGPT style */}
-      <div className="border-t border-white/5 bg-[#0E1424]">
+      <div className="border-t border-gray-100 bg-[#F9F7F1]">
         <div className="max-w-3xl mx-auto px-4 py-4">
-          <div className="relative flex items-end bg-white/[0.05] border border-white/10 rounded-2xl focus-within:border-white/20 transition-colors">
+          <div className="relative flex items-end bg-[#F9F7F1] border border-gray-200 rounded-2xl focus-within:border-white/20 transition-colors">
             <textarea
               ref={inputRef}
               value={input}
@@ -455,7 +455,7 @@ export const AdminN8nCopilot = () => {
               placeholder="Décrivez ce que vous voulez faire..."
               disabled={loading}
               rows={1}
-              className="flex-1 bg-transparent px-4 py-3 text-sm text-white placeholder-gray-500 outline-none resize-none disabled:opacity-30 max-h-[150px]"
+              className="flex-1 bg-transparent px-4 py-3 text-sm text-[#262626] placeholder-gray-500 outline-none resize-none disabled:opacity-30 max-h-[150px]"
             />
             <button
               onClick={() => handleSend()}
@@ -465,7 +465,7 @@ export const AdminN8nCopilot = () => {
               <ArrowUp className="w-4 h-4" />
             </button>
           </div>
-          <p className="text-[10px] text-gray-600 text-center mt-2">
+          <p className="text-[10px] text-[#716D5C] text-center mt-2">
             Actero Copilot peut faire des erreurs. Vérifiez les modifications avant de les appliquer.
           </p>
         </div>

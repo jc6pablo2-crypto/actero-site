@@ -267,15 +267,15 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0E1A] flex flex-col md:flex-row font-sans text-white">
+    <div className="min-h-screen bg-white flex flex-col md:flex-row font-sans text-[#262626]">
       {/* Mobile Header */}
-      <div className="md:hidden h-16 bg-[#0E1424] border-b border-white/10 flex items-center justify-between px-4">
+      <div className="md:hidden h-16 bg-[#F9F7F1] border-b border-gray-200 flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
-          <Logo className="w-6 h-6 text-white" />
+          <Logo className="w-6 h-6 text-[#262626]" />
           <span className="font-bold text-lg">Actero Admin</span>
         </div>
         <button onClick={() => setIsMobileMenuOpen(true)}>
-          <Menu className="w-6 h-6 text-gray-400" />
+          <Menu className="w-6 h-6 text-[#716D5C]" />
         </button>
       </div>
 
@@ -298,14 +298,14 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm"
+              className="fixed inset-0 bg-gray-900/30 backdrop-blur-sm"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <motion.div
               initial={{ x: -280 }}
               animate={{ x: 0 }}
               exit={{ x: -280 }}
-              className="relative w-4/5 max-w-xs bg-[#0E1424] h-full shadow-2xl"
+              className="relative w-4/5 max-w-xs bg-[#F9F7F1] h-full shadow-2xl"
             >
               <Sidebar 
                 title="Actero Admin"
@@ -328,7 +328,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       />
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        <header className="hidden md:flex h-16 bg-[#0E1424] border-b border-white/10 items-center px-8">
+        <header className="hidden md:flex h-16 bg-[#F9F7F1] border-b border-gray-200 items-center px-8">
           <h1 className="text-xl font-bold capitalize tracking-tight">
             {activeTab.replace("-", " ")}
           </h1>
@@ -361,7 +361,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "intelligence" && (
             <div className="max-w-6xl mx-auto">
-              <IntelligenceView supabase={supabase} theme="dark" />
+              <IntelligenceView supabase={supabase} theme="light" />
             </div>
           )}
 
@@ -407,22 +407,22 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="relative bg-[#0E1424] rounded-2xl border border-white/10 p-5 overflow-hidden group hover:border-white/20 transition-colors"
+                    className="relative bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5 overflow-hidden group hover:border-white/20 transition-colors"
                   >
                     <div className={`absolute -top-6 -right-6 w-20 h-20 bg-${kpi.color}-500/10 rounded-full blur-2xl group-hover:bg-${kpi.color}-500/20 transition-colors`} />
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{kpi.label}</span>
+                      <span className="text-[11px] font-semibold text-[#716D5C] uppercase tracking-wider">{kpi.label}</span>
                       <kpi.icon className={`w-4 h-4 text-${kpi.color}-400`} />
                     </div>
                     <div className="flex items-end gap-2">
-                      <span className="text-3xl font-bold text-white font-mono tracking-tight">
+                      <span className="text-3xl font-bold text-[#262626] font-mono tracking-tight">
                         {kpi.isPercent ? (
                           <>{overviewData?.autoRate || 0}</>
                         ) : (
                           <AnimatedCounter value={kpi.value} />
                         )}
                       </span>
-                      <span className="text-sm font-medium text-gray-500 mb-0.5">{kpi.suffix}</span>
+                      <span className="text-sm font-medium text-[#716D5C] mb-0.5">{kpi.suffix}</span>
                     </div>
                     {kpi.trend !== undefined && Number(kpi.trend) !== 0 && (
                       <div className={`flex items-center gap-1 mt-2 text-xs font-medium ${Number(kpi.trend) > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
@@ -437,13 +437,13 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               {/* Row 2: Activity chart + Recent events */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {/* Activity mini-chart */}
-                <div className="lg:col-span-2 bg-[#0E1424] rounded-2xl border border-white/10 p-6">
+                <div className="lg:col-span-2 bg-[#F9F7F1] rounded-2xl border border-gray-200 p-6">
                   <div className="flex items-center justify-between mb-5">
                     <div>
-                      <h3 className="text-sm font-bold text-white">Activité 14 derniers jours</h3>
-                      <p className="text-xs text-gray-500 mt-0.5">Événements traités par jour</p>
+                      <h3 className="text-sm font-bold text-[#262626]">Activité 14 derniers jours</h3>
+                      <p className="text-xs text-[#716D5C] mt-0.5">Événements traités par jour</p>
                     </div>
-                    <BarChart3 className="w-4 h-4 text-gray-600" />
+                    <BarChart3 className="w-4 h-4 text-[#716D5C]" />
                   </div>
                   <div className="flex items-end gap-1.5 h-32">
                     {(overviewData?.dailyActivity || Array.from({ length: 14 }, () => ({ events: 0, label: '' }))).map((day, i) => {
@@ -461,7 +461,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                             className={`w-full h-full rounded-md transition-colors ${
                               day.events > 0
                                 ? 'bg-emerald-500/60 hover:bg-emerald-400/80'
-                                : 'bg-white/5'
+                                : 'bg-gray-50'
                             }`}
                           />
                           <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
@@ -473,16 +473,16 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                   </div>
                   <div className="flex justify-between mt-2">
                     {(overviewData?.dailyActivity || []).filter((_, i) => i % 2 === 0).map((day, i) => (
-                      <span key={i} className="text-[10px] text-gray-600">{day.label}</span>
+                      <span key={i} className="text-[10px] text-[#716D5C]">{day.label}</span>
                     ))}
                   </div>
                 </div>
 
                 {/* Recent events feed */}
-                <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-6">
+                <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-bold text-white">Derniers événements</h3>
-                    <span className="text-[10px] text-gray-500 font-medium">LIVE</span>
+                    <h3 className="text-sm font-bold text-[#262626]">Derniers événements</h3>
+                    <span className="text-[10px] text-[#716D5C] font-medium">LIVE</span>
                   </div>
                   <div className="space-y-3">
                     {(overviewData?.recentEvents || []).slice(0, 6).map((event, i) => {
@@ -496,7 +496,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                         visit_reply_sent: { label: 'Réponse visite', color: 'text-purple-400', bg: 'bg-purple-500/10' },
                         match_found: { label: 'Match trouvé', color: 'text-pink-400', bg: 'bg-pink-500/10' },
                       };
-                      const cat = categoryLabels[event.event_category] || { label: event.event_category, color: 'text-gray-400', bg: 'bg-white/5' };
+                      const cat = categoryLabels[event.event_category] || { label: event.event_category, color: 'text-[#716D5C]', bg: 'bg-gray-50' };
                       const timeAgo = (() => {
                         const diff = (Date.now() - new Date(event.created_at).getTime()) / 1000;
                         if (diff < 60) return "à l'instant";
@@ -514,15 +514,15 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                         >
                           <div className={`w-2 h-2 rounded-full ${cat.color.replace('text-', 'bg-')}`} />
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium text-white truncate">{cat.label}</p>
-                            <p className="text-[10px] text-gray-500 truncate">{event.clients?.brand_name || '—'}</p>
+                            <p className="text-xs font-medium text-[#262626] truncate">{cat.label}</p>
+                            <p className="text-[10px] text-[#716D5C] truncate">{event.clients?.brand_name || '—'}</p>
                           </div>
-                          <span className="text-[10px] text-gray-600 whitespace-nowrap">{timeAgo}</span>
+                          <span className="text-[10px] text-[#716D5C] whitespace-nowrap">{timeAgo}</span>
                         </motion.div>
                       );
                     })}
                     {(!overviewData?.recentEvents || overviewData.recentEvents.length === 0) && (
-                      <p className="text-xs text-gray-600 text-center py-4">Aucun événement récent</p>
+                      <p className="text-xs text-[#716D5C] text-center py-4">Aucun événement récent</p>
                     )}
                   </div>
                 </div>
@@ -531,9 +531,9 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               {/* Row 3: Clients overview + Funnel + Event breakdown */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {/* Clients list */}
-                <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-6">
+                <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-bold text-white">Clients actifs</h3>
+                    <h3 className="text-sm font-bold text-[#262626]">Clients actifs</h3>
                     <button onClick={() => setActiveTab('clients')} className="text-[10px] text-emerald-400 font-medium hover:text-emerald-300 transition-colors">Voir tout →</button>
                   </div>
                   <div className="space-y-3">
@@ -543,7 +543,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: i * 0.05 }}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] transition-colors cursor-pointer"
+                        className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] hover:bg-[#F9F7F1] transition-colors cursor-pointer"
                         onClick={() => setSelectedClient(client)}
                       >
                         <div className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold ${
@@ -554,34 +554,34 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                           {client.client_type === 'immobilier' ? <Building2 className="w-4 h-4" /> : <ShoppingBag className="w-4 h-4" />}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-white truncate">{client.brand_name}</p>
-                          <p className="text-[10px] text-gray-500 capitalize">{client.client_type || 'ecommerce'}</p>
+                          <p className="text-sm font-medium text-[#262626] truncate">{client.brand_name}</p>
+                          <p className="text-[10px] text-[#716D5C] capitalize">{client.client_type || 'ecommerce'}</p>
                         </div>
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
                           client.status === 'active'
                             ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                            : 'bg-gray-500/10 text-gray-400 border border-gray-500/20'
+                            : 'bg-gray-500/10 text-[#716D5C] border border-gray-500/20'
                         }`}>
                           {client.status === 'active' ? 'ACTIF' : 'INACTIF'}
                         </span>
                       </motion.div>
                     ))}
                     {clients.length === 0 && (
-                      <p className="text-xs text-gray-600 text-center py-4">Aucun client</p>
+                      <p className="text-xs text-[#716D5C] text-center py-4">Aucun client</p>
                     )}
                   </div>
                 </div>
 
                 {/* Funnel pipeline */}
-                <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-6">
+                <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-bold text-white">Pipeline Funnel</h3>
-                    <Target className="w-4 h-4 text-gray-600" />
+                    <h3 className="text-sm font-bold text-[#262626]">Pipeline Funnel</h3>
+                    <Target className="w-4 h-4 text-[#716D5C]" />
                   </div>
                   <div className="space-y-3">
                     {(overviewData?.funnel || []).map((f, i) => {
                       const statusColors = {
-                        draft: { label: 'Brouillon', color: 'text-gray-400', bg: 'bg-gray-500/10 border-gray-500/20' },
+                        draft: { label: 'Brouillon', color: 'text-[#716D5C]', bg: 'bg-gray-500/10 border-gray-500/20' },
                         sent: { label: 'Envoyé', color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
                         paid: { label: 'Payé', color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' },
                         canceled: { label: 'Annulé', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' },
@@ -596,8 +596,8 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                           className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02]"
                         >
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-white truncate">{f.company_name}</p>
-                            <p className="text-[10px] text-gray-500">{f.setup_price}€ setup + {f.monthly_price}€/mois</p>
+                            <p className="text-sm font-medium text-[#262626] truncate">{f.company_name}</p>
+                            <p className="text-[10px] text-[#716D5C]">{f.setup_price}€ setup + {f.monthly_price}€/mois</p>
                           </div>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${s.bg} ${s.color}`}>
                             {s.label.toUpperCase()}
@@ -606,16 +606,16 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                       );
                     })}
                     {(!overviewData?.funnel || overviewData.funnel.length === 0) && (
-                      <p className="text-xs text-gray-600 text-center py-4">Aucun prospect dans le funnel</p>
+                      <p className="text-xs text-[#716D5C] text-center py-4">Aucun prospect dans le funnel</p>
                     )}
                   </div>
                 </div>
 
                 {/* Event breakdown by type */}
-                <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-6">
+                <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-sm font-bold text-white">Répartition événements</h3>
-                    <TrendingUp className="w-4 h-4 text-gray-600" />
+                    <h3 className="text-sm font-bold text-[#262626]">Répartition événements</h3>
+                    <TrendingUp className="w-4 h-4 text-[#716D5C]" />
                   </div>
                   <div className="space-y-2.5">
                     {Object.entries(overviewData?.eventsByCategory || {})
@@ -652,10 +652,10 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                         return (
                           <div key={cat}>
                             <div className="flex items-center justify-between mb-1">
-                              <span className="text-xs text-gray-400">{labels[cat] || cat}</span>
-                              <span className="text-xs font-mono text-gray-500">{count} ({pct}%)</span>
+                              <span className="text-xs text-[#716D5C]">{labels[cat] || cat}</span>
+                              <span className="text-xs font-mono text-[#716D5C]">{count} ({pct}%)</span>
                             </div>
-                            <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-1.5 bg-gray-50 rounded-full overflow-hidden">
                               <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${pct}%` }}
@@ -667,7 +667,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                         );
                       })}
                     {(!overviewData?.eventsByCategory || Object.keys(overviewData.eventsByCategory).length === 0) && (
-                      <p className="text-xs text-gray-600 text-center py-4">Aucune donnée</p>
+                      <p className="text-xs text-[#716D5C] text-center py-4">Aucune donnée</p>
                     )}
                   </div>
                 </div>
@@ -675,10 +675,10 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
               {/* Row 4: Leads preview */}
               {leads.length > 0 && (
-                <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-6">
+                <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <h3 className="text-sm font-bold text-white">Derniers leads</h3>
+                      <h3 className="text-sm font-bold text-[#262626]">Derniers leads</h3>
                       <span className="text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-md">{leads.length}</span>
                     </div>
                     <button onClick={() => setActiveTab('leads')} className="text-[10px] text-emerald-400 font-medium hover:text-emerald-300 transition-colors">Voir tout →</button>
@@ -690,11 +690,11 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: i * 0.05 }}
-                        className="p-3 rounded-xl bg-white/[0.02] border border-white/5"
+                        className="p-3 rounded-xl bg-white/[0.02] border border-gray-100"
                       >
-                        <p className="text-sm font-medium text-white">{lead.brand_name}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">{lead.email}</p>
-                        <p className="text-[10px] text-gray-600 mt-1">{new Date(lead.created_at).toLocaleDateString('fr-FR')}</p>
+                        <p className="text-sm font-medium text-[#262626]">{lead.brand_name}</p>
+                        <p className="text-xs text-[#716D5C] mt-0.5">{lead.email}</p>
+                        <p className="text-[10px] text-[#716D5C] mt-1">{new Date(lead.created_at).toLocaleDateString('fr-FR')}</p>
                       </motion.div>
                     ))}
                   </div>
@@ -708,16 +708,16 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               {/* Header with search + add */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-white">Clients</h2>
-                  <p className="text-sm text-gray-500 mt-1">{clients.length} client{clients.length > 1 ? 's' : ''} au total</p>
+                  <h2 className="text-2xl font-bold text-[#262626]">Clients</h2>
+                  <p className="text-sm text-[#716D5C] mt-1">{clients.length} client{clients.length > 1 ? 's' : ''} au total</p>
                 </div>
                 <div className="flex items-center gap-3 w-full sm:w-auto">
                   <div className="relative flex-1 sm:flex-initial">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#716D5C]" />
                     <input
                       type="text"
                       placeholder="Rechercher..."
-                      className="pl-9 pr-4 py-2 bg-[#0E1424] border border-white/10 rounded-xl text-sm w-full sm:w-64 outline-none focus:border-white/20 transition-all"
+                      className="pl-9 pr-4 py-2 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm w-full sm:w-64 outline-none focus:border-white/20 transition-all"
                     />
                   </div>
                 </div>
@@ -725,36 +725,36 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
               {/* Summary row */}
               <div className="grid grid-cols-3 gap-4">
-                <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-5">
+                <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5">
                   <div className="flex items-center gap-2 mb-2">
                     <Users className="w-4 h-4 text-emerald-400" />
-                    <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Actifs</span>
+                    <span className="text-[11px] font-semibold text-[#716D5C] uppercase tracking-wider">Actifs</span>
                   </div>
                   <p className="text-2xl font-bold font-mono text-emerald-400">{clients.filter(c => c.status === 'active').length}</p>
                 </div>
-                <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-5">
+                <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5">
                   <div className="flex items-center gap-2 mb-2">
                     <ShoppingBag className="w-4 h-4 text-blue-400" />
-                    <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">E-commerce</span>
+                    <span className="text-[11px] font-semibold text-[#716D5C] uppercase tracking-wider">E-commerce</span>
                   </div>
-                  <p className="text-2xl font-bold font-mono text-white">{clients.filter(c => !c.client_type || c.client_type === 'ecommerce').length}</p>
+                  <p className="text-2xl font-bold font-mono text-[#262626]">{clients.filter(c => !c.client_type || c.client_type === 'ecommerce').length}</p>
                 </div>
-                <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-5">
+                <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5">
                   <div className="flex items-center gap-2 mb-2">
                     <Building2 className="w-4 h-4 text-violet-400" />
-                    <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Immobilier</span>
+                    <span className="text-[11px] font-semibold text-[#716D5C] uppercase tracking-wider">Immobilier</span>
                   </div>
-                  <p className="text-2xl font-bold font-mono text-white">{clients.filter(c => c.client_type === 'immobilier').length}</p>
+                  <p className="text-2xl font-bold font-mono text-[#262626]">{clients.filter(c => c.client_type === 'immobilier').length}</p>
                 </div>
               </div>
 
               {isLoading ? (
                 <div className="flex justify-center py-20">
-                  <Sparkles className="w-8 h-8 animate-pulse text-gray-400" />
+                  <Sparkles className="w-8 h-8 animate-pulse text-[#716D5C]" />
                 </div>
               ) : clients.length === 0 ? (
-                <div className="bg-[#0E1424] border border-white/10 rounded-2xl p-16 text-center flex flex-col items-center">
-                  <Users className="w-12 h-12 text-gray-600 mb-4" />
+                <div className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-16 text-center flex flex-col items-center">
+                  <Users className="w-12 h-12 text-[#716D5C] mb-4" />
                   <h3 className="text-xl font-bold mb-2">Aucun client pour le moment</h3>
                   <button onClick={handleAddClient} className="bg-white text-black px-5 py-2.5 rounded-xl text-sm font-bold mt-4">
                     Ajouter un client
@@ -769,7 +769,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04 }}
                       onClick={() => setSelectedClient(client)}
-                      className="bg-[#0E1424] border border-white/10 rounded-2xl p-5 flex items-center gap-5 hover:border-white/20 transition-all cursor-pointer group"
+                      className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-5 flex items-center gap-5 hover:border-white/20 transition-all cursor-pointer group"
                     >
                       {/* Icon */}
                       <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
@@ -783,22 +783,22 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                       {/* Info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3">
-                          <p className="text-base font-bold text-white truncate">{client.brand_name}</p>
+                          <p className="text-base font-bold text-[#262626] truncate">{client.brand_name}</p>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${
                             client.status === 'active'
                               ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                              : 'bg-gray-500/10 text-gray-400 border-gray-500/20'
+                              : 'bg-gray-500/10 text-[#716D5C] border-gray-500/20'
                           }`}>
                             {client.status === 'active' ? 'ACTIF' : 'INACTIF'}
                           </span>
                         </div>
                         <div className="flex items-center gap-4 mt-1.5 flex-wrap">
-                          <span className="text-xs text-gray-500 capitalize">{client.client_type || 'ecommerce'}</span>
-                          <span className="text-xs text-gray-400">{client.contact_email || 'Pas d\'email'}</span>
-                          <span className="text-[10px] text-gray-600">Créé le {new Date(client.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                          <span className="text-xs text-[#716D5C] capitalize">{client.client_type || 'ecommerce'}</span>
+                          <span className="text-xs text-[#716D5C]">{client.contact_email || 'Pas d\'email'}</span>
+                          <span className="text-[10px] text-[#716D5C]">Créé le {new Date(client.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                         </div>
                         <div className="mt-1 flex items-center gap-2">
-                          <span className="text-[10px] font-mono text-gray-600">{client.id}</span>
+                          <span className="text-[10px] font-mono text-[#716D5C]">{client.id}</span>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -806,12 +806,12 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                               setCopiedId(client.id);
                               setTimeout(() => setCopiedId(null), 2000);
                             }}
-                            className="p-0.5 rounded hover:bg-white/10 transition-colors"
+                            className="p-0.5 rounded hover:bg-gray-50 transition-colors"
                             title="Copier l'ID"
                           >
                             {copiedId === client.id
                               ? <Check className="w-3 h-3 text-emerald-400" />
-                              : <Copy className="w-3 h-3 text-gray-600 hover:text-gray-400" />
+                              : <Copy className="w-3 h-3 text-[#716D5C] hover:text-[#716D5C]" />
                             }
                           </button>
                         </div>
@@ -821,14 +821,14 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={(e) => { e.stopPropagation(); setCallNotesClient(client); }}
-                          className="text-gray-600 hover:text-emerald-400 transition-colors p-2 rounded-lg hover:bg-emerald-500/10"
+                          className="text-[#716D5C] hover:text-emerald-400 transition-colors p-2 rounded-lg hover:bg-emerald-500/10"
                           title="Notes de call"
                         >
                           <FileText className="w-4 h-4" />
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); setSelectedClient(client); }}
-                          className="text-gray-600 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/5"
+                          className="text-[#716D5C] hover:text-[#262626] transition-colors p-2 rounded-lg hover:bg-gray-50"
                           title="Configurer"
                         >
                           <MoreVertical className="w-5 h-5" />
@@ -851,34 +851,34 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             <div className="max-w-6xl mx-auto animate-fade-in-up">
               <div className="mb-8">
                 <h2 className="text-3xl font-bold mb-2">Leads Capturés</h2>
-                <p className="text-gray-500">Contacts intéressés via l'Audit IA.</p>
+                <p className="text-[#716D5C]">Contacts intéressés via l'Audit IA.</p>
               </div>
 
               {isLoading ? (
                 <div className="flex justify-center py-20">
-                  <Sparkles className="w-8 h-8 animate-pulse text-gray-400" />
+                  <Sparkles className="w-8 h-8 animate-pulse text-[#716D5C]" />
                 </div>
               ) : leads.length === 0 ? (
-                <div className="text-center py-20 bg-[#0E1424] rounded-2xl border border-white/10">
-                  <Users className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                  <p className="text-gray-500">Aucun lead pour le moment.</p>
+                <div className="text-center py-20 bg-[#F9F7F1] rounded-2xl border border-gray-200">
+                  <Users className="w-12 h-12 text-[#716D5C] mx-auto mb-4" />
+                  <p className="text-[#716D5C]">Aucun lead pour le moment.</p>
                 </div>
               ) : (
-                <div className="bg-[#0E1424] border border-white/10 rounded-2xl overflow-x-auto">
+                <div className="bg-[#F9F7F1] border border-gray-200 rounded-2xl overflow-x-auto">
                   <table className="w-full text-left border-collapse min-w-[800px]">
                     <thead>
-                      <tr className="border-b border-white/5 bg-[#0A0E1A]">
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Entreprise</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Email</th>
-                        <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Date</th>
+                      <tr className="border-b border-gray-100 bg-white">
+                        <th className="px-6 py-4 text-xs font-bold text-[#716D5C] uppercase tracking-widest">Entreprise</th>
+                        <th className="px-6 py-4 text-xs font-bold text-[#716D5C] uppercase tracking-widest">Email</th>
+                        <th className="px-6 py-4 text-xs font-bold text-[#716D5C] uppercase tracking-widest">Date</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5 text-sm">
                       {leads.map((lead) => (
-                        <tr key={lead.id} className="hover:bg-white/5 transition-colors">
+                        <tr key={lead.id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-6 py-4 font-bold">{lead.brand_name}</td>
-                          <td className="px-6 py-4 text-zinc-300">{lead.email}</td>
-                          <td className="px-6 py-4 text-zinc-500">
+                          <td className="px-6 py-4 text-[#716D5C]">{lead.email}</td>
+                          <td className="px-6 py-4 text-[#716D5C]">
                             {new Date(lead.created_at).toLocaleDateString("fr-FR")}
                           </td>
                         </tr>

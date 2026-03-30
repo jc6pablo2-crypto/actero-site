@@ -9,7 +9,7 @@ import {
 import { supabase } from '../../lib/supabase'
 
 const STATUS_CONFIG = {
-  pending: { label: 'En attente', color: 'text-gray-400 bg-gray-400/10' },
+  pending: { label: 'En attente', color: 'text-[#716D5C] bg-gray-400/10' },
   clicked: { label: 'Clique', color: 'text-blue-400 bg-blue-400/10' },
   signed_up: { label: 'Inscrit', color: 'text-amber-400 bg-amber-400/10' },
   paid: { label: 'Paye', color: 'text-emerald-400 bg-emerald-400/10' },
@@ -134,7 +134,7 @@ export const AdminReferralsView = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-6 h-6 text-gray-500 animate-spin" />
+        <Loader2 className="w-6 h-6 text-[#716D5C] animate-spin" />
       </div>
     )
   }
@@ -154,13 +154,13 @@ export const AdminReferralsView = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="bg-[#0E1424] rounded-2xl border border-white/10 p-5"
+            className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5"
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{kpi.label}</span>
+              <span className="text-[11px] font-semibold text-[#716D5C] uppercase tracking-wider">{kpi.label}</span>
               <kpi.icon className={`w-4 h-4 text-${kpi.color}-400`} />
             </div>
-            <span className={`${kpi.isText ? 'text-lg' : 'text-3xl'} font-bold text-white font-mono tracking-tight`}>
+            <span className={`${kpi.isText ? 'text-lg' : 'text-3xl'} font-bold text-[#262626] font-mono tracking-tight`}>
               {kpi.value}
             </span>
           </motion.div>
@@ -169,17 +169,17 @@ export const AdminReferralsView = () => {
 
       {/* Top referrers */}
       {topReferrers.length > 0 && (
-        <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-6">
-          <h3 className="text-sm font-bold text-white mb-4">Top parrains</h3>
+        <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-6">
+          <h3 className="text-sm font-bold text-[#262626] mb-4">Top parrains</h3>
           <div className="flex flex-wrap gap-3">
             {topReferrers.map(([name, count], i) => (
               <div
                 key={name}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10"
+                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-50 border border-gray-200"
               >
                 <span className="text-xs font-bold text-emerald-400">{i + 1}.</span>
-                <span className="text-sm font-medium text-white">{name}</span>
-                <span className="text-xs text-gray-500">{count} parrainage{count > 1 ? 's' : ''}</span>
+                <span className="text-sm font-medium text-[#262626]">{name}</span>
+                <span className="text-xs text-[#716D5C]">{count} parrainage{count > 1 ? 's' : ''}</span>
               </div>
             ))}
           </div>
@@ -189,13 +189,13 @@ export const AdminReferralsView = () => {
       {/* Filters */}
       <div className="flex flex-col md:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#716D5C]" />
           <input
             type="text"
             placeholder="Rechercher par client ou code..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-[#0E1424] border border-white/10 rounded-xl text-sm text-white placeholder:text-gray-600 outline-none focus:border-white/20"
+            className="w-full pl-10 pr-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] placeholder:text-[#716D5C] outline-none focus:border-white/20"
           />
         </div>
         <div className="flex gap-2 overflow-x-auto">
@@ -205,8 +205,8 @@ export const AdminReferralsView = () => {
               onClick={() => setStatusFilter(s)}
               className={`px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
                 statusFilter === s
-                  ? 'bg-white/10 text-white'
-                  : 'text-gray-500 hover:text-gray-300'
+                  ? 'bg-gray-50 text-[#262626]'
+                  : 'text-[#716D5C] hover:text-[#716D5C]'
               }`}
             >
               {s === 'all' ? 'Tous' : (STATUS_CONFIG[s]?.label || s)}
@@ -216,34 +216,34 @@ export const AdminReferralsView = () => {
       </div>
 
       {/* Referrals table */}
-      <div className="bg-[#0E1424] rounded-2xl border border-white/10 overflow-hidden">
+      <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 overflow-hidden">
         {filteredReferrals.length === 0 ? (
           <div className="p-12 text-center">
             <Gift className="w-10 h-10 mx-auto mb-3 text-gray-700" />
-            <p className="text-sm text-gray-500">Aucun parrainage trouve</p>
+            <p className="text-sm text-[#716D5C]">Aucun parrainage trouve</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/5">
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Parrain</th>
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Code</th>
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Statut</th>
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Credit</th>
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                <tr className="border-b border-gray-100">
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Parrain</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Code</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Statut</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Credit</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Date</th>
+                  <th className="text-left px-6 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredReferrals.map((ref) => {
                   const statusConf = STATUS_CONFIG[ref.status] || STATUS_CONFIG.pending
                   return (
-                    <tr key={ref.id} className="border-t border-white/5 hover:bg-white/[0.02]">
-                      <td className="px-6 py-4 text-sm font-medium text-white">
+                    <tr key={ref.id} className="border-t border-gray-100 hover:bg-white/[0.02]">
+                      <td className="px-6 py-4 text-sm font-medium text-[#262626]">
                         {ref.clients?.brand_name || 'Inconnu'}
                       </td>
-                      <td className="px-6 py-4 text-sm font-mono text-gray-400">
+                      <td className="px-6 py-4 text-sm font-mono text-[#716D5C]">
                         {ref.referral_code}
                       </td>
                       <td className="px-6 py-4">
@@ -251,26 +251,26 @@ export const AdminReferralsView = () => {
                           {statusConf.label}
                         </span>
                       </td>
-                      <td className={`px-6 py-4 text-sm font-mono ${ref.referrer_credit_amount ? 'text-emerald-400' : 'text-gray-600'}`}>
+                      <td className={`px-6 py-4 text-sm font-mono ${ref.referrer_credit_amount ? 'text-emerald-400' : 'text-[#716D5C]'}`}>
                         {ref.referrer_credit_amount ? `${ref.referrer_credit_amount / 100}€` : '—'}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">
+                      <td className="px-6 py-4 text-sm text-[#716D5C]">
                         {new Date(ref.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </td>
                       <td className="px-6 py-4">
                         <div className="relative">
                           <button
                             onClick={() => setActionMenuId(actionMenuId === ref.id ? null : ref.id)}
-                            className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                            className="p-1.5 rounded-lg hover:bg-gray-50 transition-colors"
                           >
-                            <MoreVertical className="w-4 h-4 text-gray-500" />
+                            <MoreVertical className="w-4 h-4 text-[#716D5C]" />
                           </button>
                           {actionMenuId === ref.id && (
-                            <div className="absolute right-0 top-8 z-10 bg-[#111] border border-white/10 rounded-xl shadow-xl py-1 min-w-[160px]">
+                            <div className="absolute right-0 top-8 z-10 bg-[#111] border border-gray-200 rounded-xl shadow-xl py-1 min-w-[160px]">
                               {ref.status !== 'rewarded' && ref.status !== 'cancelled' && (
                                 <button
                                   onClick={() => validateMutation.mutate(ref.id)}
-                                  className="w-full text-left px-4 py-2 text-sm text-emerald-400 hover:bg-white/5 flex items-center gap-2"
+                                  className="w-full text-left px-4 py-2 text-sm text-emerald-400 hover:bg-gray-50 flex items-center gap-2"
                                 >
                                   <CheckCircle2 className="w-3.5 h-3.5" /> Valider
                                 </button>
@@ -278,14 +278,14 @@ export const AdminReferralsView = () => {
                               {ref.status !== 'cancelled' && ref.status !== 'rewarded' && (
                                 <button
                                   onClick={() => cancelMutation.mutate(ref.id)}
-                                  className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/5 flex items-center gap-2"
+                                  className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-50 flex items-center gap-2"
                                 >
                                   <XCircle className="w-3.5 h-3.5" /> Annuler
                                 </button>
                               )}
                               <button
                                 onClick={() => setActionMenuId(null)}
-                                className="w-full text-left px-4 py-2 text-sm text-gray-400 hover:bg-white/5"
+                                className="w-full text-left px-4 py-2 text-sm text-[#716D5C] hover:bg-gray-50"
                               >
                                 Fermer
                               </button>

@@ -192,7 +192,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
         description="Devenez ambassadeur Actero et touchez jusqu'à 300€ par client recommandé. Zéro effort commercial, on s'occupe de tout."
         canonical="/ambassadeurs"
       />
-    <div className="relative min-h-screen bg-[#0A0E1A] font-sans text-white selection:bg-emerald-500/20 selection:text-white">
+    <div className="relative min-h-screen bg-white font-sans text-[#262626] selection:bg-emerald-500/20 selection:text-[#262626]">
       {/* BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/20 via-[#030303] to-[#030303]" />
@@ -219,10 +219,10 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                   soyez récompensé
                 </span>
               </h1>
-              <p className="text-xl md:text-2xl text-gray-400 font-medium max-w-2xl mx-auto leading-relaxed mb-4">
+              <p className="text-xl md:text-2xl text-[#716D5C] font-medium max-w-2xl mx-auto leading-relaxed mb-4">
                 Partagez Actero à votre réseau professionnel. Quand votre contact devient client, vous touchez une récompense.
               </p>
-              <p className="text-base text-gray-500 max-w-xl mx-auto leading-relaxed mb-12">
+              <p className="text-base text-[#716D5C] max-w-xl mx-auto leading-relaxed mb-12">
                 Zéro effort commercial. On s’occupe de tout. Vous gagnez.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -234,7 +234,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                 </button>
                 <button
                   onClick={() => onNavigate('/ambassador/login')}
-                  className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-full text-lg transition-all border border-white/10"
+                  className="px-8 py-4 bg-gray-50 hover:bg-gray-50 text-[#262626] font-bold rounded-full text-lg transition-all border border-gray-200"
                 >
                   Déjà ambassadeur ? Connectez-vous
                 </button>
@@ -250,12 +250,12 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {socialProofStats.map((stat, i) => (
                   <ScaleIn key={i} delay={i * 0.1}>
-                    <div className="text-center p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
+                    <div className="text-center p-6 rounded-2xl bg-white/[0.02] border border-gray-200">
                       <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-3">
                         <stat.icon className="w-5 h-5 text-emerald-400" />
                       </div>
-                      <p className="text-2xl font-bold text-white mb-1">{stat.value}</p>
-                      <p className="text-xs text-gray-500 font-medium">{stat.label}</p>
+                      <p className="text-2xl font-bold text-[#262626] mb-1">{stat.value}</p>
+                      <p className="text-xs text-[#716D5C] font-medium">{stat.label}</p>
                     </div>
                   </ScaleIn>
                 ))}
@@ -278,15 +278,15 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
             <StaggerContainer className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
               {steps.map((step, i) => (
                 <StaggerItem key={i}>
-                  <div className="relative p-8 rounded-3xl bg-[#111] border border-white/10 hover:border-emerald-500/30 transition-all group">
+                  <div className="relative p-8 rounded-3xl bg-[#111] border border-gray-200 hover:border-emerald-500/30 transition-all group">
                     <div className="absolute -top-4 -left-2 w-10 h-10 rounded-full bg-emerald-500 text-black flex items-center justify-center font-bold text-base shadow-lg shadow-emerald-500/25">
                       {i + 1}
                     </div>
                     <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
                       <step.icon className="w-7 h-7 text-emerald-400" />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
-                    <p className="text-gray-400 font-medium leading-relaxed">{step.desc}</p>
+                    <h3 className="text-xl font-bold text-[#262626] mb-3">{step.title}</h3>
+                    <p className="text-[#716D5C] font-medium leading-relaxed">{step.desc}</p>
                     {i < steps.length - 1 && (
                       <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2">
                         <ArrowRight className="w-5 h-5 text-emerald-500/30" />
@@ -301,7 +301,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
           {/* ═══════════════════════════════════════════ */}
           {/* QUI PEUT ÊTRE RECOMMANDÉ                   */}
           {/* ═══════════════════════════════════════════ */}
-          <section className="py-24 md:py-32 px-6 bg-[#0E1424]">
+          <section className="py-24 md:py-32 px-6 bg-[#F9F7F1]">
             <FadeInUp className="max-w-5xl mx-auto text-center mb-16">
               <p className="text-xs font-bold text-cyan-400/80 uppercase tracking-[0.2em] mb-4">
                 Qui peut être recommandé
@@ -313,12 +313,12 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
             <StaggerContainer className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
               {targets.map((t, i) => (
                 <StaggerItem key={i}>
-                  <div className="p-8 rounded-3xl bg-[#111] border border-white/10 hover:border-cyan-500/30 transition-all h-full">
+                  <div className="p-8 rounded-3xl bg-[#111] border border-gray-200 hover:border-cyan-500/30 transition-all h-full">
                     <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6">
                       <t.icon className="w-7 h-7 text-cyan-400" />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-3">{t.title}</h3>
-                    <p className="text-gray-400 font-medium leading-relaxed">{t.desc}</p>
+                    <h3 className="text-xl font-bold text-[#262626] mb-3">{t.title}</h3>
+                    <p className="text-[#716D5C] font-medium leading-relaxed">{t.desc}</p>
                   </div>
                 </StaggerItem>
               ))}
@@ -336,25 +336,25 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
               <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6">
                 Une récompense pour chaque client signé grâce à vous
               </h2>
-              <p className="text-xl text-gray-400 font-medium leading-relaxed mb-10">
+              <p className="text-xl text-[#716D5C] font-medium leading-relaxed mb-10">
                 Plus vous recommandez, plus vous gagnez. Les récompenses augmentent à partir du 3e client.
               </p>
               <div className="grid md:grid-cols-2 gap-6 mb-8">
                 <div className="p-8 rounded-3xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/5 border border-emerald-500/20 text-center">
                   <p className="text-xs font-bold text-emerald-400/60 uppercase tracking-widest mb-3">1er et 2e client</p>
                   <p className="text-5xl font-bold text-emerald-400 mb-2">150€</p>
-                  <p className="text-sm text-gray-400 font-medium">par client signé</p>
+                  <p className="text-sm text-[#716D5C] font-medium">par client signé</p>
                 </div>
                 <div className="p-8 rounded-3xl bg-gradient-to-br from-amber-500/10 to-orange-500/5 border border-amber-500/20 text-center relative overflow-hidden">
                   <div className="absolute top-3 right-3 px-2 py-0.5 bg-amber-500/20 border border-amber-500/30 rounded-full text-[10px] font-bold text-amber-400 uppercase tracking-wider">Bonus</div>
                   <p className="text-xs font-bold text-amber-400/60 uppercase tracking-widest mb-3">À partir du 3e client</p>
                   <p className="text-5xl font-bold text-amber-400 mb-2">300€</p>
-                  <p className="text-sm text-gray-400 font-medium">par client signé</p>
+                  <p className="text-sm text-[#716D5C] font-medium">par client signé</p>
                 </div>
               </div>
-              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
-                <p className="text-sm text-gray-400 font-medium">
-                  Versée <span className="text-white font-bold">30 jours</span> après le paiement effectif du client. Aucune limite de recommandations.
+              <div className="p-5 rounded-2xl bg-white/[0.02] border border-gray-100 text-center">
+                <p className="text-sm text-[#716D5C] font-medium">
+                  Versée <span className="text-[#262626] font-bold">30 jours</span> après le paiement effectif du client. Aucune limite de recommandations.
                 </p>
               </div>
             </FadeInUp>
@@ -363,7 +363,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
           {/* ═══════════════════════════════════════════ */}
           {/* CE QUE VOUS N'AVEZ PAS À FAIRE             */}
           {/* ═══════════════════════════════════════════ */}
-          <section className="py-24 md:py-32 px-6 bg-[#0E1424]">
+          <section className="py-24 md:py-32 px-6 bg-[#F9F7F1]">
             <FadeInUp className="max-w-3xl mx-auto text-center mb-12">
               <p className="text-xs font-bold text-red-400/80 uppercase tracking-[0.2em] mb-4">
                 Ce que vous n’avez pas à faire
@@ -375,11 +375,11 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
             <StaggerContainer className="max-w-2xl mx-auto space-y-4">
               {notToDo.map((item, i) => (
                 <StaggerItem key={i}>
-                  <div className="flex items-center gap-4 p-5 rounded-2xl bg-[#111] border border-white/10">
+                  <div className="flex items-center gap-4 p-5 rounded-2xl bg-[#111] border border-gray-200">
                     <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
                       <X className="w-5 h-5 text-red-400" />
                     </div>
-                    <span className="text-lg font-bold text-white">{item}</span>
+                    <span className="text-lg font-bold text-[#262626]">{item}</span>
                   </div>
                 </StaggerItem>
               ))}
@@ -401,11 +401,11 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
             <StaggerContainer className="max-w-4xl mx-auto grid sm:grid-cols-2 gap-6">
               {whyActero.map((item, i) => (
                 <StaggerItem key={i}>
-                  <div className="flex items-center gap-5 p-6 rounded-2xl bg-[#111] border border-white/10">
+                  <div className="flex items-center gap-5 p-6 rounded-2xl bg-[#111] border border-gray-200">
                     <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
                       <item.icon className="w-6 h-6 text-emerald-400" />
                     </div>
-                    <span className="text-lg font-bold text-white">{item.label}</span>
+                    <span className="text-lg font-bold text-[#262626]">{item.label}</span>
                   </div>
                 </StaggerItem>
               ))}
@@ -415,7 +415,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
           {/* ═══════════════════════════════════════════ */}
           {/* FAQ                                        */}
           {/* ═══════════════════════════════════════════ */}
-          <section className="py-24 md:py-32 px-6 bg-[#0E1424]">
+          <section className="py-24 md:py-32 px-6 bg-[#F9F7F1]">
             <FadeInUp className="max-w-3xl mx-auto">
               <div className="text-center mb-16">
                 <p className="text-xs font-bold text-cyan-400/80 uppercase tracking-[0.2em] mb-4">
@@ -427,15 +427,15 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                 {faqItems.map((faq, i) => (
                   <div
                     key={i}
-                    className="rounded-2xl bg-[#111] border border-white/10 overflow-hidden"
+                    className="rounded-2xl bg-[#111] border border-gray-200 overflow-hidden"
                   >
                     <button
                       onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
                       className="w-full flex items-center justify-between p-6 text-left"
                     >
-                      <span className="text-lg font-bold text-white pr-4">{faq.q}</span>
+                      <span className="text-lg font-bold text-[#262626] pr-4">{faq.q}</span>
                       <ChevronDown
-                        className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-300 ${
+                        className={`w-5 h-5 text-[#716D5C] flex-shrink-0 transition-transform duration-300 ${
                           openFaqIndex === i ? 'rotate-180' : ''
                         }`}
                       />
@@ -449,7 +449,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                           transition={{ duration: 0.3 }}
                           className="overflow-hidden"
                         >
-                          <p className="px-6 pb-6 text-gray-400 font-medium leading-relaxed">
+                          <p className="px-6 pb-6 text-[#716D5C] font-medium leading-relaxed">
                             {faq.a}
                           </p>
                         </motion.div>
@@ -473,7 +473,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                 <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">
                   Candidature
                 </h2>
-                <p className="text-gray-400 font-medium">
+                <p className="text-[#716D5C] font-medium">
                   Remplissez le formulaire ci-dessous. Nous reviendrons vers vous rapidement.
                 </p>
               </div>
@@ -484,10 +484,10 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                     <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-6">
                       <CheckCircle2 className="w-8 h-8 text-emerald-400" />
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-3">
+                    <h3 className="text-2xl font-bold text-[#262626] mb-3">
                       Candidature envoyée !
                     </h3>
-                    <p className="text-gray-400 font-medium">
+                    <p className="text-[#716D5C] font-medium">
                       Merci pour votre intérêt. Notre équipe vous contactera très bientôt.
                     </p>
                   </div>
@@ -495,11 +495,11 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
               ) : (
                 <form
                   onSubmit={handleSubmit}
-                  className="p-8 md:p-10 rounded-3xl bg-[#111] border border-white/10 space-y-6"
+                  className="p-8 md:p-10 rounded-3xl bg-[#111] border border-gray-200 space-y-6"
                 >
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-bold text-gray-300 mb-2">
+                      <label className="block text-sm font-bold text-[#716D5C] mb-2">
                         Prénom <span className="text-red-400">*</span>
                       </label>
                       <input
@@ -508,12 +508,12 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                         required
                         value={formData.first_name}
                         onChange={handleFormChange}
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
+                        className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-[#262626] placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
                         placeholder="Jean"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-gray-300 mb-2">
+                      <label className="block text-sm font-bold text-[#716D5C] mb-2">
                         Nom <span className="text-red-400">*</span>
                       </label>
                       <input
@@ -522,14 +522,14 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                         required
                         value={formData.last_name}
                         onChange={handleFormChange}
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
+                        className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-[#262626] placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
                         placeholder="Dupont"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-300 mb-2">
+                    <label className="block text-sm font-bold text-[#716D5C] mb-2">
                       Email <span className="text-red-400">*</span>
                     </label>
                     <input
@@ -538,13 +538,13 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                       required
                       value={formData.email}
                       onChange={handleFormChange}
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-[#262626] placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
                       placeholder="jean@exemple.com"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-300 mb-2">
+                    <label className="block text-sm font-bold text-[#716D5C] mb-2">
                       Téléphone
                     </label>
                     <input
@@ -552,20 +552,20 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleFormChange}
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-[#262626] placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all"
                       placeholder="+33 6 12 34 56 78"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-300 mb-2">
+                    <label className="block text-sm font-bold text-[#716D5C] mb-2">
                       Type de réseau
                     </label>
                     <select
                       name="network_type"
                       value={formData.network_type}
                       onChange={handleFormChange}
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all appearance-none"
+                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-[#262626] focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all appearance-none"
                     >
                       <option value="" className="bg-[#111]">Sélectionner</option>
                       <option value="e_commerce" className="bg-[#111]">E-commerce</option>
@@ -577,7 +577,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-300 mb-2">
+                    <label className="block text-sm font-bold text-[#716D5C] mb-2">
                       Message (optionnel)
                     </label>
                     <textarea
@@ -585,14 +585,14 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                       value={formData.message}
                       onChange={handleFormChange}
                       rows={4}
-                      className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all resize-none"
+                      className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-[#262626] placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all resize-none"
                       placeholder="Parlez-nous de votre réseau..."
                     />
                   </div>
 
                   {/* Validation des règles */}
-                  <div className="space-y-3 p-4 bg-white/[0.02] border border-white/5 rounded-xl">
-                    <p className="text-sm font-bold text-white mb-3">Validation des règles du programme</p>
+                  <div className="space-y-3 p-4 bg-white/[0.02] border border-gray-100 rounded-xl">
+                    <p className="text-sm font-bold text-[#262626] mb-3">Validation des règles du programme</p>
                     {[
                       { key: 'role', text: "Je comprends que mon rôle est uniquement de recommander Actero, pas de vendre ni de closer." },
                       { key: 'promises', text: "Je comprends que je ne peux faire aucune promesse au nom d\u2019Actero, ni annoncer des prix ou des résultats non validés." },
@@ -606,9 +606,9 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                           type="checkbox"
                           checked={rules[key]}
                           onChange={() => setRules(prev => ({ ...prev, [key]: !prev[key] }))}
-                          className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/5 text-emerald-500 focus:ring-emerald-500/30 accent-emerald-500 flex-shrink-0"
+                          className="mt-0.5 w-4 h-4 rounded border-white/20 bg-gray-50 text-emerald-500 focus:ring-emerald-500/30 accent-emerald-500 flex-shrink-0"
                         />
-                        <span className={`text-xs leading-relaxed transition-colors ${rules[key] ? 'text-zinc-300' : 'text-zinc-500 group-hover:text-zinc-400'}`}>{text}</span>
+                        <span className={`text-xs leading-relaxed transition-colors ${rules[key] ? 'text-[#716D5C]' : 'text-[#716D5C] group-hover:text-[#716D5C]'}`}>{text}</span>
                       </label>
                     ))}
                   </div>
@@ -622,7 +622,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                   <button
                     type="submit"
                     disabled={formLoading || !allRulesAccepted}
-                    className={`w-full py-4 font-bold rounded-xl text-lg transition-all flex items-center justify-center gap-3 ${allRulesAccepted ? 'bg-emerald-500 hover:bg-emerald-400 text-black' : 'bg-white/5 text-zinc-600 cursor-not-allowed'}`}
+                    className={`w-full py-4 font-bold rounded-xl text-lg transition-all flex items-center justify-center gap-3 ${allRulesAccepted ? 'bg-emerald-500 hover:bg-emerald-400 text-black' : 'bg-gray-50 text-[#716D5C] cursor-not-allowed'}`}
                   >
                     {formLoading ? (
                       <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -634,7 +634,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                     )}
                   </button>
 
-                  <p className="text-center text-xs text-gray-600">
+                  <p className="text-center text-xs text-[#716D5C]">
                     En soumettant ce formulaire, vous acceptez d’être contacté par l'équipe Actero.
                   </p>
                 </form>

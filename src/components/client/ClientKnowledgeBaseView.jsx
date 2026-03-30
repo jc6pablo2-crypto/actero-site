@@ -94,59 +94,59 @@ const ToneEditor = ({ entry, onSave, saving }) => {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-bold text-zinc-300">Tutoiement / Vouvoiement</label>
+        <label className="text-sm font-bold text-[#716D5C]">Tutoiement / Vouvoiement</label>
         <button
           onClick={() => setForm(f => ({ ...f, tutoiement: !f.tutoiement }))}
-          className={`relative w-12 h-6 rounded-full transition-colors ${form.tutoiement ? 'bg-blue-500' : 'bg-zinc-700'}`}
+          className={`relative w-12 h-6 rounded-full transition-colors ${form.tutoiement ? 'bg-blue-500' : 'bg-gray-200'}`}
         >
           <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${form.tutoiement ? 'translate-x-6' : 'translate-x-0.5'}`} />
         </button>
-        <span className="text-xs text-zinc-500">{form.tutoiement ? 'Tutoiement' : 'Vouvoiement'}</span>
+        <span className="text-xs text-[#716D5C]">{form.tutoiement ? 'Tutoiement' : 'Vouvoiement'}</span>
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Ton</label>
+        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">Ton</label>
         <select
           value={form.tone}
           onChange={(e) => setForm(f => ({ ...f, tone: e.target.value }))}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none"
         >
           {['Formel', 'Professionnel', 'Decontracte', 'Amical'].map(t => (
-            <option key={t} value={t} className="bg-zinc-900">{t}</option>
+            <option key={t} value={t} className="bg-white">{t}</option>
           ))}
         </select>
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Signature email</label>
+        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">Signature email</label>
         <input
           type="text"
           value={form.signature}
           onChange={(e) => setForm(f => ({ ...f, signature: e.target.value }))}
           placeholder="L'equipe Bonne Gueule"
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Phrases ou mots interdits (un par ligne)</label>
+        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">Phrases ou mots interdits (un par ligne)</label>
         <textarea
           value={form.forbidden}
           onChange={(e) => setForm(f => ({ ...f, forbidden: e.target.value }))}
           rows={4}
           placeholder="je ne sais pas&#10;ce n'est pas possible"
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none resize-none"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none resize-none"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Instructions speciales</label>
+        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">Instructions speciales</label>
         <textarea
           value={form.instructions}
           onChange={(e) => setForm(f => ({ ...f, instructions: e.target.value }))}
           rows={4}
           placeholder="Instructions supplementaires pour l'IA..."
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none resize-none"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none resize-none"
         />
       </div>
 
@@ -173,10 +173,10 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-4"
+      className="bg-gray-50 border border-gray-200 rounded-2xl p-5 space-y-4"
     >
       <div>
-        <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">
+        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">
           {isFaq ? 'Question' : 'Titre'}
         </label>
         <input
@@ -184,12 +184,12 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder={isFaq ? 'Comment suivre ma commande ?' : 'Titre...'}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-white/30"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none focus:border-white/30"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">
+        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">
           {isFaq ? 'Reponse' : 'Contenu'}
         </label>
         <textarea
@@ -197,18 +197,18 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
           onChange={(e) => setContent(e.target.value)}
           rows={6}
           placeholder={PLACEHOLDERS[category] || 'Contenu...'}
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none resize-none focus:border-white/30"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none resize-none focus:border-white/30"
         />
       </div>
 
       {category === 'temporary' && (
         <div>
-          <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Valide jusqu&apos;au</label>
+          <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">Valide jusqu&apos;au</label>
           <input
             type="date"
             value={expiresAt}
             onChange={(e) => setExpiresAt(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white outline-none"
+            className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none"
           />
         </div>
       )}
@@ -230,7 +230,7 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
             <Trash2 className="w-4 h-4" /> Supprimer
           </button>
         )}
-        <button onClick={onCancel} className="px-4 py-2.5 rounded-xl text-sm font-bold text-zinc-500 hover:text-white transition-colors">
+        <button onClick={onCancel} className="px-4 py-2.5 rounded-xl text-sm font-bold text-[#716D5C] hover:text-[#262626] transition-colors">
           Annuler
         </button>
       </div>
@@ -357,15 +357,15 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
     <div className="max-w-5xl mx-auto space-y-6 animate-fade-in-up">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className={`text-2xl font-bold tracking-tight ${isLight ? 'text-slate-900' : 'text-white'}`}>
+          <h2 className={`text-2xl font-bold tracking-tight ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>
             Base de connaissances
           </h2>
-          <p className={`text-sm mt-1 ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>
+          <p className={`text-sm mt-1 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
             Configurez les informations que votre IA utilise pour repondre a vos clients.
           </p>
         </div>
         {lastSync && (
-          <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs ${isLight ? 'bg-slate-100 text-slate-500' : 'bg-white/5 text-zinc-500'}`}>
+          <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-gray-50 text-[#716D5C]'}`}>
             <Clock className="w-3 h-3" />
             Derniere synchro : {formatTimeAgo(lastSync)}
           </div>
@@ -375,7 +375,7 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
       <div className="flex flex-col md:flex-row gap-6">
         {/* Sidebar categories */}
         <div className="md:w-56 flex-shrink-0">
-          <div className={`rounded-2xl border p-2 space-y-1 ${isLight ? 'bg-white border-slate-200' : 'bg-[#0E1424] border-white/10'}`}>
+          <div className={`rounded-2xl border p-2 space-y-1 ${isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'}`}>
             {CATEGORIES.map((cat) => {
               const count = entries.filter(e => e.category === cat.id).length
               const isActive = selectedCategory === cat.id
@@ -385,8 +385,8 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                   onClick={() => { setSelectedCategory(cat.id); setEditingEntry(null); setIsCreating(false) }}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold transition-all ${
                     isActive
-                      ? (isLight ? 'bg-blue-50 text-blue-600' : 'bg-white/10 text-white')
-                      : (isLight ? 'text-slate-500 hover:bg-slate-50' : 'text-zinc-400 hover:bg-white/5')
+                      ? (isLight ? 'bg-[#003725]/10 text-[#003725]' : 'bg-gray-50 text-[#262626]')
+                      : (isLight ? 'text-[#716D5C] hover:bg-[#F9F7F1]' : 'text-[#716D5C] hover:bg-gray-50')
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -394,7 +394,7 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                     {cat.label}
                   </div>
                   {count > 0 && (
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isLight ? 'bg-slate-100 text-slate-500' : 'bg-white/10 text-zinc-500'}`}>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-gray-50 text-[#716D5C]'}`}>
                       {count}
                     </span>
                   )}
@@ -408,10 +408,10 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
         <div className="flex-1 space-y-4">
           {isLoading ? (
             <div className="flex justify-center py-16">
-              <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+              <Loader2 className="w-6 h-6 animate-spin text-[#716D5C]" />
             </div>
           ) : selectedCategory === 'tone' ? (
-            <div className={`rounded-2xl border p-6 ${isLight ? 'bg-white border-slate-200' : 'bg-[#0E1424] border-white/10'}`}>
+            <div className={`rounded-2xl border p-6 ${isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'}`}>
               <ToneEditor
                 entry={filteredEntries[0]}
                 onSave={(entry) => saveMutation.mutate(entry)}
@@ -422,9 +422,9 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
             <>
               {/* Entry list */}
               {filteredEntries.length === 0 && !isCreating ? (
-                <div className={`text-center py-16 rounded-2xl border ${isLight ? 'bg-white border-slate-200' : 'bg-[#0E1424] border-white/10'}`}>
-                  <categoryConfig.icon className={`w-10 h-10 mx-auto mb-3 ${isLight ? 'text-slate-300' : 'text-zinc-700'}`} />
-                  <p className={`text-sm ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>
+                <div className={`text-center py-16 rounded-2xl border ${isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'}`}>
+                  <categoryConfig.icon className={`w-10 h-10 mx-auto mb-3 ${isLight ? 'text-slate-300' : 'text-[#716D5C]'}`} />
+                  <p className={`text-sm ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
                     Ajoutez vos {categoryConfig.label.toLowerCase()} pour que l&apos;IA reponde precisement a vos clients.
                   </p>
                   <button
@@ -461,15 +461,15 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                         onClick={() => setEditingEntry(entry.id)}
                         className={`rounded-2xl border p-5 cursor-pointer transition-all ${
                           isExpired
-                            ? (isLight ? 'bg-slate-50 border-slate-200 opacity-50' : 'bg-white/[0.02] border-white/5 opacity-50')
-                            : (isLight ? 'bg-white border-slate-200 hover:border-slate-300' : 'bg-[#0E1424] border-white/10 hover:border-white/20')
+                            ? (isLight ? 'bg-[#F9F7F1] border-gray-200 opacity-50' : 'bg-white/[0.02] border-gray-100 opacity-50')
+                            : (isLight ? 'bg-white border-gray-200 hover:border-slate-300' : 'bg-[#F9F7F1] border-gray-200 hover:border-white/20')
                         }`}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1.5">
-                              <GripVertical className="w-4 h-4 text-zinc-700 flex-shrink-0" />
-                              <h3 className={`text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+                              <GripVertical className="w-4 h-4 text-[#716D5C] flex-shrink-0" />
+                              <h3 className={`text-sm font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>
                                 {entry.title}
                               </h3>
                               {isExpired && (
@@ -483,11 +483,11 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                                 </span>
                               )}
                             </div>
-                            <p className={`text-xs line-clamp-2 ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>
+                            <p className={`text-xs line-clamp-2 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
                               {entry.content}
                             </p>
                           </div>
-                          <ChevronRight className={`w-4 h-4 flex-shrink-0 mt-1 ${isLight ? 'text-slate-400' : 'text-zinc-600'}`} />
+                          <ChevronRight className={`w-4 h-4 flex-shrink-0 mt-1 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`} />
                         </div>
                       </motion.div>
                     )
@@ -511,8 +511,8 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                   onClick={() => setIsCreating(true)}
                   className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed text-sm font-bold transition-all ${
                     isLight
-                      ? 'border-slate-300 text-slate-500 hover:border-slate-400 hover:text-slate-700'
-                      : 'border-white/10 text-zinc-500 hover:border-white/20 hover:text-white'
+                      ? 'border-slate-300 text-[#716D5C] hover:border-slate-400 hover:text-slate-700'
+                      : 'border-gray-200 text-[#716D5C] hover:border-white/20 hover:text-[#262626]'
                   }`}
                 >
                   <Plus className="w-4 h-4" />
@@ -521,7 +521,7 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
               )}
 
               {selectedCategory === 'faq' && filteredEntries.length > 0 && (
-                <p className={`text-xs ${isLight ? 'text-slate-400' : 'text-zinc-600'}`}>
+                <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
                   {filteredEntries.length} question{filteredEntries.length > 1 ? 's' : ''} dans votre FAQ
                 </p>
               )}

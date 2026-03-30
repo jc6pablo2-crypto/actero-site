@@ -14,7 +14,7 @@ const supabase = createClient(
 )
 
 const PIPELINE_COLS = [
-  { id: 'lead', title: 'Lead', color: 'border-zinc-500/30', badge: 'bg-zinc-100 text-zinc-700' },
+  { id: 'lead', title: 'Lead', color: 'border-gray-200', badge: 'bg-gray-100 text-[#716D5C]' },
   { id: 'contacted', title: 'Contacté', color: 'border-amber-500/30', badge: 'bg-amber-100 text-amber-700' },
   { id: 'call_planned', title: 'Call planifié', color: 'border-blue-500/30', badge: 'bg-blue-100 text-blue-700' },
   { id: 'audit_done', title: 'Audit fait', color: 'border-purple-500/30', badge: 'bg-purple-100 text-purple-700' },
@@ -252,7 +252,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
 
   const renderStars = (count) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <Star key={i} className={`w-3.5 h-3.5 ${i < count ? 'text-amber-400 fill-amber-400' : 'text-zinc-700'}`} />
+      <Star key={i} className={`w-3.5 h-3.5 ${i < count ? 'text-amber-400 fill-amber-400' : 'text-[#716D5C]'}`} />
     ))
   }
 
@@ -267,8 +267,8 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-white">Centre de Prospection</h2>
-          <p className="text-sm text-zinc-500 mt-1">Analysez des stores, scrappez Trustpilot, générez du contenu IA, gérez votre pipeline</p>
+          <h2 className="text-2xl font-bold text-[#262626]">Centre de Prospection</h2>
+          <p className="text-sm text-[#716D5C] mt-1">Analysez des stores, scrappez Trustpilot, générez du contenu IA, gérez votre pipeline</p>
         </div>
         <div className="flex gap-2">
           {[
@@ -280,7 +280,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
               key={tab.id}
               onClick={() => setView(tab.id)}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                view === tab.id ? 'bg-violet-500/20 text-violet-400 border border-violet-500/30' : 'bg-white/5 text-zinc-400 border border-white/10 hover:bg-white/10'
+                view === tab.id ? 'bg-violet-500/20 text-violet-400 border border-violet-500/30' : 'bg-gray-50 text-[#716D5C] border border-gray-200 hover:bg-gray-50'
               }`}
             >
               <tab.icon className="w-4 h-4 inline mr-1.5" />{tab.label}
@@ -292,24 +292,24 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
       {/* Trustpilot Scraper View */}
       {view === 'trustpilot' && (
         <div className="space-y-6">
-          <div className="bg-[#111] border border-white/5 rounded-2xl p-6">
-            <h3 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
+          <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+            <h3 className="text-[#262626] font-bold text-sm mb-3 flex items-center gap-2">
               <Star className="w-4 h-4 text-amber-400" />
               Scraper Trustpilot - Avis négatifs SAV
             </h3>
-            <p className="text-xs text-zinc-500 mb-4">Trouvez les boutiques avec un mauvais SAV en analysant leurs avis Trustpilot</p>
+            <p className="text-xs text-[#716D5C] mb-4">Trouvez les boutiques avec un mauvais SAV en analysant leurs avis Trustpilot</p>
             <div className="flex gap-3">
               <input
                 value={trustpilotStore}
                 onChange={(e) => setTrustpilotStore(e.target.value)}
                 placeholder="Nom du store (ex: gymshark, sezane, balzac-paris...)"
-                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500/50 transition-colors"
+                className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-amber-500/50 transition-colors"
                 onKeyDown={e => e.key === 'Enter' && scrapeTrustpilot()}
               />
               <button
                 onClick={scrapeTrustpilot}
                 disabled={scrapingTrustpilot || !trustpilotStore.trim()}
-                className="flex items-center gap-2 px-5 py-2 bg-amber-600 hover:bg-amber-500 disabled:bg-zinc-700 disabled:text-zinc-500 text-white rounded-xl text-sm font-medium transition-all"
+                className="flex items-center gap-2 px-5 py-2 bg-amber-600 hover:bg-amber-500 disabled:bg-gray-200 disabled:text-[#716D5C] text-white rounded-xl text-sm font-medium transition-all"
               >
                 {scrapingTrustpilot ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
                 {scrapingTrustpilot ? 'Scraping...' : 'Scraper'}
@@ -320,20 +320,20 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
           {trustpilotResults && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
               {/* Summary */}
-              <div className="bg-[#111] border border-white/5 rounded-2xl p-6">
+              <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-white font-bold text-sm flex items-center gap-2">
+                  <h3 className="text-[#262626] font-bold text-sm flex items-center gap-2">
                     <ThumbsDown className="w-4 h-4 text-red-400" />
                     Résultats pour "{trustpilotResults.storeName}"
                   </h3>
-                  <span className="text-xs text-zinc-500">
+                  <span className="text-xs text-[#716D5C]">
                     {trustpilotResults.totalNegativeReviews} avis négatifs trouvés (1-2 étoiles)
                   </span>
                 </div>
 
                 {/* Pain points extracted */}
                 <div className="mb-5">
-                  <h4 className="text-xs text-zinc-400 font-medium mb-2 uppercase tracking-wider">Points de douleur extraits</h4>
+                  <h4 className="text-xs text-[#716D5C] font-medium mb-2 uppercase tracking-wider">Points de douleur extraits</h4>
                   <div className="flex flex-wrap gap-2">
                     {trustpilotResults.painPoints.map((pp, i) => (
                       <span key={i} className="text-xs bg-red-500/10 text-red-400 border border-red-500/20 px-3 py-1 rounded-full flex items-center gap-1.5">
@@ -346,8 +346,8 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                 </div>
 
                 {/* Average rating */}
-                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-white/5">
-                  <span className="text-xs text-zinc-500">Note moyenne (avis négatifs) :</span>
+                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
+                  <span className="text-xs text-[#716D5C]">Note moyenne (avis négatifs) :</span>
                   <div className="flex items-center gap-1">
                     {renderStars(Math.round(Number(trustpilotResults.avgNegativeRating)))}
                   </div>
@@ -357,18 +357,18 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                 {/* Individual reviews */}
                 <div className="space-y-3">
                   {trustpilotResults.reviews.map((review, i) => (
-                    <div key={i} className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                    <div key={i} className="bg-white/[0.02] border border-gray-100 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-zinc-800 flex items-center justify-center text-xs font-bold text-zinc-400">
+                          <div className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center text-xs font-bold text-[#716D5C]">
                             {review.author.charAt(0)}
                           </div>
-                          <span className="text-sm text-white font-medium">{review.author}</span>
+                          <span className="text-sm text-[#262626] font-medium">{review.author}</span>
                           <div className="flex">{renderStars(review.stars)}</div>
                         </div>
-                        <span className="text-[10px] text-zinc-600">{review.date}</span>
+                        <span className="text-[10px] text-[#716D5C]">{review.date}</span>
                       </div>
-                      <p className="text-sm text-zinc-400 leading-relaxed">"{review.text}"</p>
+                      <p className="text-sm text-[#716D5C] leading-relaxed">"{review.text}"</p>
                       <div className="flex gap-1.5 mt-2">
                         {review.painPoints.map((pp, j) => (
                           <span key={j} className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full">{pp}</span>
@@ -386,8 +386,8 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                     <Send className="w-5 h-5 text-violet-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-white font-medium">Utiliser ces données pour prospecter</p>
-                    <p className="text-xs text-zinc-500">Ajoutez ce store comme prospect avec les pain points détectés</p>
+                    <p className="text-sm text-[#262626] font-medium">Utiliser ces données pour prospecter</p>
+                    <p className="text-xs text-[#716D5C]">Ajoutez ce store comme prospect avec les pain points détectés</p>
                   </div>
                 </div>
                 <button
@@ -424,8 +424,8 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
       {view === 'analyzer' && (
         <>
           {/* Bulk analyzer */}
-          <div className="bg-[#111] border border-white/5 rounded-2xl p-6">
-            <h3 className="text-white font-bold text-sm mb-3 flex items-center gap-2">
+          <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+            <h3 className="text-[#262626] font-bold text-sm mb-3 flex items-center gap-2">
               <Globe className="w-4 h-4 text-violet-400" />
               Analyse en masse de stores Shopify
             </h3>
@@ -433,17 +433,17 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
               value={urls}
               onChange={(e) => setUrls(e.target.value)}
               placeholder={"Collez les URLs des stores (une par ligne) :\nhttps://example.myshopify.com\nhttps://autre-boutique.com"}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 resize-none focus:outline-none focus:border-violet-500/50 transition-colors"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] placeholder-zinc-600 resize-none focus:outline-none focus:border-violet-500/50 transition-colors"
               rows={4}
             />
             <div className="flex items-center justify-between mt-3">
-              <span className="text-xs text-zinc-600">
+              <span className="text-xs text-[#716D5C]">
                 {urls.split('\n').filter(u => u.trim()).length} URL(s) détectée(s)
               </span>
               <button
                 onClick={analyzeStores}
                 disabled={analyzing || !urls.trim()}
-                className="flex items-center gap-2 px-5 py-2 bg-violet-600 hover:bg-violet-500 disabled:bg-zinc-700 disabled:text-zinc-500 text-white rounded-xl text-sm font-medium transition-all"
+                className="flex items-center gap-2 px-5 py-2 bg-violet-600 hover:bg-violet-500 disabled:bg-gray-200 disabled:text-[#716D5C] text-white rounded-xl text-sm font-medium transition-all"
               >
                 {analyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
                 {analyzing ? 'Analyse en cours...' : 'Analyser'}
@@ -455,20 +455,20 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
           {prospects.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-white font-bold text-sm">{prospects.length} prospect(s) analysé(s)</h3>
-                <span className="text-xs text-zinc-500">Triés par score (pire en premier)</span>
+                <h3 className="text-[#262626] font-bold text-sm">{prospects.length} prospect(s) analysé(s)</h3>
+                <span className="text-xs text-[#716D5C]">Triés par score (pire en premier)</span>
               </div>
               {[...prospects].sort((a, b) => a.score - b.score).map((prospect) => (
                 <motion.div
                   key={prospect.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-[#111] border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-colors"
+                  className="bg-[#111] border border-gray-100 rounded-2xl p-5 hover:border-gray-200 transition-colors"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <a href={`https://${prospect.url}`} target="_blank" rel="noopener noreferrer" className="text-white font-bold hover:text-violet-400 transition-colors flex items-center gap-1">
+                        <a href={`https://${prospect.url}`} target="_blank" rel="noopener noreferrer" className="text-[#262626] font-bold hover:text-violet-400 transition-colors flex items-center gap-1">
                           {prospect.url} <ExternalLink className="w-3.5 h-3.5" />
                         </a>
                         <span className={`text-xs font-bold px-2 py-0.5 rounded-md border ${getScoreBg(prospect.score)} ${getScoreColor(prospect.score)}`}>
@@ -483,32 +483,32 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
 
                       {/* Detailed metrics grid */}
                       <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-3">
-                        <div className="bg-white/[0.02] border border-white/5 rounded-lg px-2.5 py-1.5">
-                          <span className="text-[10px] text-zinc-600 block">CA mensuel est.</span>
-                          <span className="text-xs font-bold text-white flex items-center gap-1">
+                        <div className="bg-white/[0.02] border border-gray-100 rounded-lg px-2.5 py-1.5">
+                          <span className="text-[10px] text-[#716D5C] block">CA mensuel est.</span>
+                          <span className="text-xs font-bold text-[#262626] flex items-center gap-1">
                             <DollarSign className="w-3 h-3 text-emerald-400" />{prospect.monthlyRevenue?.toLocaleString() || 'N/A'}€
                           </span>
                         </div>
-                        <div className="bg-white/[0.02] border border-white/5 rounded-lg px-2.5 py-1.5">
-                          <span className="text-[10px] text-zinc-600 block">Tickets/mois</span>
-                          <span className="text-xs font-bold text-white flex items-center gap-1">
+                        <div className="bg-white/[0.02] border border-gray-100 rounded-lg px-2.5 py-1.5">
+                          <span className="text-[10px] text-[#716D5C] block">Tickets/mois</span>
+                          <span className="text-xs font-bold text-[#262626] flex items-center gap-1">
                             <Mail className="w-3 h-3 text-blue-400" />~{prospect.estimatedTickets || 'N/A'}
                           </span>
                         </div>
-                        <div className="bg-white/[0.02] border border-white/5 rounded-lg px-2.5 py-1.5">
-                          <span className="text-[10px] text-zinc-600 block">Temps réponse</span>
-                          <span className="text-xs font-bold text-white flex items-center gap-1">
+                        <div className="bg-white/[0.02] border border-gray-100 rounded-lg px-2.5 py-1.5">
+                          <span className="text-[10px] text-[#716D5C] block">Temps réponse</span>
+                          <span className="text-xs font-bold text-[#262626] flex items-center gap-1">
                             <Clock className="w-3 h-3 text-amber-400" />{prospect.responseTime || 'N/A'}
                           </span>
                         </div>
-                        <div className="bg-white/[0.02] border border-white/5 rounded-lg px-2.5 py-1.5">
-                          <span className="text-[10px] text-zinc-600 block">Abandon panier</span>
-                          <span className="text-xs font-bold text-white flex items-center gap-1">
+                        <div className="bg-white/[0.02] border border-gray-100 rounded-lg px-2.5 py-1.5">
+                          <span className="text-[10px] text-[#716D5C] block">Abandon panier</span>
+                          <span className="text-xs font-bold text-[#262626] flex items-center gap-1">
                             <ShoppingCart className="w-3 h-3 text-red-400" />{prospect.cartAbandonRate || 'N/A'}
                           </span>
                         </div>
-                        <div className="bg-white/[0.02] border border-white/5 rounded-lg px-2.5 py-1.5">
-                          <span className="text-[10px] text-zinc-600 block">ROI estimé</span>
+                        <div className="bg-white/[0.02] border border-gray-100 rounded-lg px-2.5 py-1.5">
+                          <span className="text-[10px] text-[#716D5C] block">ROI estimé</span>
                           <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
                             <TrendingDown className="w-3 h-3" />{prospect.roiEstimate}€/mois
                           </span>
@@ -522,8 +522,8 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                           </span>
                         ))}
                       </div>
-                      <div className="flex items-center gap-4 text-xs text-zinc-500">
-                        <span>Statut : <b className="text-zinc-300 capitalize">{prospect.status}</b></span>
+                      <div className="flex items-center gap-4 text-xs text-[#716D5C]">
+                        <span>Statut : <b className="text-[#716D5C] capitalize">{prospect.status}</b></span>
                       </div>
                     </div>
                     <div className="flex flex-col items-end gap-2 ml-4">
@@ -555,7 +555,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                         <select
                           value={prospect.status}
                           onChange={(e) => updateProspectStatus(prospect.id, e.target.value)}
-                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none"
+                          className="bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-[#716D5C] focus:outline-none"
                         >
                           {PIPELINE_COLS.map(col => (
                             <option key={col.id} value={col.id}>{col.title}</option>
@@ -563,7 +563,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                         </select>
                         <button
                           onClick={() => deleteProspect(prospect.id)}
-                          className="p-1.5 hover:bg-red-500/10 text-zinc-600 hover:text-red-400 rounded-lg transition-all"
+                          className="p-1.5 hover:bg-red-500/10 text-[#716D5C] hover:text-red-400 rounded-lg transition-all"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -582,10 +582,10 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
           {PIPELINE_COLS.map(col => {
             const colProspects = prospects.filter(p => p.status === col.id)
             return (
-              <div key={col.id} className="rounded-2xl border border-white/5 bg-[#0E1424]/50 p-3 flex flex-col gap-3 min-h-[50vh]">
+              <div key={col.id} className="rounded-2xl border border-gray-100 bg-[#F9F7F1]/50 p-3 flex flex-col gap-3 min-h-[50vh]">
                 <div className="flex items-center justify-between px-2 mb-1">
-                  <h4 className="font-bold text-white text-xs tracking-widest uppercase">{col.title}</h4>
-                  <span className="bg-white/10 text-zinc-400 px-2 py-0.5 rounded-full text-[10px] font-bold">{colProspects.length}</span>
+                  <h4 className="font-bold text-[#262626] text-xs tracking-widest uppercase">{col.title}</h4>
+                  <span className="bg-gray-50 text-[#716D5C] px-2 py-0.5 rounded-full text-[10px] font-bold">{colProspects.length}</span>
                 </div>
                 {colProspects.map(p => (
                   <div key={p.id} className={`bg-[#111] border ${col.color} p-3 rounded-xl`}>
@@ -593,7 +593,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                       <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreBg(p.score)} ${getScoreColor(p.score)}`}>{p.score}/100</span>
                       <span className="text-[10px] text-emerald-400 font-medium">{p.roiEstimate}€</span>
                     </div>
-                    <p className="text-xs text-white font-medium truncate mb-2">{p.url}</p>
+                    <p className="text-xs text-[#262626] font-medium truncate mb-2">{p.url}</p>
                     <div className="flex gap-1">
                       {PIPELINE_COLS.map((c, i) => {
                         const currentIdx = PIPELINE_COLS.findIndex(x => x.id === p.status)
@@ -603,7 +603,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                           <button
                             key={c.id}
                             onClick={() => updateProspectStatus(p.id, c.id)}
-                            className="flex-1 text-[9px] py-1 rounded-md bg-white/5 hover:bg-white/10 text-zinc-400 transition-all"
+                            className="flex-1 text-[9px] py-1 rounded-md bg-gray-50 hover:bg-gray-50 text-[#716D5C] transition-all"
                           >
                             {i < currentIdx ? '←' : '→'} {c.title.split(' ')[0]}
                           </button>
@@ -613,7 +613,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                   </div>
                 ))}
                 {colProspects.length === 0 && (
-                  <div className="text-center p-6 border border-white/5 border-dashed rounded-xl text-zinc-700 text-xs">Vide</div>
+                  <div className="text-center p-6 border border-gray-100 border-dashed rounded-xl text-[#716D5C] text-xs">Vide</div>
                 )}
               </div>
             )
@@ -628,7 +628,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => { setContentDraft(''); setSelectedProspect(null) }}
           >
             <motion.div
@@ -636,17 +636,17 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={e => e.stopPropagation()}
-              className="bg-[#111] border border-white/10 rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[80vh] overflow-y-auto"
+              className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[80vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <h3 className="text-lg font-bold text-[#262626] flex items-center gap-2">
                   {(() => {
                     const ct = contentTypeLabels[contentType]
                     return <><ct.icon className={`w-5 h-5 ${ct.color}`} />{ct.label} — {selectedProspect.url}</>
                   })()}
                 </h3>
-                <button onClick={() => { setContentDraft(''); setSelectedProspect(null) }} className="p-1 hover:bg-white/10 rounded-lg">
-                  <X className="w-5 h-5 text-zinc-400" />
+                <button onClick={() => { setContentDraft(''); setSelectedProspect(null) }} className="p-1 hover:bg-gray-50 rounded-lg">
+                  <X className="w-5 h-5 text-[#716D5C]" />
                 </button>
               </div>
 
@@ -662,8 +662,8 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                     }}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
                       key === contentType
-                        ? 'bg-white/10 border-white/20 text-white'
-                        : 'bg-white/[0.02] border-white/5 text-zinc-500 hover:text-zinc-300 hover:bg-white/5'
+                        ? 'bg-gray-50 border-white/20 text-[#262626]'
+                        : 'bg-white/[0.02] border-gray-100 text-[#716D5C] hover:text-[#716D5C] hover:bg-gray-50'
                     }`}
                   >
                     <val.icon className={`w-3.5 h-3.5 ${key === contentType ? val.color : ''}`} />
@@ -675,11 +675,11 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
               {generatingContent ? (
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="w-8 h-8 animate-spin text-violet-400" />
-                  <span className="ml-3 text-zinc-400">Génération en cours...</span>
+                  <span className="ml-3 text-[#716D5C]">Génération en cours...</span>
                 </div>
               ) : (
                 <>
-                  <pre className="bg-black/30 border border-white/5 rounded-xl p-4 text-sm text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed">
+                  <pre className="bg-white/30 border border-gray-100 rounded-xl p-4 text-sm text-[#716D5C] whitespace-pre-wrap font-mono leading-relaxed">
                     {contentDraft}
                   </pre>
                   <div className="flex gap-2 mt-4">
@@ -691,7 +691,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                     </button>
                     <button
                       onClick={() => generateContent(selectedProspect, contentType)}
-                      className="px-4 py-2 bg-white/5 hover:bg-white/10 text-zinc-300 rounded-xl text-sm font-medium transition-all border border-white/10"
+                      className="px-4 py-2 bg-gray-50 hover:bg-gray-50 text-[#716D5C] rounded-xl text-sm font-medium transition-all border border-gray-200"
                     >
                       <RefreshCw className="w-4 h-4 inline mr-1.5" /> Régénérer
                     </button>

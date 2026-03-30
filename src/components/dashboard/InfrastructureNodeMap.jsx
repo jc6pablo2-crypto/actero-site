@@ -6,7 +6,7 @@ export const InfrastructureNodeMap = ({ theme = "dark" }) => {
   const isLight = theme === "light";
   return (
     <div
-      className={`rounded-3xl border p-8 shadow-sm relative overflow-hidden h-[400px] flex items-center justify-center transition-colors duration-300 ${isLight ? "bg-white border-slate-200" : "bg-[#0E1424] border-white/10"
+      className={`rounded-3xl border p-8 shadow-sm relative overflow-hidden h-[400px] flex items-center justify-center transition-colors duration-300 ${isLight ? "bg-white border-gray-200" : "bg-[#F9F7F1] border-gray-200"
         }`}
     >
       {/* Background grid */}
@@ -32,15 +32,15 @@ export const InfrastructureNodeMap = ({ theme = "dark" }) => {
         {/* Source Node */}
         <div className="flex flex-col items-center gap-3">
           <div
-            className={`w-16 h-16 border rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group ${isLight ? "bg-slate-50 border-slate-200" : "bg-white/5 border-white/10"
+            className={`w-16 h-16 border rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group ${isLight ? "bg-[#F9F7F1] border-gray-200" : "bg-gray-50 border-gray-200"
               }`}
           >
             <ShoppingCart
-              className={`w-8 h-8 ${isLight ? "text-blue-600" : "text-indigo-400"}`}
+              className={`w-8 h-8 ${isLight ? "text-[#003725]" : "text-indigo-400"}`}
             />
           </div>
           <span
-            className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-slate-400" : "text-gray-400"}`}
+            className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`}
           >
             Shopify
           </span>
@@ -50,8 +50,8 @@ export const InfrastructureNodeMap = ({ theme = "dark" }) => {
         <div className="flex flex-col items-center gap-3">
           <div
             className={`w-20 h-20 border rounded-full flex items-center justify-center relative ${isLight
-              ? "bg-slate-900 border-slate-800 shadow-xl"
-              : "bg-zinc-900 border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.1)]"
+              ? "bg-[#F9F7F1] border-gray-200 shadow-xl"
+              : "bg-white border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.1)]"
               }`}
           >
             <div
@@ -63,7 +63,7 @@ export const InfrastructureNodeMap = ({ theme = "dark" }) => {
             />
           </div>
           <span
-            className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-slate-900" : "text-emerald-500"
+            className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-[#262626]" : "text-emerald-500"
               }`}
           >
             Actero OS
@@ -74,7 +74,7 @@ export const InfrastructureNodeMap = ({ theme = "dark" }) => {
         <div className="flex flex-col items-center gap-8">
           <div className="flex flex-col items-center gap-3">
             <div
-              className={`w-16 h-16 border rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group ${isLight ? "bg-slate-50 border-slate-200" : "bg-white/5 border-white/10"
+              className={`w-16 h-16 border rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group ${isLight ? "bg-[#F9F7F1] border-gray-200" : "bg-gray-50 border-gray-200"
                 }`}
             >
               <Mail
@@ -82,22 +82,22 @@ export const InfrastructureNodeMap = ({ theme = "dark" }) => {
               />
             </div>
             <span
-              className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-slate-400" : "text-gray-400"}`}
+              className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`}
             >
               Klaviyo
             </span>
           </div>
           <div className="flex flex-col items-center gap-3">
             <div
-              className={`w-16 h-16 border rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group ${isLight ? "bg-slate-50 border-slate-200" : "bg-white/5 border-white/10"
+              className={`w-16 h-16 border rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md relative group ${isLight ? "bg-[#F9F7F1] border-gray-200" : "bg-gray-50 border-gray-200"
                 }`}
             >
               <Database
-                className={`w-8 h-8 ${isLight ? "text-blue-600" : "text-blue-400"}`}
+                className={`w-8 h-8 ${isLight ? "text-[#003725]" : "text-blue-400"}`}
               />
             </div>
             <span
-              className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-slate-400" : "text-gray-400"}`}
+              className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`}
             >
               Make
             </span>

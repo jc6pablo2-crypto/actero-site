@@ -14,11 +14,11 @@ export const MetricCard = ({
   const isLight = theme === "light";
   const colors = {
     zinc: {
-      bg: isLight ? "bg-slate-100" : "bg-zinc-800",
-      border: isLight ? "border-slate-200" : "border-zinc-700",
-      text: isLight ? "text-slate-500" : "text-zinc-300",
-      val: isLight ? "text-slate-900" : "text-zinc-300",
-      hover: isLight ? "group-hover:bg-slate-200/50" : "group-hover:bg-zinc-400/10",
+      bg: isLight ? "bg-gray-100" : "bg-gray-50",
+      border: isLight ? "border-gray-200" : "border-zinc-700",
+      text: isLight ? "text-[#716D5C]" : "text-[#716D5C]",
+      val: isLight ? "text-[#262626]" : "text-[#716D5C]",
+      hover: isLight ? "group-hover:bg-gray-200/50" : "group-hover:bg-gray-200/10",
     },
     emerald: {
       bg: isLight ? "bg-emerald-50" : "bg-emerald-500/10",
@@ -37,7 +37,7 @@ export const MetricCard = ({
     blue: {
       bg: isLight ? "bg-blue-50" : "bg-blue-500/10",
       border: isLight ? "border-blue-100" : "border-blue-500/20",
-      text: "text-blue-600",
+      text: "text-[#003725]",
       val: isLight ? "text-blue-700" : "text-blue-500",
       hover: isLight ? "group-hover:bg-blue-100/50" : "group-hover:bg-blue-500/20",
     },
@@ -49,7 +49,7 @@ export const MetricCard = ({
     if (variation === null || variation === undefined) return null;
     if (variation === "—") {
       return (
-        <span className="text-[10px] font-bold text-gray-500 mt-2 block">
+        <span className="text-[10px] font-bold text-[#716D5C] mt-2 block">
           — pas de données
         </span>
       );
@@ -60,7 +60,7 @@ export const MetricCard = ({
     const isNeut = variation === 0;
 
     return (
-      <div className={`flex items-center gap-1 mt-2 text-[10px] font-bold ${isPos ? "text-emerald-500" : isNeg ? "text-rose-500" : "text-gray-500"}`}>
+      <div className={`flex items-center gap-1 mt-2 text-[10px] font-bold ${isPos ? "text-emerald-500" : isNeg ? "text-rose-500" : "text-[#716D5C]"}`}>
         {isPos && <TrendingUp className="w-3 h-3" />}
         {isNeg && <TrendingDown className="w-3 h-3" />}
         {isNeut && <span className="mr-0.5">=</span>}
@@ -72,8 +72,8 @@ export const MetricCard = ({
   return (
     <div
       className={`group p-6 rounded-2xl border transition-all duration-300 ${isLight
-        ? "bg-white border-slate-200 shadow-sm hover:shadow-md"
-        : "bg-[#0E1424] border-white/10 hover:border-white/20"
+        ? "bg-white border-gray-200 shadow-sm hover:shadow-md"
+        : "bg-[#F9F7F1] border-gray-200 hover:border-white/20"
         } ${className}`}
     >
       <div className="flex items-center gap-3 mb-6">
@@ -83,7 +83,7 @@ export const MetricCard = ({
           <Icon className={`w-5 h-5 ${c.text}`} />
         </div>
         <h4
-          className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-slate-500" : "text-zinc-500"
+          className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"
             }`}
         >
           {title}
@@ -98,7 +98,7 @@ export const MetricCard = ({
           {subtitleItems.map((item, idx) => (
             <span
               key={idx}
-              className={`text-[10px] font-bold uppercase tracking-widest ${isLight ? "text-slate-400" : "text-zinc-500"
+              className={`text-[10px] font-bold uppercase tracking-widest ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"
                 }`}
             >
               {item}

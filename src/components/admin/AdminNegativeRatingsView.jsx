@@ -71,8 +71,8 @@ export const AdminNegativeRatingsView = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-6 animate-fade-in-up">
       <div>
-        <h2 className="text-2xl font-bold text-white">Notations negatives</h2>
-        <p className="text-sm text-gray-500 mt-1">Reponses IA mal notees par les clients — analyse des problemes de brand_context</p>
+        <h2 className="text-2xl font-bold text-[#262626]">Notations negatives</h2>
+        <p className="text-sm text-[#716D5C] mt-1">Reponses IA mal notees par les clients — analyse des problemes de brand_context</p>
       </div>
 
       {/* Client satisfaction overview */}
@@ -86,18 +86,18 @@ export const AdminNegativeRatingsView = () => {
               onClick={() => setSelectedClientId(selectedClientId === client.id ? null : client.id)}
               className={`rounded-xl border p-3 text-left transition-all ${
                 selectedClientId === client.id
-                  ? 'bg-white/10 border-white/20'
-                  : 'bg-[#0E1424] border-white/10 hover:border-white/20'
+                  ? 'bg-gray-50 border-white/20'
+                  : 'bg-[#F9F7F1] border-gray-200 hover:border-white/20'
               }`}
             >
-              <p className="text-sm font-bold text-white truncate">{client.brand_name}</p>
+              <p className="text-sm font-bold text-[#262626] truncate">{client.brand_name}</p>
               <div className="flex items-center gap-2 mt-1">
                 {rate !== null ? (
                   <span className={`text-xs font-bold ${isLow ? 'text-red-400' : 'text-emerald-400'}`}>
                     {rate}%
                   </span>
                 ) : (
-                  <span className="text-xs text-zinc-600">—</span>
+                  <span className="text-xs text-[#716D5C]">—</span>
                 )}
                 {isLow && <AlertTriangle className="w-3 h-3 text-red-400" />}
               </div>
@@ -135,12 +135,12 @@ export const AdminNegativeRatingsView = () => {
       {/* Negative ratings list */}
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#716D5C]" />
         </div>
       ) : ratingsData.length === 0 ? (
-        <div className="text-center py-16 rounded-2xl border bg-[#0E1424] border-white/10">
-          <ThumbsDown className="w-10 h-10 text-zinc-700 mx-auto mb-3" />
-          <p className="text-sm text-zinc-500">Aucune notation negative{selectedClientId ? ' pour ce client' : ''}.</p>
+        <div className="text-center py-16 rounded-2xl border bg-[#F9F7F1] border-gray-200">
+          <ThumbsDown className="w-10 h-10 text-[#716D5C] mx-auto mb-3" />
+          <p className="text-sm text-[#716D5C]">Aucune notation negative{selectedClientId ? ' pour ce client' : ''}.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -151,19 +151,19 @@ export const AdminNegativeRatingsView = () => {
                 key={conv.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="bg-[#0E1424] border border-white/10 rounded-2xl p-5 space-y-3"
+                className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-5 space-y-3"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <ThumbsDown className="w-4 h-4 text-red-400" />
-                    <span className="text-sm font-bold text-white">{client?.brand_name || 'Client'}</span>
+                    <span className="text-sm font-bold text-[#262626]">{client?.brand_name || 'Client'}</span>
                     {conv.customer_name && (
-                      <span className="text-xs text-zinc-500">
+                      <span className="text-xs text-[#716D5C]">
                         <User className="w-3 h-3 inline mr-1" />{conv.customer_name}
                       </span>
                     )}
                   </div>
-                  <span className="text-xs text-zinc-600">
+                  <span className="text-xs text-[#716D5C]">
                     <Clock className="w-3 h-3 inline mr-1" />
                     {conv.rated_at ? new Date(conv.rated_at).toLocaleDateString('fr-FR') : '—'}
                   </span>
@@ -171,14 +171,14 @@ export const AdminNegativeRatingsView = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div>
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Message client</p>
-                    <p className="text-xs text-zinc-400 bg-white/5 rounded-lg px-3 py-2 line-clamp-3">
+                    <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-1">Message client</p>
+                    <p className="text-xs text-[#716D5C] bg-gray-50 rounded-lg px-3 py-2 line-clamp-3">
                       {conv.customer_message}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1">Reponse IA</p>
-                    <p className="text-xs text-zinc-400 bg-red-500/5 border border-red-500/10 rounded-lg px-3 py-2 line-clamp-3">
+                    <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-1">Reponse IA</p>
+                    <p className="text-xs text-[#716D5C] bg-red-500/5 border border-red-500/10 rounded-lg px-3 py-2 line-clamp-3">
                       {conv.ai_response}
                     </p>
                   </div>

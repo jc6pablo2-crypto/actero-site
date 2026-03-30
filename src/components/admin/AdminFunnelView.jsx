@@ -7,7 +7,7 @@ import {
 import { supabase } from '../../lib/supabase'
 
 const STATUS_CONFIG = {
-  draft: { label: 'Brouillon', color: 'bg-gray-500/10 text-gray-400 border-gray-500/20' },
+  draft: { label: 'Brouillon', color: 'bg-gray-500/10 text-[#716D5C] border-gray-500/20' },
   sent: { label: 'Email envoyé', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
   paid: { label: 'Payé — Actif', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
   canceled: { label: 'Annulé', color: 'bg-red-500/10 text-red-400 border-red-500/20' },
@@ -192,7 +192,7 @@ export function AdminFunnelView() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h2 className="text-3xl font-bold mb-1">Funnel Clients</h2>
-          <p className="text-gray-500">Liens de paiement privés post-call.</p>
+          <p className="text-[#716D5C]">Liens de paiement privés post-call.</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
@@ -205,11 +205,11 @@ export function AdminFunnelView() {
       {/* Modal Form */}
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowForm(false)} />
-          <div className="relative bg-[#0E1424] border border-white/10 rounded-2xl p-8 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 bg-white/60 backdrop-blur-sm" onClick={() => setShowForm(false)} />
+          <div className="relative bg-[#F9F7F1] border border-gray-200 rounded-2xl p-8 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setShowForm(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"
+              className="absolute top-4 right-4 text-[#716D5C] hover:text-[#262626] transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -218,7 +218,7 @@ export function AdminFunnelView() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-2">
                   Nom entreprise *
                 </label>
                 <input
@@ -227,28 +227,28 @@ export function AdminFunnelView() {
                   value={formData.company_name}
                   onChange={(e) => handleCompanyNameChange(e.target.value)}
                   placeholder="Brand X"
-                  className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-2">
                   Slug (URL)
                 </label>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-gray-600 shrink-0">/start/</span>
+                  <span className="text-xs text-[#716D5C] shrink-0">/start/</span>
                   <input
                     type="text"
                     required
                     value={formData.slug}
                     onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
-                    className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-2">
                   Email *
                 </label>
                 <input
@@ -257,12 +257,12 @@ export function AdminFunnelView() {
                   value={formData.email}
                   onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                   placeholder="contact@brand-x.com"
-                  className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-2">
                   Type de client *
                 </label>
                 <select
@@ -277,7 +277,7 @@ export function AdminFunnelView() {
                       avg_ticket_time: '',
                     }));
                   }}
-                  className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all appearance-none cursor-pointer"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all appearance-none cursor-pointer"
                 >
                   <option value="ecommerce">🛒 E-commerce (Shopify)</option>
                   <option value="immobilier">🏠 Agence Immobilière</option>
@@ -286,7 +286,7 @@ export function AdminFunnelView() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                  <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-2">
                     Prix setup (EUR)
                   </label>
                   <input
@@ -295,11 +295,11 @@ export function AdminFunnelView() {
                     required
                     value={formData.setup_price}
                     onChange={(e) => setFormData(prev => ({ ...prev, setup_price: parseInt(e.target.value) || 0 }))}
-                    className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                  <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-2">
                     Prix mensuel (EUR)
                   </label>
                   <input
@@ -308,14 +308,14 @@ export function AdminFunnelView() {
                     required
                     value={formData.monthly_price}
                     onChange={(e) => setFormData(prev => ({ ...prev, monthly_price: parseInt(e.target.value) || 0 }))}
-                    className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
                   />
                 </div>
               </div>
 
-              <div className="border-t border-white/10 pt-5 mt-1">
+              <div className="border-t border-gray-200 pt-5 mt-1">
                 <div className="flex items-center gap-3 mb-4">
-                  <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Configuration ROI (optionnel)</p>
+                  <p className="text-xs font-bold text-[#716D5C] uppercase tracking-widest">Configuration ROI (optionnel)</p>
                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                     formData.client_type === 'immobilier'
                       ? 'bg-violet-500/10 text-violet-400 border border-violet-500/20'
@@ -327,7 +327,7 @@ export function AdminFunnelView() {
                 {formData.client_type === 'immobilier' ? (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                      <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-2">
                         Coût horaire agent (€/h)
                       </label>
                       <input
@@ -337,11 +337,11 @@ export function AdminFunnelView() {
                         value={formData.hourly_cost}
                         onChange={(e) => setFormData(prev => ({ ...prev, hourly_cost: e.target.value }))}
                         placeholder="30"
-                        className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                      <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-2">
                         Temps moyen / lead (min)
                       </label>
                       <input
@@ -350,14 +350,14 @@ export function AdminFunnelView() {
                         value={formData.avg_ticket_time}
                         onChange={(e) => setFormData(prev => ({ ...prev, avg_ticket_time: e.target.value }))}
                         placeholder="8"
-                        className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
                       />
                     </div>
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                      <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-2">
                         Coût horaire support (€/h)
                       </label>
                       <input
@@ -367,11 +367,11 @@ export function AdminFunnelView() {
                         value={formData.hourly_cost}
                         onChange={(e) => setFormData(prev => ({ ...prev, hourly_cost: e.target.value }))}
                         placeholder="25"
-                        className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                      <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-2">
                         Temps moyen / ticket (min)
                       </label>
                       <input
@@ -380,7 +380,7 @@ export function AdminFunnelView() {
                         value={formData.avg_ticket_time}
                         onChange={(e) => setFormData(prev => ({ ...prev, avg_ticket_time: e.target.value }))}
                         placeholder="5"
-                        className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
                       />
                     </div>
                   </div>
@@ -416,13 +416,13 @@ export function AdminFunnelView() {
       {/* Table */}
       {isLoading ? (
         <div className="flex justify-center py-20">
-          <Sparkles className="w-8 h-8 animate-pulse text-gray-400" />
+          <Sparkles className="w-8 h-8 animate-pulse text-[#716D5C]" />
         </div>
       ) : funnelClients.length === 0 ? (
-        <div className="bg-[#0E1424] border border-white/10 rounded-2xl p-16 text-center flex flex-col items-center">
-          <Link2 className="w-12 h-12 text-gray-600 mb-4" />
+        <div className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-16 text-center flex flex-col items-center">
+          <Link2 className="w-12 h-12 text-[#716D5C] mb-4" />
           <h3 className="text-xl font-bold mb-2">Aucun client funnel</h3>
-          <p className="text-gray-500 mb-4">Créez votre premier lien de paiement privé.</p>
+          <p className="text-[#716D5C] mb-4">Créez votre premier lien de paiement privé.</p>
           <button
             onClick={() => setShowForm(true)}
             className="bg-white text-black px-5 py-2.5 rounded-xl text-sm font-bold"
@@ -431,27 +431,27 @@ export function AdminFunnelView() {
           </button>
         </div>
       ) : (
-        <div className="bg-[#0E1424] border border-white/10 rounded-2xl overflow-x-auto">
+        <div className="bg-[#F9F7F1] border border-gray-200 rounded-2xl overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[900px]">
             <thead>
-              <tr className="border-b border-white/5 bg-[#0A0E1A]">
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Entreprise</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Type</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Email</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Pricing</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Statut</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest">Date</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest text-right">Actions</th>
+              <tr className="border-b border-gray-100 bg-white">
+                <th className="px-6 py-4 text-xs font-bold text-[#716D5C] uppercase tracking-widest">Entreprise</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#716D5C] uppercase tracking-widest">Type</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#716D5C] uppercase tracking-widest">Email</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#716D5C] uppercase tracking-widest">Pricing</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#716D5C] uppercase tracking-widest">Statut</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#716D5C] uppercase tracking-widest">Date</th>
+                <th className="px-6 py-4 text-xs font-bold text-[#716D5C] uppercase tracking-widest text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 text-sm">
               {funnelClients.map((client) => {
                 const status = STATUS_CONFIG[client.status] || STATUS_CONFIG.draft
                 return (
-                  <tr key={client.id} className="hover:bg-white/5 transition-colors">
+                  <tr key={client.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-bold text-white">{client.company_name}</div>
-                      <div className="text-xs text-gray-600 mt-0.5">/start/{client.slug}</div>
+                      <div className="font-bold text-[#262626]">{client.company_name}</div>
+                      <div className="text-xs text-[#716D5C] mt-0.5">/start/{client.slug}</div>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase border ${
@@ -462,9 +462,9 @@ export function AdminFunnelView() {
                         {client.client_type === 'immobilier' ? '🏠 Immo' : '🛒 E-com'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-400">{client.email}</td>
+                    <td className="px-6 py-4 text-[#716D5C]">{client.email}</td>
                     <td className="px-6 py-4">
-                      <div className="text-white font-mono text-xs">
+                      <div className="text-[#262626] font-mono text-xs">
                         {client.setup_price}€ + {client.monthly_price}€/m
                       </div>
                     </td>
@@ -473,7 +473,7 @@ export function AdminFunnelView() {
                         {status.label}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-gray-500 text-xs">
+                    <td className="px-6 py-4 text-[#716D5C] text-xs">
                       {new Date(client.created_at).toLocaleDateString('fr-FR')}
                     </td>
                     <td className="px-6 py-4">
@@ -481,7 +481,7 @@ export function AdminFunnelView() {
                         {/* Copy link */}
                         <button
                           onClick={() => copyLink(client.slug, client.id)}
-                          className="p-2 text-gray-500 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+                          className="p-2 text-[#716D5C] hover:text-[#262626] transition-colors rounded-lg hover:bg-gray-50"
                           title="Copier le lien"
                         >
                           {copiedId === client.id ? (
@@ -496,7 +496,7 @@ export function AdminFunnelView() {
                           href={`${siteUrl}/start/${client.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2 text-gray-500 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+                          className="p-2 text-[#716D5C] hover:text-[#262626] transition-colors rounded-lg hover:bg-gray-50"
                           title="Ouvrir le lien"
                         >
                           <ExternalLink className="w-4 h-4" />
@@ -506,7 +506,7 @@ export function AdminFunnelView() {
                         <button
                           onClick={() => handleResendEmail(client)}
                           disabled={sendingId === client.id}
-                          className="p-2 text-gray-500 hover:text-white transition-colors rounded-lg hover:bg-white/5 disabled:opacity-40"
+                          className="p-2 text-[#716D5C] hover:text-[#262626] transition-colors rounded-lg hover:bg-gray-50 disabled:opacity-40"
                           title="Renvoyer l'email"
                         >
                           {sendingId === client.id ? (

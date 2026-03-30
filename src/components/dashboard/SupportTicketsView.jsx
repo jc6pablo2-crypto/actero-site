@@ -39,7 +39,7 @@ const STATUS_CONFIG = {
 const PRIORITY_CONFIG = {
   high: { label: 'Urgent', color: { dark: 'bg-red-500/10 text-red-400 border-red-500/20', light: 'bg-red-50 text-red-700 border-red-200' } },
   normal: { label: 'Normal', color: { dark: 'bg-blue-500/10 text-blue-400 border-blue-500/20', light: 'bg-blue-50 text-blue-700 border-blue-200' } },
-  low: { label: 'Basse', color: { dark: 'bg-zinc-500/10 text-zinc-400 border-zinc-500/20', light: 'bg-slate-50 text-slate-600 border-slate-200' } },
+  low: { label: 'Basse', color: { dark: 'bg-gray-50 text-[#716D5C] border-gray-200', light: 'bg-[#F9F7F1] text-[#716D5C] border-gray-200' } },
 }
 
 // ============================================================
@@ -62,20 +62,20 @@ const NewTicketForm = ({ onSubmit, onCancel, theme, isSubmitting }) => {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className={`p-6 rounded-2xl border ${isLight ? 'bg-white border-slate-200' : 'bg-[#0E1424] border-white/10'}`}
+      className={`p-6 rounded-2xl border ${isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'}`}
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className={`text-base font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+        <h3 className={`text-base font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>
           Nouvelle demande
         </h3>
-        <button onClick={onCancel} className={`p-1 rounded-lg ${isLight ? 'hover:bg-slate-100 text-slate-400' : 'hover:bg-white/5 text-zinc-600'}`}>
+        <button onClick={onCancel} className={`p-1 rounded-lg ${isLight ? 'hover:bg-gray-100 text-[#716D5C]' : 'hover:bg-gray-50 text-[#716D5C]'}`}>
           <X className="w-4 h-4" />
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className={`block text-xs font-bold mb-1.5 ${isLight ? 'text-slate-700' : 'text-zinc-300'}`}>
+          <label className={`block text-xs font-bold mb-1.5 ${isLight ? 'text-slate-700' : 'text-[#716D5C]'}`}>
             Titre de la demande *
           </label>
           <input
@@ -85,14 +85,14 @@ const NewTicketForm = ({ onSubmit, onCancel, theme, isSubmitting }) => {
             placeholder="Ex: Ajouter une automatisation de relance SMS..."
             className={`w-full px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-violet-500/50 ${
               isLight
-                ? 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
-                : 'bg-white/5 border-white/10 text-white placeholder-zinc-600'
+                ? 'bg-[#F9F7F1] border-gray-200 text-[#262626] placeholder-slate-400'
+                : 'bg-gray-50 border-gray-200 text-[#262626] placeholder-zinc-600'
             }`}
           />
         </div>
 
         <div>
-          <label className={`block text-xs font-bold mb-1.5 ${isLight ? 'text-slate-700' : 'text-zinc-300'}`}>
+          <label className={`block text-xs font-bold mb-1.5 ${isLight ? 'text-slate-700' : 'text-[#716D5C]'}`}>
             Description
           </label>
           <textarea
@@ -102,14 +102,14 @@ const NewTicketForm = ({ onSubmit, onCancel, theme, isSubmitting }) => {
             rows={3}
             className={`w-full px-4 py-2.5 rounded-xl border text-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-500/50 ${
               isLight
-                ? 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
-                : 'bg-white/5 border-white/10 text-white placeholder-zinc-600'
+                ? 'bg-[#F9F7F1] border-gray-200 text-[#262626] placeholder-slate-400'
+                : 'bg-gray-50 border-gray-200 text-[#262626] placeholder-zinc-600'
             }`}
           />
         </div>
 
         <div>
-          <label className={`block text-xs font-bold mb-1.5 ${isLight ? 'text-slate-700' : 'text-zinc-300'}`}>
+          <label className={`block text-xs font-bold mb-1.5 ${isLight ? 'text-slate-700' : 'text-[#716D5C]'}`}>
             Priorité
           </label>
           <div className="flex gap-2">
@@ -121,7 +121,7 @@ const NewTicketForm = ({ onSubmit, onCancel, theme, isSubmitting }) => {
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
                   priority === key
                     ? config.color[isLight ? 'light' : 'dark']
-                    : (isLight ? 'border-slate-200 text-slate-500 hover:bg-slate-50' : 'border-white/10 text-zinc-500 hover:bg-white/5')
+                    : (isLight ? 'border-gray-200 text-[#716D5C] hover:bg-[#F9F7F1]' : 'border-gray-200 text-[#716D5C] hover:bg-gray-50')
                 }`}
               >
                 {config.label}
@@ -134,14 +134,14 @@ const NewTicketForm = ({ onSubmit, onCancel, theme, isSubmitting }) => {
           <button
             type="button"
             onClick={onCancel}
-            className={`px-4 py-2 rounded-xl text-sm font-bold ${isLight ? 'text-slate-500 hover:bg-slate-50' : 'text-zinc-500 hover:bg-white/5'}`}
+            className={`px-4 py-2 rounded-xl text-sm font-bold ${isLight ? 'text-[#716D5C] hover:bg-[#F9F7F1]' : 'text-[#716D5C] hover:bg-gray-50'}`}
           >
             Annuler
           </button>
           <button
             type="submit"
             disabled={!title.trim() || isSubmitting}
-            className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold text-white transition-all ${
+            className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold text-[#262626] transition-all ${
               !title.trim() || isSubmitting
                 ? 'bg-violet-600/50 cursor-not-allowed'
                 : 'bg-violet-600 hover:bg-violet-500'
@@ -172,7 +172,7 @@ const TicketCard = ({ ticket, theme }) => {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       className={`p-4 rounded-2xl border transition-colors ${
-        isLight ? 'bg-white border-slate-200 hover:border-slate-300' : 'bg-[#0E1424] border-white/10 hover:border-white/20'
+        isLight ? 'bg-white border-gray-200 hover:border-slate-300' : 'bg-[#F9F7F1] border-gray-200 hover:border-white/20'
       }`}
     >
       <div className="flex items-start justify-between gap-3">
@@ -188,16 +188,16 @@ const TicketCard = ({ ticket, theme }) => {
               </span>
             )}
           </div>
-          <h4 className={`text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
+          <h4 className={`text-sm font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>
             {ticket.title}
           </h4>
           {ticket.description && (
-            <p className={`text-xs mt-1 line-clamp-2 ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>
+            <p className={`text-xs mt-1 line-clamp-2 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
               {ticket.description}
             </p>
           )}
         </div>
-        <span className={`text-[10px] tabular-nums shrink-0 ${isLight ? 'text-slate-400' : 'text-zinc-600'}`}>
+        <span className={`text-[10px] tabular-nums shrink-0 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
           {new Date(ticket.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
         </span>
       </div>
@@ -266,10 +266,10 @@ export const SupportTicketsView = ({ supabase, clientId, theme }) => {
     <div className="max-w-4xl mx-auto space-y-6 animate-fade-in-up">
       {/* Header */}
       <div>
-        <h2 className={`text-3xl font-bold mb-2 tracking-tight ${isLight ? 'text-slate-900' : 'text-white'}`}>
+        <h2 className={`text-3xl font-bold mb-2 tracking-tight ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>
           Support & Demandes
         </h2>
-        <p className={`font-medium text-lg ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>
+        <p className={`font-medium text-lg ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
           Demandez des ajustements, de nouvelles automatisations ou signalez un problème.
         </p>
       </div>
@@ -312,15 +312,15 @@ export const SupportTicketsView = ({ supabase, clientId, theme }) => {
               onClick={() => setFilter(f.id)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 filter === f.id
-                  ? (isLight ? 'bg-white text-violet-600 shadow-sm border border-slate-200' : 'bg-white/10 text-white')
-                  : (isLight ? 'text-slate-500 hover:text-slate-700' : 'text-zinc-500 hover:text-zinc-300')
+                  ? (isLight ? 'bg-white text-violet-600 shadow-sm border border-gray-200' : 'bg-gray-50 text-[#262626]')
+                  : (isLight ? 'text-[#716D5C] hover:text-slate-700' : 'text-[#716D5C] hover:text-[#716D5C]')
               }`}
             >
               {f.label}
               <span className={`px-1.5 py-0.5 rounded-md text-[10px] ${
                 filter === f.id
-                  ? (isLight ? 'bg-violet-50 text-violet-600' : 'bg-white/10 text-white')
-                  : (isLight ? 'bg-slate-100 text-slate-500' : 'bg-white/5 text-zinc-500')
+                  ? (isLight ? 'bg-violet-50 text-violet-600' : 'bg-gray-50 text-[#262626]')
+                  : (isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-gray-50 text-[#716D5C]')
               }`}>
                 {f.count}
               </span>
@@ -330,7 +330,7 @@ export const SupportTicketsView = ({ supabase, clientId, theme }) => {
 
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-white bg-violet-600 hover:bg-violet-500 transition-all"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-[#262626] bg-violet-600 hover:bg-violet-500 transition-all"
         >
           <Plus className="w-4 h-4" />
           Nouvelle demande
@@ -354,16 +354,16 @@ export const SupportTicketsView = ({ supabase, clientId, theme }) => {
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map(i => (
-              <div key={i} className={`h-24 rounded-2xl animate-pulse ${isLight ? 'bg-slate-100' : 'bg-zinc-900'}`} />
+              <div key={i} className={`h-24 rounded-2xl animate-pulse ${isLight ? 'bg-gray-100' : 'bg-white'}`} />
             ))}
           </div>
         ) : filteredTickets.length === 0 ? (
-          <div className={`text-center py-16 rounded-2xl border ${isLight ? 'bg-white border-slate-200' : 'bg-[#0E1424] border-white/10'}`}>
-            <MessageSquare className={`w-10 h-10 mx-auto mb-3 ${isLight ? 'text-slate-300' : 'text-zinc-700'}`} />
-            <p className={`text-sm font-bold mb-1 ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>
+          <div className={`text-center py-16 rounded-2xl border ${isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'}`}>
+            <MessageSquare className={`w-10 h-10 mx-auto mb-3 ${isLight ? 'text-slate-300' : 'text-[#716D5C]'}`} />
+            <p className={`text-sm font-bold mb-1 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
               {filter === 'all' ? 'Aucune demande' : 'Aucune demande dans cette catégorie'}
             </p>
-            <p className={`text-xs ${isLight ? 'text-slate-400' : 'text-zinc-600'}`}>
+            <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
               Créez votre première demande pour une nouvelle automatisation ou un ajustement.
             </p>
           </div>

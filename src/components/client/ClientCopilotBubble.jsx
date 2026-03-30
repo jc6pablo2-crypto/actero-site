@@ -135,27 +135,27 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             className={`fixed bottom-6 right-6 z-50 w-[380px] h-[520px] rounded-2xl shadow-2xl flex flex-col overflow-hidden border ${
               isLight
-                ? 'bg-white border-slate-200 shadow-slate-200/50'
-                : 'bg-[#0E1424] border-white/10 shadow-black/50'
+                ? 'bg-white border-gray-200 shadow-gray-200/50'
+                : 'bg-[#F9F7F1] border-gray-200 shadow-black/50'
             }`}
           >
             {/* Header */}
             <div className={`flex items-center justify-between px-4 py-3 border-b ${
-              isLight ? 'border-slate-100 bg-slate-50' : 'border-white/5 bg-[#111]'
+              isLight ? 'border-gray-100 bg-[#F9F7F1]' : 'border-gray-100 bg-[#111]'
             }`}>
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
                   <Sparkles className="w-4 h-4 text-violet-400" />
                 </div>
                 <div>
-                  <h3 className={`text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>Actero Copilot</h3>
-                  <p className={`text-[10px] ${isLight ? 'text-slate-500' : 'text-gray-500'}`}>Posez-moi vos questions</p>
+                  <h3 className={`text-sm font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>Actero Copilot</h3>
+                  <p className={`text-[10px] ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>Posez-moi vos questions</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
                 className={`p-1.5 rounded-lg transition-colors ${
-                  isLight ? 'hover:bg-slate-100 text-slate-400' : 'hover:bg-white/5 text-gray-500'
+                  isLight ? 'hover:bg-gray-100 text-[#716D5C]' : 'hover:bg-gray-50 text-[#716D5C]'
                 }`}
               >
                 <X className="w-4 h-4" />
@@ -172,7 +172,7 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                       <Sparkles className="w-3.5 h-3.5 text-violet-400" />
                     </div>
                     <div className={`px-3 py-2.5 rounded-2xl rounded-bl-md text-xs leading-relaxed ${
-                      isLight ? 'bg-slate-100 text-slate-700' : 'bg-white/5 text-gray-300'
+                      isLight ? 'bg-gray-100 text-slate-700' : 'bg-gray-50 text-[#716D5C]'
                     }`}>
                       {clientType === 'immobilier'
                         ? "Bonjour ! Je suis votre assistant Actero. Je peux vous aider à comprendre vos leads, visites, métriques et répondre à vos questions sur vos automatisations immobilières."
@@ -188,8 +188,8 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                         onClick={() => handleSend(q)}
                         className={`block w-full text-left px-3 py-2 rounded-lg text-[11px] transition-all border ${
                           isLight
-                            ? 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'
-                            : 'bg-white/[0.02] border-white/5 text-gray-400 hover:bg-white/[0.05] hover:border-white/10'
+                            ? 'bg-white border-gray-200 text-[#716D5C] hover:bg-[#F9F7F1] hover:border-slate-300'
+                            : 'bg-white/[0.02] border-gray-100 text-[#716D5C] hover:bg-[#F9F7F1] hover:border-gray-200'
                         }`}
                       >
                         {q}
@@ -217,14 +217,14 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                       msg.role === 'user'
                         ? 'bg-violet-600 text-white rounded-br-md'
                         : isLight
-                          ? 'bg-slate-100 text-slate-700 rounded-bl-md'
-                          : 'bg-white/5 text-gray-300 rounded-bl-md'
+                          ? 'bg-gray-100 text-slate-700 rounded-bl-md'
+                          : 'bg-gray-50 text-[#716D5C] rounded-bl-md'
                     }`}>
                       {msg.content.split('\n').map((line, j) => (
                         <p key={j} className={j > 0 ? 'mt-1.5' : ''}>
                           {line.split('**').map((part, k) =>
                             k % 2 === 1
-                              ? <strong key={k} className={msg.role === 'user' ? 'font-semibold' : `font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>{part}</strong>
+                              ? <strong key={k} className={msg.role === 'user' ? 'font-semibold' : `font-semibold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>{part}</strong>
                               : part
                           )}
                         </p>
@@ -241,8 +241,8 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                             : loadingAudio === i
                               ? 'bg-violet-500/10 border-violet-500/20 text-violet-400'
                               : isLight
-                                ? 'bg-white border-slate-200 text-slate-500 hover:bg-violet-50 hover:border-violet-300 hover:text-violet-600 shadow-sm'
-                                : 'bg-white/5 border-white/10 text-gray-400 hover:bg-violet-500/10 hover:border-violet-500/20 hover:text-violet-400'
+                                ? 'bg-white border-gray-200 text-[#716D5C] hover:bg-violet-50 hover:border-violet-300 hover:text-violet-600 shadow-sm'
+                                : 'bg-gray-50 border-gray-200 text-[#716D5C] hover:bg-violet-500/10 hover:border-violet-500/20 hover:text-violet-400'
                         }`}
                       >
                         {loadingAudio === i ? (
@@ -264,7 +264,7 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                   <div className="w-7 h-7 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center flex-shrink-0">
                     <Sparkles className="w-3.5 h-3.5 text-violet-400 animate-pulse" />
                   </div>
-                  <div className={`px-3 py-2.5 rounded-2xl rounded-bl-md ${isLight ? 'bg-slate-100' : 'bg-white/5'}`}>
+                  <div className={`px-3 py-2.5 rounded-2xl rounded-bl-md ${isLight ? 'bg-gray-100' : 'bg-gray-50'}`}>
                     <div className="flex items-center gap-1.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: '0ms' }} />
                       <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -278,11 +278,11 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
             </div>
 
             {/* Input */}
-            <div className={`px-3 py-3 border-t ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
+            <div className={`px-3 py-3 border-t ${isLight ? 'border-gray-100' : 'border-gray-100'}`}>
               <div className={`flex items-end rounded-xl border transition-colors ${
                 isLight
-                  ? 'bg-slate-50 border-slate-200 focus-within:border-violet-300'
-                  : 'bg-white/5 border-white/10 focus-within:border-violet-500/40'
+                  ? 'bg-[#F9F7F1] border-gray-200 focus-within:border-violet-300'
+                  : 'bg-gray-50 border-gray-200 focus-within:border-violet-500/40'
               }`}>
                 <textarea
                   ref={inputRef}
@@ -302,7 +302,7 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                   disabled={loading}
                   rows={1}
                   className={`flex-1 bg-transparent px-3 py-2.5 text-xs outline-none resize-none max-h-[80px] disabled:opacity-30 ${
-                    isLight ? 'text-slate-900 placeholder-slate-400' : 'text-white placeholder-gray-500'
+                    isLight ? 'text-[#262626] placeholder-slate-400' : 'text-[#262626] placeholder-gray-500'
                   }`}
                 />
                 <button

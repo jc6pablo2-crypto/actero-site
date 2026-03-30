@@ -82,13 +82,13 @@ export const AdminKanbanBoard = ({ requests, onRefresh }) => {
           return (
             <div
               key={col.id}
-              className="rounded-3xl border border-white/5 bg-[#0E1424]/50 p-4 flex flex-col gap-4 shadow-inner min-h-[60vh]"
+              className="rounded-3xl border border-gray-100 bg-[#F9F7F1]/50 p-4 flex flex-col gap-4 shadow-inner min-h-[60vh]"
             >
               <div className="flex items-center justify-between mb-2 px-2">
-                <h3 className="font-bold text-white text-sm tracking-widest uppercase">
+                <h3 className="font-bold text-[#262626] text-sm tracking-widest uppercase">
                   {col.title}
                 </h3>
-                <span className="bg-white/10 text-zinc-400 px-2.5 py-0.5 rounded-full text-xs font-bold">
+                <span className="bg-gray-50 text-[#716D5C] px-2.5 py-0.5 rounded-full text-xs font-bold">
                   {columnTasks.length}
                 </span>
               </div>
@@ -119,17 +119,17 @@ export const AdminKanbanBoard = ({ requests, onRefresh }) => {
                         )}
                         <button
                           onClick={() => setDetail(req)}
-                          className="p-1 rounded hover:bg-white/10 text-zinc-500 hover:text-white transition-colors"
+                          className="p-1 rounded hover:bg-gray-50 text-[#716D5C] hover:text-[#262626] transition-colors"
                           title="Voir détails"
                         >
                           <Eye className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
-                    <h4 className="font-bold text-white text-base leading-tight mb-2 group-hover:text-emerald-400 transition-colors">
+                    <h4 className="font-bold text-[#262626] text-base leading-tight mb-2 group-hover:text-emerald-400 transition-colors">
                       {req.title || "Projet IA"}
                     </h4>
-                    <p className="text-xs text-zinc-500 font-medium line-clamp-2 mb-4">
+                    <p className="text-xs text-[#716D5C] font-medium line-clamp-2 mb-4">
                       {req.description}
                     </p>
 
@@ -138,7 +138,7 @@ export const AdminKanbanBoard = ({ requests, onRefresh }) => {
                       {canGoLeft && (
                         <button
                           onClick={() => updateStatus(req.id, COLUMNS[currentColIdx - 1].statusValue)}
-                          className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-[11px] font-medium transition-all border border-white/5"
+                          className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 rounded-lg bg-gray-50 hover:bg-gray-50 text-[#716D5C] hover:text-[#262626] text-[11px] font-medium transition-all border border-gray-100"
                         >
                           <ChevronLeft className="w-3.5 h-3.5" />
                           {COLUMNS[currentColIdx - 1].title.split(' ')[0]}
@@ -168,16 +168,16 @@ export const AdminKanbanBoard = ({ requests, onRefresh }) => {
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-white/5 pt-3">
+                    <div className="flex items-center justify-between border-t border-gray-100 pt-3">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded bg-white/10 flex items-center justify-center text-[10px] font-bold text-white uppercase">
+                        <div className="w-6 h-6 rounded bg-gray-50 flex items-center justify-center text-[10px] font-bold text-[#262626] uppercase">
                           {req.clients?.brand_name?.charAt(0) || "?"}
                         </div>
-                        <span className="text-xs font-bold text-zinc-400 truncate max-w-[100px]">
+                        <span className="text-xs font-bold text-[#716D5C] truncate max-w-[100px]">
                           {req.clients?.brand_name || "Client Inconnu"}
                         </span>
                       </div>
-                      <span className="text-[10px] text-zinc-600 font-mono">
+                      <span className="text-[10px] text-[#716D5C] font-mono">
                         {new Date(req.created_at).toLocaleDateString("fr-FR", {
                           month: "short",
                           day: "numeric",
@@ -188,7 +188,7 @@ export const AdminKanbanBoard = ({ requests, onRefresh }) => {
                 )
               })}
               {columnTasks.length === 0 && (
-                <div className="text-center p-8 border border-white/5 border-dashed rounded-2xl text-zinc-600 text-sm font-medium">
+                <div className="text-center p-8 border border-gray-100 border-dashed rounded-2xl text-[#716D5C] text-sm font-medium">
                   Vide
                 </div>
               )}
@@ -204,7 +204,7 @@ export const AdminKanbanBoard = ({ requests, onRefresh }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => setDetail(null)}
           >
             <motion.div
@@ -212,36 +212,36 @@ export const AdminKanbanBoard = ({ requests, onRefresh }) => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={e => e.stopPropagation()}
-              className="bg-[#111] border border-white/10 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
+              className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white">{detail.title || 'Demande'}</h3>
-                <button onClick={() => setDetail(null)} className="p-1 hover:bg-white/10 rounded-lg transition-colors">
-                  <X className="w-5 h-5 text-zinc-400" />
+                <h3 className="text-lg font-bold text-[#262626]">{detail.title || 'Demande'}</h3>
+                <button onClick={() => setDetail(null)} className="p-1 hover:bg-gray-50 rounded-lg transition-colors">
+                  <X className="w-5 h-5 text-[#716D5C]" />
                 </button>
               </div>
               <div className="space-y-3">
                 <div>
-                  <span className="text-xs text-zinc-500 font-medium">Client</span>
-                  <p className="text-sm text-white">{detail.clients?.brand_name || 'Inconnu'}</p>
+                  <span className="text-xs text-[#716D5C] font-medium">Client</span>
+                  <p className="text-sm text-[#262626]">{detail.clients?.brand_name || 'Inconnu'}</p>
                 </div>
                 <div>
-                  <span className="text-xs text-zinc-500 font-medium">Description</span>
-                  <p className="text-sm text-zinc-300 whitespace-pre-wrap">{detail.description || 'Aucune description'}</p>
+                  <span className="text-xs text-[#716D5C] font-medium">Description</span>
+                  <p className="text-sm text-[#716D5C] whitespace-pre-wrap">{detail.description || 'Aucune description'}</p>
                 </div>
                 <div>
-                  <span className="text-xs text-zinc-500 font-medium">Statut</span>
-                  <p className="text-sm text-white capitalize">{detail.status || 'en_attente'}</p>
+                  <span className="text-xs text-[#716D5C] font-medium">Statut</span>
+                  <p className="text-sm text-[#262626] capitalize">{detail.status || 'en_attente'}</p>
                 </div>
                 <div>
-                  <span className="text-xs text-zinc-500 font-medium">Priorité</span>
-                  <p className={`text-sm font-medium ${detail.priority === 'high' ? 'text-red-400' : 'text-zinc-300'}`}>
+                  <span className="text-xs text-[#716D5C] font-medium">Priorité</span>
+                  <p className={`text-sm font-medium ${detail.priority === 'high' ? 'text-red-400' : 'text-[#716D5C]'}`}>
                     {detail.priority === 'high' ? 'Haute' : 'Normale'}
                   </p>
                 </div>
                 <div>
-                  <span className="text-xs text-zinc-500 font-medium">Date</span>
-                  <p className="text-sm text-zinc-300">
+                  <span className="text-xs text-[#716D5C] font-medium">Date</span>
+                  <p className="text-sm text-[#716D5C]">
                     {new Date(detail.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
                   </p>
                 </div>
@@ -254,7 +254,7 @@ export const AdminKanbanBoard = ({ requests, onRefresh }) => {
                       {idx > 0 && (
                         <button
                           onClick={() => { updateStatus(detail.id, COLUMNS[idx - 1].statusValue); setDetail(null) }}
-                          className="flex-1 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 text-sm font-medium transition-all border border-white/10"
+                          className="flex-1 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-50 text-[#716D5C] text-sm font-medium transition-all border border-gray-200"
                         >
                           ← {COLUMNS[idx - 1].title}
                         </button>

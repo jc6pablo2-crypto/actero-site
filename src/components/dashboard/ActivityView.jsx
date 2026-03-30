@@ -104,13 +104,13 @@ export const formatEvent = (event) => {
     return { icon: "💰", color: "text-violet-500", bg: "bg-violet-500/10", message: `Panier récupéré ! +${event.revenue_amount || 0}€` };
   }
   if (cat === 'email_opened') {
-    return { icon: "👁️", color: "text-slate-400", bg: "bg-slate-400/10", message: "Email ouvert" };
+    return { icon: "👁️", color: "text-[#716D5C]", bg: "bg-slate-400/10", message: "Email ouvert" };
   }
   if (cat === 'email_clicked') {
-    return { icon: "🖱️", color: "text-slate-400", bg: "bg-slate-400/10", message: "Lien cliqué dans l'email" };
+    return { icon: "🖱️", color: "text-[#716D5C]", bg: "bg-slate-400/10", message: "Lien cliqué dans l'email" };
   }
 
-  return { icon: "⚙️", color: "text-gray-400", bg: "bg-gray-400/10", message: event.ticket_type || event.event_category || "Action automatisée" };
+  return { icon: "⚙️", color: "text-[#716D5C]", bg: "bg-gray-400/10", message: event.ticket_type || event.event_category || "Action automatisée" };
 };
 
 export const ActivityView = ({ supabase, theme = "dark" }) => {
@@ -131,22 +131,22 @@ export const ActivityView = ({ supabase, theme = "dark" }) => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <h2 className={`text-3xl font-bold tracking-tight ${isLight ? "text-slate-900" : "text-white"}`}>
+            <h2 className={`text-3xl font-bold tracking-tight ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
               Activité en direct
             </h2>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-50 border border-gray-200">
               <div className={`w-2 h-2 rounded-full ${isConnected ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" : "bg-rose-500"}`}></div>
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+              <span className="text-[10px] font-bold text-[#716D5C] uppercase tracking-widest">
                 {isConnected ? "Connecté" : "Déconnecté"}
               </span>
             </div>
           </div>
-          <p className={`font-medium ${isLight ? "text-slate-500" : "text-zinc-500"}`}>
+          <p className={`font-medium ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`}>
             Flux temps réel des automatisations Actero.
           </p>
         </div>
 
-        <div className={`flex p-1 rounded-xl border ${isLight ? 'bg-slate-100 border-slate-200' : 'bg-white/5 border-white/10'}`}>
+        <div className={`flex p-1 rounded-xl border ${isLight ? 'bg-gray-100 border-gray-200' : 'bg-gray-50 border-gray-200'}`}>
           {[
             { id: 'all', label: 'Tous' },
             { id: 'tickets', label: 'Tickets' },
@@ -157,8 +157,8 @@ export const ActivityView = ({ supabase, theme = "dark" }) => {
               key={t.id}
               onClick={() => setFilter(t.id)}
               className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${filter === t.id
-                ? (isLight ? 'bg-white text-blue-600 shadow-sm' : 'bg-white/10 text-white shadow-lg')
-                : (isLight ? 'text-slate-500 hover:text-slate-900' : 'text-zinc-500 hover:text-zinc-300')
+                ? (isLight ? 'bg-white text-[#003725] shadow-sm' : 'bg-gray-50 text-[#262626] shadow-lg')
+                : (isLight ? 'text-[#716D5C] hover:text-[#262626]' : 'text-[#716D5C] hover:text-[#716D5C]')
                 }`}
             >
               {t.label}
@@ -167,28 +167,28 @@ export const ActivityView = ({ supabase, theme = "dark" }) => {
         </div>
       </div>
 
-      <div className={`border rounded-3xl overflow-hidden ${isLight ? "bg-white border-slate-200 shadow-sm" : "bg-[#0E1424] border-white/10 shadow-2xl"}`}>
+      <div className={`border rounded-3xl overflow-hidden ${isLight ? "bg-white border-gray-200 shadow-sm" : "bg-[#F9F7F1] border-gray-200 shadow-2xl"}`}>
         {isLoading && events.length === 0 ? (
           <div className="p-12 space-y-6">
             {[...Array(5)].map((_, i) => (
               <div key={i} className="flex gap-4 items-center animate-pulse">
-                <div className="w-12 h-12 bg-white/5 rounded-2xl"></div>
+                <div className="w-12 h-12 bg-gray-50 rounded-2xl"></div>
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-white/5 rounded w-1/3"></div>
-                  <div className="h-3 bg-white/5 rounded w-2/3"></div>
+                  <div className="h-4 bg-gray-50 rounded w-1/3"></div>
+                  <div className="h-3 bg-gray-50 rounded w-2/3"></div>
                 </div>
               </div>
             ))}
           </div>
         ) : filteredEvents.length === 0 ? (
           <div className="p-20 text-center flex flex-col items-center">
-            <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 border border-white/5">
-              <Activity className="w-10 h-10 text-gray-500" />
+            <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6 border border-gray-100">
+              <Activity className="w-10 h-10 text-[#716D5C]" />
             </div>
-            <h3 className={`text-xl font-bold mb-2 ${isLight ? "text-slate-900" : "text-white"}`}>
+            <h3 className={`text-xl font-bold mb-2 ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
               Le système est en veille
             </h3>
-            <p className="text-gray-500 max-w-sm">
+            <p className="text-[#716D5C] max-w-sm">
               Les events apparaîtront ici dès qu'une action sera exécutée dans votre infrastructure.
             </p>
           </div>
@@ -210,20 +210,20 @@ export const ActivityView = ({ supabase, theme = "dark" }) => {
                         {details.icon}
                       </div>
                       <div>
-                        <p className={`font-bold transition-colors ${isLight ? "text-slate-900" : "text-white"}`}>
+                        <p className={`font-bold transition-colors ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
                           {details.message}
                         </p>
-                        <p className={`text-xs font-bold uppercase tracking-widest mt-0.5 ${isLight ? "text-slate-400" : "text-zinc-500"}`}>
+                        <p className={`text-xs font-bold uppercase tracking-widest mt-0.5 ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`}>
                           {(event.event_category || "").replace('_', ' ')}
                         </p>
                       </div>
                     </div>
                     <div className="text-right flex flex-col items-end">
-                      <span className={`text-xs font-bold ${isLight ? "text-slate-500" : "text-zinc-500"}`}>
+                      <span className={`text-xs font-bold ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`}>
                         {formatRelativeTime(event.created_at)}
                       </span>
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="text-[10px] font-mono text-zinc-600">ID: {event.id.split('-')[0]}</span>
+                        <span className="text-[10px] font-mono text-[#716D5C]">ID: {event.id.split('-')[0]}</span>
                       </div>
                     </div>
                   </motion.div>

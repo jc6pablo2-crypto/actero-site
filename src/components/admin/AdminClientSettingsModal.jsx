@@ -148,14 +148,14 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-[#0E1424] border border-white/10 rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 max-h-[90vh] overflow-y-auto">
+      <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-[#F9F7F1] border border-gray-200 rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <Settings className="w-5 h-5 text-zinc-400" />
-            <h3 className="text-lg font-bold text-white">{client.brand_name}</h3>
+            <Settings className="w-5 h-5 text-[#716D5C]" />
+            <h3 className="text-lg font-bold text-[#262626]">{client.brand_name}</h3>
           </div>
-          <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+          <button onClick={onClose} className="text-[#716D5C] hover:text-[#262626] transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -169,19 +169,19 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
             <Rocket className="w-5 h-5 text-emerald-400" />
             <div>
               <p className="text-sm font-bold text-emerald-400">Notes de call & Deploiement</p>
-              <p className="text-xs text-gray-500">Formulaire structure + deploiement automatise</p>
+              <p className="text-xs text-[#716D5C]">Formulaire structure + deploiement automatise</p>
             </div>
           </button>
         )}
 
         {fetching ? (
           <div className="flex justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
+            <Loader2 className="w-6 h-6 animate-spin text-[#716D5C]" />
           </div>
         ) : (
           <form onSubmit={handleSave} className="space-y-5">
             <div>
-              <label className="block text-sm font-bold text-white mb-2">
+              <label className="block text-sm font-bold text-[#262626] mb-2">
                 Coût horaire client (€/h)
               </label>
               <input
@@ -191,12 +191,12 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
                 value={hourlyCost}
                 onChange={(e) => setHourlyCost(e.target.value)}
                 placeholder="Ex: 25"
-                className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-white"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
               />
-              <p className="text-xs text-zinc-500 mt-1">Utilisé pour calculer money_saved = temps × coût</p>
+              <p className="text-xs text-[#716D5C] mt-1">Utilisé pour calculer money_saved = temps × coût</p>
             </div>
             <div>
-              <label className="block text-sm font-bold text-white mb-2">
+              <label className="block text-sm font-bold text-[#262626] mb-2">
                 Temps moyen / ticket (min)
               </label>
               <input
@@ -205,11 +205,11 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
                 value={avgTicketTime}
                 onChange={(e) => setAvgTicketTime(e.target.value)}
                 placeholder="Ex: 5"
-                className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-white"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-white mb-2">
+              <label className="block text-sm font-bold text-[#262626] mb-2">
                 Prix Actero mensuel (€)
               </label>
               <input
@@ -219,9 +219,9 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
                 value={acteroPrice}
                 onChange={(e) => setActeroPrice(e.target.value)}
                 placeholder="Ex: 490"
-                className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-white"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
               />
-              <p className="text-xs text-zinc-500 mt-1">Pour le calcul du ROI net</p>
+              <p className="text-xs text-[#716D5C] mt-1">Pour le calcul du ROI net</p>
             </div>
 
             {error && (
@@ -237,7 +237,7 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center items-center gap-2 py-3 px-6 rounded-xl text-sm font-bold text-white bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 transition-colors"
+              className="w-full flex justify-center items-center gap-2 py-3 px-6 rounded-xl text-sm font-bold text-[#262626] bg-gray-50 hover:bg-gray-100 disabled:opacity-50 transition-colors"
             >
               {loading ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /> Sauvegarde...</>
@@ -250,17 +250,17 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
 
         {/* Déploiement workflow */}
         {!fetching && (
-          <div className="mt-6 pt-6 border-t border-white/10 space-y-4">
+          <div className="mt-6 pt-6 border-t border-gray-200 space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <Rocket className="w-4 h-4 text-blue-400" />
-              <h4 className="text-sm font-bold text-white">Déploiement workflow</h4>
+              <h4 className="text-sm font-bold text-[#262626]">Déploiement workflow</h4>
             </div>
             <div>
-              <label className="block text-xs font-bold text-zinc-400 mb-1.5">Template</label>
+              <label className="block text-xs font-bold text-[#716D5C] mb-1.5">Template</label>
               <select
                 value={selectedTemplate}
                 onChange={(e) => setSelectedTemplate(e.target.value)}
-                className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm text-white outline-none focus:ring-2 focus:ring-blue-500/40 transition-all appearance-none"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-2 focus:ring-blue-500/40 transition-all appearance-none"
               >
                 {WORKFLOW_TEMPLATES.map((t) => (
                   <option key={t.id} value={t.id}>{t.label}</option>
@@ -270,7 +270,7 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
             <button
               onClick={handleDeploy}
               disabled={deploying}
-              className="w-full flex justify-center items-center gap-2 py-3 px-6 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 disabled:opacity-50 transition-colors"
+              className="w-full flex justify-center items-center gap-2 py-3 px-6 rounded-xl text-sm font-bold text-[#262626] bg-blue-600 hover:bg-blue-500 disabled:opacity-50 transition-colors"
             >
               {deploying ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /> Déploiement...</>
@@ -289,25 +289,25 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
 
         {/* Brand Context */}
         {!fetching && (
-          <div className="mt-6 pt-6 border-t border-white/10 space-y-4">
+          <div className="mt-6 pt-6 border-t border-gray-200 space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <Globe className="w-4 h-4 text-violet-400" />
-              <h4 className="text-sm font-bold text-white">Brand Context</h4>
+              <h4 className="text-sm font-bold text-[#262626]">Brand Context</h4>
             </div>
             <div>
-              <label className="block text-xs font-bold text-zinc-400 mb-1.5">URL du site</label>
+              <label className="block text-xs font-bold text-[#716D5C] mb-1.5">URL du site</label>
               <div className="flex gap-2">
                 <input
                   type="url"
                   value={brandUrl}
                   onChange={(e) => setBrandUrl(e.target.value)}
                   placeholder="https://example.com"
-                  className="flex-1 px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm text-white outline-none focus:ring-2 focus:ring-violet-500/40 transition-all"
+                  className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-2 focus:ring-violet-500/40 transition-all"
                 />
                 <button
                   onClick={handleGenerateBrandContext}
                   disabled={generatingBrand || !brandUrl.trim()}
-                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold text-white bg-violet-600 hover:bg-violet-500 disabled:opacity-50 transition-colors whitespace-nowrap"
+                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold text-[#262626] bg-violet-600 hover:bg-violet-500 disabled:opacity-50 transition-colors whitespace-nowrap"
                 >
                   {generatingBrand ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -319,19 +319,19 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
               </div>
             </div>
             <div>
-              <label className="block text-xs font-bold text-zinc-400 mb-1.5">Brand context</label>
+              <label className="block text-xs font-bold text-[#716D5C] mb-1.5">Brand context</label>
               <textarea
                 value={brandContext}
                 onChange={(e) => setBrandContext(e.target.value)}
                 rows={5}
                 placeholder="Le brand context apparaîtra ici après génération..."
-                className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl text-sm text-white outline-none focus:ring-2 focus:ring-violet-500/40 transition-all resize-y"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-2 focus:ring-violet-500/40 transition-all resize-y"
               />
             </div>
             <button
               onClick={handleSaveBrandContext}
               disabled={savingBrand || !brandContext.trim()}
-              className="w-full flex justify-center items-center gap-2 py-3 px-6 rounded-xl text-sm font-bold text-white bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 transition-colors"
+              className="w-full flex justify-center items-center gap-2 py-3 px-6 rounded-xl text-sm font-bold text-[#262626] bg-gray-50 hover:bg-gray-100 disabled:opacity-50 transition-colors"
             >
               {savingBrand ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /> Sauvegarde...</>
@@ -359,7 +359,7 @@ const STATUS_COLORS = {
   active: 'text-emerald-400 bg-emerald-500/20',
   expired: 'text-amber-400 bg-amber-500/20',
   error: 'text-red-400 bg-red-500/20',
-  revoked: 'text-zinc-400 bg-zinc-500/20',
+  revoked: 'text-[#716D5C] bg-gray-100',
   pending: 'text-blue-400 bg-blue-500/20',
 };
 
@@ -404,27 +404,27 @@ const AdminClientIntegrations = ({ clientId }) => {
   const hasAny = integrations.length > 0 || !!shopify;
 
   return (
-    <div className="mt-6 pt-6 border-t border-white/10 space-y-4">
+    <div className="mt-6 pt-6 border-t border-gray-200 space-y-4">
       <div className="flex items-center gap-2 mb-2">
         <Plug className="w-4 h-4 text-cyan-400" />
-        <h4 className="text-sm font-bold text-white">Intégrations</h4>
+        <h4 className="text-sm font-bold text-[#262626]">Intégrations</h4>
       </div>
 
       {isLoading ? (
         <div className="flex justify-center py-4">
-          <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
+          <Loader2 className="w-4 h-4 animate-spin text-[#716D5C]" />
         </div>
       ) : !hasAny ? (
-        <p className="text-xs text-zinc-500">Aucune intégration connectée</p>
+        <p className="text-xs text-[#716D5C]">Aucune intégration connectée</p>
       ) : (
         <div className="space-y-2">
           {shopify && (
-            <div className="flex items-center justify-between p-3 rounded-xl bg-[#0A0E1A] border border-white/10">
+            <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-gray-200">
               <div className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold text-white" style={{ backgroundColor: '#96BF48' }}>S</div>
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold text-[#262626]" style={{ backgroundColor: '#96BF48' }}>S</div>
                 <div>
-                  <p className="text-xs font-bold text-white">Shopify</p>
-                  <p className="text-[10px] text-zinc-500">{shopify.shop_domain}</p>
+                  <p className="text-xs font-bold text-[#262626]">Shopify</p>
+                  <p className="text-[10px] text-[#716D5C]">{shopify.shop_domain}</p>
                 </div>
               </div>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-emerald-400 bg-emerald-500/20">Connecté</span>
@@ -432,14 +432,14 @@ const AdminClientIntegrations = ({ clientId }) => {
           )}
 
           {integrations.map(int => (
-            <div key={int.id} className="flex items-center justify-between p-3 rounded-xl bg-[#0A0E1A] border border-white/10">
+            <div key={int.id} className="flex items-center justify-between p-3 rounded-xl bg-white border border-gray-200">
               <div className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold text-white bg-zinc-700">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-bold text-[#262626] bg-gray-200">
                   {(int.provider_label || int.provider)[0].toUpperCase()}
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-white">{int.provider_label || int.provider}</p>
-                  <p className="text-[10px] text-zinc-500">
+                  <p className="text-xs font-bold text-[#262626]">{int.provider_label || int.provider}</p>
+                  <p className="text-[10px] text-[#716D5C]">
                     {int.last_checked_at ? `Vérifié ${new Date(int.last_checked_at).toLocaleDateString('fr-FR')}` : 'Jamais vérifié'}
                   </p>
                 </div>
@@ -451,13 +451,13 @@ const AdminClientIntegrations = ({ clientId }) => {
                 <button
                   onClick={() => handleForceTest(int)}
                   disabled={testingId === int.id}
-                  className="p-1 rounded hover:bg-white/10 transition-colors"
+                  className="p-1 rounded hover:bg-gray-50 transition-colors"
                   title="Forcer le test"
                 >
                   {testingId === int.id ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-400" />
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-[#716D5C]" />
                   ) : (
-                    <RefreshCw className="w-3.5 h-3.5 text-zinc-500 hover:text-white" />
+                    <RefreshCw className="w-3.5 h-3.5 text-[#716D5C] hover:text-[#262626]" />
                   )}
                 </button>
               </div>

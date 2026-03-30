@@ -55,14 +55,14 @@ export default function AmbassadorSetupPassword() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0E1A] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <Logo className="w-8 h-8 mx-auto mb-4 text-white" />
+          <Logo className="w-8 h-8 mx-auto mb-4 text-[#262626]" />
           <span className="inline-block bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full mb-4 tracking-widest">PROGRAMME AMBASSADEUR</span>
         </div>
 
@@ -70,11 +70,11 @@ export default function AmbassadorSetupPassword() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#0E1424] border border-white/10 rounded-2xl p-8 text-center"
+            className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-8 text-center"
           >
             <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">Mot de passe créé !</h2>
-            <p className="text-zinc-400 mb-8">Dernière étape : ajoutez votre IBAN pour recevoir vos récompenses.</p>
+            <h2 className="text-2xl font-bold text-[#262626] mb-2">Mot de passe créé !</h2>
+            <p className="text-[#716D5C] mb-8">Dernière étape : ajoutez votre IBAN pour recevoir vos récompenses.</p>
             <a
               href="/ambassador/setup-iban"
               className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-8 py-3 rounded-xl transition-colors text-lg"
@@ -83,13 +83,13 @@ export default function AmbassadorSetupPassword() {
             </a>
           </motion.div>
         ) : (
-          <div className="bg-[#0E1424] border border-white/10 rounded-2xl p-8">
+          <div className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-8">
             <div className="text-center mb-6">
               <div className="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Lock className="w-7 h-7 text-emerald-400" />
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Créez votre mot de passe</h2>
-              <p className="text-zinc-400 text-sm">Pour accéder à votre espace ambassadeur Actero</p>
+              <h2 className="text-2xl font-bold text-[#262626] mb-2">Créez votre mot de passe</h2>
+              <p className="text-[#716D5C] text-sm">Pour accéder à votre espace ambassadeur Actero</p>
             </div>
 
             {!sessionReady && (
@@ -106,20 +106,20 @@ export default function AmbassadorSetupPassword() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-1.5">Mot de passe</label>
+                <label className="block text-sm font-medium text-[#716D5C] mb-1.5">Mot de passe</label>
                 <div className="relative">
                   <input
                     type={showPw ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Minimum 8 caractères"
-                    className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 pr-12"
+                    className="w-full bg-[#111] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 pr-12"
                     disabled={!sessionReady}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPw(!showPw)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#716D5C] hover:text-[#262626]"
                   >
                     {showPw ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
@@ -130,13 +130,13 @@ export default function AmbassadorSetupPassword() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-1.5">Confirmer le mot de passe</label>
+                <label className="block text-sm font-medium text-[#716D5C] mb-1.5">Confirmer le mot de passe</label>
                 <input
                   type={showPw ? 'text' : 'password'}
                   value={confirm}
                   onChange={(e) => setConfirm(e.target.value)}
                   placeholder="Retapez votre mot de passe"
-                  className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50"
+                  className="w-full bg-[#111] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50"
                   disabled={!sessionReady}
                 />
                 {confirm.length > 0 && password !== confirm && (
@@ -150,7 +150,7 @@ export default function AmbassadorSetupPassword() {
                 className={`w-full py-3 rounded-xl font-bold text-lg transition-all ${
                   isValid && sessionReady
                     ? 'bg-emerald-500 hover:bg-emerald-400 text-black'
-                    : 'bg-white/5 text-zinc-600 cursor-not-allowed'
+                    : 'bg-gray-50 text-[#716D5C] cursor-not-allowed'
                 }`}
               >
                 {loading ? 'Création...' : 'Créer mon mot de passe'}

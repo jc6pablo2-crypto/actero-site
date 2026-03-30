@@ -18,16 +18,16 @@ const SLACard = ({ label, value, unit, icon: Icon, color = 'zinc', theme }) => {
     amber: 'text-amber-400',
     blue: 'text-blue-400',
     rose: 'text-rose-400',
-    zinc: 'text-zinc-400',
+    zinc: 'text-[#716D5C]',
   }
   return (
-    <div className={`rounded-xl border p-4 ${isLight ? 'bg-white border-slate-200' : 'bg-[#0E1424] border-white/10'}`}>
+    <div className={`rounded-xl border p-4 ${isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'}`}>
       <div className="flex items-center gap-2 mb-2">
         <Icon className={`w-4 h-4 ${colors[color]}`} />
-        <p className={`text-xs font-bold uppercase tracking-wider ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>{label}</p>
+        <p className={`text-xs font-bold uppercase tracking-wider ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>{label}</p>
       </div>
-      <p className={`text-2xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>
-        {value}<span className="text-sm font-normal text-zinc-500 ml-1">{unit}</span>
+      <p className={`text-2xl font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>
+        {value}<span className="text-sm font-normal text-[#716D5C] ml-1">{unit}</span>
       </p>
     </div>
   )
@@ -56,11 +56,11 @@ const ScoreGauge = ({ score, theme }) => {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className={`text-3xl font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>{score}</span>
-          <span className={`text-[10px] font-bold uppercase tracking-wider ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>/100</span>
+          <span className={`text-3xl font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>{score}</span>
+          <span className={`text-[10px] font-bold uppercase tracking-wider ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>/100</span>
         </div>
       </div>
-      <p className={`mt-2 text-sm font-bold ${isLight ? 'text-slate-700' : 'text-zinc-300'}`} style={{ color }}>{label}</p>
+      <p className={`mt-2 text-sm font-bold ${isLight ? 'text-slate-700' : 'text-[#716D5C]'}`} style={{ color }}>{label}</p>
     </div>
   )
 }
@@ -179,13 +179,13 @@ export const ClientSatisfactionScore = ({ clientId, theme = 'dark' }) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`rounded-2xl border p-6 ${isLight ? 'bg-white border-slate-200' : 'bg-[#0E1424] border-white/10'}`}
+        className={`rounded-2xl border p-6 ${isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'}`}
       >
         <div className="flex flex-col md:flex-row items-center gap-6">
           <ScoreGauge score={scoreData.compositeScore} theme={theme} />
           <div className="flex-1 space-y-3">
-            <h3 className={`text-lg font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>Score de satisfaction global</h3>
-            <p className={`text-sm ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>
+            <h3 className={`text-lg font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>Score de satisfaction global</h3>
+            <p className={`text-sm ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
               Combine la satisfaction IA, le temps de reponse, la disponibilite et le volume d&apos;activite.
             </p>
             {scoreData.trend !== null && (
@@ -195,21 +195,21 @@ export const ClientSatisfactionScore = ({ clientId, theme = 'dark' }) => {
               </div>
             )}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-              <div className={`text-center px-3 py-2 rounded-lg ${isLight ? 'bg-slate-50' : 'bg-white/5'}`}>
-                <p className={`text-xs ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>Satisfaction</p>
-                <p className={`text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>{scoreData.satisfactionRate}%</p>
+              <div className={`text-center px-3 py-2 rounded-lg ${isLight ? 'bg-[#F9F7F1]' : 'bg-gray-50'}`}>
+                <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>Satisfaction</p>
+                <p className={`text-sm font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>{scoreData.satisfactionRate}%</p>
               </div>
-              <div className={`text-center px-3 py-2 rounded-lg ${isLight ? 'bg-slate-50' : 'bg-white/5'}`}>
-                <p className={`text-xs ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>Rapidite</p>
-                <p className={`text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>{scoreData.responseTimeScore}%</p>
+              <div className={`text-center px-3 py-2 rounded-lg ${isLight ? 'bg-[#F9F7F1]' : 'bg-gray-50'}`}>
+                <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>Rapidite</p>
+                <p className={`text-sm font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>{scoreData.responseTimeScore}%</p>
               </div>
-              <div className={`text-center px-3 py-2 rounded-lg ${isLight ? 'bg-slate-50' : 'bg-white/5'}`}>
-                <p className={`text-xs ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>Disponibilite</p>
-                <p className={`text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>{scoreData.uptimeScore}%</p>
+              <div className={`text-center px-3 py-2 rounded-lg ${isLight ? 'bg-[#F9F7F1]' : 'bg-gray-50'}`}>
+                <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>Disponibilite</p>
+                <p className={`text-sm font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>{scoreData.uptimeScore}%</p>
               </div>
-              <div className={`text-center px-3 py-2 rounded-lg ${isLight ? 'bg-slate-50' : 'bg-white/5'}`}>
-                <p className={`text-xs ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>Volume</p>
-                <p className={`text-sm font-bold ${isLight ? 'text-slate-900' : 'text-white'}`}>{scoreData.volumeScore}%</p>
+              <div className={`text-center px-3 py-2 rounded-lg ${isLight ? 'bg-[#F9F7F1]' : 'bg-gray-50'}`}>
+                <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>Volume</p>
+                <p className={`text-sm font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>{scoreData.volumeScore}%</p>
               </div>
             </div>
           </div>
@@ -272,15 +272,15 @@ export const SatisfactionKPI = ({ clientId, theme = 'dark' }) => {
 
   return (
     <div className={`group p-6 rounded-2xl border transition-all duration-300 ${
-      isLight ? 'bg-white border-slate-200 shadow-sm hover:shadow-md' : 'bg-[#0E1424] border-white/10 hover:border-white/20'
+      isLight ? 'bg-white border-gray-200 shadow-sm hover:shadow-md' : 'bg-[#F9F7F1] border-gray-200 hover:border-white/20'
     }`}>
       <div className="flex items-center gap-3 mb-6">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
           isLight ? 'bg-blue-50 border-blue-100' : 'bg-blue-500/10 border-blue-500/20'
         }`}>
-          <ThumbsUp className={`w-5 h-5 ${isLight ? 'text-blue-600' : 'text-blue-400'}`} />
+          <ThumbsUp className={`w-5 h-5 ${isLight ? 'text-[#003725]' : 'text-blue-400'}`} />
         </div>
-        <h4 className={`text-xs font-bold uppercase tracking-widest ${isLight ? 'text-slate-500' : 'text-zinc-500'}`}>
+        <h4 className={`text-xs font-bold uppercase tracking-widest ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
           Satisfaction IA
         </h4>
       </div>

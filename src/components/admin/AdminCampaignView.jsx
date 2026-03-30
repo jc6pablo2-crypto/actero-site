@@ -226,8 +226,8 @@ Réponds UNIQUEMENT avec le post.`)
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-white">Campagnes & Contenu</h2>
-          <p className="text-sm text-zinc-500 mt-1">Séquences email, calendrier LinkedIn, templates de posts IA</p>
+          <h2 className="text-2xl font-bold text-[#262626]">Campagnes & Contenu</h2>
+          <p className="text-sm text-[#716D5C] mt-1">Séquences email, calendrier LinkedIn, templates de posts IA</p>
         </div>
         <div className="flex gap-2">
           {activeTab === 'emails' && (
@@ -242,7 +242,7 @@ Réponds UNIQUEMENT avec le post.`)
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 border-b border-white/5 pb-0">
+      <div className="flex gap-2 border-b border-gray-100 pb-0">
         {[
           { id: 'emails', icon: Mail, label: 'Campagnes Email' },
           { id: 'linkedin', icon: Calendar, label: 'Calendrier LinkedIn' },
@@ -253,8 +253,8 @@ Réponds UNIQUEMENT avec le post.`)
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-sm font-medium transition-all border border-b-0 ${
               activeTab === tab.id
-                ? 'bg-[#111] text-white border-white/10'
-                : 'bg-transparent text-zinc-500 border-transparent hover:text-zinc-300'
+                ? 'bg-[#111] text-[#262626] border-gray-200'
+                : 'bg-transparent text-[#716D5C] border-transparent hover:text-[#716D5C]'
             }`}
           >
             <tab.icon className="w-4 h-4" /> {tab.label}
@@ -273,12 +273,12 @@ Réponds UNIQUEMENT avec le post.`)
               { label: "Taux d'ouverture", value: (() => { const t = campaigns.reduce((s, c) => s + c.totalSent, 0); return t ? Math.round(campaigns.reduce((s, c) => s + c.totalOpened, 0) / t * 100) : 0 })() + '%', icon: Eye, color: 'text-amber-400' },
               { label: 'Taux de réponse', value: (() => { const t = campaigns.reduce((s, c) => s + c.totalSent, 0); return t ? Math.round(campaigns.reduce((s, c) => s + c.totalReplied, 0) / t * 100) : 0 })() + '%', icon: Mail, color: 'text-violet-400' },
             ].map((stat, i) => (
-              <div key={i} className="bg-[#111] border border-white/5 rounded-2xl p-4">
+              <div key={i} className="bg-[#111] border border-gray-100 rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <stat.icon className={`w-4 h-4 ${stat.color}`} />
-                  <span className="text-xs text-zinc-500 font-medium">{stat.label}</span>
+                  <span className="text-xs text-[#716D5C] font-medium">{stat.label}</span>
                 </div>
-                <span className="text-2xl font-bold text-white">{stat.value}</span>
+                <span className="text-2xl font-bold text-[#262626]">{stat.value}</span>
               </div>
             ))}
           </div>
@@ -289,13 +289,13 @@ Réponds UNIQUEMENT avec le post.`)
               <motion.div
                 key={campaign.id}
                 layout
-                className="bg-[#111] border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-colors"
+                className="bg-[#111] border border-gray-100 rounded-2xl p-5 hover:border-gray-200 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 flex-1">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                       campaign.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' :
-                      campaign.status === 'draft' ? 'bg-zinc-500/10 text-zinc-400' :
+                      campaign.status === 'draft' ? 'bg-gray-50 text-[#716D5C]' :
                       'bg-amber-500/10 text-amber-400'
                     }`}>
                       {campaign.status === 'active' ? <Play className="w-5 h-5" /> :
@@ -303,8 +303,8 @@ Réponds UNIQUEMENT avec le post.`)
                        <Pause className="w-5 h-5" />}
                     </div>
                     <div>
-                      <h4 className="text-white font-bold text-sm">{campaign.name}</h4>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500">
+                      <h4 className="text-[#262626] font-bold text-sm">{campaign.name}</h4>
+                      <div className="flex items-center gap-3 mt-1 text-xs text-[#716D5C]">
                         <span>{campaign.steps.length} emails</span>
                         <span>{campaign.totalSent} envoyés</span>
                         <span>Créée le {campaign.createdAt}</span>
@@ -316,11 +316,11 @@ Réponds UNIQUEMENT avec le post.`)
                     {campaign.totalSent > 0 && (
                       <div className="flex items-center gap-4 text-xs">
                         <div className="text-center">
-                          <span className="text-zinc-500 block">Ouvert</span>
+                          <span className="text-[#716D5C] block">Ouvert</span>
                           <span className="text-blue-400 font-bold">{Math.round(campaign.totalOpened / campaign.totalSent * 100)}%</span>
                         </div>
                         <div className="text-center">
-                          <span className="text-zinc-500 block">Répondu</span>
+                          <span className="text-[#716D5C] block">Répondu</span>
                           <span className="text-emerald-400 font-bold">{Math.round(campaign.totalReplied / campaign.totalSent * 100)}%</span>
                         </div>
                       </div>
@@ -328,13 +328,13 @@ Réponds UNIQUEMENT avec le post.`)
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => setSelectedCampaign(selectedCampaign?.id === campaign.id ? null : campaign)}
-                        className="p-2 hover:bg-white/5 rounded-lg text-zinc-400 hover:text-white transition-all"
+                        className="p-2 hover:bg-gray-50 rounded-lg text-[#716D5C] hover:text-[#262626] transition-all"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => toggleCampaignStatus(campaign.id)}
-                        className={`p-2 hover:bg-white/5 rounded-lg transition-all ${
+                        className={`p-2 hover:bg-gray-50 rounded-lg transition-all ${
                           campaign.status === 'active' ? 'text-amber-400' : 'text-emerald-400'
                         }`}
                       >
@@ -342,7 +342,7 @@ Réponds UNIQUEMENT avec le post.`)
                       </button>
                       <button
                         onClick={() => deleteCampaign(campaign.id)}
-                        className="p-2 hover:bg-red-500/10 text-zinc-500 hover:text-red-400 rounded-lg transition-all"
+                        className="p-2 hover:bg-red-500/10 text-[#716D5C] hover:text-red-400 rounded-lg transition-all"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -358,22 +358,22 @@ Réponds UNIQUEMENT avec le post.`)
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
+                      <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
                         {campaign.steps.map((step, i) => (
                           <div key={i} className="flex items-start gap-3">
                             <div className="flex flex-col items-center">
                               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                                i === 0 ? 'bg-violet-500/20 text-violet-400' : 'bg-white/5 text-zinc-400'
+                                i === 0 ? 'bg-violet-500/20 text-violet-400' : 'bg-gray-50 text-[#716D5C]'
                               }`}>
                                 J+{step.day}
                               </div>
                               {i < campaign.steps.length - 1 && (
-                                <div className="w-px h-8 bg-white/10 mt-1" />
+                                <div className="w-px h-8 bg-gray-50 mt-1" />
                               )}
                             </div>
-                            <div className="flex-1 bg-white/[0.02] border border-white/5 rounded-xl p-3">
-                              <p className="text-sm text-white font-medium">{step.subject}</p>
-                              {step.body && <p className="text-xs text-zinc-500 mt-1 line-clamp-2">{step.body}</p>}
+                            <div className="flex-1 bg-white/[0.02] border border-gray-100 rounded-xl p-3">
+                              <p className="text-sm text-[#262626] font-medium">{step.subject}</p>
+                              {step.body && <p className="text-xs text-[#716D5C] mt-1 line-clamp-2">{step.body}</p>}
                               {step.openRate > 0 && (
                                 <div className="flex gap-3 mt-2 text-[10px]">
                                   <span className="text-blue-400">Ouverture: {step.openRate}%</span>
@@ -399,19 +399,19 @@ Réponds UNIQUEMENT avec le post.`)
           {/* Week navigation */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <button onClick={() => setWeekOffset(w => w - 1)} className="p-2 hover:bg-white/5 rounded-lg text-zinc-400 hover:text-white transition-all">
+              <button onClick={() => setWeekOffset(w => w - 1)} className="p-2 hover:bg-gray-50 rounded-lg text-[#716D5C] hover:text-[#262626] transition-all">
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              <h3 className="text-white font-bold text-sm">
+              <h3 className="text-[#262626] font-bold text-sm">
                 Semaine du {weekDates[0].toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} au {weekDates[4].toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
               </h3>
-              <button onClick={() => setWeekOffset(w => w + 1)} className="p-2 hover:bg-white/5 rounded-lg text-zinc-400 hover:text-white transition-all">
+              <button onClick={() => setWeekOffset(w => w + 1)} className="p-2 hover:bg-gray-50 rounded-lg text-[#716D5C] hover:text-[#262626] transition-all">
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
             <button
               onClick={() => setWeekOffset(0)}
-              className="text-xs text-zinc-500 hover:text-zinc-300 px-3 py-1 rounded-lg hover:bg-white/5 transition-all"
+              className="text-xs text-[#716D5C] hover:text-[#716D5C] px-3 py-1 rounded-lg hover:bg-gray-50 transition-all"
             >
               Aujourd'hui
             </button>
@@ -430,16 +430,16 @@ Réponds UNIQUEMENT avec le post.`)
                 <div
                   key={slot.day}
                   className={`bg-[#111] border rounded-2xl p-4 flex flex-col min-h-[280px] transition-all ${
-                    isToday ? 'border-violet-500/30' : 'border-white/5'
+                    isToday ? 'border-violet-500/30' : 'border-gray-100'
                   }`}
                 >
                   {/* Day header */}
                   <div className="flex items-center justify-between mb-3">
                     <div>
-                      <span className={`text-xs font-bold uppercase tracking-wider ${isToday ? 'text-violet-400' : 'text-zinc-500'}`}>
+                      <span className={`text-xs font-bold uppercase tracking-wider ${isToday ? 'text-violet-400' : 'text-[#716D5C]'}`}>
                         {slot.day}
                       </span>
-                      <span className="text-[10px] text-zinc-600 ml-2">
+                      <span className="text-[10px] text-[#716D5C] ml-2">
                         {date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
                       </span>
                     </div>
@@ -450,7 +450,7 @@ Réponds UNIQUEMENT avec le post.`)
                   <select
                     value={slot.type}
                     onChange={(e) => setWeeklySchedule(prev => prev.map((s, j) => j === i ? { ...s, type: e.target.value } : s))}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-zinc-300 focus:outline-none mb-2"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5 text-xs text-[#716D5C] focus:outline-none mb-2"
                   >
                     {POST_TEMPLATES.map(t => (
                       <option key={t.id} value={t.id}>{t.label}</option>
@@ -470,17 +470,17 @@ Réponds UNIQUEMENT avec le post.`)
                     value={slot.topic}
                     onChange={(e) => setWeeklySchedule(prev => prev.map((s, j) => j === i ? { ...s, topic: e.target.value } : s))}
                     placeholder="Sujet (optionnel)..."
-                    className="w-full bg-white/[0.03] border border-white/5 rounded-lg px-2 py-1.5 text-[11px] text-zinc-400 placeholder-zinc-700 focus:outline-none focus:border-white/10 mb-3"
+                    className="w-full bg-[#F9F7F1] border border-gray-100 rounded-lg px-2 py-1.5 text-[11px] text-[#716D5C] placeholder-zinc-700 focus:outline-none focus:border-gray-200 mb-3"
                   />
 
                   {/* Generated content preview or generate button */}
                   <div className="flex-1 flex flex-col justify-end">
                     {hasGenerated ? (
                       <div
-                        className="bg-white/[0.02] border border-white/5 rounded-lg p-2 cursor-pointer hover:border-white/10 transition-all mb-2"
+                        className="bg-white/[0.02] border border-gray-100 rounded-lg p-2 cursor-pointer hover:border-gray-200 transition-all mb-2"
                         onClick={() => setShowPostPreview(slot.day)}
                       >
-                        <p className="text-[10px] text-zinc-400 line-clamp-4 leading-relaxed">{generatedPosts[slot.day]}</p>
+                        <p className="text-[10px] text-[#716D5C] line-clamp-4 leading-relaxed">{generatedPosts[slot.day]}</p>
                         <span className="text-[9px] text-violet-400 mt-1 block">Cliquer pour voir</span>
                       </div>
                     ) : null}
@@ -499,10 +499,10 @@ Réponds UNIQUEMENT avec le post.`)
           </div>
 
           {/* Tips */}
-          <div className="bg-[#111] border border-white/5 rounded-2xl p-4">
-            <p className="text-xs text-zinc-500 flex items-center gap-2">
+          <div className="bg-[#111] border border-gray-100 rounded-2xl p-4">
+            <p className="text-xs text-[#716D5C] flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-violet-400" />
-              <span><b className="text-zinc-300">Conseil :</b> Variez les formats pour maximiser l'engagement. Alternez entre case studies (confiance), tips (valeur), et opinions (débat).</span>
+              <span><b className="text-[#716D5C]">Conseil :</b> Variez les formats pour maximiser l'engagement. Alternez entre case studies (confiance), tips (valeur), et opinions (débat).</span>
             </p>
           </div>
         </div>
@@ -518,14 +518,14 @@ Réponds UNIQUEMENT avec le post.`)
                 key={template.id}
                 onClick={() => { setSelectedTemplate(template.id); setGeneratedTemplate('') }}
                 className={`bg-[#111] border rounded-2xl p-5 text-left transition-all hover:border-white/15 ${
-                  selectedTemplate === template.id ? 'border-violet-500/30 ring-1 ring-violet-500/20' : 'border-white/5'
+                  selectedTemplate === template.id ? 'border-violet-500/30 ring-1 ring-violet-500/20' : 'border-gray-100'
                 }`}
               >
                 <div className={`w-10 h-10 rounded-xl ${template.bg} flex items-center justify-center mb-3`}>
                   <template.icon className={`w-5 h-5 ${template.color}`} />
                 </div>
-                <h4 className="text-white font-bold text-sm mb-1">{template.label}</h4>
-                <p className="text-[11px] text-zinc-500 leading-relaxed">{template.description}</p>
+                <h4 className="text-[#262626] font-bold text-sm mb-1">{template.label}</h4>
+                <p className="text-[11px] text-[#716D5C] leading-relaxed">{template.description}</p>
               </button>
             ))}
           </div>
@@ -535,7 +535,7 @@ Réponds UNIQUEMENT avec le post.`)
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-[#111] border border-white/5 rounded-2xl p-6"
+              className="bg-[#111] border border-gray-100 rounded-2xl p-6"
             >
               <div className="flex items-center gap-3 mb-4">
                 {(() => {
@@ -546,8 +546,8 @@ Réponds UNIQUEMENT avec le post.`)
                         <t.icon className={`w-4 h-4 ${t.color}`} />
                       </div>
                       <div>
-                        <h4 className="text-white font-bold text-sm">{t.label}</h4>
-                        <p className="text-[10px] text-zinc-500">{t.description}</p>
+                        <h4 className="text-[#262626] font-bold text-sm">{t.label}</h4>
+                        <p className="text-[10px] text-[#716D5C]">{t.description}</p>
                       </div>
                     </>
                   )
@@ -559,13 +559,13 @@ Réponds UNIQUEMENT avec le post.`)
                   value={templateTopic}
                   onChange={(e) => setTemplateTopic(e.target.value)}
                   placeholder="Sujet du post (optionnel, ex: Réduction du temps de réponse SAV de 24h à 2min)"
-                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                  className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
                   onKeyDown={e => e.key === 'Enter' && generateFromTemplate()}
                 />
                 <button
                   onClick={generateFromTemplate}
                   disabled={generatingTemplate}
-                  className="flex items-center gap-2 px-5 py-2 bg-violet-600 hover:bg-violet-500 disabled:bg-zinc-700 disabled:text-zinc-500 text-white rounded-xl text-sm font-medium transition-all"
+                  className="flex items-center gap-2 px-5 py-2 bg-violet-600 hover:bg-violet-500 disabled:bg-gray-200 disabled:text-[#716D5C] text-white rounded-xl text-sm font-medium transition-all"
                 >
                   {generatingTemplate ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                   {generatingTemplate ? 'Génération...' : 'Générer'}
@@ -574,7 +574,7 @@ Réponds UNIQUEMENT avec le post.`)
 
               {generatedTemplate && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <pre className="bg-black/30 border border-white/5 rounded-xl p-4 text-sm text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed mb-3">
+                  <pre className="bg-white/30 border border-gray-100 rounded-xl p-4 text-sm text-[#716D5C] whitespace-pre-wrap font-mono leading-relaxed mb-3">
                     {generatedTemplate}
                   </pre>
                   <div className="flex gap-2">
@@ -586,7 +586,7 @@ Réponds UNIQUEMENT avec le post.`)
                     </button>
                     <button
                       onClick={generateFromTemplate}
-                      className="px-4 py-2 bg-white/5 hover:bg-white/10 text-zinc-300 rounded-xl text-sm font-medium transition-all border border-white/10"
+                      className="px-4 py-2 bg-gray-50 hover:bg-gray-50 text-[#716D5C] rounded-xl text-sm font-medium transition-all border border-gray-200"
                     >
                       <RefreshCw className="w-4 h-4 inline mr-1.5" /> Régénérer
                     </button>
@@ -605,7 +605,7 @@ Réponds UNIQUEMENT avec le post.`)
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => setShowCreate(false)}
           >
             <motion.div
@@ -613,31 +613,31 @@ Réponds UNIQUEMENT avec le post.`)
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={e => e.stopPropagation()}
-              className="bg-[#111] border border-white/10 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
+              className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white">Nouvelle campagne</h3>
-                <button onClick={() => setShowCreate(false)} className="p-1 hover:bg-white/10 rounded-lg">
-                  <X className="w-5 h-5 text-zinc-400" />
+                <h3 className="text-lg font-bold text-[#262626]">Nouvelle campagne</h3>
+                <button onClick={() => setShowCreate(false)} className="p-1 hover:bg-gray-50 rounded-lg">
+                  <X className="w-5 h-5 text-[#716D5C]" />
                 </button>
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs text-zinc-500 font-medium block mb-1">Nom de la campagne</label>
+                  <label className="text-xs text-[#716D5C] font-medium block mb-1">Nom de la campagne</label>
                   <input
                     value={newCampaign.name}
                     onChange={e => setNewCampaign(prev => ({ ...prev, name: e.target.value }))}
                     placeholder="Ex: SAV E-commerce — Boutiques Shopify FR"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
                   />
                 </div>
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-[#716D5C]">
                   L'IA va générer une séquence de 3 emails (J+0, J+3, J+7) optimisée pour la conversion.
                 </p>
                 <button
                   onClick={generateSequence}
                   disabled={generating || !newCampaign.name.trim()}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-violet-600 hover:bg-violet-500 disabled:bg-zinc-700 disabled:text-zinc-500 text-white rounded-xl text-sm font-medium transition-all"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-violet-600 hover:bg-violet-500 disabled:bg-gray-200 disabled:text-[#716D5C] text-white rounded-xl text-sm font-medium transition-all"
                 >
                   {generating ? <><Loader2 className="w-4 h-4 animate-spin" /> Génération IA en cours...</> : <><RefreshCw className="w-4 h-4" /> Générer la séquence avec l'IA</>}
                 </button>
@@ -654,7 +654,7 @@ Réponds UNIQUEMENT avec le post.`)
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             onClick={() => setShowPostPreview(null)}
           >
             <motion.div
@@ -662,18 +662,18 @@ Réponds UNIQUEMENT avec le post.`)
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={e => e.stopPropagation()}
-              className="bg-[#111] border border-white/10 rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[80vh] overflow-y-auto"
+              className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[80vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <h3 className="text-lg font-bold text-[#262626] flex items-center gap-2">
                   <Calendar className="w-5 h-5 text-violet-400" />
                   Post LinkedIn — {showPostPreview}
                 </h3>
-                <button onClick={() => setShowPostPreview(null)} className="p-1 hover:bg-white/10 rounded-lg">
-                  <X className="w-5 h-5 text-zinc-400" />
+                <button onClick={() => setShowPostPreview(null)} className="p-1 hover:bg-gray-50 rounded-lg">
+                  <X className="w-5 h-5 text-[#716D5C]" />
                 </button>
               </div>
-              <pre className="bg-black/30 border border-white/5 rounded-xl p-4 text-sm text-zinc-300 whitespace-pre-wrap font-mono leading-relaxed">
+              <pre className="bg-white/30 border border-gray-100 rounded-xl p-4 text-sm text-[#716D5C] whitespace-pre-wrap font-mono leading-relaxed">
                 {generatedPosts[showPostPreview]}
               </pre>
               <div className="flex gap-2 mt-4">
@@ -685,7 +685,7 @@ Réponds UNIQUEMENT avec le post.`)
                 </button>
                 <button
                   onClick={() => setShowPostPreview(null)}
-                  className="px-4 py-2 bg-white/5 hover:bg-white/10 text-zinc-300 rounded-xl text-sm font-medium transition-all border border-white/10"
+                  className="px-4 py-2 bg-gray-50 hover:bg-gray-50 text-[#716D5C] rounded-xl text-sm font-medium transition-all border border-gray-200"
                 >
                   Fermer
                 </button>

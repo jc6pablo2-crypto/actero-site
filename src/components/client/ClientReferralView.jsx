@@ -8,7 +8,7 @@ import {
 import { supabase } from '../../lib/supabase'
 
 const STATUS_CONFIG = {
-  pending: { label: 'En attente', color: 'text-gray-400 bg-gray-400/10', icon: Clock },
+  pending: { label: 'En attente', color: 'text-[#716D5C] bg-gray-400/10', icon: Clock },
   clicked: { label: 'Lien clique', color: 'text-blue-400 bg-blue-400/10', icon: Eye },
   signed_up: { label: 'Inscrit', color: 'text-amber-400 bg-amber-400/10', icon: Users },
   paid: { label: 'A paye', color: 'text-emerald-400 bg-emerald-400/10', icon: DollarSign },
@@ -112,10 +112,10 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
   const currentReward = totalRewarded < 3 ? 800 : 1600
   const nextReward = 1600
 
-  const cardBg = isLight ? 'bg-white border-slate-200' : 'bg-[#0E1424] border-white/10'
-  const textPrimary = isLight ? 'text-slate-900' : 'text-white'
-  const textSecondary = isLight ? 'text-slate-500' : 'text-gray-400'
-  const inputBg = isLight ? 'bg-slate-50 border-slate-200' : 'bg-white/5 border-white/10'
+  const cardBg = isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'
+  const textPrimary = isLight ? 'text-[#262626]' : 'text-[#262626]'
+  const textSecondary = isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'
+  const inputBg = isLight ? 'bg-[#F9F7F1] border-gray-200' : 'bg-gray-50 border-gray-200'
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
@@ -144,7 +144,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
         </div>
 
         {codeLoading ? (
-          <div className="flex items-center gap-2 text-gray-500">
+          <div className="flex items-center gap-2 text-[#716D5C]">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span className="text-sm">Generation du code...</span>
           </div>
@@ -162,7 +162,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
                   copied
                     ? 'bg-emerald-500/10 text-emerald-400'
                     : isLight
-                      ? 'bg-slate-900 text-white hover:bg-slate-800'
+                      ? 'bg-[#F9F7F1] text-[#262626] hover:bg-gray-50'
                       : 'bg-white text-black hover:bg-gray-100'
                 }`}
               >
@@ -176,8 +176,8 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
                 onClick={handleShareEmail}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                   isLight
-                    ? 'border-slate-200 text-slate-700 hover:bg-slate-50'
-                    : 'border-white/10 text-gray-300 hover:bg-white/5'
+                    ? 'border-gray-200 text-slate-700 hover:bg-[#F9F7F1]'
+                    : 'border-gray-200 text-[#716D5C] hover:bg-gray-50'
                 }`}
               >
                 <Mail className="w-4 h-4" /> Email
@@ -186,8 +186,8 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
                 onClick={handleShareWhatsApp}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                   isLight
-                    ? 'border-slate-200 text-slate-700 hover:bg-slate-50'
-                    : 'border-white/10 text-gray-300 hover:bg-white/5'
+                    ? 'border-gray-200 text-slate-700 hover:bg-[#F9F7F1]'
+                    : 'border-gray-200 text-[#716D5C] hover:bg-gray-50'
                 }`}
               >
                 <Share2 className="w-4 h-4" /> WhatsApp
@@ -196,8 +196,8 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
                 onClick={handleShareLinkedIn}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                   isLight
-                    ? 'border-slate-200 text-slate-700 hover:bg-slate-50'
-                    : 'border-white/10 text-gray-300 hover:bg-white/5'
+                    ? 'border-gray-200 text-slate-700 hover:bg-[#F9F7F1]'
+                    : 'border-gray-200 text-[#716D5C] hover:bg-gray-50'
                 }`}
               >
                 <ExternalLink className="w-4 h-4" /> LinkedIn
@@ -266,7 +266,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
               </span>
             )}
           </div>
-          <div className={`h-3 rounded-full ${isLight ? 'bg-slate-100' : 'bg-white/5'}`}>
+          <div className={`h-3 rounded-full ${isLight ? 'bg-gray-100' : 'bg-gray-50'}`}>
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: totalRewarded >= 3 ? '100%' : `${(totalRewarded / 3) * 100}%` }}
@@ -305,7 +305,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className={`border-t ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
+                <tr className={`border-t ${isLight ? 'border-gray-100' : 'border-gray-100'}`}>
                   <th className={`text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider ${textSecondary}`}>Date</th>
                   <th className={`text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider ${textSecondary}`}>Statut</th>
                   <th className={`text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider ${textSecondary}`}>Credit</th>
@@ -317,7 +317,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
                   const statusConf = STATUS_CONFIG[ref.status] || STATUS_CONFIG.pending
                   const StatusIcon = statusConf.icon
                   return (
-                    <tr key={ref.id} className={`border-t ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
+                    <tr key={ref.id} className={`border-t ${isLight ? 'border-gray-100' : 'border-gray-100'}`}>
                       <td className={`px-6 py-4 text-sm ${textPrimary}`}>
                         {new Date(ref.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </td>
@@ -356,7 +356,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className={`border-t ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
+                <tr className={`border-t ${isLight ? 'border-gray-100' : 'border-gray-100'}`}>
                   <th className={`text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider ${textSecondary}`}>Date</th>
                   <th className={`text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider ${textSecondary}`}>Type</th>
                   <th className={`text-left px-6 py-3 text-xs font-semibold uppercase tracking-wider ${textSecondary}`}>Montant</th>
@@ -364,7 +364,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
               </thead>
               <tbody>
                 {rewards.map((reward) => (
-                  <tr key={reward.id} className={`border-t ${isLight ? 'border-slate-100' : 'border-white/5'}`}>
+                  <tr key={reward.id} className={`border-t ${isLight ? 'border-gray-100' : 'border-gray-100'}`}>
                     <td className={`px-6 py-4 text-sm ${textPrimary}`}>
                       {new Date(reward.applied_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                     </td>

@@ -72,14 +72,14 @@ export default function AmbassadorSetupIban() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0E1A] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <Logo className="w-8 h-8 mx-auto mb-4 text-white" />
+          <Logo className="w-8 h-8 mx-auto mb-4 text-[#262626]" />
           <span className="inline-block bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full mb-4 tracking-widest">PROGRAMME AMBASSADEUR</span>
         </div>
 
@@ -87,11 +87,11 @@ export default function AmbassadorSetupIban() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#0E1424] border border-white/10 rounded-2xl p-8 text-center"
+            className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-8 text-center"
           >
             <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">IBAN enregistré !</h2>
-            <p className="text-zinc-400 mb-8">Tout est prêt. Commencez à recommander Actero et gagnez des récompenses.</p>
+            <h2 className="text-2xl font-bold text-[#262626] mb-2">IBAN enregistré !</h2>
+            <p className="text-[#716D5C] mb-8">Tout est prêt. Commencez à recommander Actero et gagnez des récompenses.</p>
             <a
               href="/ambassador/overview"
               className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-8 py-3 rounded-xl transition-colors text-lg"
@@ -100,13 +100,13 @@ export default function AmbassadorSetupIban() {
             </a>
           </motion.div>
         ) : (
-          <div className="bg-[#0E1424] border border-white/10 rounded-2xl p-8">
+          <div className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-8">
             <div className="text-center mb-6">
               <div className="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <Landmark className="w-7 h-7 text-emerald-400" />
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Ajoutez votre IBAN</h2>
-              <p className="text-zinc-400 text-sm">Pour recevoir vos récompenses par virement bancaire</p>
+              <h2 className="text-2xl font-bold text-[#262626] mb-2">Ajoutez votre IBAN</h2>
+              <p className="text-[#716D5C] text-sm">Pour recevoir vos récompenses par virement bancaire</p>
             </div>
 
             <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 mb-6">
@@ -126,24 +126,24 @@ export default function AmbassadorSetupIban() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-1.5">Titulaire du compte *</label>
+                <label className="block text-sm font-medium text-[#716D5C] mb-1.5">Titulaire du compte *</label>
                 <input
                   type="text"
                   value={holder}
                   onChange={(e) => setHolder(e.target.value)}
                   placeholder="Prénom Nom ou Raison sociale"
-                  className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50"
+                  className="w-full bg-[#111] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-1.5">IBAN *</label>
+                <label className="block text-sm font-medium text-[#716D5C] mb-1.5">IBAN *</label>
                 <input
                   type="text"
                   value={iban}
                   onChange={handleIbanChange}
                   placeholder="FR76 1234 5678 9012 3456 7890 123"
-                  className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 font-mono tracking-wider"
+                  className="w-full bg-[#111] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 font-mono tracking-wider"
                 />
                 {iban.length > 0 && !isValidIban && (
                   <p className="text-amber-400 text-xs mt-1">IBAN invalide (doit commencer par 2 lettres)</p>
@@ -151,13 +151,13 @@ export default function AmbassadorSetupIban() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-1.5">BIC / SWIFT (optionnel)</label>
+                <label className="block text-sm font-medium text-[#716D5C] mb-1.5">BIC / SWIFT (optionnel)</label>
                 <input
                   type="text"
                   value={bic}
                   onChange={(e) => setBic(e.target.value.toUpperCase())}
                   placeholder="BNPAFRPP"
-                  className="w-full bg-[#111] border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 font-mono"
+                  className="w-full bg-[#111] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 font-mono"
                 />
               </div>
 
@@ -167,7 +167,7 @@ export default function AmbassadorSetupIban() {
                 className={`w-full py-3 rounded-xl font-bold text-lg transition-all mt-2 ${
                   isValidIban && holder.trim() && user
                     ? 'bg-emerald-500 hover:bg-emerald-400 text-black'
-                    : 'bg-white/5 text-zinc-600 cursor-not-allowed'
+                    : 'bg-gray-50 text-[#716D5C] cursor-not-allowed'
                 }`}
               >
                 {loading ? 'Enregistrement...' : 'Enregistrer mon IBAN'}
@@ -176,7 +176,7 @@ export default function AmbassadorSetupIban() {
               <button
                 type="button"
                 onClick={() => window.location.href = '/ambassador/overview'}
-                className="w-full py-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+                className="w-full py-2 text-sm text-[#716D5C] hover:text-[#716D5C] transition-colors"
               >
                 Passer cette étape (vous pourrez l'ajouter plus tard)
               </button>

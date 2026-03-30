@@ -43,7 +43,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0A0E1A] flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
@@ -55,7 +55,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#0A0E1A] flex items-center justify-center text-white">
+      <div className="min-h-screen bg-white flex items-center justify-center text-[#262626]">
         <div className="text-center">
           <p className="text-red-400 text-lg mb-4">{error}</p>
           <button onClick={() => onNavigate('/')} className="text-emerald-400 font-bold">
@@ -67,12 +67,12 @@ export const ReferralLanding = ({ code, onNavigate }) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0E1A] text-white overflow-hidden">
+    <div className="min-h-screen bg-white text-[#262626] overflow-hidden">
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0A0E1A]/80 backdrop-blur-xl border-b border-white/5">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <button onClick={() => onNavigate('/')} className="flex items-center gap-2">
-            <Logo className="w-7 h-7 text-white" />
+            <Logo className="w-7 h-7 text-[#262626]" />
             <span className="font-bold text-lg tracking-tight">Actero</span>
           </button>
           <button
@@ -122,7 +122,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
                 <span className="text-emerald-400 font-bold">Frais de setup offerts</span>{' '}
                 grace a votre parrain
               </p>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-sm text-[#716D5C] mt-1">
                 Economie immediate sur votre demarrage
               </p>
             </div>
@@ -140,13 +140,13 @@ export const ReferralLanding = ({ code, onNavigate }) => {
               Reserver mon audit gratuit
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
-            <p className="text-sm text-gray-500 mt-4">15 min — 100% gratuit — Sans engagement</p>
+            <p className="text-sm text-[#716D5C] mt-4">15 min — 100% gratuit — Sans engagement</p>
           </motion.div>
         </div>
       </div>
 
       {/* Benefits */}
-      <div className="py-20 px-6 border-t border-white/5">
+      <div className="py-20 px-6 border-t border-gray-100">
         <div className="max-w-5xl mx-auto">
           <motion.h2
             initial={{ opacity: 0 }}
@@ -184,13 +184,13 @@ export const ReferralLanding = ({ code, onNavigate }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-[#0E1424] rounded-2xl border border-white/10 p-6 hover:border-white/20 transition-colors"
+                className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-6 hover:border-white/20 transition-colors"
               >
                 <div className={`w-10 h-10 rounded-xl bg-${item.color}-500/10 flex items-center justify-center mb-4`}>
                   <item.icon className={`w-5 h-5 text-${item.color}-400`} />
                 </div>
                 <h3 className="text-lg font-bold mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
+                <p className="text-sm text-[#716D5C] leading-relaxed">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -198,22 +198,22 @@ export const ReferralLanding = ({ code, onNavigate }) => {
       </div>
 
       {/* Social proof */}
-      <div className="py-20 px-6 border-t border-white/5">
+      <div className="py-20 px-6 border-t border-gray-100">
         <div className="max-w-3xl mx-auto text-center">
           <div className="flex items-center justify-center gap-1 mb-4">
             {[...Array(5)].map((_, i) => (
               <Star key={i} className="w-5 h-5 text-amber-400 fill-amber-400" />
             ))}
           </div>
-          <p className="text-lg text-gray-300 mb-6 italic">
+          <p className="text-lg text-[#716D5C] mb-6 italic">
             "Actero a transforme notre support client. On a reduit nos temps de reponse de 80% en 2 semaines."
           </p>
-          <p className="text-sm text-gray-500">— Client Actero depuis 2025</p>
+          <p className="text-sm text-[#716D5C]">— Client Actero depuis 2025</p>
         </div>
       </div>
 
       {/* Final CTA */}
-      <div className="py-20 px-6 border-t border-white/5">
+      <div className="py-20 px-6 border-t border-gray-100">
         <div className="max-w-2xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -223,7 +223,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
           >
             <Gift className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
             <h3 className="text-2xl font-bold mb-3">Profitez de votre offre exclusive</h3>
-            <p className="text-gray-400 mb-6">
+            <p className="text-[#716D5C] mb-6">
               Setup offert grace au parrainage de {referrerName}. Reservez votre audit gratuit maintenant.
             </p>
             <button
@@ -233,7 +233,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
               Reserver mon audit gratuit
               <ArrowRight className="w-5 h-5" />
             </button>
-            <div className="flex items-center justify-center gap-6 mt-6 text-sm text-gray-500">
+            <div className="flex items-center justify-center gap-6 mt-6 text-sm text-[#716D5C]">
               <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Gratuit</span>
               <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> 15 minutes</span>
               <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Sans engagement</span>
@@ -243,8 +243,8 @@ export const ReferralLanding = ({ code, onNavigate }) => {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-8 px-6 text-center">
-        <p className="text-sm text-gray-600">&copy; 2026 Actero. Tous droits reserves.</p>
+      <footer className="border-t border-gray-100 py-8 px-6 text-center">
+        <p className="text-sm text-[#716D5C]">&copy; 2026 Actero. Tous droits reserves.</p>
       </footer>
     </div>
   )

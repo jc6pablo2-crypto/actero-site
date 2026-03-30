@@ -81,7 +81,7 @@ export const AdminPartnersView = () => {
             <Handshake className="w-7 h-7 text-indigo-400" />
             Partenaires
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-[#716D5C] mt-1">
             Candidatures du programme partenaire B2B
           </p>
         </div>
@@ -90,15 +90,15 @@ export const AdminPartnersView = () => {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Total', value: statCounts.total, icon: Users, color: 'text-gray-400' },
+          { label: 'Total', value: statCounts.total, icon: Users, color: 'text-[#716D5C]' },
           { label: 'Nouveaux', value: statCounts.new, icon: Clock, color: 'text-blue-400' },
           { label: 'Contactés', value: statCounts.contacted, icon: Mail, color: 'text-amber-400' },
           { label: 'Qualifiés', value: statCounts.qualified, icon: CheckCircle2, color: 'text-green-400' },
         ].map((stat, i) => (
-          <div key={i} className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+          <div key={i} className="p-4 rounded-xl bg-white/[0.02] border border-gray-200">
             <div className="flex items-center gap-2 mb-2">
               <stat.icon className={`w-4 h-4 ${stat.color}`} />
-              <span className="text-xs text-gray-500">{stat.label}</span>
+              <span className="text-xs text-[#716D5C]">{stat.label}</span>
             </div>
             <div className="text-2xl font-bold">{stat.value}</div>
           </div>
@@ -108,19 +108,19 @@ export const AdminPartnersView = () => {
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#716D5C]" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Rechercher par nom, email, société..."
-            className="w-full pl-10 pr-4 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl text-sm text-white placeholder-gray-600 outline-none focus:border-indigo-500/40"
+            className="w-full pl-10 pr-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] placeholder-gray-600 outline-none focus:border-indigo-500/40"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2.5 bg-white/[0.04] border border-white/10 rounded-xl text-sm text-white outline-none focus:border-indigo-500/40 appearance-none cursor-pointer"
+          className="px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:border-indigo-500/40 appearance-none cursor-pointer"
         >
           <option value="all" className="bg-[#111]">Tous les statuts</option>
           {Object.entries(STATUS_MAP).map(([key, val]) => (
@@ -135,23 +135,23 @@ export const AdminPartnersView = () => {
           <Loader2 className="w-6 h-6 text-indigo-400 animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-20 text-gray-600">
+        <div className="text-center py-20 text-[#716D5C]">
           <AlertCircle className="w-10 h-10 mx-auto mb-3 opacity-50" />
           <p>Aucune candidature trouvée.</p>
         </div>
       ) : (
-        <div className="rounded-xl border border-white/[0.06] overflow-hidden">
+        <div className="rounded-xl border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/[0.06] bg-white/[0.02]">
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Candidat</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Société</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Activité</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Potentiel</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Statut</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                <tr className="border-b border-gray-200 bg-white/[0.02]">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Candidat</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Société</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Activité</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Potentiel</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Statut</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Date</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -163,13 +163,13 @@ export const AdminPartnersView = () => {
                     >
                       <td className="px-4 py-3">
                         <div className="font-medium">{p.first_name} {p.last_name}</div>
-                        <div className="text-xs text-gray-500">{p.email}</div>
+                        <div className="text-xs text-[#716D5C]">{p.email}</div>
                       </td>
-                      <td className="px-4 py-3 text-gray-400">{p.company_name}</td>
-                      <td className="px-4 py-3 text-gray-400">{p.activity_type || '—'}</td>
-                      <td className="px-4 py-3 text-gray-400">{p.potential_clients || '—'}</td>
+                      <td className="px-4 py-3 text-[#716D5C]">{p.company_name}</td>
+                      <td className="px-4 py-3 text-[#716D5C]">{p.activity_type || '—'}</td>
+                      <td className="px-4 py-3 text-[#716D5C]">{p.potential_clients || '—'}</td>
                       <td className="px-4 py-3"><StatusBadge status={p.status} /></td>
-                      <td className="px-4 py-3 text-gray-500 text-xs">
+                      <td className="px-4 py-3 text-[#716D5C] text-xs">
                         {new Date(p.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </td>
                       <td className="px-4 py-3">
@@ -180,7 +180,7 @@ export const AdminPartnersView = () => {
                             updateStatusMutation.mutate({ id: p.id, status: e.target.value })
                           }}
                           onClick={(e) => e.stopPropagation()}
-                          className="px-2 py-1 bg-white/[0.04] border border-white/10 rounded-lg text-xs text-white outline-none cursor-pointer"
+                          className="px-2 py-1 bg-[#F9F7F1] border border-gray-200 rounded-lg text-xs text-[#262626] outline-none cursor-pointer"
                         >
                           {Object.entries(STATUS_MAP).map(([key, val]) => (
                             <option key={key} value={key} className="bg-[#111]">{val.label}</option>
@@ -199,19 +199,19 @@ export const AdminPartnersView = () => {
                               transition={{ duration: 0.2 }}
                               className="overflow-hidden"
                             >
-                              <div className="px-6 py-4 bg-white/[0.01] border-b border-white/[0.06] space-y-2">
+                              <div className="px-6 py-4 bg-white/[0.01] border-b border-gray-200 space-y-2">
                                 {p.phone && (
-                                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                                  <div className="flex items-center gap-2 text-sm text-[#716D5C]">
                                     <Phone className="w-3.5 h-3.5" />
                                     {p.phone}
                                   </div>
                                 )}
                                 {p.message && (
-                                  <div className="text-sm text-gray-400">
-                                    <span className="text-gray-600 font-medium">Message :</span> {p.message}
+                                  <div className="text-sm text-[#716D5C]">
+                                    <span className="text-[#716D5C] font-medium">Message :</span> {p.message}
                                   </div>
                                 )}
-                                <div className="text-xs text-gray-600">
+                                <div className="text-xs text-[#716D5C]">
                                   Source : {p.source} — Mis à jour : {new Date(p.updated_at).toLocaleString('fr-FR')}
                                 </div>
                               </div>

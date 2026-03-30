@@ -46,9 +46,9 @@ export function HealthScoreIndicator({ metricsData, eventsData, theme = "dark" }
   };
 
   return (
-    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${isLight ? "bg-slate-50 border-slate-200" : "bg-white/5 border-white/10"}`}>
+    <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${isLight ? "bg-[#F9F7F1] border-gray-200" : "bg-gray-50 border-gray-200"}`}>
       <div className={`w-2 h-2 rounded-full animate-pulse ${score >= 70 ? "bg-emerald-500" : "bg-rose-500"}`}></div>
-      <span className={`text-xs font-bold ${isLight ? "text-slate-900" : "text-white"}`}>
+      <span className={`text-xs font-bold ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
         Système: <span className={getStatusColor(score)}>{score}%</span>
       </span>
     </div>
@@ -60,8 +60,8 @@ export function HealthScoreWidget({ metricsData, eventsData, theme = "dark" }) {
   const isLight = theme === "light";
 
   return (
-    <div className={`p-6 rounded-2xl border transition-all ${isLight ? "bg-white border-slate-200" : "bg-[#0E1424] border-white/10"}`}>
-      <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 ${isLight ? "text-slate-500" : "text-gray-400"}`}>
+    <div className={`p-6 rounded-2xl border transition-all ${isLight ? "bg-white border-gray-200" : "bg-[#F9F7F1] border-gray-200"}`}>
+      <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`}>
         Santé de l'infrastructure
       </h3>
       <div className="flex items-center gap-8">
@@ -70,7 +70,7 @@ export function HealthScoreWidget({ metricsData, eventsData, theme = "dark" }) {
              <circle
                cx="64" cy="64" r="58"
                stroke="currentColor" strokeWidth="8" fill="transparent"
-               className={isLight ? "text-slate-100" : "text-white/5"}
+               className={isLight ? "text-slate-100" : "text-[#262626]/5"}
              />
              <circle
                cx="64" cy="64" r="58"
@@ -81,7 +81,7 @@ export function HealthScoreWidget({ metricsData, eventsData, theme = "dark" }) {
                className={score >= 90 ? "text-emerald-500" : score >= 70 ? "text-amber-500" : "text-rose-500"}
              />
            </svg>
-           <span className={`absolute text-2xl font-bold ${isLight ? "text-slate-900" : "text-white"}`}>
+           <span className={`absolute text-2xl font-bold ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
              {score}%
            </span>
         </div>
@@ -89,10 +89,10 @@ export function HealthScoreWidget({ metricsData, eventsData, theme = "dark" }) {
           {Object.entries(components).map(([key, val]) => (
             <div key={key}>
               <div className="flex justify-between text-xs font-bold mb-1 uppercase tracking-tighter">
-                <span className={isLight ? "text-slate-500" : "text-gray-500"}>{key}</span>
-                <span className={isLight ? "text-slate-900" : "text-white"}>{Math.round(val)}%</span>
+                <span className={isLight ? "text-[#716D5C]" : "text-[#716D5C]"}>{key}</span>
+                <span className={isLight ? "text-[#262626]" : "text-[#262626]"}>{Math.round(val)}%</span>
               </div>
-              <div className={`h-1.5 w-full rounded-full ${isLight ? "bg-slate-100" : "bg-white/5"}`}>
+              <div className={`h-1.5 w-full rounded-full ${isLight ? "bg-gray-100" : "bg-gray-50"}`}>
                 <div
                   className={`h-full rounded-full transition-all duration-1000 ${val >= 90 ? "bg-emerald-500" : val >= 70 ? "bg-amber-500" : "bg-rose-500"}`}
                   style={{ width: `${val}%` }}

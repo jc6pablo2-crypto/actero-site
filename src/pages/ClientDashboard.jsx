@@ -64,7 +64,7 @@ import { ClientSatisfactionScore, SatisfactionKPI } from '../components/client/C
 export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   // eslint-disable-next-line no-unused-vars
   const queryClient = useQueryClient();
-  const [theme, setTheme] = useState(() => localStorage.getItem("actero-theme") || "dark");
+  const [theme, setTheme] = useState(() => localStorage.getItem("actero-theme") || "light");
   const [selectedPeriod, setSelectedPeriod] = useState("this_month");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -337,15 +337,15 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const isLight = theme === "light";
 
   return (
-    <div className={`min-h-screen flex flex-col md:flex-row font-sans transition-colors duration-300 ${isLight ? "bg-slate-50 text-slate-900" : "bg-[#0A0E1A] text-white"}`}>
+    <div className={`min-h-screen flex flex-col md:flex-row font-sans transition-colors duration-300 ${isLight ? "bg-[#F9F7F1] text-[#262626]" : "bg-white text-[#262626]"}`}>
       {/* Mobile Header */}
-      <div className={`md:hidden h-16 flex items-center justify-between px-4 sticky top-0 z-50 ${isLight ? "bg-white border-b border-slate-200" : "bg-[#0E1424] border-b border-white/10"}`}>
+      <div className={`md:hidden h-16 flex items-center justify-between px-4 sticky top-0 z-50 ${isLight ? "bg-white border-b border-gray-200" : "bg-[#F9F7F1] border-b border-gray-200"}`}>
         <div className="flex items-center gap-2">
-          <Logo className={`w-6 h-6 ${isLight ? "text-blue-600" : "text-white"}`} />
-          <span className={`font-bold text-lg ${isLight ? "text-slate-900" : "text-white"}`}>Actero OS</span>
+          <Logo className={`w-6 h-6 ${isLight ? "text-[#003725]" : "text-[#262626]"}`} />
+          <span className={`font-bold text-lg ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>Actero OS</span>
         </div>
         <button onClick={() => setIsMobileMenuOpen(true)}>
-          <Menu className={`w-6 h-6 ${isLight ? "text-slate-500" : "text-zinc-600"}`} />
+          <Menu className={`w-6 h-6 ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`} />
         </button>
       </div>
 
@@ -367,12 +367,12 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           <div className="md:hidden fixed inset-0 z-50 flex">
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-zinc-900/50 backdrop-blur-sm"
+              className="fixed inset-0 bg-gray-500 backdrop-blur-sm"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <motion.div
               initial={{ x: -280 }} animate={{ x: 0 }} exit={{ x: -280 }}
-              className={`relative w-4/5 max-w-xs h-full shadow-2xl ${isLight ? "bg-white" : "bg-[#0E1424]"}`}
+              className={`relative w-4/5 max-w-xs h-full shadow-2xl ${isLight ? "bg-white" : "bg-[#F9F7F1]"}`}
             >
               <Sidebar 
                 title="Actero OS"
@@ -389,9 +389,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       </AnimatePresence>
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        <header className={`sticky top-0 z-40 backdrop-blur-md px-4 md:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b ${isLight ? "bg-white/80 border-slate-200" : "bg-[#0E1424]/80 border-white/10"}`}>
+        <header className={`sticky top-0 z-40 backdrop-blur-md px-4 md:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b ${isLight ? "bg-white/80 border-gray-200" : "bg-[#F9F7F1]/80 border-gray-200"}`}>
           <div className="flex items-center gap-6">
-            <h1 className={`text-xl font-bold tracking-tight whitespace-nowrap ${isLight ? "text-slate-900" : "text-white"}`}>
+            <h1 className={`text-xl font-bold tracking-tight whitespace-nowrap ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
               {activeTab === "overview" && "Vue d'ensemble"}
               {activeTab === "activity" && "Activite temps reel"}
               {activeTab === "systems" && "Mes Systemes"}
@@ -404,16 +404,16 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
             <div className="hidden lg:flex items-center gap-3">
               <HealthScoreIndicator metricsData={dailyMetrics.slice(-7)} eventsData={events} theme={theme} />
-              <div className={`h-4 w-px mx-1 ${isLight ? "bg-slate-200" : "bg-white/10"}`}></div>
-              <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg ${isLight ? "bg-slate-50 border-slate-200" : "bg-white/5 border-white/10"}`}>
-                <Clock className="w-3.5 h-3.5 text-blue-600" />
-                <span className={`text-xs font-bold ${isLight ? "text-slate-900" : "text-white"}`}>
+              <div className={`h-4 w-px mx-1 ${isLight ? "bg-gray-200" : "bg-gray-50"}`}></div>
+              <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg ${isLight ? "bg-[#F9F7F1] border-gray-200" : "bg-gray-50 border-gray-200"}`}>
+                <Clock className="w-3.5 h-3.5 text-[#003725]" />
+                <span className={`text-xs font-bold ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
                   <AnimatedCounter value={metrics?.time_saved_minutes ? Math.round(metrics.time_saved_minutes/60) : 0} />h <span className="font-normal opacity-60">/mois</span>
                 </span>
               </div>
-              <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg ${isLight ? "bg-slate-50 border-slate-200" : "bg-white/5 border-white/10"}`}>
+              <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg ${isLight ? "bg-[#F9F7F1] border-gray-200" : "bg-gray-50 border-gray-200"}`}>
                 <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
-                <span className={`text-xs font-bold ${isLight ? "text-slate-900" : "text-white"}`}>
+                <span className={`text-xs font-bold ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
                   <AnimatedCounter value={metrics?.estimated_roi || 0} />€ <span className="font-normal opacity-60">/mois</span>
                 </span>
               </div>
@@ -421,7 +421,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           </div>
           <button
             onClick={() => setActiveTab("activity")}
-            className="text-sm font-bold text-gray-400 hover:text-zinc-300 flex items-center gap-2 transition-colors"
+            className="text-sm font-bold text-[#716D5C] hover:text-[#716D5C] flex items-center gap-2 transition-colors"
           >
             Voir l'activité <ArrowRight className="w-4 h-4" />
           </button>
@@ -432,15 +432,15 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             <div className="max-w-5xl mx-auto space-y-8 animate-fade-in-up">
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                  <h2 className={`text-3xl font-bold mb-2 tracking-tight ${isLight ? "text-slate-900" : "text-white"}`}>
+                  <h2 className={`text-3xl font-bold mb-2 tracking-tight ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
                     Bonjour{currentClient ? ` ${currentClient.brand_name}` : ""}, voici vos performances.
                   </h2>
-                  <p className={`font-medium text-lg ${isLight ? "text-slate-500" : "text-zinc-500"}`}>
+                  <p className={`font-medium text-lg ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`}>
                     {selectedPeriod === "this_month" ? "Synthèse du mois en cours." : selectedPeriod === "last_month" ? "Détails du mois dernier." : "Rapport des 30 derniers jours."}
                   </p>
                 </div>
 
-                <div className={`flex p-1 rounded-xl border ${isLight ? 'bg-slate-100 border-slate-200' : 'bg-white/5 border-white/10'}`}>
+                <div className={`flex p-1 rounded-xl border ${isLight ? 'bg-gray-100 border-gray-200' : 'bg-gray-50 border-gray-200'}`}>
                   {[
                     { id: 'this_month', label: 'Ce mois' },
                     { id: 'last_month', label: 'Mois dernier' },
@@ -450,8 +450,8 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                       key={p.id}
                       onClick={() => setSelectedPeriod(p.id)}
                       className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${selectedPeriod === p.id
-                        ? (isLight ? 'bg-white text-blue-600 shadow-sm' : 'bg-white/10 text-white shadow-lg')
-                        : (isLight ? 'text-slate-500 hover:text-slate-900' : 'text-zinc-500 hover:text-zinc-300')
+                        ? (isLight ? 'bg-white text-[#003725] shadow-sm' : 'bg-gray-50 text-[#262626] shadow-lg')
+                        : (isLight ? 'text-[#716D5C] hover:text-[#262626]' : 'text-[#716D5C] hover:text-[#716D5C]')
                       }`}
                     >
                       {p.label}
@@ -559,7 +559,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
               <HealthScoreWidget metricsData={dailyMetrics.slice(-7)} eventsData={events} theme={theme} />
 
-              <div className={`mt-12 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between shadow-xl ${isLight ? "bg-slate-900 text-white" : "bg-zinc-900"}`}>
+              <div className={`mt-12 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between shadow-xl ${isLight ? "bg-[#F9F7F1] text-[#262626]" : "bg-white"}`}>
                 <div>
                   <h3 className="text-2xl font-bold mb-2">Un besoin d'aide ?</h3>
                   <p className="opacity-60">Contactez notre support ou soumettez une demande.</p>

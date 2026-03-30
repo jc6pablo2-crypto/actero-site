@@ -140,32 +140,32 @@ export const AdminClientHealthView = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-6 animate-fade-in-up">
       <div>
-        <h2 className="text-2xl font-bold text-white">Santé Clients</h2>
-        <p className="text-sm text-gray-500 mt-1">Score basé sur l'activité, les métriques et le statut</p>
+        <h2 className="text-2xl font-bold text-[#262626]">Santé Clients</h2>
+        <p className="text-sm text-[#716D5C] mt-1">Score basé sur l'activité, les métriques et le statut</p>
       </div>
 
       {/* Summary */}
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-5">
+        <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5">
           <div className="flex items-center gap-2 mb-2">
             <Heart className="w-4 h-4 text-emerald-400" />
-            <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Score moyen</span>
+            <span className="text-[11px] font-semibold text-[#716D5C] uppercase tracking-wider">Score moyen</span>
           </div>
           <p className={`text-3xl font-bold font-mono ${avgScore >= 70 ? 'text-emerald-400' : avgScore >= 40 ? 'text-amber-400' : 'text-red-400'}`}>
             {avgScore}%
           </p>
         </div>
-        <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-5">
+        <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5">
           <div className="flex items-center gap-2 mb-2">
             <AlertTriangle className="w-4 h-4 text-red-400" />
-            <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">À risque</span>
+            <span className="text-[11px] font-semibold text-[#716D5C] uppercase tracking-wider">À risque</span>
           </div>
           <p className="text-3xl font-bold font-mono text-red-400">{atRisk.length}</p>
         </div>
-        <div className="bg-[#0E1424] rounded-2xl border border-white/10 p-5">
+        <div className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5">
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">En bonne santé</span>
+            <span className="text-[11px] font-semibold text-[#716D5C] uppercase tracking-wider">En bonne santé</span>
           </div>
           <p className="text-3xl font-bold font-mono text-emerald-400">{healthy.length}</p>
         </div>
@@ -185,7 +185,7 @@ export const AdminClientHealthView = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.03 }}
-              className="bg-[#0E1424] border border-white/10 rounded-xl p-4 flex items-center gap-4 hover:border-white/20 transition-colors"
+              className="bg-[#F9F7F1] border border-gray-200 rounded-xl p-4 flex items-center gap-4 hover:border-white/20 transition-colors"
             >
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${scoreClasses.box}`}>
                 <span className={`text-lg font-bold font-mono ${scoreClasses.text}`}>{client.health.score}</span>
@@ -193,7 +193,7 @@ export const AdminClientHealthView = () => {
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="text-sm font-bold text-white truncate">{client.brand_name}</p>
+                  <p className="text-sm font-bold text-[#262626] truncate">{client.brand_name}</p>
                   {client.client_type === 'immobilier'
                     ? <Building2 className="w-3 h-3 text-violet-400" />
                     : <ShoppingBag className="w-3 h-3 text-emerald-400" />}
@@ -210,13 +210,13 @@ export const AdminClientHealthView = () => {
 
               <div className="flex items-center gap-3">
                 <div className="text-right hidden md:block">
-                  <div className="flex items-center gap-1 text-xs text-gray-400">
+                  <div className="flex items-center gap-1 text-xs text-[#716D5C]">
                     <Zap className="w-3 h-3" /> {client.recentEvents} évén. 48h
                   </div>
                 </div>
 
                 {/* Health bar */}
-                <div className="w-20 h-2 bg-white/5 rounded-full overflow-hidden hidden lg:block">
+                <div className="w-20 h-2 bg-gray-50 rounded-full overflow-hidden hidden lg:block">
                   <div
                     className={`h-full rounded-full ${scoreClasses.bar} transition-all`}
                     style={{ width: `${client.health.score}%` }}
@@ -227,10 +227,10 @@ export const AdminClientHealthView = () => {
                 <button
                   onClick={() => sendReport(client.id)}
                   disabled={sending === client.id}
-                  className="p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all disabled:opacity-50"
+                  className="p-2 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-50 hover:border-white/20 transition-all disabled:opacity-50"
                   title="Envoyer rapport mensuel"
                 >
-                  <Send className={`w-3.5 h-3.5 ${sending === client.id ? 'animate-pulse text-blue-400' : 'text-gray-400'}`} />
+                  <Send className={`w-3.5 h-3.5 ${sending === client.id ? 'animate-pulse text-blue-400' : 'text-[#716D5C]'}`} />
                 </button>
               </div>
             </motion.div>

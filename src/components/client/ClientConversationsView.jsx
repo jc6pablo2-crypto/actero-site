@@ -75,13 +75,13 @@ const RatingButtons = ({ conversation, onRate }) => {
         {!conversation.rating_comment && !showComment && (
           <button
             onClick={() => setShowComment(true)}
-            className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+            className="text-xs text-[#716D5C] hover:text-[#716D5C] transition-colors"
           >
             Ajouter un commentaire
           </button>
         )}
         {conversation.rating_comment && (
-          <p className="text-xs text-zinc-500 italic bg-white/5 rounded-lg px-3 py-2">
+          <p className="text-xs text-[#716D5C] italic bg-gray-50 rounded-lg px-3 py-2">
             {conversation.rating_comment}
           </p>
         )}
@@ -92,12 +92,12 @@ const RatingButtons = ({ conversation, onRate }) => {
               onChange={(e) => setComment(e.target.value)}
               maxLength={500}
               placeholder="Qu'est-ce qui n'allait pas dans cette reponse ?"
-              className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white outline-none resize-none"
+              className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-[#262626] outline-none resize-none"
               rows={2}
             />
             <button
               onClick={submitComment}
-              className="px-3 py-2 rounded-lg bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition-all self-end"
+              className="px-3 py-2 rounded-lg bg-gray-50 text-[#262626] text-xs font-bold hover:bg-white/20 transition-all self-end"
             >
               OK
             </button>
@@ -111,13 +111,13 @@ const RatingButtons = ({ conversation, onRate }) => {
     <div className="flex items-center gap-2">
       <button
         onClick={() => handleRate('positive')}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-zinc-500 text-xs font-bold transition-all hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/20"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-[#716D5C] text-xs font-bold transition-all hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/20"
       >
         <ThumbsUp className="w-3.5 h-3.5" />
       </button>
       <button
         onClick={() => handleRate('negative')}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 text-zinc-500 text-xs font-bold transition-all hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-[#716D5C] text-xs font-bold transition-all hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20"
       >
         <ThumbsDown className="w-3.5 h-3.5" />
       </button>
@@ -132,18 +132,18 @@ const SatisfactionGauge = ({ rate, totalRated }) => {
 
   if (totalRated < 10) {
     return (
-      <div className="bg-[#0E1424] border border-white/10 rounded-xl px-5 py-3 flex items-center gap-3">
-        <ThumbsUp className="w-4 h-4 text-zinc-600" />
+      <div className="bg-[#F9F7F1] border border-gray-200 rounded-xl px-5 py-3 flex items-center gap-3">
+        <ThumbsUp className="w-4 h-4 text-[#716D5C]" />
         <div>
-          <p className="text-xs text-zinc-500">Satisfaction</p>
-          <p className="text-sm font-bold text-zinc-500">Pas assez de donnees</p>
+          <p className="text-xs text-[#716D5C]">Satisfaction</p>
+          <p className="text-sm font-bold text-[#716D5C]">Pas assez de donnees</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-[#0E1424] border border-white/10 rounded-xl px-5 py-3 flex items-center gap-4">
+    <div className="bg-[#F9F7F1] border border-gray-200 rounded-xl px-5 py-3 flex items-center gap-4">
       <div className="relative w-14 h-14">
         <svg className="w-14 h-14 -rotate-90" viewBox="0 0 80 80">
           <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="6" />
@@ -158,13 +158,13 @@ const SatisfactionGauge = ({ rate, totalRated }) => {
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-xs font-bold text-white">{rate}%</span>
+          <span className="text-xs font-bold text-[#262626]">{rate}%</span>
         </div>
       </div>
       <div>
-        <p className="text-xs text-zinc-500">Taux de satisfaction</p>
-        <p className="text-sm font-bold text-white">{rate}% de reponses approuvees</p>
-        <p className="text-[10px] text-zinc-600">{totalRated} reponses notees</p>
+        <p className="text-xs text-[#716D5C]">Taux de satisfaction</p>
+        <p className="text-sm font-bold text-[#262626]">{rate}% de reponses approuvees</p>
+        <p className="text-[10px] text-[#716D5C]">{totalRated} reponses notees</p>
       </div>
     </div>
   )
@@ -191,37 +191,37 @@ const ConversationCard = ({ event, onRate, isFromAiConversations }) => {
   return (
     <motion.div
       layout
-      className="bg-[#0E1424] border border-white/10 rounded-2xl overflow-hidden hover:border-white/15 transition-colors"
+      className="bg-[#F9F7F1] border border-gray-200 rounded-2xl overflow-hidden hover:border-white/15 transition-colors"
     >
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full text-left px-5 py-4 flex items-start gap-4"
       >
         <div className="mt-0.5">
-          <MessageCircle className="w-5 h-5 text-zinc-500" />
+          <MessageCircle className="w-5 h-5 text-[#716D5C]" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 mb-1.5 flex-wrap">
             <StatusBadge status={status} />
             {ticketType && (
-              <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
+              <span className="inline-flex items-center gap-1 text-xs text-[#716D5C]">
                 <Tag className="w-3 h-3" />
                 {ticketType}
               </span>
             )}
-            <span className="inline-flex items-center gap-1 text-xs text-zinc-600">
+            <span className="inline-flex items-center gap-1 text-xs text-[#716D5C]">
               <Clock className="w-3 h-3" />
               {formattedDate} {formattedTime}
             </span>
             {event.response_time_ms && (
-              <span className="inline-flex items-center gap-1 text-xs text-zinc-600">
+              <span className="inline-flex items-center gap-1 text-xs text-[#716D5C]">
                 {Math.round(event.response_time_ms / 1000)}s
               </span>
             )}
           </div>
-          <p className="text-sm text-zinc-300 line-clamp-2">{displayMessage}</p>
+          <p className="text-sm text-[#716D5C] line-clamp-2">{displayMessage}</p>
         </div>
-        <div className="mt-1 text-zinc-600">
+        <div className="mt-1 text-[#716D5C]">
           {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </div>
       </button>
@@ -235,17 +235,17 @@ const ConversationCard = ({ event, onRate, isFromAiConversations }) => {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5 space-y-4 border-t border-white/5 pt-4">
+            <div className="px-5 pb-5 space-y-4 border-t border-gray-100 pt-4">
               <div>
-                <p className="text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wider">Message client</p>
-                <p className="text-sm text-zinc-300 bg-white/5 rounded-xl px-4 py-3 whitespace-pre-wrap">
+                <p className="text-xs font-bold text-[#716D5C] mb-1.5 uppercase tracking-wider">Message client</p>
+                <p className="text-sm text-[#716D5C] bg-gray-50 rounded-xl px-4 py-3 whitespace-pre-wrap">
                   {customerMessage || fallbackText}
                 </p>
               </div>
               {displayResponse && (
                 <div>
-                  <p className="text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wider">Reponse IA</p>
-                  <p className="text-sm text-zinc-300 bg-blue-500/5 border border-blue-500/10 rounded-xl px-4 py-3 whitespace-pre-wrap">
+                  <p className="text-xs font-bold text-[#716D5C] mb-1.5 uppercase tracking-wider">Reponse IA</p>
+                  <p className="text-sm text-[#716D5C] bg-blue-500/5 border border-blue-500/10 rounded-xl px-4 py-3 whitespace-pre-wrap">
                     {displayResponse}
                   </p>
                 </div>
@@ -253,20 +253,20 @@ const ConversationCard = ({ event, onRate, isFromAiConversations }) => {
               {/* Rating buttons */}
               {isFromAiConversations && (
                 <div className="pt-2">
-                  <p className="text-xs font-bold text-zinc-500 mb-2 uppercase tracking-wider">Votre avis</p>
+                  <p className="text-xs font-bold text-[#716D5C] mb-2 uppercase tracking-wider">Votre avis</p>
                   <RatingButtons conversation={event} onRate={onRate} />
                 </div>
               )}
               {!isFromAiConversations && meta && Object.keys(meta).length > 0 && (
                 <div>
-                  <p className="text-xs font-bold text-zinc-500 mb-1.5 uppercase tracking-wider">Details</p>
+                  <p className="text-xs font-bold text-[#716D5C] mb-1.5 uppercase tracking-wider">Details</p>
                   <div className="grid grid-cols-2 gap-2">
                     {Object.entries(meta)
                       .filter(([k]) => !['customer_message', 'ai_response', 'ticket_type'].includes(k))
                       .map(([k, v]) => (
-                        <div key={k} className="bg-white/5 rounded-lg px-3 py-2">
-                          <p className="text-xs text-zinc-500">{k}</p>
-                          <p className="text-xs text-zinc-300 truncate">{typeof v === 'object' ? JSON.stringify(v) : String(v)}</p>
+                        <div key={k} className="bg-gray-50 rounded-lg px-3 py-2">
+                          <p className="text-xs text-[#716D5C]">{k}</p>
+                          <p className="text-xs text-[#716D5C] truncate">{typeof v === 'object' ? JSON.stringify(v) : String(v)}</p>
                         </div>
                       ))}
                   </div>
@@ -359,24 +359,24 @@ export const ClientConversationsView = ({ clientId }) => {
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-fade-in-up">
       <div>
-        <h2 className="text-2xl font-bold text-white tracking-tight mb-1">Conversations IA</h2>
-        <p className="text-zinc-500 text-sm">Historique des echanges traites par l&apos;intelligence artificielle.</p>
+        <h2 className="text-2xl font-bold text-[#262626] tracking-tight mb-1">Conversations IA</h2>
+        <p className="text-[#716D5C] text-sm">Historique des echanges traites par l&apos;intelligence artificielle.</p>
       </div>
 
       {/* Stats */}
       <div className="flex flex-wrap gap-4">
-        <div className="bg-[#0E1424] border border-white/10 rounded-xl px-5 py-3 flex items-center gap-3">
+        <div className="bg-[#F9F7F1] border border-gray-200 rounded-xl px-5 py-3 flex items-center gap-3">
           <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           <div>
-            <p className="text-xs text-zinc-500">Resolus</p>
-            <p className="text-lg font-bold text-white">{resolvedCount}</p>
+            <p className="text-xs text-[#716D5C]">Resolus</p>
+            <p className="text-lg font-bold text-[#262626]">{resolvedCount}</p>
           </div>
         </div>
-        <div className="bg-[#0E1424] border border-white/10 rounded-xl px-5 py-3 flex items-center gap-3">
+        <div className="bg-[#F9F7F1] border border-gray-200 rounded-xl px-5 py-3 flex items-center gap-3">
           <AlertTriangle className="w-4 h-4 text-amber-400" />
           <div>
-            <p className="text-xs text-zinc-500">Escalades</p>
-            <p className="text-lg font-bold text-white">{escalatedCount}</p>
+            <p className="text-xs text-[#716D5C]">Escalades</p>
+            <p className="text-lg font-bold text-[#262626]">{escalatedCount}</p>
           </div>
         </div>
         <SatisfactionGauge rate={satisfactionRate} totalRated={ratedConversations.length} />
@@ -384,12 +384,12 @@ export const ClientConversationsView = ({ clientId }) => {
 
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#716D5C]" />
         </div>
       ) : conversations.length === 0 ? (
         <div className="text-center py-16">
-          <MessageCircle className="w-10 h-10 text-zinc-700 mx-auto mb-3" />
-          <p className="text-zinc-500 text-sm">Aucune conversation IA pour le moment.</p>
+          <MessageCircle className="w-10 h-10 text-[#716D5C] mx-auto mb-3" />
+          <p className="text-[#716D5C] text-sm">Aucune conversation IA pour le moment.</p>
         </div>
       ) : (
         <div className="space-y-3">

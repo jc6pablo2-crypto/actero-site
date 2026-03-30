@@ -59,46 +59,46 @@ export function StartPage({ clientSlug }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0E1A] flex items-center justify-center px-4 py-16">
+    <div className="min-h-screen bg-white flex items-center justify-center px-4 py-16">
       <div className="w-full max-w-lg">
         {/* Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 text-sm text-gray-400 mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-200 bg-gray-50 text-sm text-[#716D5C] mb-6">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             Offre personnalisée
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight mb-4">
+          <h1 className="text-4xl sm:text-5xl font-bold text-[#262626] tracking-tight mb-4">
             Démarrer avec Actero
           </h1>
-          <p className="text-lg text-gray-400">
+          <p className="text-lg text-[#716D5C]">
             Cette offre a été préparée pour{" "}
-            <span className="text-white font-semibold">{clientName}</span>
+            <span className="text-[#262626] font-semibold">{clientName}</span>
           </p>
         </div>
 
         {/* Card */}
-        <div className="bg-[#0E1424] border border-white/10 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-8 shadow-2xl">
           {/* Pricing */}
           <div className="flex items-baseline gap-3 mb-2">
-            <span className="text-5xl font-bold text-white">{monthlyPrice}€</span>
-            <span className="text-gray-500 text-lg">/mois</span>
+            <span className="text-5xl font-bold text-[#262626]">{monthlyPrice}€</span>
+            <span className="text-[#716D5C] text-lg">/mois</span>
           </div>
           {setupPrice > 0 && (
-            <p className="text-sm text-gray-500 mb-8">
+            <p className="text-sm text-[#716D5C] mb-8">
               + {setupPrice}€ de frais de setup (facturés une seule fois)
             </p>
           )}
           {setupPrice === 0 && <div className="mb-8" />}
 
           {/* Divider */}
-          <div className="border-t border-white/10 my-6" />
+          <div className="border-t border-gray-200 my-6" />
 
           {/* Benefits */}
           <ul className="space-y-4 mb-8">
             {benefits.map((benefit) => (
               <li key={benefit} className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-emerald-500 mt-0.5 shrink-0" />
-                <span className="text-gray-300">{benefit}</span>
+                <span className="text-[#716D5C]">{benefit}</span>
               </li>
             ))}
           </ul>
@@ -128,7 +128,7 @@ export function StartPage({ clientSlug }) {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-xs text-gray-600 mt-8">
+        <p className="text-center text-xs text-[#716D5C] mt-8">
           Paiement sécurisé par Stripe · Annulable à tout moment
         </p>
       </div>

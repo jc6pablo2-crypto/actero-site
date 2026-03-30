@@ -106,16 +106,16 @@ export const AdminOnboardingView = () => {
   return (
     <div className="max-w-3xl mx-auto animate-fade-in-up">
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-white mb-2 tracking-tight">
+        <h2 className="text-3xl font-bold text-[#262626] mb-2 tracking-tight">
           Onboarding Client
         </h2>
-        <p className="text-gray-400 font-normal mt-1 flex items-center gap-2">
-          <UserPlus className="w-5 h-5 text-zinc-400" />
+        <p className="text-[#716D5C] font-normal mt-1 flex items-center gap-2">
+          <UserPlus className="w-5 h-5 text-[#716D5C]" />
           Créez un profil client et envoyez-lui un accès immédiat (SaaS fermé).
         </p>
       </div>
 
-      <div className="bg-[#0E1424] p-8 rounded-2xl border border-white/10 shadow-sm mb-8">
+      <div className="bg-[#F9F7F1] p-8 rounded-2xl border border-gray-200 shadow-sm mb-8">
         <form onSubmit={handleCreateAndInvite} className="space-y-6">
           {errorMsg && (
             <div role="alert" className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-500/20 flex items-start gap-3 text-sm font-medium">
@@ -126,7 +126,7 @@ export const AdminOnboardingView = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="brand-name" className="block text-sm font-bold text-white mb-2">
+              <label htmlFor="brand-name" className="block text-sm font-bold text-[#262626] mb-2">
                 Nom de l'entreprise (Brand)
               </label>
               <input
@@ -135,12 +135,12 @@ export const AdminOnboardingView = () => {
                 value={brandName}
                 onChange={(e) => setBrandName(e.target.value)}
                 placeholder="Ex: Koma"
-                className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-white"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
                 required
               />
             </div>
             <div>
-              <label htmlFor="client-email" className="block text-sm font-bold text-white mb-2">
+              <label htmlFor="client-email" className="block text-sm font-bold text-[#262626] mb-2">
                 Email du client
               </label>
               <input
@@ -149,17 +149,17 @@ export const AdminOnboardingView = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Ex: contact@koma.com"
-                className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-white"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
                 required
               />
             </div>
           </div>
 
-          <div className="border-t border-white/10 pt-6 mt-2">
-            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Configuration tarification (optionnel)</p>
+          <div className="border-t border-gray-200 pt-6 mt-2">
+            <p className="text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-4">Configuration tarification (optionnel)</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label htmlFor="hourly-cost" className="block text-sm font-bold text-white mb-2">
+                <label htmlFor="hourly-cost" className="block text-sm font-bold text-[#262626] mb-2">
                   Coût horaire client (€/h)
                 </label>
                 <input
@@ -170,11 +170,11 @@ export const AdminOnboardingView = () => {
                   value={hourlyCost}
                   onChange={(e) => setHourlyCost(e.target.value)}
                   placeholder="Ex: 25"
-                  className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-white"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
                 />
               </div>
               <div>
-                <label htmlFor="avg-ticket-time" className="block text-sm font-bold text-white mb-2">
+                <label htmlFor="avg-ticket-time" className="block text-sm font-bold text-[#262626] mb-2">
                   Temps moyen / ticket (min)
                 </label>
                 <input
@@ -184,11 +184,11 @@ export const AdminOnboardingView = () => {
                   value={avgTicketTime}
                   onChange={(e) => setAvgTicketTime(e.target.value)}
                   placeholder="Ex: 5"
-                  className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-white"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
                 />
               </div>
               <div>
-                <label htmlFor="actero-price" className="block text-sm font-bold text-white mb-2">
+                <label htmlFor="actero-price" className="block text-sm font-bold text-[#262626] mb-2">
                   Prix Actero mensuel (€)
                 </label>
                 <input
@@ -199,7 +199,7 @@ export const AdminOnboardingView = () => {
                   value={acteroPrice}
                   onChange={(e) => setActeroPrice(e.target.value)}
                   placeholder="Ex: 490"
-                  className="w-full px-4 py-3 bg-[#0A0E1A] border border-white/10 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-white"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
                 />
               </div>
             </div>
@@ -209,7 +209,7 @@ export const AdminOnboardingView = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-auto flex justify-center items-center gap-2 py-3 px-6 rounded-xl shadow-sm text-sm font-bold text-white bg-zinc-900 hover:bg-zinc-800 disabled:opacity-50 transition-colors"
+              className="w-full sm:w-auto flex justify-center items-center gap-2 py-3 px-6 rounded-xl shadow-sm text-sm font-bold text-[#262626] bg-white hover:bg-gray-50 disabled:opacity-50 transition-colors"
             >
               {loading ? (
                 <>
@@ -233,7 +233,7 @@ export const AdminOnboardingView = () => {
               <CheckCircle className="w-6 h-6 text-emerald-500" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white mt-1">
+              <h3 className="text-lg font-bold text-[#262626] mt-1">
                 Client onboardé avec succès !
               </h3>
               <p className="text-emerald-500 text-sm font-medium mt-1">
@@ -242,28 +242,28 @@ export const AdminOnboardingView = () => {
             </div>
           </div>
 
-          <div className="bg-[#0E1424] rounded-xl border border-white/5 p-4 space-y-3 text-sm mb-6">
-            <div className="flex justify-between border-b border-white/5 pb-2 flex-wrap gap-2">
-              <span className="text-gray-400 font-medium whitespace-nowrap">
+          <div className="bg-[#F9F7F1] rounded-xl border border-gray-100 p-4 space-y-3 text-sm mb-6">
+            <div className="flex justify-between border-b border-gray-100 pb-2 flex-wrap gap-2">
+              <span className="text-[#716D5C] font-medium whitespace-nowrap">
                 Client ID
               </span>
-              <span className="font-mono font-bold text-white truncate max-w-xs">
+              <span className="font-mono font-bold text-[#262626] truncate max-w-xs">
                 {successData.client_id}
               </span>
             </div>
-            <div className="flex justify-between border-b border-white/5 pb-2 flex-wrap gap-2">
-              <span className="text-gray-400 font-medium whitespace-nowrap">
+            <div className="flex justify-between border-b border-gray-100 pb-2 flex-wrap gap-2">
+              <span className="text-[#716D5C] font-medium whitespace-nowrap">
                 Email invité
               </span>
-              <span className="font-bold text-white truncate max-w-xs">
+              <span className="font-bold text-[#262626] truncate max-w-xs">
                 {successData.email}
               </span>
             </div>
             <div className="flex justify-between flex-wrap gap-2">
-              <span className="text-gray-400 font-medium whitespace-nowrap">
+              <span className="text-[#716D5C] font-medium whitespace-nowrap">
                 Statut liaison
               </span>
-              <span className="font-bold text-white">
+              <span className="font-bold text-[#262626]">
                 {successData.linked ? (
                   <span className="text-emerald-500 flex items-center gap-1">
                     <CheckCircle2 className="w-4 h-4" /> Lié (
@@ -276,11 +276,11 @@ export const AdminOnboardingView = () => {
                 )}
               </span>
             </div>
-            <div className="flex justify-between border-t border-white/5 pt-2 flex-wrap gap-2">
-              <span className="text-gray-400 font-medium whitespace-nowrap">
+            <div className="flex justify-between border-t border-gray-100 pt-2 flex-wrap gap-2">
+              <span className="text-[#716D5C] font-medium whitespace-nowrap">
                 Tarification
               </span>
-              <span className="font-bold text-white">
+              <span className="font-bold text-[#262626]">
                 {settingsSaved ? (
                   <span className="text-emerald-500 flex items-center gap-1">
                     <CheckCircle2 className="w-4 h-4" /> Configurée
@@ -297,13 +297,13 @@ export const AdminOnboardingView = () => {
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => handleResendMagicLink(successData.email)}
-              className="bg-white/5 text-white hover:bg-white/10 border border-white/10 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2"
+              className="bg-gray-50 text-[#262626] hover:bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2"
             >
               <RefreshCw className="w-4 h-4" /> Renvoyer magic link
             </button>
             <button
               onClick={() => handleCheckStatus(successData.email)}
-              className="bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2"
+              className="bg-gray-50 text-[#716D5C] hover:bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2"
             >
               Vérifier le statut
             </button>

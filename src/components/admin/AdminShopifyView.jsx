@@ -81,33 +81,33 @@ export function AdminShopifyView() {
     <div className="max-w-4xl mx-auto animate-fade-in-up space-y-8">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+        <h2 className="text-2xl font-bold text-[#262626] mb-2 flex items-center gap-3">
           <ShoppingBag className="w-6 h-6 text-emerald-400" />
           App Shopify
         </h2>
-        <p className="text-zinc-500 text-sm">
+        <p className="text-[#716D5C] text-sm">
           Envoyez le lien d'installation de l'app Shopify à vos clients e-commerce.
         </p>
       </div>
 
       {/* Send form */}
-      <form onSubmit={handleSend} className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-6 space-y-5">
-        <h3 className="text-white font-bold text-lg">Envoyer un lien d'installation</h3>
+      <form onSubmit={handleSend} className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-6 space-y-5">
+        <h3 className="text-[#262626] font-bold text-lg">Envoyer un lien d'installation</h3>
 
         {/* Client dropdown */}
         <div>
-          <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
+          <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">
             Client *
           </label>
           <select
             value={selectedClientId}
             onChange={(e) => setSelectedClientId(e.target.value)}
             required
-            className="w-full bg-white/[0.05] border border-white/[0.10] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-emerald-500/50 transition-colors"
+            className="w-full bg-[#F9F7F1] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] text-sm focus:outline-none focus:border-emerald-500/50 transition-colors"
           >
-            <option value="" className="bg-[#111B2E]">Sélectionner un client...</option>
+            <option value="" className="bg-white">Sélectionner un client...</option>
             {clients.map((c) => (
-              <option key={c.id} value={c.id} className="bg-[#111B2E]">
+              <option key={c.id} value={c.id} className="bg-white">
                 {c.brand_name} — {c.contact_email || 'pas d\'email'}
                 {connectedIds.has(c.id) ? ' ✓ Shopify connecté' : ''}
               </option>
@@ -123,21 +123,21 @@ export function AdminShopifyView() {
 
         {/* Install URL */}
         <div>
-          <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
+          <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">
             Lien d'installation Shopify *
           </label>
           <div className="flex items-center gap-2">
-            <Link2 className="w-4 h-4 text-zinc-500 shrink-0" />
+            <Link2 className="w-4 h-4 text-[#716D5C] shrink-0" />
             <input
               type="url"
               value={installUrl}
               onChange={(e) => setInstallUrl(e.target.value)}
               placeholder="https://admin.shopify.com/oauth/install_custom_app?client_id=..."
               required
-              className="flex-1 bg-white/[0.05] border border-white/[0.10] rounded-xl px-4 py-3 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
+              className="flex-1 bg-[#F9F7F1] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] text-sm placeholder:text-[#716D5C] focus:outline-none focus:border-emerald-500/50 transition-colors"
             />
           </div>
-          <p className="mt-2 text-xs text-zinc-600">
+          <p className="mt-2 text-xs text-[#716D5C]">
             Copiez le lien depuis Shopify Partners → App Actero → Distribution
           </p>
         </div>
@@ -168,23 +168,23 @@ export function AdminShopifyView() {
       </form>
 
       {/* Connected clients table */}
-      <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-6">
-        <h3 className="text-white font-bold text-lg mb-4">Connexions Shopify actives</h3>
+      <div className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-6">
+        <h3 className="text-[#262626] font-bold text-lg mb-4">Connexions Shopify actives</h3>
         {connections.length === 0 ? (
-          <p className="text-zinc-500 text-sm">Aucun client n'a encore connecté Shopify.</p>
+          <p className="text-[#716D5C] text-sm">Aucun client n'a encore connecté Shopify.</p>
         ) : (
           <div className="space-y-3">
             {connections.map((conn) => {
               const client = clients.find(c => c.id === conn.client_id)
               return (
-                <div key={conn.client_id} className="flex items-center justify-between bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
+                <div key={conn.client_id} className="flex items-center justify-between bg-[#F9F7F1] border border-gray-200 rounded-xl px-4 py-3">
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span className="text-white text-sm font-medium">{client?.brand_name || 'Client inconnu'}</span>
+                    <span className="text-[#262626] text-sm font-medium">{client?.brand_name || 'Client inconnu'}</span>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="text-zinc-500 text-xs">{conn.shop_domain}</span>
-                    <span className="text-zinc-600 text-xs">
+                    <span className="text-[#716D5C] text-xs">{conn.shop_domain}</span>
+                    <span className="text-[#716D5C] text-xs">
                       {new Date(conn.created_at).toLocaleDateString('fr-FR')}
                     </span>
                   </div>
