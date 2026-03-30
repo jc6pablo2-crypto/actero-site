@@ -73,14 +73,9 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                 <div className="max-w-3xl mx-auto text-center mb-12">
                     {/* Badge */}
                     <FadeInUp className="mb-6">
-                        <div className="inline-flex items-center gap-2 border px-4 py-2 rounded-full text-sm font-medium bg-[#F9F7F1] border-gray-200 text-[#716D5C]">
-                            {content.badge.icon && (
-                                <>
-                                    <img src={content.badge.icon} alt="" className="h-4 w-auto opacity-60" />
-                                    <span className="w-px h-4 bg-gray-200"></span>
-                                </>
-                            )}
-                            <span>🇫🇷 {content.badge.label}</span>
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium text-[#716D5C]">
+                            <span>Powered by</span>
+                            <img src="/elevenlabs-grants.webp" alt="ElevenLabs Grants" className="h-3.5 w-auto" />
                         </div>
                     </FadeInUp>
 
