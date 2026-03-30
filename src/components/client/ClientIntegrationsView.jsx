@@ -245,8 +245,8 @@ const ConnectModal = ({ provider, onClose, onSuccess, isLight }) => {
                 placeholder={field.placeholder}
                 className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all ${
                   isLight
-                    ? 'bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:ring-2 focus:ring-blue-500/40'
-                    : 'bg-white border border-gray-200 text-[#262626] focus:ring-2 focus:ring-zinc-400'
+                    ? 'bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:ring-2 focus:ring-blue-500'
+                    : 'bg-white border border-gray-200 text-[#262626] focus:ring-2 focus:ring-gray-300'
                 }`}
               />
             </div>
@@ -458,8 +458,8 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
             placeholder="Rechercher..."
             className={`w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none transition-all ${
               isLight
-                ? 'bg-white border border-gray-200 text-[#262626] focus:ring-2 focus:ring-blue-500/40'
-                : 'bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:ring-2 focus:ring-zinc-400'
+                ? 'bg-white border border-gray-200 text-[#262626] focus:ring-2 focus:ring-blue-500'
+                : 'bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:ring-2 focus:ring-gray-300'
             }`}
           />
         </div>
@@ -568,8 +568,8 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
                 placeholder={oauthPromptProvider.oauthPromptPlaceholder || 'ma-boutique'}
                 className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all ${
                   isLight
-                    ? 'bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:ring-2 focus:ring-blue-500/40'
-                    : 'bg-white border border-gray-200 text-[#262626] focus:ring-2 focus:ring-zinc-400'
+                    ? 'bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:ring-2 focus:ring-blue-500'
+                    : 'bg-white border border-gray-200 text-[#262626] focus:ring-2 focus:ring-gray-300'
                 }`}
               />
               {oauthPromptProvider.oauthPromptHint && (

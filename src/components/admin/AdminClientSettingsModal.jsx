@@ -191,7 +191,7 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
                 value={hourlyCost}
                 onChange={(e) => setHourlyCost(e.target.value)}
                 placeholder="Ex: 25"
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-300 outline-none transition-all text-sm text-[#262626]"
               />
               <p className="text-xs text-[#716D5C] mt-1">Utilisé pour calculer money_saved = temps × coût</p>
             </div>
@@ -205,7 +205,7 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
                 value={avgTicketTime}
                 onChange={(e) => setAvgTicketTime(e.target.value)}
                 placeholder="Ex: 5"
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-300 outline-none transition-all text-sm text-[#262626]"
               />
             </div>
             <div>
@@ -219,7 +219,7 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
                 value={acteroPrice}
                 onChange={(e) => setActeroPrice(e.target.value)}
                 placeholder="Ex: 490"
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-300 outline-none transition-all text-sm text-[#262626]"
               />
               <p className="text-xs text-[#716D5C] mt-1">Pour le calcul du ROI net</p>
             </div>
@@ -260,7 +260,7 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
               <select
                 value={selectedTemplate}
                 onChange={(e) => setSelectedTemplate(e.target.value)}
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-2 focus:ring-blue-500/40 transition-all appearance-none"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-2 focus:ring-blue-500 transition-all appearance-none"
               >
                 {WORKFLOW_TEMPLATES.map((t) => (
                   <option key={t.id} value={t.id}>{t.label}</option>
@@ -302,7 +302,7 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
                   value={brandUrl}
                   onChange={(e) => setBrandUrl(e.target.value)}
                   placeholder="https://example.com"
-                  className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-2 focus:ring-violet-500/40 transition-all"
+                  className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-2 focus:ring-violet-500 transition-all"
                 />
                 <button
                   onClick={handleGenerateBrandContext}
@@ -325,7 +325,7 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
                 onChange={(e) => setBrandContext(e.target.value)}
                 rows={5}
                 placeholder="Le brand context apparaîtra ici après génération..."
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-2 focus:ring-violet-500/40 transition-all resize-y"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-2 focus:ring-violet-500 transition-all resize-y"
               />
             </div>
             <button

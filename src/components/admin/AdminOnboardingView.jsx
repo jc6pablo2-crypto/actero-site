@@ -135,7 +135,7 @@ export const AdminOnboardingView = () => {
                 value={brandName}
                 onChange={(e) => setBrandName(e.target.value)}
                 placeholder="Ex: Koma"
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-300 outline-none transition-all text-sm text-[#262626]"
                 required
               />
             </div>
@@ -149,7 +149,7 @@ export const AdminOnboardingView = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Ex: contact@koma.com"
-                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
+                className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-300 outline-none transition-all text-sm text-[#262626]"
                 required
               />
             </div>
@@ -170,7 +170,7 @@ export const AdminOnboardingView = () => {
                   value={hourlyCost}
                   onChange={(e) => setHourlyCost(e.target.value)}
                   placeholder="Ex: 25"
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-300 outline-none transition-all text-sm text-[#262626]"
                 />
               </div>
               <div>
@@ -184,7 +184,7 @@ export const AdminOnboardingView = () => {
                   value={avgTicketTime}
                   onChange={(e) => setAvgTicketTime(e.target.value)}
                   placeholder="Ex: 5"
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-300 outline-none transition-all text-sm text-[#262626]"
                 />
               </div>
               <div>
@@ -199,7 +199,7 @@ export const AdminOnboardingView = () => {
                   value={acteroPrice}
                   onChange={(e) => setActeroPrice(e.target.value)}
                   placeholder="Ex: 490"
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-zinc-400 outline-none transition-all text-sm text-[#262626]"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-300 outline-none transition-all text-sm text-[#262626]"
                 />
               </div>
             </div>

@@ -115,6 +115,16 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                             Voir comment ça marche
                         </button>
                     </FadeInUp>
+
+                    {/* Ambassador CTA */}
+                    <FadeInUp delay={0.18} className="flex justify-center">
+                        <button
+                            onClick={() => onNavigate('/ambassadeurs')}
+                            className="text-xs font-medium text-[#716D5C] hover:text-[#003725] transition-colors mt-3"
+                        >
+                            Devenir ambassadeur Actero →
+                        </button>
+                    </FadeInUp>
                 </div>
 
                 {/* Feature cards — 4-column grid BELOW the CTA (Shine style) */}
