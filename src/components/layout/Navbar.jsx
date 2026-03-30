@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  ChevronDown,
   Menu,
   X,
-  Bot,
-  Zap,
-  Sparkles
 } from 'lucide-react'
 import { Logo } from './Logo'
 import { ButtonColorful } from '../ui/button-colorful'
@@ -49,94 +45,21 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
           </div>
 
           <div className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-            <div
-              className="relative"
-              onMouseEnter={() => setIsMegaMenuOpen(true)}
-              onMouseLeave={() => setIsMegaMenuOpen(false)}
+            <button
+              onClick={() => onNavigate("/produits")}
+              className="text-[14px] font-semibold text-[#262626] hover:text-[#003725] transition-colors"
             >
-              <div className="flex items-center gap-1 cursor-pointer py-4 text-sm font-semibold text-[#262626] hover:text-[#262626] transition-colors group">
-                Produits
-                <ChevronDown
-                  className={`w-3.5 h-3.5 transition-transform duration-300 ${isMegaMenuOpen ? "rotate-180 text-[#262626]" : ""}`}
-                />
-              </div>
-
-              <AnimatePresence>
-                {isMegaMenuOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.98 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[850px] bg-white border border-gray-200 rounded-3xl shadow-xl p-6 gap-6 grid grid-cols-3"
-                  >
-                    <div
-                      onClick={() => {
-                        setIsMegaMenuOpen(false);
-                        scrollToId("comment-ca-marche");
-                      }}
-                      className="flex flex-col p-6 rounded-2xl bg-white border border-gray-200 hover:bg-[#F9F7F1] hover:border-gray-300 transition-all cursor-pointer group"
-                    >
-                      <div className="w-14 h-14 bg-[#0F5F35] rounded-2xl flex items-center justify-center mb-6 text-white shadow-lg shadow-[#003725]/20 group-hover:scale-105 transition-transform">
-                        <Bot className="w-7 h-7" />
-                      </div>
-                      <h3 className="text-[#262626] font-semibold text-[19px] mb-2">
-                        Agents IA
-                      </h3>
-                      <p className="text-[15px] text-[#716D5C] font-medium leading-relaxed">
-                        Vos employés virtuels qui ne dorment jamais.
-                      </p>
-                    </div>
-
-                    <div
-                      onClick={() => {
-                        setIsMegaMenuOpen(false);
-                        scrollToId("comment-ca-marche");
-                      }}
-                      className="flex flex-col p-6 rounded-2xl bg-white border border-gray-200 hover:bg-[#F9F7F1] hover:border-gray-300 transition-all cursor-pointer group"
-                    >
-                      <div className="w-14 h-14 bg-[#F9F7F1] rounded-2xl flex items-center justify-center mb-6 text-amber-500 shadow-md border border-gray-200 group-hover:scale-105 transition-transform">
-                        <Zap className="w-7 h-7 fill-amber-500" />
-                      </div>
-                      <h3 className="text-[#262626] font-semibold text-[19px] mb-2">
-                        Automatisations
-                      </h3>
-                      <p className="text-[15px] text-[#716D5C] font-medium leading-relaxed">
-                        Connectez Shopify, votre CRM et vos factures.
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => {
-                        setIsMegaMenuOpen(false);
-                        onAuditOpen?.();
-                      }}
-                      className="flex flex-col p-6 rounded-2xl bg-white border border-gray-200 hover:bg-[#F9F7F1] hover:border-gray-300 transition-all cursor-pointer group text-left"
-                    >
-                      <div className="w-14 h-14 bg-[#F9F7F1] rounded-2xl flex items-center justify-center mb-6 text-orange-500 shadow-md border border-gray-200 group-hover:scale-105 transition-transform">
-                        <Sparkles className="w-7 h-7 fill-orange-500" />
-                      </div>
-                      <h3 className="text-[#262626] font-semibold text-[19px] mb-2">
-                        Audit IA
-                      </h3>
-                      <p className="text-[15px] text-[#716D5C] font-medium leading-relaxed">
-                        Analyse gratuite de votre business en temps réel.
-                      </p>
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
+              Produits
+            </button>
             <button
               onClick={() => onNavigate("/tarifs")}
-              className="text-[13px] font-semibold text-[#262626] hover:text-[#262626] transition-colors"
+              className="text-[14px] font-semibold text-[#262626] hover:text-[#003725] transition-colors"
             >
               Tarifs
             </button>
             <button
               onClick={() => onNavigate("/entreprise")}
-              className="text-[13px] font-semibold text-[#262626] hover:text-[#262626] transition-colors"
+              className="text-[14px] font-semibold text-[#262626] hover:text-[#003725] transition-colors"
             >
               Entreprise
             </button>
