@@ -292,7 +292,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
       {/* Trustpilot Scraper View */}
       {view === 'trustpilot' && (
         <div className="space-y-6">
-          <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+          <div className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-6">
             <h3 className="text-[#262626] font-bold text-sm mb-3 flex items-center gap-2">
               <Star className="w-4 h-4 text-amber-400" />
               Scraper Trustpilot - Avis négatifs SAV
@@ -303,7 +303,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                 value={trustpilotStore}
                 onChange={(e) => setTrustpilotStore(e.target.value)}
                 placeholder="Nom du store (ex: gymshark, sezane, balzac-paris...)"
-                className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-amber-500/50 transition-colors"
+                className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-gray-400 focus:outline-none focus:border-amber-500/50 transition-colors"
                 onKeyDown={e => e.key === 'Enter' && scrapeTrustpilot()}
               />
               <button
@@ -320,7 +320,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
           {trustpilotResults && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
               {/* Summary */}
-              <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+              <div className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-[#262626] font-bold text-sm flex items-center gap-2">
                     <ThumbsDown className="w-4 h-4 text-red-400" />
@@ -357,7 +357,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                 {/* Individual reviews */}
                 <div className="space-y-3">
                   {trustpilotResults.reviews.map((review, i) => (
-                    <div key={i} className="bg-white/[0.02] border border-gray-100 rounded-xl p-4">
+                    <div key={i} className="bg-gray-50 border border-gray-100 rounded-xl p-4">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <div className="w-7 h-7 rounded-full bg-gray-50 flex items-center justify-center text-xs font-bold text-[#716D5C]">
@@ -380,7 +380,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
               </div>
 
               {/* Action: use this data for prospection */}
-              <div className="bg-[#111] border border-violet-500/20 rounded-2xl p-4 flex items-center justify-between">
+              <div className="bg-[#F9F7F1] border border-violet-500/20 rounded-2xl p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
                     <Send className="w-5 h-5 text-violet-400" />
@@ -424,7 +424,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
       {view === 'analyzer' && (
         <>
           {/* Bulk analyzer */}
-          <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+          <div className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-6">
             <h3 className="text-[#262626] font-bold text-sm mb-3 flex items-center gap-2">
               <Globe className="w-4 h-4 text-violet-400" />
               Analyse en masse de stores Shopify
@@ -433,7 +433,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
               value={urls}
               onChange={(e) => setUrls(e.target.value)}
               placeholder={"Collez les URLs des stores (une par ligne) :\nhttps://example.myshopify.com\nhttps://autre-boutique.com"}
-              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] placeholder-zinc-600 resize-none focus:outline-none focus:border-violet-500/50 transition-colors"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] placeholder-gray-400 resize-none focus:outline-none focus:border-violet-500/50 transition-colors"
               rows={4}
             />
             <div className="flex items-center justify-between mt-3">
@@ -463,7 +463,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                   key={prospect.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-[#111] border border-gray-100 rounded-2xl p-5 hover:border-gray-200 transition-colors"
+                  className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-5 hover:border-gray-200 transition-colors"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -483,31 +483,31 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
 
                       {/* Detailed metrics grid */}
                       <div className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-3">
-                        <div className="bg-white/[0.02] border border-gray-100 rounded-lg px-2.5 py-1.5">
+                        <div className="bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5">
                           <span className="text-[10px] text-[#716D5C] block">CA mensuel est.</span>
                           <span className="text-xs font-bold text-[#262626] flex items-center gap-1">
                             <DollarSign className="w-3 h-3 text-emerald-400" />{prospect.monthlyRevenue?.toLocaleString() || 'N/A'}€
                           </span>
                         </div>
-                        <div className="bg-white/[0.02] border border-gray-100 rounded-lg px-2.5 py-1.5">
+                        <div className="bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5">
                           <span className="text-[10px] text-[#716D5C] block">Tickets/mois</span>
                           <span className="text-xs font-bold text-[#262626] flex items-center gap-1">
                             <Mail className="w-3 h-3 text-blue-400" />~{prospect.estimatedTickets || 'N/A'}
                           </span>
                         </div>
-                        <div className="bg-white/[0.02] border border-gray-100 rounded-lg px-2.5 py-1.5">
+                        <div className="bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5">
                           <span className="text-[10px] text-[#716D5C] block">Temps réponse</span>
                           <span className="text-xs font-bold text-[#262626] flex items-center gap-1">
                             <Clock className="w-3 h-3 text-amber-400" />{prospect.responseTime || 'N/A'}
                           </span>
                         </div>
-                        <div className="bg-white/[0.02] border border-gray-100 rounded-lg px-2.5 py-1.5">
+                        <div className="bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5">
                           <span className="text-[10px] text-[#716D5C] block">Abandon panier</span>
                           <span className="text-xs font-bold text-[#262626] flex items-center gap-1">
                             <ShoppingCart className="w-3 h-3 text-red-400" />{prospect.cartAbandonRate || 'N/A'}
                           </span>
                         </div>
-                        <div className="bg-white/[0.02] border border-gray-100 rounded-lg px-2.5 py-1.5">
+                        <div className="bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5">
                           <span className="text-[10px] text-[#716D5C] block">ROI estimé</span>
                           <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
                             <TrendingDown className="w-3 h-3" />{prospect.roiEstimate}€/mois
@@ -588,7 +588,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                   <span className="bg-gray-50 text-[#716D5C] px-2 py-0.5 rounded-full text-[10px] font-bold">{colProspects.length}</span>
                 </div>
                 {colProspects.map(p => (
-                  <div key={p.id} className={`bg-[#111] border ${col.color} p-3 rounded-xl`}>
+                  <div key={p.id} className={`bg-[#F9F7F1] border ${col.color} p-3 rounded-xl`}>
                     <div className="flex items-center justify-between mb-1">
                       <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreBg(p.score)} ${getScoreColor(p.score)}`}>{p.score}/100</span>
                       <span className="text-[10px] text-emerald-400 font-medium">{p.roiEstimate}€</span>
@@ -636,7 +636,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={e => e.stopPropagation()}
-              className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[80vh] overflow-y-auto"
+              className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[80vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-[#262626] flex items-center gap-2">
@@ -663,7 +663,7 @@ Ton : enthousiaste mais professionnel, comme un expert qui veut aider.`
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
                       key === contentType
                         ? 'bg-gray-50 border-white/20 text-[#262626]'
-                        : 'bg-white/[0.02] border-gray-100 text-[#716D5C] hover:text-[#716D5C] hover:bg-gray-50'
+                        : 'bg-gray-50 border-gray-100 text-[#716D5C] hover:text-[#716D5C] hover:bg-gray-50'
                     }`}
                   >
                     <val.icon className={`w-3.5 h-3.5 ${key === contentType ? val.color : ''}`} />

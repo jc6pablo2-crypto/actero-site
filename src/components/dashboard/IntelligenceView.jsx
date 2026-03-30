@@ -245,7 +245,7 @@ export const ExecutionPlanDrawer = ({
                   onClose();
                   onNavigateToActivity();
                 }}
-                className="w-full bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors"
+                className="w-full bg-white text-[#262626] py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors"
               >
                 Voir l'activité en direct <ArrowRight className="w-4 h-4" />
               </button>
@@ -258,7 +258,7 @@ export const ExecutionPlanDrawer = ({
             <button
               disabled={loading}
               onClick={handleImplementClick}
-              className="flex-1 bg-white text-black font-bold py-3.5 px-6 rounded-xl hover:bg-gray-100 transition-colors shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 bg-white text-[#262626] font-bold py-3.5 px-6 rounded-xl hover:bg-gray-100 transition-colors shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <span className="animate-spin w-5 h-5 border-2 border-black/20 border-t-black rounded-full"></span>
@@ -308,7 +308,7 @@ export const RecommendationCard = ({ reco, onAction, onOpenPlan, theme = "dark" 
   const ImpactIcon = cat.icon;
 
   return (
-    <div className={`border rounded-3xl p-6 transition-all duration-300 ${isLight ? "bg-white border-gray-200 shadow-sm hover:shadow-md" : "bg-[#F9F7F1] border-gray-200 hover:border-white/20"}`}>
+    <div className={`border rounded-3xl p-6 transition-all duration-300 ${isLight ? "bg-white border-gray-200 shadow-sm hover:shadow-md" : "bg-[#F9F7F1] border-gray-200 hover:border-gray-300"}`}>
       <div className="flex flex-col lg:flex-row gap-6 mb-6">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-4">

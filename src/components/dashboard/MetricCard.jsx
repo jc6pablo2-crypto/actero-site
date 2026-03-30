@@ -37,7 +37,7 @@ export const MetricCard = ({
     blue: {
       bg: isLight ? "bg-blue-50" : "bg-blue-500/10",
       border: isLight ? "border-blue-100" : "border-blue-500/20",
-      text: "text-[#003725]",
+      text: "text-blue-600",
       val: isLight ? "text-blue-700" : "text-blue-500",
       hover: isLight ? "group-hover:bg-blue-100/50" : "group-hover:bg-blue-500/20",
     },
@@ -73,7 +73,7 @@ export const MetricCard = ({
     <div
       className={`group p-6 rounded-2xl border transition-all duration-300 ${isLight
         ? "bg-white border-gray-200 shadow-sm hover:shadow-md"
-        : "bg-[#F9F7F1] border-gray-200 hover:border-white/20"
+        : "bg-[#F9F7F1] border-gray-200 hover:border-gray-300"
         } ${className}`}
     >
       <div className="flex items-center gap-3 mb-6">

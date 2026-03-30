@@ -116,7 +116,7 @@ export const AdminBillingView = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.03 }}
-                className="bg-[#F9F7F1] border border-gray-200 rounded-xl p-4 flex items-center gap-4 hover:border-white/20 transition-colors"
+                className="bg-[#F9F7F1] border border-gray-200 rounded-xl p-4 flex items-center gap-4 hover:border-gray-300 transition-colors"
               >
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center border ${s.bg}`}>
                   <CreditCard className={`w-4 h-4 ${s.color}`} />
@@ -168,7 +168,7 @@ export const AdminBillingView = () => {
                   const s = invoiceStatusLabels[inv.status] || invoiceStatusLabels.draft
                   const StatusIcon = s.icon
                   return (
-                    <tr key={inv.id} className="hover:bg-white/[0.02] transition-colors">
+                    <tr key={inv.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-5 py-3 text-xs font-mono text-[#716D5C]">{inv.number || '—'}</td>
                       <td className="px-5 py-3">
                         <p className="text-xs font-medium text-[#262626]">{inv.customer_name}</p>

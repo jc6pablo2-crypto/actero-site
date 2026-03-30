@@ -223,7 +223,7 @@ export const AdminN8nCopilot = () => {
                   <button
                     key={i}
                     onClick={() => handleSend(s.text)}
-                    className="text-left p-3 rounded-xl border border-gray-100 bg-white/[0.02] text-xs text-[#716D5C] hover:bg-[#F9F7F1] hover:border-gray-200 hover:text-[#716D5C] transition-all flex items-start gap-2.5"
+                    className="text-left p-3 rounded-xl border border-gray-100 bg-gray-50 text-xs text-[#716D5C] hover:bg-[#F9F7F1] hover:border-gray-200 hover:text-[#716D5C] transition-all flex items-start gap-2.5"
                   >
                     <s.icon className="w-4 h-4 mt-0.5 text-[#716D5C] flex-shrink-0" />
                     <span className="leading-relaxed">{s.text}</span>
@@ -239,7 +239,7 @@ export const AdminN8nCopilot = () => {
               key={i}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`py-4 ${i > 0 ? 'border-t border-white/[0.03]' : ''}`}
+              className={`py-4 ${i > 0 ? 'border-t border-gray-100' : ''}`}
             >
               <div className="flex gap-4">
                 {/* Avatar */}
@@ -304,7 +304,7 @@ export const AdminN8nCopilot = () => {
                                     className={`text-left px-3 py-2 rounded-lg text-xs transition-all border ${
                                       isSelected
                                         ? 'bg-violet-500/20 border-violet-500/40 text-violet-300 font-medium'
-                                        : 'bg-white/[0.02] border-gray-100 text-[#716D5C] hover:bg-[#F9F7F1] hover:border-gray-200'
+                                        : 'bg-gray-50 border-gray-100 text-[#716D5C] hover:bg-[#F9F7F1] hover:border-gray-200'
                                     }`}
                                   >
                                     <span className={`inline-flex items-center justify-center w-4 h-4 rounded-full border text-[9px] font-bold mr-2 ${
@@ -352,7 +352,7 @@ export const AdminN8nCopilot = () => {
 
           {/* Loading */}
           {loading && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-4 border-t border-white/[0.03]">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-4 border-t border-gray-100">
               <div className="flex gap-4">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500/30 to-violet-600/20 border border-violet-500/20 flex items-center justify-center flex-shrink-0">
                   <Sparkles className="w-4 h-4 text-violet-400 animate-pulse" />
@@ -386,7 +386,7 @@ export const AdminN8nCopilot = () => {
               <button
                 onClick={handleQcmSubmit}
                 disabled={Object.keys(qcmAnswers).length < activeQcm.questions.length}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-white text-black hover:bg-gray-100 transition-all disabled:opacity-30"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-white text-[#262626] hover:bg-gray-100 transition-all disabled:opacity-30"
               >
                 <Zap className="w-4 h-4" />
                 Générer le workflow
@@ -416,7 +416,7 @@ export const AdminN8nCopilot = () => {
                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 ${
                   cfg.color === 'red'
                     ? 'bg-red-600 text-white hover:bg-red-500'
-                    : 'bg-white text-black hover:bg-gray-100'
+                    : 'bg-white text-[#262626] hover:bg-gray-100'
                 }`}
               >
                 {applying ? <Loader2 className="w-4 h-4 animate-spin" /> : <cfg.icon className="w-4 h-4" />}
@@ -460,7 +460,7 @@ export const AdminN8nCopilot = () => {
             <button
               onClick={() => handleSend()}
               disabled={!input.trim() || loading}
-              className="m-2 p-2 rounded-xl bg-white text-black hover:bg-gray-200 transition-all disabled:opacity-20 disabled:hover:bg-white flex-shrink-0"
+              className="m-2 p-2 rounded-xl bg-white text-[#262626] hover:bg-gray-200 transition-all disabled:opacity-20 disabled:hover:bg-white flex-shrink-0"
             >
               <ArrowUp className="w-4 h-4" />
             </button>

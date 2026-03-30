@@ -49,7 +49,7 @@ const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain
   const badge = status ? STATUS_BADGES[status] : null;
 
   return (
-    <div className={`relative rounded-2xl border p-5 transition-all hover:border-white/20 ${
+    <div className={`relative rounded-2xl border p-5 transition-all hover:border-gray-300 ${
       isLight
         ? `bg-white border-gray-200 ${isConnected ? 'ring-1 ring-emerald-200' : ''}`
         : `bg-[#F9F7F1] border-gray-200 ${isConnected ? 'ring-1 ring-emerald-500/20' : ''}`
@@ -280,7 +280,7 @@ const ConnectModal = ({ provider, onClose, onSuccess, isLight }) => {
             className={`flex-1 flex justify-center items-center gap-2 py-3 rounded-xl text-sm font-bold transition-colors disabled:opacity-50 ${
               isLight
                 ? 'bg-gray-100 text-[#262626] hover:bg-gray-200'
-                : 'bg-gray-50 text-[#262626] hover:bg-white/15 border border-gray-200'
+                : 'bg-gray-50 text-[#262626] hover:bg-gray-100 border border-gray-200'
             }`}
           >
             {testing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
@@ -289,7 +289,7 @@ const ConnectModal = ({ provider, onClose, onSuccess, isLight }) => {
           <button
             onClick={handleSave}
             disabled={!testResult?.ok || saving}
-            className="flex-1 flex justify-center items-center gap-2 py-3 rounded-xl text-sm font-bold text-[#262626] bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 transition-colors"
+            className="flex-1 flex justify-center items-center gap-2 py-3 rounded-xl text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 transition-colors"
           >
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
             Sauvegarder
@@ -318,7 +318,7 @@ const DisconnectModal = ({ provider, onClose, onConfirm, disconnecting, isLight 
         <button
           onClick={onClose}
           className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors ${
-            isLight ? 'bg-gray-100 text-slate-700 hover:bg-gray-200' : 'bg-gray-50 text-[#262626] hover:bg-white/15'
+            isLight ? 'bg-gray-100 text-slate-700 hover:bg-gray-200' : 'bg-gray-50 text-[#262626] hover:bg-gray-100'
           }`}
         >
           Annuler
@@ -326,7 +326,7 @@ const DisconnectModal = ({ provider, onClose, onConfirm, disconnecting, isLight 
         <button
           onClick={onConfirm}
           disabled={disconnecting}
-          className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-bold text-[#262626] bg-red-600 hover:bg-red-500 disabled:opacity-50 transition-colors"
+          className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-500 disabled:opacity-50 transition-colors"
         >
           {disconnecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
           Déconnecter
@@ -582,7 +582,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
                 <button
                   onClick={() => setOauthPromptProvider(null)}
                   className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors ${
-                    isLight ? 'bg-gray-100 text-slate-700 hover:bg-gray-200' : 'bg-gray-50 text-[#262626] hover:bg-white/15'
+                    isLight ? 'bg-gray-100 text-slate-700 hover:bg-gray-200' : 'bg-gray-50 text-[#262626] hover:bg-gray-100'
                   }`}
                 >
                   Annuler

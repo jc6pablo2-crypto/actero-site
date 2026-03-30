@@ -153,7 +153,7 @@ export const AdminAcquisitionView = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-[#111] border border-gray-100 rounded-2xl p-5"
+                className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-5"
               >
                 <div className="flex items-center justify-between mb-3">
                   <kpi.icon className={`w-5 h-5 ${kpi.color}`} />
@@ -171,7 +171,7 @@ export const AdminAcquisitionView = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Enhanced Funnel visualization */}
-            <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+            <div className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-6">
               <h3 className="text-[#262626] font-bold text-sm mb-4 flex items-center gap-2">
                 <Activity className="w-4 h-4 text-violet-400" />
                 Funnel de conversion détaillé
@@ -224,7 +224,7 @@ export const AdminAcquisitionView = () => {
             </div>
 
             {/* Sources breakdown */}
-            <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+            <div className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-6">
               <h3 className="text-[#262626] font-bold text-sm mb-4 flex items-center gap-2">
                 <Globe className="w-4 h-4 text-blue-400" />
                 Leads par source
@@ -271,7 +271,7 @@ export const AdminAcquisitionView = () => {
           </div>
 
           {/* Recent conversions */}
-          <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+          <div className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-6">
             <h3 className="text-[#262626] font-bold text-sm mb-4 flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-emerald-400" />
               Derniers clients signés
@@ -303,7 +303,7 @@ export const AdminAcquisitionView = () => {
           </div>
 
           {/* Weekly objectives */}
-          <div className="bg-[#111] border border-gray-100 rounded-2xl p-6">
+          <div className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-6">
             <h3 className="text-[#262626] font-bold text-sm mb-4 flex items-center gap-2">
               <Target className="w-4 h-4 text-amber-400" />
               Objectifs hebdomadaires
@@ -354,7 +354,7 @@ export const AdminAcquisitionView = () => {
               { label: 'Clients référés', value: partners.reduce((s, p) => s + p.clientsReferred, 0), icon: Users, color: 'text-blue-400' },
               { label: 'Revenu partenariats', value: `${partners.reduce((s, p) => s + (p.totalRevenue || 0), 0).toLocaleString()}€`, icon: DollarSign, color: 'text-violet-400' },
             ].map((stat, i) => (
-              <div key={i} className="bg-[#111] border border-gray-100 rounded-2xl p-4">
+              <div key={i} className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <stat.icon className={`w-4 h-4 ${stat.color}`} />
                   <span className="text-xs text-[#716D5C] font-medium">{stat.label}</span>
@@ -365,7 +365,7 @@ export const AdminAcquisitionView = () => {
           </div>
 
           {/* Partners table */}
-          <div className="bg-[#111] border border-gray-100 rounded-2xl overflow-hidden">
+          <div className="bg-[#F9F7F1] border border-gray-100 rounded-2xl overflow-hidden">
             <div className="flex items-center justify-between p-5 border-b border-gray-100">
               <h3 className="text-[#262626] font-bold text-sm flex items-center gap-2">
                 <Building2 className="w-4 h-4 text-violet-400" />
@@ -380,7 +380,7 @@ export const AdminAcquisitionView = () => {
             </div>
 
             {/* Table header */}
-            <div className="grid grid-cols-12 gap-3 px-5 py-3 bg-white/[0.02] border-b border-gray-100 text-[10px] text-[#716D5C] font-medium uppercase tracking-wider">
+            <div className="grid grid-cols-12 gap-3 px-5 py-3 bg-gray-50 border-b border-gray-100 text-[10px] text-[#716D5C] font-medium uppercase tracking-wider">
               <div className="col-span-3">Agence</div>
               <div className="col-span-2">Contact</div>
               <div className="col-span-1">Statut</div>
@@ -392,7 +392,7 @@ export const AdminAcquisitionView = () => {
 
             {/* Table rows */}
             {partners.map(partner => (
-              <div key={partner.id} className="grid grid-cols-12 gap-3 px-5 py-3.5 border-b border-gray-100 hover:bg-white/[0.02] transition-colors items-center">
+              <div key={partner.id} className="grid grid-cols-12 gap-3 px-5 py-3.5 border-b border-gray-100 hover:bg-gray-50 transition-colors items-center">
                 <div className="col-span-3">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-400 text-xs font-bold">
@@ -451,7 +451,7 @@ export const AdminAcquisitionView = () => {
           </div>
 
           {/* Tips */}
-          <div className="bg-[#111] border border-gray-100 rounded-2xl p-4">
+          <div className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-4">
             <p className="text-xs text-[#716D5C] flex items-center gap-2">
               <Handshake className="w-4 h-4 text-emerald-400" />
               <span><b className="text-[#716D5C]">Stratégie :</b> Les agences Shopify sont votre meilleur canal. Proposez 10-15% de commission sur le MRR généré par les clients référés.</span>
@@ -475,7 +475,7 @@ export const AdminAcquisitionView = () => {
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={e => e.stopPropagation()}
-              className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
+              className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-[#262626]">Nouveau partenaire</h3>
@@ -490,7 +490,7 @@ export const AdminAcquisitionView = () => {
                     value={newPartner.name}
                     onChange={e => setNewPartner(p => ({ ...p, name: e.target.value }))}
                     placeholder="Ex: Agence Pixel"
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-gray-400 focus:outline-none focus:border-violet-500/50"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -500,7 +500,7 @@ export const AdminAcquisitionView = () => {
                       value={newPartner.contact}
                       onChange={e => setNewPartner(p => ({ ...p, contact: e.target.value }))}
                       placeholder="email@agence.com"
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-gray-400 focus:outline-none focus:border-violet-500/50"
                     />
                   </div>
                   <div>
@@ -509,7 +509,7 @@ export const AdminAcquisitionView = () => {
                       value={newPartner.phone}
                       onChange={e => setNewPartner(p => ({ ...p, phone: e.target.value }))}
                       placeholder="+33 6 ..."
-                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-gray-400 focus:outline-none focus:border-violet-500/50"
                     />
                   </div>
                 </div>
@@ -542,7 +542,7 @@ export const AdminAcquisitionView = () => {
                     value={newPartner.notes}
                     onChange={e => setNewPartner(p => ({ ...p, notes: e.target.value }))}
                     placeholder="Spécialité, contexte..."
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-gray-400 focus:outline-none focus:border-violet-500/50"
                   />
                 </div>
                 <button
@@ -573,7 +573,7 @@ export const AdminAcquisitionView = () => {
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={e => e.stopPropagation()}
-              className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
+              className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-[#262626]">Modifier — {editingPartner.name}</h3>

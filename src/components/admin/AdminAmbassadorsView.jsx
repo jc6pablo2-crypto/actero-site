@@ -68,7 +68,7 @@ const InlineNoteEditor = ({ leadId, currentNote, onSave }) => {
         value={note}
         onChange={(e) => setNote(e.target.value)}
         onKeyDown={(e) => { if (e.key === 'Enter') { onSave(leadId, note); setEditing(false) } }}
-        className="px-2 py-1 bg-[#111] border border-gray-200 rounded-lg text-[10px] text-[#262626] w-40 outline-none focus:border-white/20"
+        className="px-2 py-1 bg-[#F9F7F1] border border-gray-200 rounded-lg text-[10px] text-[#262626] w-40 outline-none focus:border-gray-300"
         placeholder="Note interne..."
         autoFocus
       />
@@ -366,7 +366,7 @@ export const AdminAmbassadorsView = () => {
               placeholder="Rechercher..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 pr-4 py-2 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm w-64 outline-none focus:border-white/20 transition-all text-[#262626]"
+              className="pl-9 pr-4 py-2 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm w-64 outline-none focus:border-gray-300 transition-all text-[#262626]"
             />
           </div>
         </div>
@@ -385,7 +385,7 @@ export const AdminAmbassadorsView = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="relative bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5 overflow-hidden group hover:border-white/20 transition-colors"
+            className="relative bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5 overflow-hidden group hover:border-gray-300 transition-colors"
           >
             <div className={`absolute -top-6 -right-6 w-20 h-20 bg-${kpi.color}-500/10 rounded-full blur-2xl group-hover:bg-${kpi.color}-500/20 transition-colors`} />
             <div className="flex items-center justify-between mb-3">
@@ -416,7 +416,7 @@ export const AdminAmbassadorsView = () => {
           </div>
           <div className="space-y-3">
             {applications.filter(a => a.status === 'new').map((app) => (
-              <div key={app.id} className="flex items-center gap-4 p-4 rounded-xl bg-white/[0.02] border border-gray-100">
+              <div key={app.id} className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 border border-gray-100">
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-[#262626]">{app.first_name} {app.last_name}</p>
                   <p className="text-xs text-[#716D5C]">{app.email}{app.phone ? ` | ${app.phone}` : ''}</p>
@@ -477,7 +477,7 @@ export const AdminAmbassadorsView = () => {
             <select
               value={ambassadorStatusFilter}
               onChange={(e) => setAmbassadorStatusFilter(e.target.value)}
-              className="px-3 py-1.5 bg-[#F9F7F1] border border-gray-200 rounded-lg text-xs text-[#262626] outline-none focus:border-white/20"
+              className="px-3 py-1.5 bg-[#F9F7F1] border border-gray-200 rounded-lg text-xs text-[#262626] outline-none focus:border-gray-300"
             >
               <option value="all">Tous les statuts</option>
               {Object.entries(AMBASSADOR_STATUS_MAP).map(([key, cfg]) => (
@@ -495,7 +495,7 @@ export const AdminAmbassadorsView = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.03 }}
-                  className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-5 hover:border-white/20 transition-all"
+                  className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-5 hover:border-gray-300 transition-all"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
@@ -558,7 +558,7 @@ export const AdminAmbassadorsView = () => {
                         <MoreVertical className="w-5 h-5" />
                       </button>
                       {actionMenuId === amb.id && (
-                        <div className="absolute right-0 top-10 bg-[#111] border border-gray-200 rounded-xl shadow-xl z-20 py-1 min-w-[160px]">
+                        <div className="absolute right-0 top-10 bg-[#F9F7F1] border border-gray-200 rounded-xl shadow-xl z-20 py-1 min-w-[160px]">
                           {amb.status !== 'active' && (
                             <button
                               onClick={() => updateAmbassadorMutation.mutate({ id: amb.id, status: 'active' })}
@@ -613,7 +613,7 @@ export const AdminAmbassadorsView = () => {
             <select
               value={leadStatusFilter}
               onChange={(e) => setLeadStatusFilter(e.target.value)}
-              className="px-3 py-1.5 bg-[#F9F7F1] border border-gray-200 rounded-lg text-xs text-[#262626] outline-none focus:border-white/20"
+              className="px-3 py-1.5 bg-[#F9F7F1] border border-gray-200 rounded-lg text-xs text-[#262626] outline-none focus:border-gray-300"
             >
               <option value="all">Tous les statuts</option>
               {Object.entries(LEAD_STATUS_MAP).map(([key, cfg]) => (
@@ -623,7 +623,7 @@ export const AdminAmbassadorsView = () => {
             <select
               value={leadAmbassadorFilter}
               onChange={(e) => setLeadAmbassadorFilter(e.target.value)}
-              className="px-3 py-1.5 bg-[#F9F7F1] border border-gray-200 rounded-lg text-xs text-[#262626] outline-none focus:border-white/20"
+              className="px-3 py-1.5 bg-[#F9F7F1] border border-gray-200 rounded-lg text-xs text-[#262626] outline-none focus:border-gray-300"
             >
               <option value="all">Tous les ambassadeurs</option>
               {ambassadorOptions.map(a => (
@@ -654,7 +654,7 @@ export const AdminAmbassadorsView = () => {
                     const st = LEAD_STATUS_MAP[lead.status] || LEAD_STATUS_MAP.submitted
                     const ambName = lead.ambassadors ? `${lead.ambassadors.first_name} ${lead.ambassadors.last_name}` : '—'
                     return (
-                      <tr key={lead.id} className="hover:bg-white/[0.02] transition-colors">
+                      <tr key={lead.id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-5 py-3">
                           <p className="font-medium text-[#262626] text-xs">{ambName}</p>
                           <p className="text-[10px] text-[#716D5C]">{lead.ambassadors?.ambassador_code || ''}</p>
@@ -676,7 +676,7 @@ export const AdminAmbassadorsView = () => {
                               <ChevronDown className="w-3 h-3" />
                             </button>
                             {showLeadStatusMenu === lead.id && (
-                              <div className="absolute left-0 top-7 bg-[#111] border border-gray-200 rounded-xl shadow-xl z-20 py-1 min-w-[170px]">
+                              <div className="absolute left-0 top-7 bg-[#F9F7F1] border border-gray-200 rounded-xl shadow-xl z-20 py-1 min-w-[170px]">
                                 {Object.entries(LEAD_STATUS_MAP).map(([key, cfg]) => (
                                   <button
                                     key={key}
@@ -738,7 +738,7 @@ export const AdminAmbassadorsView = () => {
               <select
                 value={commissionStatusFilter}
                 onChange={(e) => setCommissionStatusFilter(e.target.value)}
-                className="px-3 py-1.5 bg-[#F9F7F1] border border-gray-200 rounded-lg text-xs text-[#262626] outline-none focus:border-white/20"
+                className="px-3 py-1.5 bg-[#F9F7F1] border border-gray-200 rounded-lg text-xs text-[#262626] outline-none focus:border-gray-300"
               >
                 <option value="all">Tous les statuts</option>
                 {Object.entries(COMMISSION_STATUS_MAP).map(([key, cfg]) => (
@@ -775,7 +775,7 @@ export const AdminAmbassadorsView = () => {
                     const st = COMMISSION_STATUS_MAP[comm.status] || COMMISSION_STATUS_MAP.pending
                     const ambName = comm.ambassadors ? `${comm.ambassadors.first_name} ${comm.ambassadors.last_name}` : '—'
                     return (
-                      <tr key={comm.id} className="hover:bg-white/[0.02] transition-colors">
+                      <tr key={comm.id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-5 py-3 text-xs font-medium text-[#262626]">{ambName}</td>
                         <td className="px-5 py-3">
                           <p className="text-xs text-[#262626]">{comm.ambassador_leads?.prospect_name || '—'}</p>
@@ -802,7 +802,7 @@ export const AdminAmbassadorsView = () => {
                               <MoreVertical className="w-4 h-4" />
                             </button>
                             {actionMenuId === comm.id && (
-                              <div className="absolute right-0 top-8 bg-[#111] border border-gray-200 rounded-xl shadow-xl z-20 py-1 min-w-[160px]">
+                              <div className="absolute right-0 top-8 bg-[#F9F7F1] border border-gray-200 rounded-xl shadow-xl z-20 py-1 min-w-[160px]">
                                 {(comm.status === 'eligible' || comm.status === 'pending') && (
                                   <button
                                     onClick={() => updateCommissionMutation.mutate({ id: comm.id, status: 'approved' })}
@@ -881,7 +881,7 @@ export const AdminAmbassadorsView = () => {
                     value={commissionForm.amount}
                     onChange={(e) => setCommissionForm({ ...commissionForm, amount: e.target.value })}
                     placeholder="500"
-                    className="w-full px-4 py-2.5 bg-[#111] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:border-white/20"
+                    className="w-full px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:border-gray-300"
                   />
                 </div>
                 <div>
@@ -890,7 +890,7 @@ export const AdminAmbassadorsView = () => {
                     type="date"
                     value={commissionForm.client_payment_date}
                     onChange={(e) => setCommissionForm({ ...commissionForm, client_payment_date: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-[#111] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:border-white/20"
+                    className="w-full px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:border-gray-300"
                   />
                 </div>
                 <button
@@ -905,7 +905,7 @@ export const AdminAmbassadorsView = () => {
                     })
                   }}
                   disabled={createCommissionMutation.isPending}
-                  className="w-full py-2.5 rounded-xl bg-white text-black font-bold text-sm hover:bg-gray-200 transition-colors disabled:opacity-50"
+                  className="w-full py-2.5 rounded-xl bg-white text-[#262626] font-bold text-sm hover:bg-gray-200 transition-colors disabled:opacity-50"
                 >
                   {createCommissionMutation.isPending ? 'Création...' : 'Créer la commission'}
                 </button>

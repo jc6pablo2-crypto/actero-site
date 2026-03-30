@@ -428,7 +428,7 @@ export const CallNotesWizard = ({ client, onClose, onDeployReady }) => {
             {currentStep < STEPS.length - 1 ? (
               <button
                 onClick={() => handleStepChange(currentStep + 1)}
-                className="flex items-center gap-2 px-5 py-2.5 bg-white text-black rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 bg-white text-[#262626] rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
               >
                 Suivant
                 <ChevronRight className="w-4 h-4" />
@@ -481,7 +481,7 @@ function InputField({ label, value, onChange, type = 'text', placeholder, suffix
           value={value || ''}
           onChange={e => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-[#262626] placeholder-gray-600 outline-none focus:border-white/20 transition-colors"
+          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-[#262626] placeholder-gray-600 outline-none focus:border-gray-300 transition-colors"
         />
         {suffix && (
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#716D5C]">{suffix}</span>
@@ -500,7 +500,7 @@ function TextareaField({ label, value, onChange, placeholder, rows = 3 }) {
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-[#262626] placeholder-gray-600 outline-none focus:border-white/20 transition-colors resize-none"
+        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-[#262626] placeholder-gray-600 outline-none focus:border-gray-300 transition-colors resize-none"
       />
     </div>
   );
@@ -541,7 +541,7 @@ function StepBasics({ form, updateField }) {
                 className={`flex items-center gap-3 p-4 rounded-xl border transition-all ${
                   selected
                     ? `border-${opt.color}-500/30 bg-${opt.color}-500/10`
-                    : 'border-gray-200 bg-white/[0.02] hover:border-white/20'
+                    : 'border-gray-200 bg-gray-50 hover:border-gray-300'
                 }`}
               >
                 <Icon className={`w-5 h-5 ${selected ? `text-${opt.color}-400` : 'text-[#716D5C]'}`} />
@@ -572,7 +572,7 @@ function StepBusiness({ form, updateField }) {
           <select
             value={form.ticketing_tool || ''}
             onChange={e => updateField('ticketing_tool', e.target.value || null)}
-            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-[#262626] outline-none focus:border-white/20 transition-colors"
+            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-[#262626] outline-none focus:border-gray-300 transition-colors"
           >
             <option value="">Selectionner...</option>
             {TICKETING_OPTIONS.map(opt => (
@@ -588,7 +588,7 @@ function StepBusiness({ form, updateField }) {
 
         <InputField label="Cout horaire support" value={form.hourly_support_cost} onChange={v => updateField('hourly_support_cost', v)} type="number" suffix="EUR/h" />
 
-        <div className="flex items-center justify-between p-3 bg-white/[0.02] border border-gray-200 rounded-lg">
+        <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg">
           <span className="text-sm text-[#716D5C]">Chatbot souhaite ?</span>
           <button
             onClick={() => updateField('wants_chatbot', !form.wants_chatbot)}
@@ -654,7 +654,7 @@ function StepEmail({ form, updateField, onAutoDetect, autoDetecting }) {
               className={`w-full flex items-center gap-3 p-3 rounded-lg border text-left transition-all ${
                 form.email_sending_preference === opt.value
                   ? 'border-emerald-500/30 bg-emerald-500/10'
-                  : 'border-gray-200 bg-white/[0.02] hover:border-white/20'
+                  : 'border-gray-200 bg-gray-50 hover:border-gray-300'
               }`}
             >
               <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
@@ -674,7 +674,7 @@ function StepEmail({ form, updateField, onAutoDetect, autoDetecting }) {
       </div>
 
       {form.email_sending_preference === 'smtp_client' && (
-        <div className="space-y-3 p-4 bg-white/[0.02] border border-gray-200 rounded-lg">
+        <div className="space-y-3 p-4 bg-gray-50 border border-gray-200 rounded-lg">
           <InputField label="Hote SMTP" value={form.smtp_host} onChange={v => updateField('smtp_host', v)} placeholder="smtp.gmail.com" />
           <div className="grid grid-cols-2 gap-3">
             <InputField label="Port" value={form.smtp_port} onChange={v => updateField('smtp_port', v)} type="number" placeholder="587" />
@@ -728,7 +728,7 @@ function StepWorkflows({ form, toggleWorkflow, workflows }) {
             className={`w-full flex items-start gap-4 p-4 rounded-xl border transition-all text-left ${
               selected
                 ? 'border-emerald-500/30 bg-emerald-500/10'
-                : 'border-gray-200 bg-white/[0.02] hover:border-white/20'
+                : 'border-gray-200 bg-gray-50 hover:border-gray-300'
             }`}
           >
             <div className={`mt-0.5 w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-colors ${

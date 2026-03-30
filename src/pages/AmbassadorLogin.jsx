@@ -92,7 +92,7 @@ export const AmbassadorLogin = ({ onNavigate }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black font-bold rounded-xl text-base transition-all"
+              className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-[#262626] font-bold rounded-xl text-base transition-all"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin mx-auto" />

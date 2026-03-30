@@ -293,7 +293,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
   const inputClass = `w-full px-4 py-3 rounded-xl text-sm font-medium outline-none transition-all ${
     isLight
       ? 'bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:border-blue-400 focus:ring-2 focus:ring-blue-100'
-      : 'bg-gray-50 border border-gray-200 text-[#262626] focus:border-white/30 focus:ring-2 focus:ring-white/5'
+      : 'bg-gray-50 border border-gray-200 text-[#262626] focus:border-gray-400 focus:ring-2 focus:ring-white/5'
   }`
 
   const labelClass = `block text-xs font-bold uppercase tracking-wider mb-2 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`
@@ -349,7 +349,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
             <label className={labelClass}>
               <Mail className="w-3 h-3 inline mr-1" /> Email du compte
             </label>
-            <div className={`px-4 py-3 rounded-xl text-sm ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-white/[0.02] text-[#716D5C]'}`}>
+            <div className={`px-4 py-3 rounded-xl text-sm ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-gray-50 text-[#716D5C]'}`}>
               {session?.user?.email || '—'}
             </div>
           </div>
@@ -359,7 +359,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
                 ? <><Building2 className="w-3 h-3 inline mr-1" /> Type</>
                 : <><ShoppingBag className="w-3 h-3 inline mr-1" /> Type</>}
             </label>
-            <div className={`px-4 py-3 rounded-xl text-sm capitalize ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-white/[0.02] text-[#716D5C]'}`}>
+            <div className={`px-4 py-3 rounded-xl text-sm capitalize ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-gray-50 text-[#716D5C]'}`}>
               {client?.client_type || 'ecommerce'}
             </div>
           </div>
@@ -369,7 +369,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
           <label className={labelClass}>
             <Calendar className="w-3 h-3 inline mr-1" /> Membre depuis
           </label>
-          <div className={`px-4 py-3 rounded-xl text-sm ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-white/[0.02] text-[#716D5C]'}`}>
+          <div className={`px-4 py-3 rounded-xl text-sm ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-gray-50 text-[#716D5C]'}`}>
             {client?.created_at ? new Date(client.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'}
           </div>
         </div>
@@ -393,7 +393,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
               isLight
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-white text-black hover:bg-gray-100'
+                : 'bg-white text-[#262626] hover:bg-gray-100'
             } disabled:opacity-50`}
           >
             <Save className="w-4 h-4" /> Enregistrer
@@ -418,7 +418,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
           </div>
         </div>
 
-        <div className={`rounded-xl p-4 ${isLight ? 'bg-[#F9F7F1] border border-gray-200' : 'bg-white/[0.02] border border-gray-100'}`}>
+        <div className={`rounded-xl p-4 ${isLight ? 'bg-[#F9F7F1] border border-gray-200' : 'bg-gray-50 border border-gray-100'}`}>
           <div className="flex items-center justify-between">
             <div>
               <p className={`text-sm font-medium ${isLight ? 'text-slate-700' : 'text-[#716D5C]'}`}>Portail client Stripe</p>
@@ -505,7 +505,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
               isLight
                 ? 'bg-[#F9F7F1] text-[#262626] hover:bg-gray-50'
-                : 'bg-gray-50 text-[#262626] hover:bg-white/20 border border-gray-200'
+                : 'bg-gray-50 text-[#262626] hover:bg-gray-100 border border-gray-200'
             } disabled:opacity-30`}
           >
             <Lock className="w-4 h-4" /> Changer le mot de passe

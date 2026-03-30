@@ -407,7 +407,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="relative bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5 overflow-hidden group hover:border-white/20 transition-colors"
+                    className="relative bg-[#F9F7F1] rounded-2xl border border-gray-200 p-5 overflow-hidden group hover:border-gray-300 transition-colors"
                   >
                     <div className={`absolute -top-6 -right-6 w-20 h-20 bg-${kpi.color}-500/10 rounded-full blur-2xl group-hover:bg-${kpi.color}-500/20 transition-colors`} />
                     <div className="flex items-center justify-between mb-3">
@@ -464,7 +464,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                                 : 'bg-gray-50'
                             }`}
                           />
-                          <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-bold px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                          <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white text-[#262626] text-[10px] font-bold px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
                             {day.events} évén.
                           </div>
                         </motion.div>
@@ -543,7 +543,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: i * 0.05 }}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] hover:bg-[#F9F7F1] transition-colors cursor-pointer"
+                        className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-[#F9F7F1] transition-colors cursor-pointer"
                         onClick={() => setSelectedClient(client)}
                       >
                         <div className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold ${
@@ -593,7 +593,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: i * 0.05 }}
-                          className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02]"
+                          className="flex items-center gap-3 p-3 rounded-xl bg-gray-50"
                         >
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-[#262626] truncate">{f.company_name}</p>
@@ -690,7 +690,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: i * 0.05 }}
-                        className="p-3 rounded-xl bg-white/[0.02] border border-gray-100"
+                        className="p-3 rounded-xl bg-gray-50 border border-gray-100"
                       >
                         <p className="text-sm font-medium text-[#262626]">{lead.brand_name}</p>
                         <p className="text-xs text-[#716D5C] mt-0.5">{lead.email}</p>
@@ -717,7 +717,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                     <input
                       type="text"
                       placeholder="Rechercher..."
-                      className="pl-9 pr-4 py-2 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm w-full sm:w-64 outline-none focus:border-white/20 transition-all"
+                      className="pl-9 pr-4 py-2 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm w-full sm:w-64 outline-none focus:border-gray-300 transition-all"
                     />
                   </div>
                 </div>
@@ -756,7 +756,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 <div className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-16 text-center flex flex-col items-center">
                   <Users className="w-12 h-12 text-[#716D5C] mb-4" />
                   <h3 className="text-xl font-bold mb-2">Aucun client pour le moment</h3>
-                  <button onClick={handleAddClient} className="bg-white text-black px-5 py-2.5 rounded-xl text-sm font-bold mt-4">
+                  <button onClick={handleAddClient} className="bg-white text-[#262626] px-5 py-2.5 rounded-xl text-sm font-bold mt-4">
                     Ajouter un client
                   </button>
                 </div>
@@ -769,7 +769,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.04 }}
                       onClick={() => setSelectedClient(client)}
-                      className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-5 flex items-center gap-5 hover:border-white/20 transition-all cursor-pointer group"
+                      className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-5 flex items-center gap-5 hover:border-gray-300 transition-all cursor-pointer group"
                     >
                       {/* Icon */}
                       <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${

@@ -52,7 +52,7 @@ const StatusBadge = ({ status, config }) => {
 
 // ─── KPI card with icon ───
 const KPICard = ({ label, value, icon: Icon, accent = 'emerald', subtitle }) => (
-  <div className="p-5 rounded-2xl bg-[#111] border border-gray-200 hover:border-white/20 transition-all group">
+  <div className="p-5 rounded-2xl bg-[#F9F7F1] border border-gray-200 hover:border-gray-300 transition-all group">
     <div className="flex items-center justify-between mb-3">
       <p className="text-xs font-bold text-[#716D5C] uppercase tracking-wider">{label}</p>
       {Icon && <Icon className={`w-4 h-4 text-${accent}-400 opacity-60 group-hover:opacity-100 transition-opacity`} />}
@@ -449,7 +449,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
             </div>
 
             {/* Link */}
-            <div className="p-6 rounded-2xl bg-[#111] border border-gray-200">
+            <div className="p-6 rounded-2xl bg-[#F9F7F1] border border-gray-200">
               <p className="text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-3">Votre lien de parrainage</p>
               {ambassadorLink && (
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-[#F9F7F1] border border-gray-100 mb-4">
@@ -472,13 +472,13 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
 
             {/* Reward tiers */}
             <div className="grid md:grid-cols-2 gap-4">
-              <div className={`p-5 rounded-2xl border text-center ${leadsWon < 3 ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-white/[0.02] border-gray-100'}`}>
+              <div className={`p-5 rounded-2xl border text-center ${leadsWon < 3 ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-gray-50 border-gray-100'}`}>
                 <p className="text-[10px] font-bold text-emerald-400/60 uppercase tracking-widest mb-1">1er et 2e client</p>
                 <p className="text-3xl font-bold text-emerald-400">150 €</p>
                 <p className="text-xs text-[#716D5C] mt-1">par client signé</p>
                 {leadsWon < 3 && <p className="text-[10px] text-emerald-400/80 mt-2 font-bold">Palier actuel</p>}
               </div>
-              <div className={`p-5 rounded-2xl border text-center relative overflow-hidden ${leadsWon >= 3 ? 'bg-amber-500/5 border-amber-500/20' : 'bg-white/[0.02] border-gray-100'}`}>
+              <div className={`p-5 rounded-2xl border text-center relative overflow-hidden ${leadsWon >= 3 ? 'bg-amber-500/5 border-amber-500/20' : 'bg-gray-50 border-gray-100'}`}>
                 {leadsWon >= 3 && <p className="absolute top-2 right-2 text-[9px] font-bold text-amber-400 bg-amber-500/20 px-2 py-0.5 rounded-full">Actif</p>}
                 <p className="text-[10px] font-bold text-amber-400/60 uppercase tracking-widest mb-1">À partir du 3e client</p>
                 <p className="text-3xl font-bold text-amber-400">300 €</p>
@@ -530,7 +530,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
               </button>
               <button
                 onClick={() => setActiveTab('commissions')}
-                className="p-5 rounded-2xl bg-white/[0.02] border border-gray-200 hover:border-white/20 transition-all text-left group"
+                className="p-5 rounded-2xl bg-gray-50 border border-gray-200 hover:border-gray-300 transition-all text-left group"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -560,7 +560,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
               <p className="text-[#716D5C] font-medium">Partagez ce lien pour attribuer automatiquement vos recommandations.</p>
             </div>
 
-            <div className="p-8 rounded-2xl bg-[#111] border border-gray-200 space-y-6">
+            <div className="p-8 rounded-2xl bg-[#F9F7F1] border border-gray-200 space-y-6">
               <div>
                 <p className="text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-3">Code ambassadeur</p>
                 <p className="text-4xl font-bold text-emerald-400 font-mono">{ambCode || '—'}</p>
@@ -611,7 +611,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
               </div>
               <button
                 onClick={() => { setShowLeadModal(true); setLeadError('') }}
-                className="flex items-center gap-2 px-5 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl transition-all"
+                className="flex items-center gap-2 px-5 py-3 bg-emerald-500 hover:bg-emerald-400 text-[#262626] font-bold rounded-xl transition-all"
               >
                 <Plus className="w-4 h-4" /> Recommander un prospect
               </button>
@@ -619,7 +619,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
 
             {/* Empty state */}
             {leads.length === 0 ? (
-              <div className="rounded-2xl bg-[#111] border border-gray-200 p-12 text-center">
+              <div className="rounded-2xl bg-[#F9F7F1] border border-gray-200 p-12 text-center">
                 <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-6">
                   <Users className="w-8 h-8 text-emerald-400/50" />
                 </div>
@@ -629,7 +629,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                 </p>
                 <button
                   onClick={() => { setShowLeadModal(true); setLeadError('') }}
-                  className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-xl transition-all inline-flex items-center gap-2"
+                  className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-[#262626] font-bold rounded-xl transition-all inline-flex items-center gap-2"
                 >
                   <Plus className="w-4 h-4" /> Recommander un prospect
                 </button>
@@ -637,7 +637,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
             ) : (
               <div className="space-y-3">
                 {leads.map((lead) => (
-                  <div key={lead.id} className="rounded-2xl bg-[#111] border border-gray-200 hover:border-white/20 transition-all p-5">
+                  <div key={lead.id} className="rounded-2xl bg-[#F9F7F1] border border-gray-200 hover:border-gray-300 transition-all p-5">
                     <div className="flex items-start justify-between gap-4 mb-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3 flex-wrap">
@@ -719,7 +719,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="w-full max-w-lg bg-[#111] border border-gray-200 rounded-3xl p-8"
+                    className="w-full max-w-lg bg-[#F9F7F1] border border-gray-200 rounded-3xl p-8"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {leadSuccess ? (
@@ -773,13 +773,13 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                               onChange={(e) => setLeadForm((p) => ({ ...p, company_niche: e.target.value }))}
                               className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-[#262626] focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all appearance-none"
                             >
-                              <option value="" className="bg-[#111]">Sélectionner</option>
-                              <option value="E-commerce" className="bg-[#111]">E-commerce</option>
-                              <option value="Immobilier" className="bg-[#111]">Immobilier</option>
-                              <option value="SaaS" className="bg-[#111]">SaaS</option>
-                              <option value="Finance" className="bg-[#111]">Finance</option>
-                              <option value="Santé" className="bg-[#111]">Santé</option>
-                              <option value="Autre" className="bg-[#111]">Autre</option>
+                              <option value="" className="bg-[#F9F7F1]">Sélectionner</option>
+                              <option value="E-commerce" className="bg-[#F9F7F1]">E-commerce</option>
+                              <option value="Immobilier" className="bg-[#F9F7F1]">Immobilier</option>
+                              <option value="SaaS" className="bg-[#F9F7F1]">SaaS</option>
+                              <option value="Finance" className="bg-[#F9F7F1]">Finance</option>
+                              <option value="Santé" className="bg-[#F9F7F1]">Santé</option>
+                              <option value="Autre" className="bg-[#F9F7F1]">Autre</option>
                             </select>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
@@ -817,7 +817,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                           <button
                             type="submit"
                             disabled={leadSubmitting}
-                            className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black font-bold rounded-xl transition-all"
+                            className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-[#262626] font-bold rounded-xl transition-all"
                           >
                             {leadSubmitting ? (
                               <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin mx-auto" />
@@ -852,7 +852,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
             </div>
 
             {commissions.length === 0 ? (
-              <div className="rounded-2xl bg-[#111] border border-gray-200 p-12 text-center">
+              <div className="rounded-2xl bg-[#F9F7F1] border border-gray-200 p-12 text-center">
                 <div className="w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center mx-auto mb-6">
                   <DollarSign className="w-8 h-8 text-amber-400/50" />
                 </div>
@@ -864,7 +864,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
             ) : (
               <div className="space-y-3">
                 {commissions.map((c) => (
-                  <div key={c.id} className="rounded-2xl bg-[#111] border border-gray-200 hover:border-white/20 transition-all p-5">
+                  <div key={c.id} className="rounded-2xl bg-[#F9F7F1] border border-gray-200 hover:border-gray-300 transition-all p-5">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3 flex-wrap">
@@ -932,7 +932,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                   content: "Un lead ne peut être attribué qu\u2019à un seul ambassadeur. En cas de doublon, c\u2019est le premier ambassadeur ayant soumis le lead qui est retenu (premier arrivé, premier servi).",
                 },
               ].map((rule, i) => (
-                <div key={i} className="p-6 rounded-2xl bg-[#111] border border-gray-200">
+                <div key={i} className="p-6 rounded-2xl bg-[#F9F7F1] border border-gray-200">
                   <h3 className="text-lg font-bold text-[#262626] mb-3">{rule.title}</h3>
                   <p className="text-[#716D5C] font-medium leading-relaxed">{rule.content}</p>
                 </div>
@@ -1027,7 +1027,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                 </div>
 
                 {/* IBAN Section */}
-                <div className="p-5 rounded-xl bg-white/[0.02] border border-gray-100">
+                <div className="p-5 rounded-xl bg-gray-50 border border-gray-100">
                   <h3 className="text-sm font-bold text-[#262626] mb-4 flex items-center gap-2">
                     <Landmark className="w-4 h-4 text-emerald-400" /> Informations bancaires
                   </h3>
@@ -1092,7 +1092,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
                   <button
                     type="submit"
                     disabled={profileSaving}
-                    className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black font-bold rounded-xl transition-all"
+                    className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-[#262626] font-bold rounded-xl transition-all"
                   >
                     {profileSaving ? 'Enregistrement...' : profileSaved ? 'Enregistré !' : 'Enregistrer'}
                   </button>
@@ -1119,7 +1119,7 @@ export const AmbassadorDashboard = ({ onNavigate, currentRoute }) => {
       {/* Mobile menu toggle */}
       <button
         onClick={() => setIsMobileMenuOpen(true)}
-        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 rounded-xl bg-[#111] border border-gray-200 flex items-center justify-center"
+        className="md:hidden fixed top-4 left-4 z-50 w-10 h-10 rounded-xl bg-[#F9F7F1] border border-gray-200 flex items-center justify-center"
       >
         <Menu className="w-5 h-5 text-[#262626]" />
       </button>

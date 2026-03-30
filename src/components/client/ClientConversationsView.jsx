@@ -97,7 +97,7 @@ const RatingButtons = ({ conversation, onRate }) => {
             />
             <button
               onClick={submitComment}
-              className="px-3 py-2 rounded-lg bg-gray-50 text-[#262626] text-xs font-bold hover:bg-white/20 transition-all self-end"
+              className="px-3 py-2 rounded-lg bg-gray-50 text-[#262626] text-xs font-bold hover:bg-gray-100 transition-all self-end"
             >
               OK
             </button>
@@ -191,7 +191,7 @@ const ConversationCard = ({ event, onRate, isFromAiConversations }) => {
   return (
     <motion.div
       layout
-      className="bg-[#F9F7F1] border border-gray-200 rounded-2xl overflow-hidden hover:border-white/15 transition-colors"
+      className="bg-[#F9F7F1] border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition-colors"
     >
       <button
         onClick={() => setExpanded(!expanded)}

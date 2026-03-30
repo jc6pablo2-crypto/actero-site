@@ -21,7 +21,7 @@ export function SuccessPage({ onNavigate }) {
             href="https://tally.so"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full bg-white text-black py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-white text-[#262626] py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
           >
             Commencer l'onboarding
             <ArrowRight className="w-5 h-5" />

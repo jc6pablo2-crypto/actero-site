@@ -195,7 +195,7 @@ export const AdminReferralsView = () => {
             placeholder="Rechercher par client ou code..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] placeholder:text-[#716D5C] outline-none focus:border-white/20"
+            className="w-full pl-10 pr-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] placeholder:text-[#716D5C] outline-none focus:border-gray-300"
           />
         </div>
         <div className="flex gap-2 overflow-x-auto">
@@ -239,7 +239,7 @@ export const AdminReferralsView = () => {
                 {filteredReferrals.map((ref) => {
                   const statusConf = STATUS_CONFIG[ref.status] || STATUS_CONFIG.pending
                   return (
-                    <tr key={ref.id} className="border-t border-gray-100 hover:bg-white/[0.02]">
+                    <tr key={ref.id} className="border-t border-gray-100 hover:bg-gray-50">
                       <td className="px-6 py-4 text-sm font-medium text-[#262626]">
                         {ref.clients?.brand_name || 'Inconnu'}
                       </td>
@@ -266,7 +266,7 @@ export const AdminReferralsView = () => {
                             <MoreVertical className="w-4 h-4 text-[#716D5C]" />
                           </button>
                           {actionMenuId === ref.id && (
-                            <div className="absolute right-0 top-8 z-10 bg-[#111] border border-gray-200 rounded-xl shadow-xl py-1 min-w-[160px]">
+                            <div className="absolute right-0 top-8 z-10 bg-[#F9F7F1] border border-gray-200 rounded-xl shadow-xl py-1 min-w-[160px]">
                               {ref.status !== 'rewarded' && ref.status !== 'cancelled' && (
                                 <button
                                   onClick={() => validateMutation.mutate(ref.id)}

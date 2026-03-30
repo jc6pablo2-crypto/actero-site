@@ -107,7 +107,7 @@ export function StartPage({ clientSlug }) {
           <button
             onClick={handleCheckout}
             disabled={loading}
-            className="w-full bg-white text-black py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full bg-white text-[#262626] py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
           >
             {loading ? (
               <>

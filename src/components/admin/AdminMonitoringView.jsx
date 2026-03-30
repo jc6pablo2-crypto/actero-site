@@ -85,7 +85,7 @@ const AssociateModal = ({ workflow, clients, associations, onClose, onAssociate,
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         onClick={e => e.stopPropagation()}
-        className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
+        className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
       >
         <div className="flex items-center justify-between mb-5">
           <h3 className="text-base font-bold text-[#262626]">Associer à un client</h3>
@@ -149,7 +149,7 @@ const AssociateModal = ({ workflow, clients, associations, onClose, onAssociate,
             >
               <option value="">Sélectionner un client...</option>
               {clients.map(c => (
-                <option key={c.id} value={c.id} className="bg-[#111]">{c.brand_name} ({c.client_type})</option>
+                <option key={c.id} value={c.id} className="bg-[#F9F7F1]">{c.brand_name} ({c.client_type})</option>
               ))}
             </select>
           </div>
@@ -289,7 +289,7 @@ export const AdminMonitoringView = () => {
           { label: 'Exécutions', value: totalExecs, icon: Activity, color: 'text-violet-400', bg: 'bg-violet-500/10' },
           { label: 'Taux succès', value: `${successRate}%`, icon: ShieldCheck, color: successRate >= 90 ? 'text-emerald-400' : 'text-amber-400', bg: successRate >= 90 ? 'bg-emerald-500/10' : 'bg-amber-500/10' },
         ].map(kpi => (
-          <div key={kpi.label} className="bg-[#111] border border-gray-100 rounded-2xl p-4">
+          <div key={kpi.label} className="bg-[#F9F7F1] border border-gray-100 rounded-2xl p-4">
             <div className="flex items-center gap-2 mb-2">
               <div className={`w-7 h-7 rounded-lg ${kpi.bg} flex items-center justify-center`}>
                 <kpi.icon className={`w-3.5 h-3.5 ${kpi.color}`} />
@@ -336,7 +336,7 @@ export const AdminMonitoringView = () => {
           </div>
           <button
             onClick={() => refetch()}
-            className="p-1.5 rounded-lg bg-gray-50 border border-gray-200 text-[#716D5C] hover:text-[#262626] hover:border-white/20 transition-all"
+            className="p-1.5 rounded-lg bg-gray-50 border border-gray-200 text-[#716D5C] hover:text-[#262626] hover:border-gray-300 transition-all"
             title="Rafraîchir"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
@@ -345,7 +345,7 @@ export const AdminMonitoringView = () => {
       </div>
 
       {/* Workflow table */}
-      <div className="bg-[#111] border border-gray-100 rounded-2xl overflow-hidden">
+      <div className="bg-[#F9F7F1] border border-gray-100 rounded-2xl overflow-hidden">
         {/* Table header */}
         <div className="grid grid-cols-12 gap-4 px-5 py-3 border-b border-gray-100 text-[10px] uppercase tracking-wider text-[#716D5C] font-bold">
           <div className="col-span-1">Statut</div>
@@ -370,8 +370,8 @@ export const AdminMonitoringView = () => {
           return (
             <div key={wf.id}>
               <div
-                className={`grid grid-cols-12 gap-4 px-5 py-3.5 border-b border-white/[0.03] hover:bg-white/[0.02] transition-colors items-center cursor-pointer ${
-                  isExpanded ? 'bg-white/[0.02]' : ''
+                className={`grid grid-cols-12 gap-4 px-5 py-3.5 border-b border-gray-100 hover:bg-gray-50 transition-colors items-center cursor-pointer ${
+                  isExpanded ? 'bg-gray-50' : ''
                 }`}
                 onClick={() => setExpanded(isExpanded ? null : wf.id)}
               >
@@ -474,7 +474,7 @@ export const AdminMonitoringView = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={e => e.stopPropagation()}
-                    className="px-2 py-1 rounded-lg border border-gray-200 text-[10px] font-medium text-[#716D5C] hover:text-[#262626] hover:border-white/20 transition-all"
+                    className="px-2 py-1 rounded-lg border border-gray-200 text-[10px] font-medium text-[#716D5C] hover:text-[#262626] hover:border-gray-300 transition-all"
                   >
                     <ExternalLink className="w-3 h-3 inline" />
                   </a>

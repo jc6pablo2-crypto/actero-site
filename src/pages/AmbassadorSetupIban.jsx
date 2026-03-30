@@ -94,7 +94,7 @@ export default function AmbassadorSetupIban() {
             <p className="text-[#716D5C] mb-8">Tout est prêt. Commencez à recommander Actero et gagnez des récompenses.</p>
             <a
               href="/ambassador/overview"
-              className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-8 py-3 rounded-xl transition-colors text-lg"
+              className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-[#262626] font-bold px-8 py-3 rounded-xl transition-colors text-lg"
             >
               Accéder à mon dashboard <ArrowRight className="w-5 h-5" />
             </a>
@@ -132,7 +132,7 @@ export default function AmbassadorSetupIban() {
                   value={holder}
                   onChange={(e) => setHolder(e.target.value)}
                   placeholder="Prénom Nom ou Raison sociale"
-                  className="w-full bg-[#111] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50"
+                  className="w-full bg-[#F9F7F1] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] placeholder-gray-400 focus:outline-none focus:border-emerald-500/50"
                 />
               </div>
 
@@ -143,7 +143,7 @@ export default function AmbassadorSetupIban() {
                   value={iban}
                   onChange={handleIbanChange}
                   placeholder="FR76 1234 5678 9012 3456 7890 123"
-                  className="w-full bg-[#111] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 font-mono tracking-wider"
+                  className="w-full bg-[#F9F7F1] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] placeholder-gray-400 focus:outline-none focus:border-emerald-500/50 font-mono tracking-wider"
                 />
                 {iban.length > 0 && !isValidIban && (
                   <p className="text-amber-400 text-xs mt-1">IBAN invalide (doit commencer par 2 lettres)</p>
@@ -157,7 +157,7 @@ export default function AmbassadorSetupIban() {
                   value={bic}
                   onChange={(e) => setBic(e.target.value.toUpperCase())}
                   placeholder="BNPAFRPP"
-                  className="w-full bg-[#111] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 font-mono"
+                  className="w-full bg-[#F9F7F1] border border-gray-200 rounded-xl px-4 py-3 text-[#262626] placeholder-gray-400 focus:outline-none focus:border-emerald-500/50 font-mono"
                 />
               </div>
 
@@ -166,7 +166,7 @@ export default function AmbassadorSetupIban() {
                 disabled={!isValidIban || !holder.trim() || loading || !user}
                 className={`w-full py-3 rounded-xl font-bold text-lg transition-all mt-2 ${
                   isValidIban && holder.trim() && user
-                    ? 'bg-emerald-500 hover:bg-emerald-400 text-black'
+                    ? 'bg-emerald-500 hover:bg-emerald-400 text-[#262626]'
                     : 'bg-gray-50 text-[#716D5C] cursor-not-allowed'
                 }`}
               >

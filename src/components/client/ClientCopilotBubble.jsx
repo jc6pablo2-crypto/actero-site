@@ -141,7 +141,7 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
           >
             {/* Header */}
             <div className={`flex items-center justify-between px-4 py-3 border-b ${
-              isLight ? 'border-gray-100 bg-[#F9F7F1]' : 'border-gray-100 bg-[#111]'
+              isLight ? 'border-gray-100 bg-[#F9F7F1]' : 'border-gray-100 bg-[#F9F7F1]'
             }`}>
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
@@ -189,7 +189,7 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                         className={`block w-full text-left px-3 py-2 rounded-lg text-[11px] transition-all border ${
                           isLight
                             ? 'bg-white border-gray-200 text-[#716D5C] hover:bg-[#F9F7F1] hover:border-slate-300'
-                            : 'bg-white/[0.02] border-gray-100 text-[#716D5C] hover:bg-[#F9F7F1] hover:border-gray-200'
+                            : 'bg-gray-50 border-gray-100 text-[#716D5C] hover:bg-[#F9F7F1] hover:border-gray-200'
                         }`}
                       >
                         {q}

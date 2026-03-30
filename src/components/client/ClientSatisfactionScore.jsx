@@ -272,7 +272,7 @@ export const SatisfactionKPI = ({ clientId, theme = 'dark' }) => {
 
   return (
     <div className={`group p-6 rounded-2xl border transition-all duration-300 ${
-      isLight ? 'bg-white border-gray-200 shadow-sm hover:shadow-md' : 'bg-[#F9F7F1] border-gray-200 hover:border-white/20'
+      isLight ? 'bg-white border-gray-200 shadow-sm hover:shadow-md' : 'bg-[#F9F7F1] border-gray-200 hover:border-gray-300'
     }`}>
       <div className="flex items-center gap-3 mb-6">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${

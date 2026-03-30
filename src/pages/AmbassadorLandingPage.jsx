@@ -228,7 +228,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
                   onClick={() => scrollToId('candidature')}
-                  className="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-emerald-500/25"
+                  className="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-[#262626] font-bold rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-emerald-500/25"
                 >
                   Devenir ambassadeur
                 </button>
@@ -250,7 +250,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {socialProofStats.map((stat, i) => (
                   <ScaleIn key={i} delay={i * 0.1}>
-                    <div className="text-center p-6 rounded-2xl bg-white/[0.02] border border-gray-200">
+                    <div className="text-center p-6 rounded-2xl bg-gray-50 border border-gray-200">
                       <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-3">
                         <stat.icon className="w-5 h-5 text-emerald-400" />
                       </div>
@@ -278,8 +278,8 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
             <StaggerContainer className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
               {steps.map((step, i) => (
                 <StaggerItem key={i}>
-                  <div className="relative p-8 rounded-3xl bg-[#111] border border-gray-200 hover:border-emerald-500/30 transition-all group">
-                    <div className="absolute -top-4 -left-2 w-10 h-10 rounded-full bg-emerald-500 text-black flex items-center justify-center font-bold text-base shadow-lg shadow-emerald-500/25">
+                  <div className="relative p-8 rounded-3xl bg-[#F9F7F1] border border-gray-200 hover:border-emerald-500/30 transition-all group">
+                    <div className="absolute -top-4 -left-2 w-10 h-10 rounded-full bg-emerald-500 text-[#262626] flex items-center justify-center font-bold text-base shadow-lg shadow-emerald-500/25">
                       {i + 1}
                     </div>
                     <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
@@ -313,7 +313,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
             <StaggerContainer className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
               {targets.map((t, i) => (
                 <StaggerItem key={i}>
-                  <div className="p-8 rounded-3xl bg-[#111] border border-gray-200 hover:border-cyan-500/30 transition-all h-full">
+                  <div className="p-8 rounded-3xl bg-[#F9F7F1] border border-gray-200 hover:border-cyan-500/30 transition-all h-full">
                     <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6">
                       <t.icon className="w-7 h-7 text-cyan-400" />
                     </div>
@@ -352,7 +352,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                   <p className="text-sm text-[#716D5C] font-medium">par client signé</p>
                 </div>
               </div>
-              <div className="p-5 rounded-2xl bg-white/[0.02] border border-gray-100 text-center">
+              <div className="p-5 rounded-2xl bg-gray-50 border border-gray-100 text-center">
                 <p className="text-sm text-[#716D5C] font-medium">
                   Versée <span className="text-[#262626] font-bold">30 jours</span> après le paiement effectif du client. Aucune limite de recommandations.
                 </p>
@@ -375,7 +375,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
             <StaggerContainer className="max-w-2xl mx-auto space-y-4">
               {notToDo.map((item, i) => (
                 <StaggerItem key={i}>
-                  <div className="flex items-center gap-4 p-5 rounded-2xl bg-[#111] border border-gray-200">
+                  <div className="flex items-center gap-4 p-5 rounded-2xl bg-[#F9F7F1] border border-gray-200">
                     <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
                       <X className="w-5 h-5 text-red-400" />
                     </div>
@@ -401,7 +401,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
             <StaggerContainer className="max-w-4xl mx-auto grid sm:grid-cols-2 gap-6">
               {whyActero.map((item, i) => (
                 <StaggerItem key={i}>
-                  <div className="flex items-center gap-5 p-6 rounded-2xl bg-[#111] border border-gray-200">
+                  <div className="flex items-center gap-5 p-6 rounded-2xl bg-[#F9F7F1] border border-gray-200">
                     <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
                       <item.icon className="w-6 h-6 text-emerald-400" />
                     </div>
@@ -427,7 +427,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                 {faqItems.map((faq, i) => (
                   <div
                     key={i}
-                    className="rounded-2xl bg-[#111] border border-gray-200 overflow-hidden"
+                    className="rounded-2xl bg-[#F9F7F1] border border-gray-200 overflow-hidden"
                   >
                     <button
                       onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
@@ -480,7 +480,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
 
               {formSuccess ? (
                 <ScaleIn>
-                  <div className="p-10 rounded-3xl bg-[#111] border border-emerald-500/30 text-center">
+                  <div className="p-10 rounded-3xl bg-[#F9F7F1] border border-emerald-500/30 text-center">
                     <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-6">
                       <CheckCircle2 className="w-8 h-8 text-emerald-400" />
                     </div>
@@ -495,7 +495,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
               ) : (
                 <form
                   onSubmit={handleSubmit}
-                  className="p-8 md:p-10 rounded-3xl bg-[#111] border border-gray-200 space-y-6"
+                  className="p-8 md:p-10 rounded-3xl bg-[#F9F7F1] border border-gray-200 space-y-6"
                 >
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
@@ -567,12 +567,12 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                       onChange={handleFormChange}
                       className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-[#262626] focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all appearance-none"
                     >
-                      <option value="" className="bg-[#111]">Sélectionner</option>
-                      <option value="e_commerce" className="bg-[#111]">E-commerce</option>
-                      <option value="immobilier" className="bg-[#111]">Immobilier</option>
-                      <option value="tech" className="bg-[#111]">Tech</option>
-                      <option value="finance" className="bg-[#111]">Finance</option>
-                      <option value="autre" className="bg-[#111]">Autre</option>
+                      <option value="" className="bg-[#F9F7F1]">Sélectionner</option>
+                      <option value="e_commerce" className="bg-[#F9F7F1]">E-commerce</option>
+                      <option value="immobilier" className="bg-[#F9F7F1]">Immobilier</option>
+                      <option value="tech" className="bg-[#F9F7F1]">Tech</option>
+                      <option value="finance" className="bg-[#F9F7F1]">Finance</option>
+                      <option value="autre" className="bg-[#F9F7F1]">Autre</option>
                     </select>
                   </div>
 
@@ -591,7 +591,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                   </div>
 
                   {/* Validation des règles */}
-                  <div className="space-y-3 p-4 bg-white/[0.02] border border-gray-100 rounded-xl">
+                  <div className="space-y-3 p-4 bg-gray-50 border border-gray-100 rounded-xl">
                     <p className="text-sm font-bold text-[#262626] mb-3">Validation des règles du programme</p>
                     {[
                       { key: 'role', text: "Je comprends que mon rôle est uniquement de recommander Actero, pas de vendre ni de closer." },
@@ -622,7 +622,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                   <button
                     type="submit"
                     disabled={formLoading || !allRulesAccepted}
-                    className={`w-full py-4 font-bold rounded-xl text-lg transition-all flex items-center justify-center gap-3 ${allRulesAccepted ? 'bg-emerald-500 hover:bg-emerald-400 text-black' : 'bg-gray-50 text-[#716D5C] cursor-not-allowed'}`}
+                    className={`w-full py-4 font-bold rounded-xl text-lg transition-all flex items-center justify-center gap-3 ${allRulesAccepted ? 'bg-emerald-500 hover:bg-emerald-400 text-[#262626]' : 'bg-gray-50 text-[#716D5C] cursor-not-allowed'}`}
                   >
                     {formLoading ? (
                       <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />

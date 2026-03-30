@@ -213,7 +213,7 @@ export const DeploymentProgress = ({ deploymentId, clientName, onClose }) => {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="px-4 py-3 mx-3 mt-1 bg-white/[0.02] rounded-lg border border-gray-100">
+                      <div className="px-4 py-3 mx-3 mt-1 bg-gray-50 rounded-lg border border-gray-100">
                         {step.details && (
                           <p className="text-xs text-[#716D5C]">{step.details}</p>
                         )}
@@ -256,7 +256,7 @@ export const DeploymentProgress = ({ deploymentId, clientName, onClose }) => {
                   <div className="space-y-2">
                     <p className="text-xs font-medium text-[#716D5C] uppercase tracking-wider">Workflows deployes</p>
                     {workflowsDeployed.map((wf, i) => (
-                      <div key={i} className="flex items-center gap-3 p-3 bg-white/[0.02] rounded-lg border border-gray-100">
+                      <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
                         <div className={`w-2 h-2 rounded-full ${wf.error ? 'bg-red-400' : wf.skipped ? 'bg-amber-400' : 'bg-emerald-400'}`} />
                         <div className="flex-1 min-w-0">
                           <p className="text-sm text-[#262626] truncate">{wf.name}</p>
@@ -289,7 +289,7 @@ export const DeploymentProgress = ({ deploymentId, clientName, onClose }) => {
 
                 <button
                   onClick={onClose}
-                  className="w-full py-3 bg-white text-black rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
+                  className="w-full py-3 bg-white text-[#262626] rounded-xl text-sm font-bold hover:bg-gray-200 transition-colors"
                 >
                   Fermer
                 </button>
@@ -311,7 +311,7 @@ export const DeploymentProgress = ({ deploymentId, clientName, onClose }) => {
                 </div>
                 <button
                   onClick={onClose}
-                  className="w-full py-3 bg-gray-50 text-[#262626] rounded-xl text-sm font-bold hover:bg-white/20 transition-colors"
+                  className="w-full py-3 bg-gray-50 text-[#262626] rounded-xl text-sm font-bold hover:bg-gray-100 transition-colors"
                 >
                   Fermer
                 </button>

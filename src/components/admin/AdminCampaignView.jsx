@@ -371,7 +371,7 @@ Réponds UNIQUEMENT avec le post.`)
                                 <div className="w-px h-8 bg-gray-50 mt-1" />
                               )}
                             </div>
-                            <div className="flex-1 bg-white/[0.02] border border-gray-100 rounded-xl p-3">
+                            <div className="flex-1 bg-gray-50 border border-gray-100 rounded-xl p-3">
                               <p className="text-sm text-[#262626] font-medium">{step.subject}</p>
                               {step.body && <p className="text-xs text-[#716D5C] mt-1 line-clamp-2">{step.body}</p>}
                               {step.openRate > 0 && (
@@ -477,7 +477,7 @@ Réponds UNIQUEMENT avec le post.`)
                   <div className="flex-1 flex flex-col justify-end">
                     {hasGenerated ? (
                       <div
-                        className="bg-white/[0.02] border border-gray-100 rounded-lg p-2 cursor-pointer hover:border-gray-200 transition-all mb-2"
+                        className="bg-gray-50 border border-gray-100 rounded-lg p-2 cursor-pointer hover:border-gray-200 transition-all mb-2"
                         onClick={() => setShowPostPreview(slot.day)}
                       >
                         <p className="text-[10px] text-[#716D5C] line-clamp-4 leading-relaxed">{generatedPosts[slot.day]}</p>
@@ -559,7 +559,7 @@ Réponds UNIQUEMENT avec le post.`)
                   value={templateTopic}
                   onChange={(e) => setTemplateTopic(e.target.value)}
                   placeholder="Sujet du post (optionnel, ex: Réduction du temps de réponse SAV de 24h à 2min)"
-                  className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                  className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-gray-400 focus:outline-none focus:border-violet-500/50"
                   onKeyDown={e => e.key === 'Enter' && generateFromTemplate()}
                 />
                 <button
@@ -628,7 +628,7 @@ Réponds UNIQUEMENT avec le post.`)
                     value={newCampaign.name}
                     onChange={e => setNewCampaign(prev => ({ ...prev, name: e.target.value }))}
                     placeholder="Ex: SAV E-commerce — Boutiques Shopify FR"
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-zinc-600 focus:outline-none focus:border-violet-500/50"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] placeholder-gray-400 focus:outline-none focus:border-violet-500/50"
                   />
                 </div>
                 <p className="text-xs text-[#716D5C]">

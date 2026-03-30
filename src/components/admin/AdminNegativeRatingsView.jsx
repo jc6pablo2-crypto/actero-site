@@ -87,7 +87,7 @@ export const AdminNegativeRatingsView = () => {
               className={`rounded-xl border p-3 text-left transition-all ${
                 selectedClientId === client.id
                   ? 'bg-gray-50 border-white/20'
-                  : 'bg-[#F9F7F1] border-gray-200 hover:border-white/20'
+                  : 'bg-[#F9F7F1] border-gray-200 hover:border-gray-300'
               }`}
             >
               <p className="text-sm font-bold text-[#262626] truncate">{client.brand_name}</p>

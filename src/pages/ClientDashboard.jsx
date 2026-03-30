@@ -566,7 +566,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 </div>
                 <button
                    onClick={() => setActiveTab("support")}
-                   className="mt-6 md:mt-0 bg-white text-black px-6 py-3.5 rounded-xl font-bold flex items-center gap-2 hover:bg-gray-100 transition-all"
+                   className="mt-6 md:mt-0 bg-white text-[#262626] px-6 py-3.5 rounded-xl font-bold flex items-center gap-2 hover:bg-gray-100 transition-all"
                 >
                   Support & Demandes <ArrowUpRight className="w-5 h-5" />
                 </button>

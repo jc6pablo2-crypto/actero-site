@@ -220,7 +220,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
               <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {targets.map((t, i) => (
                   <StaggerItem key={i}>
-                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-gray-200 hover:border-indigo-500/20 transition-all group h-full">
+                    <div className="p-6 rounded-2xl bg-gray-50 border border-gray-200 hover:border-indigo-500/20 transition-all group h-full">
                       <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center mb-4 group-hover:bg-indigo-500/20 transition-colors">
                         <t.icon className="w-6 h-6 text-indigo-400" />
                       </div>
@@ -236,7 +236,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
           {/* ═══════════════════════════════════════════ */}
           {/* COMMENT ÇA MARCHE                          */}
           {/* ═══════════════════════════════════════════ */}
-          <section className="py-24 px-6 bg-white/[0.01]">
+          <section className="py-24 px-6 bg-gray-50/50">
             <div className="max-w-5xl mx-auto">
               <FadeInUp className="text-center mb-16">
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
@@ -249,7 +249,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {steps.map((s, i) => (
                   <ScaleIn key={i} delay={i * 0.15}>
-                    <div className="relative p-8 rounded-2xl bg-white/[0.02] border border-gray-200 text-center h-full">
+                    <div className="relative p-8 rounded-2xl bg-gray-50 border border-gray-200 text-center h-full">
                       <div className="text-5xl font-black text-indigo-500/20 mb-4">{s.num}</div>
                       <h3 className="text-lg font-bold mb-3">{s.title}</h3>
                       <p className="text-sm text-[#716D5C] leading-relaxed">{s.desc}</p>
@@ -278,7 +278,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
               <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {benefits.map((b, i) => (
                   <StaggerItem key={i}>
-                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-gray-200 hover:border-indigo-500/20 transition-all group h-full">
+                    <div className="p-6 rounded-2xl bg-gray-50 border border-gray-200 hover:border-indigo-500/20 transition-all group h-full">
                       <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center mb-4 group-hover:bg-indigo-500/20 transition-colors">
                         <b.icon className="w-6 h-6 text-indigo-400" />
                       </div>
@@ -294,7 +294,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
           {/* ═══════════════════════════════════════════ */}
           {/* CE QUE VOUS N'AVEZ PAS À FAIRE            */}
           {/* ═══════════════════════════════════════════ */}
-          <section className="py-24 px-6 bg-white/[0.01]">
+          <section className="py-24 px-6 bg-gray-50/50">
             <div className="max-w-3xl mx-auto">
               <FadeInUp className="text-center mb-16">
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
@@ -335,7 +335,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
               <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {whyActero.map((w, i) => (
                   <StaggerItem key={i}>
-                    <div className="p-6 rounded-2xl bg-white/[0.02] border border-gray-200 hover:border-violet-500/20 transition-all group h-full">
+                    <div className="p-6 rounded-2xl bg-gray-50 border border-gray-200 hover:border-violet-500/20 transition-all group h-full">
                       <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center mb-4 group-hover:bg-violet-500/20 transition-colors">
                         <w.icon className="w-6 h-6 text-violet-400" />
                       </div>
@@ -351,7 +351,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
           {/* ═══════════════════════════════════════════ */}
           {/* FAQ                                        */}
           {/* ═══════════════════════════════════════════ */}
-          <section className="py-24 px-6 bg-white/[0.01]">
+          <section className="py-24 px-6 bg-gray-50/50">
             <div className="max-w-3xl mx-auto">
               <FadeInUp className="text-center mb-16">
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
@@ -361,7 +361,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
               <div className="space-y-3">
                 {faqItems.map((faq, i) => (
                   <FadeInUp key={i} delay={i * 0.05}>
-                    <div className="rounded-xl border border-gray-200 bg-white/[0.02] overflow-hidden">
+                    <div className="rounded-xl border border-gray-200 bg-gray-50 overflow-hidden">
                       <button
                         onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
                         className="w-full flex items-center justify-between px-6 py-5 text-left group"
@@ -498,9 +498,9 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                           required
                           className="w-full px-4 py-3 bg-[#F9F7F1] border border-gray-200 rounded-xl text-[#262626] outline-none focus:border-indigo-500/40 transition-colors appearance-none cursor-pointer"
                         >
-                          <option value="" disabled className="bg-[#111]">Sélectionnez</option>
+                          <option value="" disabled className="bg-[#F9F7F1]">Sélectionnez</option>
                           {activityOptions.map((opt) => (
-                            <option key={opt} value={opt} className="bg-[#111]">{opt}</option>
+                            <option key={opt} value={opt} className="bg-[#F9F7F1]">{opt}</option>
                           ))}
                         </select>
                       </div>
@@ -512,9 +512,9 @@ export const PartnerLandingPage = ({ onNavigate }) => {
                           onChange={handleFormChange}
                           className="w-full px-4 py-3 bg-[#F9F7F1] border border-gray-200 rounded-xl text-[#262626] outline-none focus:border-indigo-500/40 transition-colors appearance-none cursor-pointer"
                         >
-                          <option value="" className="bg-[#111]">Sélectionnez</option>
+                          <option value="" className="bg-[#F9F7F1]">Sélectionnez</option>
                           {clientsOptions.map((opt) => (
-                            <option key={opt} value={opt} className="bg-[#111]">{opt}</option>
+                            <option key={opt} value={opt} className="bg-[#F9F7F1]">{opt}</option>
                           ))}
                         </select>
                       </div>

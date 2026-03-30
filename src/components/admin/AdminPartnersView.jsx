@@ -95,7 +95,7 @@ export const AdminPartnersView = () => {
           { label: 'Contactés', value: statCounts.contacted, icon: Mail, color: 'text-amber-400' },
           { label: 'Qualifiés', value: statCounts.qualified, icon: CheckCircle2, color: 'text-green-400' },
         ].map((stat, i) => (
-          <div key={i} className="p-4 rounded-xl bg-white/[0.02] border border-gray-200">
+          <div key={i} className="p-4 rounded-xl bg-gray-50 border border-gray-200">
             <div className="flex items-center gap-2 mb-2">
               <stat.icon className={`w-4 h-4 ${stat.color}`} />
               <span className="text-xs text-[#716D5C]">{stat.label}</span>
@@ -122,9 +122,9 @@ export const AdminPartnersView = () => {
           onChange={(e) => setStatusFilter(e.target.value)}
           className="px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:border-indigo-500/40 appearance-none cursor-pointer"
         >
-          <option value="all" className="bg-[#111]">Tous les statuts</option>
+          <option value="all" className="bg-[#F9F7F1]">Tous les statuts</option>
           {Object.entries(STATUS_MAP).map(([key, val]) => (
-            <option key={key} value={key} className="bg-[#111]">{val.label}</option>
+            <option key={key} value={key} className="bg-[#F9F7F1]">{val.label}</option>
           ))}
         </select>
       </div>
@@ -144,7 +144,7 @@ export const AdminPartnersView = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-200 bg-white/[0.02]">
+                <tr className="border-b border-gray-200 bg-gray-50">
                   <th className="text-left px-4 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Candidat</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Société</th>
                   <th className="text-left px-4 py-3 text-xs font-semibold text-[#716D5C] uppercase tracking-wider">Activité</th>
@@ -158,7 +158,7 @@ export const AdminPartnersView = () => {
                 {filtered.map((p) => (
                   <React.Fragment key={p.id}>
                     <tr
-                      className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors cursor-pointer"
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer"
                       onClick={() => setExpandedRow(expandedRow === p.id ? null : p.id)}
                     >
                       <td className="px-4 py-3">
@@ -183,7 +183,7 @@ export const AdminPartnersView = () => {
                           className="px-2 py-1 bg-[#F9F7F1] border border-gray-200 rounded-lg text-xs text-[#262626] outline-none cursor-pointer"
                         >
                           {Object.entries(STATUS_MAP).map(([key, val]) => (
-                            <option key={key} value={key} className="bg-[#111]">{val.label}</option>
+                            <option key={key} value={key} className="bg-[#F9F7F1]">{val.label}</option>
                           ))}
                         </select>
                       </td>
@@ -199,7 +199,7 @@ export const AdminPartnersView = () => {
                               transition={{ duration: 0.2 }}
                               className="overflow-hidden"
                             >
-                              <div className="px-6 py-4 bg-white/[0.01] border-b border-gray-200 space-y-2">
+                              <div className="px-6 py-4 bg-gray-50/50 border-b border-gray-200 space-y-2">
                                 {p.phone && (
                                   <div className="flex items-center gap-2 text-sm text-[#716D5C]">
                                     <Phone className="w-3.5 h-3.5" />

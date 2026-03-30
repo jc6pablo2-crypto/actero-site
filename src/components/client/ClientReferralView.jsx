@@ -163,7 +163,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
                     ? 'bg-emerald-500/10 text-emerald-400'
                     : isLight
                       ? 'bg-[#F9F7F1] text-[#262626] hover:bg-gray-50'
-                      : 'bg-white text-black hover:bg-gray-100'
+                      : 'bg-white text-[#262626] hover:bg-gray-100'
                 }`}
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}

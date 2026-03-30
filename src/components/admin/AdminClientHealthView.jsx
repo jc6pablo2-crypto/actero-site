@@ -185,7 +185,7 @@ export const AdminClientHealthView = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.03 }}
-              className="bg-[#F9F7F1] border border-gray-200 rounded-xl p-4 flex items-center gap-4 hover:border-white/20 transition-colors"
+              className="bg-[#F9F7F1] border border-gray-200 rounded-xl p-4 flex items-center gap-4 hover:border-gray-300 transition-colors"
             >
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${scoreClasses.box}`}>
                 <span className={`text-lg font-bold font-mono ${scoreClasses.text}`}>{client.health.score}</span>
@@ -227,7 +227,7 @@ export const AdminClientHealthView = () => {
                 <button
                   onClick={() => sendReport(client.id)}
                   disabled={sending === client.id}
-                  className="p-2 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-50 hover:border-white/20 transition-all disabled:opacity-50"
+                  className="p-2 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all disabled:opacity-50"
                   title="Envoyer rapport mensuel"
                 >
                   <Send className={`w-3.5 h-3.5 ${sending === client.id ? 'animate-pulse text-blue-400' : 'text-[#716D5C]'}`} />

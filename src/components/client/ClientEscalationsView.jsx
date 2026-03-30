@@ -110,7 +110,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#111] border border-gray-200 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+        className="bg-[#F9F7F1] border border-gray-200 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -179,7 +179,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
                 onChange={(e) => setResponse(e.target.value)}
                 rows={5}
                 placeholder="Redigez votre reponse..."
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none resize-none focus:border-white/30"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none resize-none focus:border-gray-400"
               />
             </div>
 
@@ -204,7 +204,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
               <button
                 onClick={() => respondMutation.mutate()}
                 disabled={!response.trim() || respondMutation.isPending}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-black hover:bg-gray-100 transition-all disabled:opacity-50"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-[#262626] hover:bg-gray-100 transition-all disabled:opacity-50"
               >
                 {respondMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 Envoyer la reponse
@@ -413,7 +413,7 @@ export const ClientEscalationsView = ({ clientId, theme = 'dark' }) => {
                 className={`rounded-2xl border p-5 cursor-pointer transition-all ${
                   isLight
                     ? 'bg-white border-gray-200 hover:border-slate-300'
-                    : 'bg-[#F9F7F1] border-gray-200 hover:border-white/20'
+                    : 'bg-[#F9F7F1] border-gray-200 hover:border-gray-300'
                 } ${overdue ? 'border-l-2 border-l-red-500' : ''}`}
               >
                 <div className="flex items-start justify-between">

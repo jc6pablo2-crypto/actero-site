@@ -270,7 +270,7 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
             <button
               onClick={handleDeploy}
               disabled={deploying}
-              className="w-full flex justify-center items-center gap-2 py-3 px-6 rounded-xl text-sm font-bold text-[#262626] bg-blue-600 hover:bg-blue-500 disabled:opacity-50 transition-colors"
+              className="w-full flex justify-center items-center gap-2 py-3 px-6 rounded-xl text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 disabled:opacity-50 transition-colors"
             >
               {deploying ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /> Déploiement...</>
@@ -307,7 +307,7 @@ export const AdminClientSettingsModal = ({ client, onClose, onSaved, onOpenCallN
                 <button
                   onClick={handleGenerateBrandContext}
                   disabled={generatingBrand || !brandUrl.trim()}
-                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold text-[#262626] bg-violet-600 hover:bg-violet-500 disabled:opacity-50 transition-colors whitespace-nowrap"
+                  className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold text-white bg-violet-600 hover:bg-violet-500 disabled:opacity-50 transition-colors whitespace-nowrap"
                 >
                   {generatingBrand ? (
                     <Loader2 className="w-4 h-4 animate-spin" />

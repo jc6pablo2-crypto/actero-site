@@ -203,7 +203,7 @@ export const ActivityView = ({ supabase, theme = "dark" }) => {
                     initial={{ height: 0, opacity: 0, y: -20 }}
                     animate={{ height: "auto", opacity: 1, y: 0 }}
                     key={event.id}
-                    className="p-5 flex items-center justify-between group hover:bg-white/[0.02] transition-colors"
+                    className="p-5 flex items-center justify-between group hover:bg-gray-50 transition-colors"
                   >
                     <div className="flex items-center gap-5">
                       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-inner ${details.bg} ${details.color}`}>

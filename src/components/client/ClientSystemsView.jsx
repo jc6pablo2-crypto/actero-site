@@ -51,7 +51,7 @@ const ConfirmDialog = ({ isOpen, onConfirm, onCancel, workflowName }) => (
         <motion.div
           initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}
           onClick={e => e.stopPropagation()}
-          className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-sm mx-4 shadow-2xl"
+          className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-6 max-w-sm mx-4 shadow-2xl"
         >
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
@@ -231,8 +231,8 @@ export const ClientSystemsView = ({ clientId, clientName, theme }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className={`bg-[#111] border rounded-2xl p-5 transition-all ${
-                wf.active ? 'border-gray-100 hover:border-gray-200' : 'border-white/[0.03] opacity-70'
+              className={`bg-[#F9F7F1] border rounded-2xl p-5 transition-all ${
+                wf.active ? 'border-gray-100 hover:border-gray-200' : 'border-gray-100 opacity-70'
               }`}
             >
               <div className="flex items-start justify-between gap-4">

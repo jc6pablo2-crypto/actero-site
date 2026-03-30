@@ -77,7 +77,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
           </button>
           <button
             onClick={handleCTA}
-            className="bg-emerald-500 hover:bg-emerald-400 text-black px-5 py-2 rounded-xl text-sm font-bold transition-all"
+            className="bg-emerald-500 hover:bg-emerald-400 text-[#262626] px-5 py-2 rounded-xl text-sm font-bold transition-all"
           >
             Commencer
           </button>
@@ -135,7 +135,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
           >
             <button
               onClick={handleCTA}
-              className="group bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3 shadow-lg shadow-emerald-500/25"
+              className="group bg-emerald-500 hover:bg-emerald-400 text-[#262626] px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3 shadow-lg shadow-emerald-500/25"
             >
               Reserver mon audit gratuit
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -184,7 +184,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-6 hover:border-white/20 transition-colors"
+                className="bg-[#F9F7F1] rounded-2xl border border-gray-200 p-6 hover:border-gray-300 transition-colors"
               >
                 <div className={`w-10 h-10 rounded-xl bg-${item.color}-500/10 flex items-center justify-center mb-4`}>
                   <item.icon className={`w-5 h-5 text-${item.color}-400`} />
@@ -228,7 +228,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
             </p>
             <button
               onClick={handleCTA}
-              className="bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3"
+              className="bg-emerald-500 hover:bg-emerald-400 text-[#262626] px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3"
             >
               Reserver mon audit gratuit
               <ArrowRight className="w-5 h-5" />

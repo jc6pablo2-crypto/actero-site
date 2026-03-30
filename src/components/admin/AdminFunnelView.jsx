@@ -196,7 +196,7 @@ export function AdminFunnelView() {
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="bg-white text-black px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-gray-200 transition-colors"
+          className="bg-white text-[#262626] px-5 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-gray-200 transition-colors"
         >
           <Plus className="w-4 h-4" /> Nouveau client
         </button>
@@ -227,7 +227,7 @@ export function AdminFunnelView() {
                   value={formData.company_name}
                   onChange={(e) => handleCompanyNameChange(e.target.value)}
                   placeholder="Brand X"
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-300 transition-all"
                 />
               </div>
 
@@ -242,7 +242,7 @@ export function AdminFunnelView() {
                     required
                     value={formData.slug}
                     onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-300 transition-all"
                   />
                 </div>
               </div>
@@ -257,7 +257,7 @@ export function AdminFunnelView() {
                   value={formData.email}
                   onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                   placeholder="contact@brand-x.com"
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-300 transition-all"
                 />
               </div>
 
@@ -277,7 +277,7 @@ export function AdminFunnelView() {
                       avg_ticket_time: '',
                     }));
                   }}
-                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all appearance-none cursor-pointer"
+                  className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-300 transition-all appearance-none cursor-pointer"
                 >
                   <option value="ecommerce">🛒 E-commerce (Shopify)</option>
                   <option value="immobilier">🏠 Agence Immobilière</option>
@@ -295,7 +295,7 @@ export function AdminFunnelView() {
                     required
                     value={formData.setup_price}
                     onChange={(e) => setFormData(prev => ({ ...prev, setup_price: parseInt(e.target.value) || 0 }))}
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-300 transition-all"
                   />
                 </div>
                 <div>
@@ -308,7 +308,7 @@ export function AdminFunnelView() {
                     required
                     value={formData.monthly_price}
                     onChange={(e) => setFormData(prev => ({ ...prev, monthly_price: parseInt(e.target.value) || 0 }))}
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-300 transition-all"
                   />
                 </div>
               </div>
@@ -337,7 +337,7 @@ export function AdminFunnelView() {
                         value={formData.hourly_cost}
                         onChange={(e) => setFormData(prev => ({ ...prev, hourly_cost: e.target.value }))}
                         placeholder="30"
-                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-300 transition-all"
                       />
                     </div>
                     <div>
@@ -350,7 +350,7 @@ export function AdminFunnelView() {
                         value={formData.avg_ticket_time}
                         onChange={(e) => setFormData(prev => ({ ...prev, avg_ticket_time: e.target.value }))}
                         placeholder="8"
-                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-300 transition-all"
                       />
                     </div>
                   </div>
@@ -367,7 +367,7 @@ export function AdminFunnelView() {
                         value={formData.hourly_cost}
                         onChange={(e) => setFormData(prev => ({ ...prev, hourly_cost: e.target.value }))}
                         placeholder="25"
-                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-300 transition-all"
                       />
                     </div>
                     <div>
@@ -380,7 +380,7 @@ export function AdminFunnelView() {
                         value={formData.avg_ticket_time}
                         onChange={(e) => setFormData(prev => ({ ...prev, avg_ticket_time: e.target.value }))}
                         placeholder="5"
-                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-white/20 transition-all"
+                        className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-gray-300 transition-all"
                       />
                     </div>
                   </div>
@@ -394,7 +394,7 @@ export function AdminFunnelView() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-white text-black py-3 rounded-xl font-bold text-sm hover:bg-gray-200 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full bg-white text-[#262626] py-3 rounded-xl font-bold text-sm hover:bg-gray-200 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {submitting ? (
                   <>
@@ -425,7 +425,7 @@ export function AdminFunnelView() {
           <p className="text-[#716D5C] mb-4">Créez votre premier lien de paiement privé.</p>
           <button
             onClick={() => setShowForm(true)}
-            className="bg-white text-black px-5 py-2.5 rounded-xl text-sm font-bold"
+            className="bg-white text-[#262626] px-5 py-2.5 rounded-xl text-sm font-bold"
           >
             Nouveau client
           </button>

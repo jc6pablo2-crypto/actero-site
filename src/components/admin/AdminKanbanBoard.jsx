@@ -103,7 +103,7 @@ export const AdminKanbanBoard = ({ requests, onRefresh }) => {
                   <motion.div
                     layoutId={req.id}
                     key={req.id}
-                    className={`bg-[#111] border ${col.color} p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow group ${isUpdating ? 'opacity-50 pointer-events-none' : ''}`}
+                    className={`bg-[#F9F7F1] border ${col.color} p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow group ${isUpdating ? 'opacity-50 pointer-events-none' : ''}`}
                   >
                     <div className="flex items-center justify-between mb-3">
                       <span
@@ -212,7 +212,7 @@ export const AdminKanbanBoard = ({ requests, onRefresh }) => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={e => e.stopPropagation()}
-              className="bg-[#111] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
+              className="bg-[#F9F7F1] border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-[#262626]">{detail.title || 'Demande'}</h3>

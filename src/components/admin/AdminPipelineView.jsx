@@ -156,7 +156,7 @@ export const AdminPipelineView = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="bg-[#F9F7F1] rounded-xl border border-gray-200 p-3 hover:border-white/20 transition-colors"
+                    className="bg-[#F9F7F1] rounded-xl border border-gray-200 p-3 hover:border-gray-300 transition-colors"
                   >
                     <div className="flex items-center gap-2 mb-2">
                       <User className="w-3 h-3 text-[#716D5C]" />

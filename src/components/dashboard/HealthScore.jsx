@@ -70,7 +70,7 @@ export function HealthScoreWidget({ metricsData, eventsData, theme = "dark" }) {
              <circle
                cx="64" cy="64" r="58"
                stroke="currentColor" strokeWidth="8" fill="transparent"
-               className={isLight ? "text-slate-100" : "text-[#262626]/5"}
+               className={isLight ? "text-gray-200" : "text-[#262626]/5"}
              />
              <circle
                cx="64" cy="64" r="58"

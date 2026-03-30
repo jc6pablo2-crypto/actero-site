@@ -23,7 +23,7 @@ export function CancelPage({ onNavigate }) {
           {client && (
             <button
               onClick={() => onNavigate(`/start/${client}`)}
-              className="w-full bg-white text-black py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full bg-white text-[#262626] py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
               <RotateCcw className="w-5 h-5" />
               Réessayer

@@ -153,7 +153,7 @@ const ToneEditor = ({ entry, onSave, saving }) => {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-black hover:bg-gray-100 transition-all disabled:opacity-50"
+        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-[#262626] hover:bg-gray-100 transition-all disabled:opacity-50"
       >
         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
         Enregistrer
@@ -184,7 +184,7 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder={isFaq ? 'Comment suivre ma commande ?' : 'Titre...'}
-          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none focus:border-white/30"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none focus:border-gray-400"
         />
       </div>
 
@@ -197,7 +197,7 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
           onChange={(e) => setContent(e.target.value)}
           rows={6}
           placeholder={PLACEHOLDERS[category] || 'Contenu...'}
-          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none resize-none focus:border-white/30"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none resize-none focus:border-gray-400"
         />
       </div>
 
@@ -217,7 +217,7 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
         <button
           onClick={() => onSave({ ...entry, title, content, expires_at: expiresAt ? new Date(expiresAt).toISOString() : null })}
           disabled={saving || !title.trim() || !content.trim()}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-black hover:bg-gray-100 transition-all disabled:opacity-50"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-[#262626] hover:bg-gray-100 transition-all disabled:opacity-50"
         >
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Enregistrer
@@ -429,7 +429,7 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                   </p>
                   <button
                     onClick={() => setIsCreating(true)}
-                    className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-black hover:bg-gray-100 transition-all"
+                    className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-[#262626] hover:bg-gray-100 transition-all"
                   >
                     <Plus className="w-4 h-4" /> Ajouter
                   </button>
@@ -461,8 +461,8 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                         onClick={() => setEditingEntry(entry.id)}
                         className={`rounded-2xl border p-5 cursor-pointer transition-all ${
                           isExpired
-                            ? (isLight ? 'bg-[#F9F7F1] border-gray-200 opacity-50' : 'bg-white/[0.02] border-gray-100 opacity-50')
-                            : (isLight ? 'bg-white border-gray-200 hover:border-slate-300' : 'bg-[#F9F7F1] border-gray-200 hover:border-white/20')
+                            ? (isLight ? 'bg-[#F9F7F1] border-gray-200 opacity-50' : 'bg-gray-50 border-gray-100 opacity-50')
+                            : (isLight ? 'bg-white border-gray-200 hover:border-slate-300' : 'bg-[#F9F7F1] border-gray-200 hover:border-gray-300')
                         }`}
                       >
                         <div className="flex items-start justify-between">
@@ -512,7 +512,7 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                   className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed text-sm font-bold transition-all ${
                     isLight
                       ? 'border-slate-300 text-[#716D5C] hover:border-slate-400 hover:text-slate-700'
-                      : 'border-gray-200 text-[#716D5C] hover:border-white/20 hover:text-[#262626]'
+                      : 'border-gray-200 text-[#716D5C] hover:border-gray-300 hover:text-[#262626]'
                   }`}
                 >
                   <Plus className="w-4 h-4" />
