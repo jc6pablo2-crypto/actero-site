@@ -175,7 +175,7 @@ export const BeforeAfterSlider = () => {
                             style={{ left: `${sliderPos}%` }}
                         >
                             <div className="absolute top-0 bottom-0 w-0.5 md:w-1 bg-white shadow-[0_0_15px_rgba(255,255,255,0.5)]"></div>
-                            <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-2xl relative z-10 text-black border-4 border-[#030303]">
+                            <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center shadow-2xl relative z-10 text-black border-4 border-gray-200">
                                 <GripVertical className="w-5 h-5 md:w-6 md:h-6" />
                             </div>
                         </div>

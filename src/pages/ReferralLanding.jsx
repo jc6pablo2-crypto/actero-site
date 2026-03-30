@@ -77,7 +77,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
           </button>
           <button
             onClick={handleCTA}
-            className="bg-emerald-500 hover:bg-emerald-400 text-[#262626] px-5 py-2 rounded-xl text-sm font-bold transition-all"
+            className="bg-[#0F5F35] hover:bg-[#003725] text-white px-5 py-2 rounded-xl text-sm font-bold transition-all"
           >
             Commencer
           </button>
@@ -135,7 +135,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
           >
             <button
               onClick={handleCTA}
-              className="group bg-emerald-500 hover:bg-emerald-400 text-[#262626] px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3 shadow-lg shadow-emerald-500/25"
+              className="group bg-[#0F5F35] hover:bg-[#003725] text-white px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3 shadow-lg shadow-[#003725]/15"
             >
               Reserver mon audit gratuit
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -228,7 +228,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
             </p>
             <button
               onClick={handleCTA}
-              className="bg-emerald-500 hover:bg-emerald-400 text-[#262626] px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3"
+              className="bg-[#0F5F35] hover:bg-[#003725] text-white px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3"
             >
               Reserver mon audit gratuit
               <ArrowRight className="w-5 h-5" />

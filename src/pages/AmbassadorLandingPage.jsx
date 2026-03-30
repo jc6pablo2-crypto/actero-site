@@ -192,12 +192,12 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
         description="Devenez ambassadeur Actero et touchez jusqu'à 300€ par client recommandé. Zéro effort commercial, on s'occupe de tout."
         canonical="/ambassadeurs"
       />
-    <div className="relative min-h-screen bg-white font-sans text-[#262626] selection:bg-emerald-500/20 selection:text-[#262626]">
+    <div className="relative min-h-screen bg-white font-sans text-[#262626] selection:bg-[#003725]/15 selection:text-[#262626]">
       {/* BACKGROUND */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/20 via-[#030303] to-[#030303]" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-emerald-500/5 rounded-full blur-[120px]" />
-        <div className="absolute top-1/3 right-0 w-[400px] h-[400px] bg-cyan-500/3 rounded-full blur-[100px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F9F7F1] to-white" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[#003725]/3 rounded-full blur-[120px]" />
+        <div className="absolute top-1/3 right-0 w-[400px] h-[400px] bg-[#003725]/2 rounded-full blur-[100px]" />
       </div>
 
       <div className="relative z-10 w-full">
@@ -209,13 +209,13 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
           {/* ═══════════════════════════════════════════ */}
           <section className="pt-36 pb-24 md:pt-44 md:pb-32 px-6">
             <FadeInUp className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-widest mb-8">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#F9F7F1] border border-gray-200 text-[#003725] text-xs font-bold uppercase tracking-widest mb-8">
                 <UserPlus className="w-3.5 h-3.5" />
                 Programme Ambassadeur
               </div>
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-6 leading-[1.05]">
                 Recommandez,{' '}
-                <span className="bg-gradient-to-r from-emerald-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent bg-[length:200%] animate-[shimmer_3s_ease-in-out_infinite]">
+                <span className="text-[#003725]">
                   soyez récompensé
                 </span>
               </h1>
@@ -228,7 +228,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <button
                   onClick={() => scrollToId('candidature')}
-                  className="px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-[#262626] font-bold rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-emerald-500/25"
+                  className="px-8 py-4 bg-[#0F5F35] hover:bg-[#003725] text-white font-bold rounded-full text-lg transition-all hover:scale-105 shadow-lg shadow-[#003725]/15"
                 >
                   Devenir ambassadeur
                 </button>
@@ -251,8 +251,8 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                 {socialProofStats.map((stat, i) => (
                   <ScaleIn key={i} delay={i * 0.1}>
                     <div className="text-center p-6 rounded-2xl bg-gray-50 border border-gray-200">
-                      <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mx-auto mb-3">
-                        <stat.icon className="w-5 h-5 text-emerald-400" />
+                      <div className="w-10 h-10 rounded-xl bg-[#003725]/10 flex items-center justify-center mx-auto mb-3">
+                        <stat.icon className="w-5 h-5 text-[#003725]" />
                       </div>
                       <p className="text-2xl font-bold text-[#262626] mb-1">{stat.value}</p>
                       <p className="text-xs text-[#716D5C] font-medium">{stat.label}</p>
@@ -268,7 +268,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
           {/* ═══════════════════════════════════════════ */}
           <section className="py-24 md:py-32 px-6">
             <FadeInUp className="max-w-5xl mx-auto text-center mb-16">
-              <p className="text-xs font-bold text-emerald-400/80 uppercase tracking-[0.2em] mb-4">
+              <p className="text-xs font-bold text-[#003725]/80 uppercase tracking-[0.2em] mb-4">
                 Comment ça marche
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tighter">
@@ -278,12 +278,12 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
             <StaggerContainer className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
               {steps.map((step, i) => (
                 <StaggerItem key={i}>
-                  <div className="relative p-8 rounded-3xl bg-[#F9F7F1] border border-gray-200 hover:border-emerald-500/30 transition-all group">
-                    <div className="absolute -top-4 -left-2 w-10 h-10 rounded-full bg-emerald-500 text-[#262626] flex items-center justify-center font-bold text-base shadow-lg shadow-emerald-500/25">
+                  <div className="relative p-8 rounded-3xl bg-[#F9F7F1] border border-gray-200 hover:border-[#003725]/20 transition-all group">
+                    <div className="absolute -top-4 -left-2 w-10 h-10 rounded-full bg-emerald-500 text-[#262626] flex items-center justify-center font-bold text-base shadow-lg shadow-[#003725]/15">
                       {i + 1}
                     </div>
-                    <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
-                      <step.icon className="w-7 h-7 text-emerald-400" />
+                    <div className="w-14 h-14 rounded-2xl bg-[#003725]/10 flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+                      <step.icon className="w-7 h-7 text-[#003725]" />
                     </div>
                     <h3 className="text-xl font-bold text-[#262626] mb-3">{step.title}</h3>
                     <p className="text-[#716D5C] font-medium leading-relaxed">{step.desc}</p>
@@ -303,7 +303,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
           {/* ═══════════════════════════════════════════ */}
           <section className="py-24 md:py-32 px-6 bg-[#F9F7F1]">
             <FadeInUp className="max-w-5xl mx-auto text-center mb-16">
-              <p className="text-xs font-bold text-cyan-400/80 uppercase tracking-[0.2em] mb-4">
+              <p className="text-xs font-bold text-[#003725]/80 uppercase tracking-[0.2em] mb-4">
                 Qui peut être recommandé
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tighter">
@@ -315,7 +315,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                 <StaggerItem key={i}>
                   <div className="p-8 rounded-3xl bg-[#F9F7F1] border border-gray-200 hover:border-cyan-500/30 transition-all h-full">
                     <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6">
-                      <t.icon className="w-7 h-7 text-cyan-400" />
+                      <t.icon className="w-7 h-7 text-[#003725]" />
                     </div>
                     <h3 className="text-xl font-bold text-[#262626] mb-3">{t.title}</h3>
                     <p className="text-[#716D5C] font-medium leading-relaxed">{t.desc}</p>
@@ -330,7 +330,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
           {/* ═══════════════════════════════════════════ */}
           <section className="py-24 md:py-32 px-6">
             <FadeInUp className="max-w-3xl mx-auto text-center">
-              <p className="text-xs font-bold text-emerald-400/80 uppercase tracking-[0.2em] mb-4">
+              <p className="text-xs font-bold text-[#003725]/80 uppercase tracking-[0.2em] mb-4">
                 Ce que vous pouvez gagner
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-6">
@@ -340,15 +340,15 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                 Plus vous recommandez, plus vous gagnez. Les récompenses augmentent à partir du 3e client.
               </p>
               <div className="grid md:grid-cols-2 gap-6 mb-8">
-                <div className="p-8 rounded-3xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/5 border border-emerald-500/20 text-center">
-                  <p className="text-xs font-bold text-emerald-400/60 uppercase tracking-widest mb-3">1er et 2e client</p>
-                  <p className="text-5xl font-bold text-emerald-400 mb-2">150€</p>
+                <div className="p-8 rounded-3xl bg-[#F9F7F1] border border-gray-200 text-center">
+                  <p className="text-xs font-bold text-[#003725]/60 uppercase tracking-widest mb-3">1er et 2e client</p>
+                  <p className="text-5xl font-bold text-[#003725] mb-2">150€</p>
                   <p className="text-sm text-[#716D5C] font-medium">par client signé</p>
                 </div>
-                <div className="p-8 rounded-3xl bg-gradient-to-br from-amber-500/10 to-orange-500/5 border border-amber-500/20 text-center relative overflow-hidden">
-                  <div className="absolute top-3 right-3 px-2 py-0.5 bg-amber-500/20 border border-amber-500/30 rounded-full text-[10px] font-bold text-amber-400 uppercase tracking-wider">Bonus</div>
-                  <p className="text-xs font-bold text-amber-400/60 uppercase tracking-widest mb-3">À partir du 3e client</p>
-                  <p className="text-5xl font-bold text-amber-400 mb-2">300€</p>
+                <div className="p-8 rounded-3xl bg-[#F9F7F1] border border-gray-200 text-center relative overflow-hidden">
+                  <div className="absolute top-3 right-3 px-2 py-0.5 bg-amber-500/20 border border-amber-500/30 rounded-full text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">Bonus</div>
+                  <p className="text-xs font-bold text-[#716D5C]/60 uppercase tracking-widest mb-3">À partir du 3e client</p>
+                  <p className="text-5xl font-bold text-[#716D5C] mb-2">300€</p>
                   <p className="text-sm text-[#716D5C] font-medium">par client signé</p>
                 </div>
               </div>
@@ -391,7 +391,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
           {/* ═══════════════════════════════════════════ */}
           <section className="py-24 md:py-32 px-6">
             <FadeInUp className="max-w-5xl mx-auto text-center mb-16">
-              <p className="text-xs font-bold text-emerald-400/80 uppercase tracking-[0.2em] mb-4">
+              <p className="text-xs font-bold text-[#003725]/80 uppercase tracking-[0.2em] mb-4">
                 Pourquoi Actero
               </p>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tighter">
@@ -402,8 +402,8 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
               {whyActero.map((item, i) => (
                 <StaggerItem key={i}>
                   <div className="flex items-center gap-5 p-6 rounded-2xl bg-[#F9F7F1] border border-gray-200">
-                    <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-                      <item.icon className="w-6 h-6 text-emerald-400" />
+                    <div className="w-12 h-12 rounded-xl bg-[#003725]/10 flex items-center justify-center flex-shrink-0">
+                      <item.icon className="w-6 h-6 text-[#003725]" />
                     </div>
                     <span className="text-lg font-bold text-[#262626]">{item.label}</span>
                   </div>
@@ -418,7 +418,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
           <section className="py-24 md:py-32 px-6 bg-[#F9F7F1]">
             <FadeInUp className="max-w-3xl mx-auto">
               <div className="text-center mb-16">
-                <p className="text-xs font-bold text-cyan-400/80 uppercase tracking-[0.2em] mb-4">
+                <p className="text-xs font-bold text-[#003725]/80 uppercase tracking-[0.2em] mb-4">
                   Questions fréquentes
                 </p>
                 <h2 className="text-4xl md:text-5xl font-bold tracking-tighter">FAQ</h2>
@@ -467,7 +467,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
           <section id="candidature" className="py-24 md:py-32 px-6">
             <FadeInUp className="max-w-2xl mx-auto">
               <div className="text-center mb-12">
-                <p className="text-xs font-bold text-emerald-400/80 uppercase tracking-[0.2em] mb-4">
+                <p className="text-xs font-bold text-[#003725]/80 uppercase tracking-[0.2em] mb-4">
                   Rejoignez le programme
                 </p>
                 <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4">
@@ -480,9 +480,9 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
 
               {formSuccess ? (
                 <ScaleIn>
-                  <div className="p-10 rounded-3xl bg-[#F9F7F1] border border-emerald-500/30 text-center">
+                  <div className="p-10 rounded-3xl bg-[#F9F7F1] border border-[#003725]/20 text-center">
                     <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                      <CheckCircle2 className="w-8 h-8 text-[#003725]" />
                     </div>
                     <h3 className="text-2xl font-bold text-[#262626] mb-3">
                       Candidature envoyée !
@@ -622,7 +622,7 @@ export const AmbassadorLandingPage = ({ onNavigate }) => {
                   <button
                     type="submit"
                     disabled={formLoading || !allRulesAccepted}
-                    className={`w-full py-4 font-bold rounded-xl text-lg transition-all flex items-center justify-center gap-3 ${allRulesAccepted ? 'bg-emerald-500 hover:bg-emerald-400 text-[#262626]' : 'bg-gray-50 text-[#716D5C] cursor-not-allowed'}`}
+                    className={`w-full py-4 font-bold rounded-xl text-lg transition-all flex items-center justify-center gap-3 ${allRulesAccepted ? 'bg-[#0F5F35] hover:bg-[#003725] text-white' : 'bg-gray-50 text-[#716D5C] cursor-not-allowed'}`}
                   >
                     {formLoading ? (
                       <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />

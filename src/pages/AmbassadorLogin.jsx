@@ -105,7 +105,7 @@ export const AmbassadorLogin = ({ onNavigate }) => {
       </div>
 
       {/* Right: Visual */}
-      <div className="hidden lg:flex w-1/2 items-center justify-center bg-gradient-to-br from-emerald-950/30 to-[#030303] border-l border-gray-100">
+      <div className="hidden lg:flex w-1/2 items-center justify-center bg-gradient-to-br from-[#F9F7F1] to-white border-l border-gray-100">
         <div className="text-center p-12">
           <div className="w-20 h-20 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-8">
             <Logo className="w-10 h-10 text-emerald-400" />
