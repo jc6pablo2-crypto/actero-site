@@ -1,46 +1,35 @@
 import React from 'react';
-import { ArrowRight, Shield, Clock, TrendingUp, UserPlus, ShoppingBag, Building2 } from 'lucide-react';
+import { ArrowRight, Shield, Clock, TrendingUp, UserPlus, ShoppingBag, Building2, Headphones, RefreshCw, BarChart3, Zap } from 'lucide-react';
 import { FadeInUp, ScaleIn } from './scroll-animations';
 import { ButtonColorful } from './button-colorful';
-import { MagneticButton } from './magnetic-button';
 
 export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange }) => {
 
     const heroContent = {
         ecommerce: {
             badge: { icon: '/shopify-partners.svg', label: 'Partenaire Shopify officiel' },
-            headline: (
-                <>
-                    <span className="block text-[#262626]">Transformez votre SAV</span>
-                    <span className="block text-[#716D5C]">en machine de croissance.</span>
-                    <span className="block text-[#003725]">
-                        Récupérez chaque euro perdu.
-                    </span>
-                </>
-            ),
-            subtitle: "Actero automatise le support client et relance vos paniers abandonnés pour les marques Shopify qui veulent scaler sans multiplier les coûts. Résultats mesurables dès le premier mois.",
-            metrics: [
-                { icon: <TrendingUp className="w-5 h-5 text-[#003725]" />, value: "+15%", label: "de revenus récupérés en moyenne" },
-                { icon: <Clock className="w-5 h-5 text-[#716D5C]" />, value: "7 jours", label: "pour être opérationnel" },
-                { icon: <Shield className="w-5 h-5 text-[#716D5C]" />, value: "0 code", label: "on gère tout pour vous" },
+            headlineMain: "L'automatisation IA",
+            headlineSub: "qui fait croître votre e-commerce",
+            subtitle: "Actero automatise le support client et relance vos paniers abandonnés pour les marques Shopify qui veulent scaler sans multiplier les coûts.",
+            subtitleSecond: "Résultats mesurables dès le premier mois.",
+            cards: [
+                { title: "Support IA 24/7", desc: "80% des tickets résolus", bg: "bg-[#003725]", text: "text-white", icon: <Headphones className="w-6 h-6" /> },
+                { title: "Relance paniers", desc: "+15% de récupération", bg: "bg-[#F9F7F1]", text: "text-[#003725]", icon: <RefreshCw className="w-6 h-6" /> },
+                { title: "Monitoring IA", desc: "Alertes temps réel", bg: "bg-[#F9F7F1]", text: "text-[#003725]", icon: <BarChart3 className="w-6 h-6" /> },
+                { title: "Automatisations", desc: "Tout connecté", bg: "bg-[#003725]", text: "text-white", icon: <Zap className="w-6 h-6" /> },
             ],
         },
         immobilier: {
             badge: { icon: null, label: 'Spécialiste IA pour agences immobilières' },
-            headline: (
-                <>
-                    <span className="block text-[#262626]">Automatisez votre agence.</span>
-                    <span className="block text-[#716D5C]">Récupérez chaque prospect.</span>
-                    <span className="block text-[#003725]">
-                        3 agents IA à votre service.
-                    </span>
-                </>
-            ),
-            subtitle: "Prise de rendez-vous, collecte de documents, relance des prospects inactifs — nos agents IA gèrent vos tâches chronophages 24h/24 pour que vous vous concentriez sur la vente.",
-            metrics: [
-                { icon: <TrendingUp className="w-5 h-5 text-[#003725]" />, value: "+30%", label: "de rendez-vous confirmés" },
-                { icon: <Clock className="w-5 h-5 text-[#716D5C]" />, value: "-50%", label: "de temps administratif" },
-                { icon: <Shield className="w-5 h-5 text-[#716D5C]" />, value: "+10%", label: "de prospects récupérés" },
+            headlineMain: "3 agents IA pour",
+            headlineSub: "transformer votre agence",
+            subtitle: "Prise de rendez-vous, collecte de documents, relance des prospects inactifs — nos agents IA gèrent vos tâches chronophages 24h/24.",
+            subtitleSecond: "Vous vous concentrez sur la vente.",
+            cards: [
+                { title: "Agent RDV", desc: "+30% confirmés", bg: "bg-[#003725]", text: "text-white", icon: <Clock className="w-6 h-6" /> },
+                { title: "Agent Documents", desc: "-50% admin", bg: "bg-[#F9F7F1]", text: "text-[#003725]", icon: <Shield className="w-6 h-6" /> },
+                { title: "Agent Relance", desc: "+10% réactivés", bg: "bg-[#F9F7F1]", text: "text-[#003725]", icon: <TrendingUp className="w-6 h-6" /> },
+                { title: "Dashboard live", desc: "Suivi temps réel", bg: "bg-[#003725]", text: "text-white", icon: <BarChart3 className="w-6 h-6" /> },
             ],
         },
     };
@@ -49,22 +38,17 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
     const isEcommerce = vertical === 'ecommerce';
 
     return (
-        <div className="relative min-h-[100vh] flex flex-col items-center justify-center pt-24 pb-20 px-6 bg-white">
+        <div className="relative bg-white pt-28 md:pt-36 pb-16 md:pb-24 px-6">
+            <div className="max-w-6xl mx-auto">
 
-            {/* ── Content ── */}
-            <div
-                className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-center"
-            >
-
-                {/* ── Vertical Toggle ── */}
-                <FadeInUp className="mb-10">
-                    <div className="relative inline-flex items-center bg-[#F9F7F1] rounded-2xl p-1.5 gap-1.5">
-                        {/* Sliding indicator */}
+                {/* Vertical Toggle — centered above */}
+                <FadeInUp className="flex justify-center mb-12">
+                    <div className="relative inline-flex items-center bg-[#F9F7F1] rounded-full p-1 gap-1">
                         <div
-                            className={`absolute top-1.5 bottom-1.5 rounded-xl transition-all duration-300 ease-out bg-white shadow-sm ${
+                            className={`absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out bg-white shadow-sm ${
                                 isEcommerce
-                                    ? 'left-1.5 right-[calc(50%+0.375rem)]'
-                                    : 'left-[calc(50%+0.375rem)] right-1.5'
+                                    ? 'left-1 right-[calc(50%+0.25rem)]'
+                                    : 'left-[calc(50%+0.25rem)] right-1'
                             }`}
                         />
                         {[
@@ -74,106 +58,95 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                             <button
                                 key={v.key}
                                 onClick={() => onVerticalChange?.(v.key)}
-                                className={`relative z-10 flex items-center gap-2.5 px-7 py-3 rounded-xl text-sm font-semibold tracking-wide transition-all duration-300 ${
-                                    vertical === v.key
-                                        ? 'text-[#262626]'
-                                        : 'text-[#716D5C] hover:text-[#262626]'
+                                className={`relative z-10 flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                                    vertical === v.key ? 'text-[#262626]' : 'text-[#716D5C] hover:text-[#262626]'
                                 }`}
                             >
-                                <span className={`transition-all duration-300 ${vertical === v.key ? 'text-[#262626]' : 'text-gray-400'}`}>
-                                    {v.icon}
-                                </span>
+                                {v.icon}
                                 {v.label}
                             </button>
                         ))}
                     </div>
                 </FadeInUp>
 
-                {/* Made in France */}
-                <FadeInUp className="mb-3">
-                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#716D5C] px-3 py-1.5 rounded-full border border-gray-200 bg-[#F9F7F1]">
-                    <span>🇫🇷</span>
-                    <span>Made in France</span>
-                  </div>
-                </FadeInUp>
+                {/* 2-column layout: text left, cards right */}
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
-                {/* Trust Badge */}
-                <FadeInUp className="mb-10">
-                    <div className="inline-flex items-center gap-3 border px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-500 bg-[#F9F7F1] border-gray-200 text-[#716D5C]">
-                        {content.badge.icon && (
-                            <>
-                                <img src={content.badge.icon} alt="" className="h-4 w-auto opacity-60" />
-                                <span className="w-px h-4 bg-gray-200"></span>
-                            </>
-                        )}
-                        <span>{content.badge.label}</span>
+                    {/* LEFT — Text content */}
+                    <div className="pt-4">
+                        {/* Badge */}
+                        <FadeInUp className="mb-6">
+                            <div className="inline-flex items-center gap-2 border px-4 py-2 rounded-full text-sm font-medium bg-[#F9F7F1] border-gray-200 text-[#716D5C]">
+                                {content.badge.icon && (
+                                    <>
+                                        <img src={content.badge.icon} alt="" className="h-4 w-auto opacity-60" />
+                                        <span className="w-px h-4 bg-gray-200"></span>
+                                    </>
+                                )}
+                                <span>🇫🇷 {content.badge.label}</span>
+                            </div>
+                        </FadeInUp>
+
+                        {/* Headline — left-aligned, serif, massive */}
+                        <FadeInUp delay={0.05} className="mb-6">
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#262626] leading-[1.1]" style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.02em' }}>
+                                {content.headlineMain}
+                                <br />
+                                <span className="text-[#716D5C]">{content.headlineSub}</span>
+                            </h1>
+                        </FadeInUp>
+
+                        {/* Subtitle */}
+                        <FadeInUp delay={0.1} className="mb-4">
+                            <p className="text-base md:text-lg text-[#716D5C] font-normal leading-relaxed max-w-lg">
+                                {content.subtitle}
+                            </p>
+                        </FadeInUp>
+                        <FadeInUp delay={0.12} className="mb-8">
+                            <p className="text-base md:text-lg text-[#262626] font-medium">
+                                {content.subtitleSecond}
+                            </p>
+                        </FadeInUp>
+
+                        {/* CTAs — Shine style */}
+                        <FadeInUp delay={0.15} className="flex flex-wrap items-center gap-4 mb-8">
+                            <ButtonColorful onClick={() => onNavigate('/audit')}>
+                                {vertical === 'immobilier' ? 'Demander une démo' : 'Réserver un audit gratuit'} <ArrowRight className="w-4 h-4" />
+                            </ButtonColorful>
+                            <button
+                                onClick={() => {
+                                    const el = document.getElementById('comment-ca-marche');
+                                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                                }}
+                                className="text-sm font-semibold text-[#003725] underline underline-offset-4 decoration-[#003725]/40 hover:decoration-[#003725] transition-colors"
+                            >
+                                Voir comment ça marche
+                            </button>
+                        </FadeInUp>
                     </div>
-                </FadeInUp>
 
-                {/* ── Headline ── */}
-                <FadeInUp delay={0.1} className="text-center max-w-4xl mb-8">
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold text-[#262626] leading-[1.08] md:leading-[1.05]" style={{ letterSpacing: '-0.03em' }}>
-                        {content.headline}
-                    </h1>
-                </FadeInUp>
-
-                {/* Subtitle */}
-                <FadeInUp delay={0.15} className="text-center max-w-2xl mb-10">
-                    <p className="text-base md:text-lg text-[#716D5C] font-normal leading-relaxed">
-                        {content.subtitle}
-                    </p>
-                </FadeInUp>
-
-                {/* CTA Buttons */}
-                <FadeInUp delay={0.2} className="flex flex-col sm:flex-row items-center gap-4 mb-6">
-                    <ButtonColorful
-                        onClick={() => onNavigate('/audit')}
-                    >
-                        {vertical === 'immobilier' ? 'Demander une démo' : 'Réserver un audit gratuit'}
-                    </ButtonColorful>
-                    <MagneticButton
-                        onClick={() => {
-                            const el = document.getElementById('comment-ca-marche');
-                            if (el) el.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                        className="text-sm font-semibold text-[#003725] hover:text-[#003725] transition-colors flex items-center gap-2 px-6 py-3 underline underline-offset-4 decoration-[#003725]/40 hover:decoration-[#003725]"
-                    >
-                        Voir comment ça marche <ArrowRight className="w-4 h-4" />
-                    </MagneticButton>
-                </FadeInUp>
-
-                {/* Ambassador CTA */}
-                <FadeInUp delay={0.25} className="mb-16">
-                    <button
-                        onClick={() => onNavigate('/ambassadeurs')}
-                        className="text-sm font-medium text-[#716D5C] hover:text-[#003725] transition-colors flex items-center gap-2 px-4 py-2 underline underline-offset-4 decoration-gray-300 hover:decoration-[#003725]"
-                    >
-                        <UserPlus className="w-3.5 h-3.5" />
-                        Devenir ambassadeur Actero
-                    </button>
-                </FadeInUp>
-
-                {/* ── Proof Metrics Bar ── */}
-                <ScaleIn delay={0.3} className="w-full max-w-3xl">
-                    <div className="border rounded-3xl px-6 py-5 md:px-10 md:py-6 bg-white border-gray-200">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-0">
-                            {content.metrics.map((item, i) => (
+                    {/* RIGHT — Bento card grid (Shine style) */}
+                    <FadeInUp delay={0.2}>
+                        <div className="grid grid-cols-2 gap-3">
+                            {content.cards.map((card, i) => (
                                 <div
                                     key={i}
-                                    className={`flex items-center gap-4 ${i < 2 ? 'md:border-r md:border-gray-200' : ''} ${i > 0 ? 'md:pl-8' : ''}`}
+                                    className={`${card.bg} ${card.text} rounded-2xl p-6 flex flex-col justify-between min-h-[180px] md:min-h-[200px] transition-transform hover:scale-[1.02] duration-300`}
                                 >
-                                    <div className="w-10 h-10 rounded-xl bg-[#F9F7F1] border border-gray-200 flex items-center justify-center flex-shrink-0">
-                                        {item.icon}
+                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-auto ${
+                                        card.bg === 'bg-[#003725]' ? 'bg-white/15' : 'bg-[#003725]/10'
+                                    }`}>
+                                        {card.icon}
                                     </div>
                                     <div>
-                                        <p className="text-[#262626] font-bold text-xl leading-tight tracking-tight">{item.value}</p>
-                                        <p className="text-[#716D5C] text-sm font-medium">{item.label}</p>
+                                        <p className="font-bold text-lg leading-tight mb-1">{card.title}</p>
+                                        <p className={`text-sm font-medium ${card.bg === 'bg-[#003725]' ? 'text-white/70' : 'text-[#716D5C]'}`}>{card.desc}</p>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
-                </ScaleIn>
+                    </FadeInUp>
+                </div>
             </div>
         </div>
     );
