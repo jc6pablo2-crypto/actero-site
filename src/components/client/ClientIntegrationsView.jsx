@@ -86,6 +86,15 @@ const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain
           <div className="flex items-center gap-2 mt-3">
             {isConnected ? (
               <>
+                {!isShopify && (status === 'expired' || status === 'error') && (
+                  <button
+                    onClick={() => onOAuthConnect(provider)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-colors"
+                    style={{ backgroundColor: provider.color || '#0F5F35' }}
+                  >
+                    <RefreshCw className="w-3 h-3" /> Reconnecter
+                  </button>
+                )}
                 {!isShopify && (
                   <button
                     onClick={() => onDisconnect(connection)}
@@ -95,7 +104,7 @@ const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain
                   </button>
                 )}
                 {isShopify && (
-                  <span className="text-xs text-emerald-400 font-medium flex items-center gap-1">
+                  <span className="text-xs text-[#003725] font-medium flex items-center gap-1">
                     <CheckCircle className="w-3.5 h-3.5" /> App installée
                   </span>
                 )}
