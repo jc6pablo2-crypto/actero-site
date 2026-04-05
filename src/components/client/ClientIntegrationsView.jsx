@@ -42,11 +42,13 @@ const STATUS_BADGES = {
   pending: { label: 'En attente', className: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
 };
 
-const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain, onOAuthConnect, onDisconnect, isLight }) => {
+const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain, onOAuthConnect, onDisconnect, onTest, isLight }) => {
   const isShopify = provider.id === 'shopify';
   const isConnected = isShopify ? shopifyConnected : !!connection;
   const status = isShopify ? (shopifyConnected ? 'active' : null) : connection?.status;
   const badge = status ? STATUS_BADGES[status] : null;
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState(null);
 
   return (
     <div className={`relative rounded-2xl border p-5 transition-all hover:border-gray-300 ${
@@ -95,6 +97,23 @@ const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain
                     <RefreshCw className="w-3 h-3" /> Reconnecter
                   </button>
                 )}
+                {!isShopify && status === 'active' && (
+                  <button
+                    onClick={async () => {
+                      setTesting(true);
+                      setTestResult(null);
+                      const result = await onTest(connection.id);
+                      setTestResult(result);
+                      setTesting(false);
+                      if (result?.ok) setTimeout(() => setTestResult(null), 3000);
+                    }}
+                    disabled={testing}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-[#003725] bg-[#F9F7F1] hover:bg-gray-100 border border-gray-200 transition-colors disabled:opacity-50"
+                  >
+                    {testing ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
+                    {testing ? 'Test...' : 'Tester'}
+                  </button>
+                )}
                 {!isShopify && (
                   <button
                     onClick={() => onDisconnect(connection)}
@@ -106,6 +125,12 @@ const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain
                 {isShopify && (
                   <span className="text-xs text-[#003725] font-medium flex items-center gap-1">
                     <CheckCircle className="w-3.5 h-3.5" /> App installée
+                  </span>
+                )}
+                {testResult && (
+                  <span className={`text-xs font-medium flex items-center gap-1 ${testResult.ok ? 'text-[#003725]' : 'text-red-500'}`}>
+                    {testResult.ok ? <CheckCircle className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                    {testResult.message}
                   </span>
                 )}
               </>
@@ -369,6 +394,26 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
     }
   }, []);
 
+  const handleTestConnection = async (integrationId) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/integrations/test', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({ integration_id: integrationId }),
+      });
+      const data = await res.json();
+      // Refetch integrations list to get updated status
+      queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
+      return data;
+    } catch {
+      return { ok: false, message: 'Erreur reseau' };
+    }
+  };
+
   const handleOAuthConnect = async (provider) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
@@ -534,6 +579,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
                     shopifyConnected={shopifyConnected}
                     shopifyDomain={shopifyDomain}
                     onOAuthConnect={handleOAuthConnect}
+                    onTest={handleTestConnection}
                     onDisconnect={(conn) => setDisconnectTarget({ ...conn, providerName: provider.name })}
                     isLight={isLight}
                   />

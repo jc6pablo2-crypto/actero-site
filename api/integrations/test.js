@@ -1,12 +1,57 @@
 import { createClient } from '@supabase/supabase-js';
 
+const PROVIDER_TEST_ENDPOINTS = {
+  gorgias: {
+    method: 'GET',
+    url: (c) => `https://${c.domain}/api/account`,
+    headers: (c) => ({
+      'Authorization': `Basic ${Buffer.from(`${c.email || ''}:${c.api_key}`).toString('base64')}`,
+    }),
+  },
+  zendesk: {
+    method: 'GET',
+    url: (c) => `https://${c.subdomain}.zendesk.com/api/v2/users/me.json`,
+    headers: (c) => ({
+      'Authorization': `Basic ${Buffer.from(`${c.email}/token:${c.api_key}`).toString('base64')}`,
+    }),
+  },
+  klaviyo: {
+    method: 'GET',
+    url: () => 'https://a.klaviyo.com/api/accounts/',
+    headers: (c) => ({
+      'Authorization': `Klaviyo-API-Key ${c.api_key}`,
+      'revision': '2024-02-15',
+    }),
+  },
+  freshdesk: {
+    method: 'GET',
+    url: (c) => `https://${c.domain}/api/v2/agents/me`,
+    headers: (c) => ({
+      'Authorization': `Basic ${Buffer.from(`${c.api_key}:X`).toString('base64')}`,
+    }),
+  },
+  slack: {
+    // For OAuth Slack, test the bot token
+    method: 'POST',
+    url: () => 'https://slack.com/api/auth.test',
+    headers: (c) => ({
+      'Authorization': `Bearer ${c.access_token}`,
+    }),
+  },
+  calendly: {
+    method: 'GET',
+    url: () => 'https://api.calendly.com/users/me',
+    headers: (c) => ({ 'Authorization': `Bearer ${c.api_key}` }),
+  },
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const token = req.headers.authorization?.replace('Bearer ', '');
-  if (!token) return res.status(401).json({ error: 'Non authentifié' });
+  if (!token) return res.status(401).json({ error: 'Non authentifie' });
 
   const supabase = createClient(
     process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
@@ -14,68 +59,67 @@ export default async function handler(req, res) {
   );
 
   const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-  if (authError || !user) return res.status(401).json({ error: 'Non authentifié' });
+  if (authError || !user) return res.status(401).json({ error: 'Non authentifie' });
 
-  const { provider, credentials } = req.body;
-  if (!provider || !credentials) {
-    return res.status(400).json({ error: 'Provider et credentials requis' });
+  const { integration_id, provider, credentials } = req.body;
+
+  // Mode 1: Test an existing integration by ID (fetch credentials from DB)
+  if (integration_id) {
+    try {
+      const { data: integration, error: fetchErr } = await supabase
+        .from('client_integrations')
+        .select('*')
+        .eq('id', integration_id)
+        .single();
+
+      if (fetchErr || !integration) {
+        return res.status(404).json({ ok: false, message: 'Integration introuvable' });
+      }
+
+      // Build credentials object from stored data
+      const creds = {
+        api_key: integration.api_key,
+        access_token: integration.access_token,
+        ...(integration.extra_config || {}),
+      };
+
+      const result = await testProvider(integration.provider, creds);
+
+      // Update status in DB
+      await supabase
+        .from('client_integrations')
+        .update({
+          status: result.ok ? 'active' : 'error',
+          status_message: result.message,
+          last_checked_at: new Date().toISOString(),
+        })
+        .eq('id', integration_id);
+
+      return res.status(200).json(result);
+    } catch (err) {
+      return res.status(200).json({ ok: false, message: err.message });
+    }
   }
 
-  // Import test logic from connect endpoint
-  const { testProvider } = await import('./connect.js').catch(() => ({}));
+  // Mode 2: Test with provided credentials (before saving)
+  if (!provider || !credentials) {
+    return res.status(400).json({ error: 'integration_id ou provider+credentials requis' });
+  }
 
-  // Inline test if import fails
-  const PROVIDER_TEST_ENDPOINTS = {
-    gorgias: {
-      method: 'GET',
-      url: (c) => `https://${c.domain}/api/account`,
-      headers: (c) => ({
-        'Authorization': `Basic ${Buffer.from(`${c.email || ''}:${c.api_key}`).toString('base64')}`,
-      }),
-    },
-    zendesk: {
-      method: 'GET',
-      url: (c) => `https://${c.subdomain}.zendesk.com/api/v2/users/me.json`,
-      headers: (c) => ({
-        'Authorization': `Basic ${Buffer.from(`${c.email}/token:${c.api_key}`).toString('base64')}`,
-      }),
-    },
-    klaviyo: {
-      method: 'GET',
-      url: () => 'https://a.klaviyo.com/api/accounts/',
-      headers: (c) => ({
-        'Authorization': `Klaviyo-API-Key ${c.api_key}`,
-        'revision': '2024-02-15',
-      }),
-    },
-    freshdesk: {
-      method: 'GET',
-      url: (c) => `https://${c.domain}/api/v2/agents/me`,
-      headers: (c) => ({
-        'Authorization': `Basic ${Buffer.from(`${c.api_key}:X`).toString('base64')}`,
-      }),
-    },
-    slack: {
-      method: 'POST',
-      url: (c) => c.webhook_url,
-      body: { text: '🔄 Test de connexion Actero — tout est OK !' },
-    },
-    calendly: {
-      method: 'GET',
-      url: () => 'https://api.calendly.com/users/me',
-      headers: (c) => ({ 'Authorization': `Bearer ${c.api_key}` }),
-    },
-  };
+  const result = await testProvider(provider, credentials);
+  return res.status(200).json(result);
+}
+
+async function testProvider(provider, credentials) {
+  const config = PROVIDER_TEST_ENDPOINTS[provider];
+  if (!config) {
+    return { ok: true, message: 'Pas de test disponible pour ce provider' };
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
 
   try {
-    const config = PROVIDER_TEST_ENDPOINTS[provider];
-    if (!config) {
-      return res.status(200).json({ ok: true, message: 'Pas de test disponible pour ce provider' });
-    }
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
-
     const fetchOptions = {
       method: config.method,
       headers: {
@@ -90,13 +134,14 @@ export default async function handler(req, res) {
     clearTimeout(timeout);
 
     if (resp.ok) {
-      return res.status(200).json({ ok: true, message: 'Connexion réussie' });
+      return { ok: true, message: 'Connexion active' };
     }
-    return res.status(200).json({ ok: false, message: `Erreur ${resp.status} — vérifiez vos identifiants` });
+    return { ok: false, message: `Erreur ${resp.status} — connexion echouee` };
   } catch (err) {
+    clearTimeout(timeout);
     if (err.name === 'AbortError') {
-      return res.status(200).json({ ok: false, message: 'Timeout — le serveur ne répond pas' });
+      return { ok: false, message: 'Timeout — le serveur ne repond pas' };
     }
-    return res.status(200).json({ ok: false, message: err.message });
+    return { ok: false, message: err.message };
   }
 }
