@@ -5,8 +5,88 @@ import {
   Users, Search, Handshake, Mail, Phone, Building2,
   CheckCircle2, XCircle, Clock, Eye, Loader2, MoreVertical,
   Briefcase, ChevronDown, Filter, X, AlertCircle, Plus, Trash2,
+  Send, CreditCard,
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
+
+const PaymentLinkForm = ({ email, name }) => {
+  const [amount, setAmount] = useState('')
+  const [description, setDescription] = useState('')
+  const [sending, setSending] = useState(false)
+  const [result, setResult] = useState(null)
+
+  const handleSend = async () => {
+    if (!amount) return
+    setSending(true)
+    setResult(null)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/partner/send-payment-link', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({
+          partner_email: email,
+          partner_name: name,
+          amount_eur: parseFloat(amount),
+          description: description || undefined,
+        }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setResult({ ok: true, message: `Lien envoye a ${email}` })
+        setAmount('')
+        setDescription('')
+      } else {
+        setResult({ ok: false, message: data.error || 'Erreur' })
+      }
+    } catch {
+      setResult({ ok: false, message: 'Erreur reseau' })
+    } finally {
+      setSending(false)
+    }
+  }
+
+  return (
+    <div className="mt-3 pt-3 border-t border-gray-200">
+      <div className="flex items-center gap-2 mb-2">
+        <CreditCard className="w-3.5 h-3.5 text-[#003725]" />
+        <span className="text-xs font-bold text-[#262626]">Envoyer un lien de paiement</span>
+      </div>
+      <div className="flex items-center gap-2 flex-wrap">
+        <input
+          type="number"
+          placeholder="Montant (EUR)"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          className="w-28 px-2.5 py-1.5 bg-white border border-gray-200 rounded-lg text-xs text-[#262626] outline-none focus:ring-1 focus:ring-gray-300"
+        />
+        <input
+          type="text"
+          placeholder="Description (optionnel)"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          className="flex-1 min-w-[150px] px-2.5 py-1.5 bg-white border border-gray-200 rounded-lg text-xs text-[#262626] outline-none focus:ring-1 focus:ring-gray-300"
+        />
+        <button
+          onClick={handleSend}
+          disabled={!amount || sending}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0F5F35] text-white rounded-lg text-xs font-bold hover:bg-[#003725] transition-colors disabled:opacity-50"
+        >
+          {sending ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+          Envoyer
+        </button>
+      </div>
+      {result && (
+        <p className={`text-xs mt-2 font-medium ${result.ok ? 'text-[#003725]' : 'text-red-500'}`}>
+          {result.ok ? '✓' : '✗'} {result.message}
+        </p>
+      )}
+    </div>
+  )
+}
 
 const STATUS_MAP = {
   new: { label: 'Nouveau', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
@@ -338,6 +418,7 @@ export const AdminPartnersView = () => {
                                 <div className="text-xs text-[#716D5C]">
                                   Source : {p.source} — Mis à jour : {new Date(p.updated_at).toLocaleString('fr-FR')}
                                 </div>
+                                <PaymentLinkForm email={p.email} name={p.first_name} />
                               </div>
                             </motion.div>
                           </td>
