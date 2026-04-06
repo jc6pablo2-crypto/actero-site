@@ -58,6 +58,7 @@ import { ClientSystemsView } from '../components/client/ClientSystemsView'
 import { ClientReferralView } from '../components/client/ClientReferralView'
 import { ClientKnowledgeBaseView } from '../components/client/ClientKnowledgeBaseView'
 import { ClientIntegrationsView } from '../components/client/ClientIntegrationsView'
+import { OnboardingChecklist } from '../components/client/OnboardingChecklist'
 import { ClientEscalationsView } from '../components/client/ClientEscalationsView'
 import { ClientSatisfactionScore, SatisfactionKPI } from '../components/client/ClientSatisfactionScore'
 
@@ -460,28 +461,13 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 </div>
               </div>
 
-              {showShopifyBanner && (
-                <div className={`flex items-start gap-4 p-4 rounded-xl border ${isLight ? 'bg-red-50 border-red-200' : 'bg-red-500/10 border-red-500/20'}`}>
-                  <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
-                  <div>
-                    <p className={`font-bold text-sm mb-1 ${isLight ? 'text-red-800' : 'text-red-400'}`}>
-                      Action requise : installez l'application Shopify
-                    </p>
-                    <p className={`text-sm ${isLight ? 'text-red-600' : 'text-red-400/70'}`}>
-                      Pour activer vos agents IA, connectez votre boutique Shopify. Vous avez reçu un email avec le lien d'installation, ou cliquez ci-dessous.
-                    </p>
-                    <a
-                      href="https://admin.shopify.com/oauth/install_custom_app?client_id=fcb9a2aafa1c3d00a213ba7dd16a584c&no_redirect=true&signature=eyJleHBpcmVzX2F0IjoxNzc0MTc3NDU3LCJwZXJtYW5lbnRfZG9tYWluIjoiYWN0ZXJvLXRlc3QubXlzaG9waWZ5LmNvbSIsImNsaWVudF9pZCI6ImZjYjlhMmFhZmExYzNkMDBhMjEzYmE3ZGQxNmE1ODRjIiwicHVycG9zZSI6ImN1c3RvbV9hcHAiLCJtZXJjaGFudF9vcmdhbml6YXRpb25faWQiOjIxMDE0NTc5N30%3D--34a7d58a33b46daaef09e2292dc8b4ba17c9dc65"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-bold rounded-lg transition-colors"
-                    >
-                      <ShoppingCart className="w-4 h-4" />
-                      Installer l'app Shopify
-                    </a>
-                  </div>
-                </div>
-              )}
+              {/* Onboarding Checklist — replaces Shopify banner */}
+              <OnboardingChecklist
+                clientId={currentClient?.id}
+                clientType={currentClient?.client_type}
+                setActiveTab={setActiveTab}
+                theme={theme}
+              />
 
               <MilestoneBadge hoursSaved={periodStats?.time_saved || 0} theme={theme} />
 
