@@ -73,7 +73,14 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
 
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Erreur API')
-      const aiResponse = data.text || "Je n'ai pas pu generer une reponse."
+      const rawResponse = data.text || "Je n'ai pas pu generer une reponse."
+      // Clean markdown artifacts
+      const aiResponse = rawResponse
+        .replace(/\*\*/g, '')
+        .replace(/\*/g, '')
+        .replace(/^#+\s/gm, '')
+        .replace(/^-\s/gm, '• ')
+        .replace(/`([^`]+)`/g, '$1')
 
       // Check if any guardrail was triggered
       const guardrailTriggered = clientConfig?.guardrails?.some(rule =>
@@ -297,7 +304,7 @@ function buildSystemPrompt(settings, guardrails, knowledge) {
     prompt += `\n\nBASE DE CONNAISSANCES:\n${knowledge}`
   }
 
-  prompt += `\n\nSi tu ne peux pas repondre a la question ou si une regle d'exclusion s'applique, indique que tu escalades vers un humain.`
+  prompt += `\n\nREGLES DE FORMAT:\n- Reponds en texte brut uniquement, PAS de markdown (pas de **, pas de #, pas de backticks)\n- Pas d'emoji sauf si le ton de marque le demande\n- Reponses courtes et claires (max 3-4 phrases)\n- Si tu ne peux pas repondre ou si une regle d'exclusion s'applique, indique que tu escalades vers un humain.`
 
   return prompt
 }
