@@ -23,6 +23,7 @@ import { ReferralLanding } from "./pages/ReferralLanding";
 import { PartnerLandingPage } from "./pages/PartnerLandingPage";
 import { AmbassadorLandingPage } from "./pages/AmbassadorLandingPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
+import { SupportGuidePage } from "./pages/SupportGuidePage";
 import { AmbassadorLogin } from "./pages/AmbassadorLogin";
 import { AmbassadorDashboard } from "./pages/AmbassadorDashboard";
 import AmbassadorSetupPassword from "./pages/AmbassadorSetupPassword";
@@ -87,6 +88,7 @@ function MainRouter() {
   else if (currentRoute === "/faq") page = <FaqPage onNavigate={navigate} />;
   else if (currentRoute === "/audit") page = <AuditPage onNavigate={navigate} />;
   else if (currentRoute === "/confidentialite") page = <PrivacyPage onNavigate={navigate} />;
+  else if (currentRoute === "/support") page = <SupportGuidePage onNavigate={navigate} />;
   else if (currentRoute === "/demo") page = <DemoDashboardPage onNavigate={navigate} />;
   else if (currentRoute === "/ressources") page = <PromptLibraryPage onNavigate={navigate} />;
   else if (currentRoute.startsWith("/r/")) {

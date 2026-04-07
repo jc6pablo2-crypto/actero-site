@@ -54,10 +54,10 @@ export const Footer = ({ onNavigate }) => {
             <HelpCircle className="w-3.5 h-3.5" /> FAQ
           </button>
           <button
-            onClick={() => alert("Page à venir prochainement !")}
+            onClick={() => onNavigate("/support")}
             className="hover:text-[#262626] transition-colors"
           >
-            Contact
+            Support
           </button>
           <button
             onClick={() => alert("Page à venir prochainement !")}
