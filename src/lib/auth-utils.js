@@ -8,27 +8,50 @@ import { supabase } from './supabase'
 export const fetchUserRole = async (userId) => {
   if (!supabase) return "client";
   try {
-    // 1. Try profiles.role first
-    const { data: profile, error: profileErr } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", userId)
-      .maybeSingle();
+    // Get the user's email to check if they're a real Actero admin
+    const { data: { user } } = await supabase.auth.getUser();
+    const email = user?.email || '';
 
-    if (!profileErr && profile && profile.role) {
-      return profile.role; // 'admin' or 'client'
+    // Real Actero admins: must have @actero.fr email OR be in admin_users table
+    // This prevents client team members with role='admin' in client_users
+    // from being redirected to the Actero admin dashboard
+    if (email.endsWith('@actero.fr')) {
+      return "admin";
     }
 
-    // 2. Fallback: check admin_users table
+    // Check admin_users table (for non-@actero.fr admins like Pablo)
     const { data: adminRow } = await supabase
       .from("admin_users")
       .select("user_id")
       .eq("user_id", userId)
       .maybeSingle();
 
-    return adminRow ? "admin" : "client";
+    if (adminRow) return "admin";
+
+    // Check profiles table but ONLY trust 'admin' role if also in admin_users
+    // (profiles.role = 'admin' alone is not enough — it could be stale)
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (profile?.role === 'admin') {
+      // Double-check: is this user really an admin?
+      // If they're in client_users, they're a client, not an admin
+      const { data: clientLink } = await supabase
+        .from("client_users")
+        .select("client_id")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (clientLink) return "client"; // They're a client team member, not an Actero admin
+      return "admin";
+    }
+
+    return profile?.role || "client";
   } catch (err) {
     console.error("[fetchUserRole] Error:", err);
-    return "client"; // Safe default
+    return "client";
   }
 };
