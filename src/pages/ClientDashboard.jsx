@@ -25,6 +25,7 @@ import {
   Sparkles,
   Menu,
   UserCheck,
+  Users,
   Phone,
   CalendarCheck,
   ShoppingCart,
@@ -64,6 +65,7 @@ import { AutoDiagnostic } from '../components/client/AutoDiagnostic'
 import { GuardrailsEditor } from '../components/client/GuardrailsEditor'
 import { PromptEditor } from '../components/client/PromptEditor'
 import { ConversationSimulator } from '../components/client/ConversationSimulator'
+import { TeamManager, canAccessTab } from '../components/client/TeamManager'
 import { ClientEscalationsView } from '../components/client/ClientEscalationsView'
 import { ClientSatisfactionScore, SatisfactionKPI } from '../components/client/ClientSatisfactionScore'
 
@@ -176,6 +178,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/support") return "support";
     if (route === "/client/referral") return "referral";
     if (route === "/client/integrations") return "integrations";
+    if (route === "/client/team") return "team";
     if (route === "/client/agent-config") return "agent-config";
     if (route === "/client/simulator") return "simulator";
     if (route === "/client/guardrails") return "guardrails";
@@ -201,7 +204,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       // Try via client_users table first (invited users)
       const { data: link } = await supabase
         .from("client_users")
-        .select("client_id")
+        .select("client_id, role")
         .eq("user_id", session.user.id)
         .maybeSingle();
 
@@ -212,7 +215,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           .eq("id", link.client_id)
           .single();
         if (error && error.code !== "PGRST116") throw error;
-        return data;
+        return { ...data, _userRole: link.role || 'owner' };
       }
 
       // Fallback: owner_user_id (legacy / owner accounts)
@@ -222,7 +225,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         .eq("owner_user_id", session.user.id)
         .single();
       if (error && error.code !== "PGRST116") throw error;
-      return data;
+      return { ...data, _userRole: 'owner' };
     },
     enabled: !!supabase,
   });
@@ -434,9 +437,25 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { id: 'knowledge', label: 'Base de connaissances', icon: BookOpen },
     { id: 'support', label: 'Support', icon: MessageSquare },
     { type: 'section', label: 'Compte' },
+    { id: 'team', label: 'Equipe', icon: Users },
     { id: 'referral', label: 'Parrainage', icon: Gift },
     { id: 'profile', label: 'Mon Profil', icon: User },
   ];
+
+  const userRole = currentClient?._userRole || 'owner';
+
+  // Filter sidebar items based on user role
+  const filteredSidebarItems = sidebarItems.filter(item => {
+    if (item.type === 'section') return true; // keep section headers
+    return canAccessTab(userRole, item.id);
+  }).filter((item, i, arr) => {
+    // Remove section headers with no items after them
+    if (item.type === 'section') {
+      const nextItem = arr[i + 1];
+      return nextItem && nextItem.type !== 'section';
+    }
+    return true;
+  });
 
   const isLoading = clientLoading || metricsLoading || dailyMetricsLoading;
   const isLight = theme === "light";
@@ -458,7 +477,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       <div className="hidden md:block">
         <Sidebar 
           title="Actero OS"
-          items={sidebarItems}
+          items={filteredSidebarItems}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           onLogout={onLogout}
@@ -481,7 +500,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             >
               <Sidebar 
                 title="Actero OS"
-                items={sidebarItems}
+                items={filteredSidebarItems}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 onLogout={onLogout}
@@ -507,6 +526,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               {activeTab === "integrations" && "Intégrations"}
               {activeTab === "agent-config" && "Agent IA"}
               {activeTab === "simulator" && "Simulateur"}
+              {activeTab === "team" && "Equipe"}
               {activeTab === "guardrails" && "Garde-fous"}
               {activeTab === "escalations" && "Escalades"}
             </h1>
@@ -764,6 +784,10 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               clientType={currentClient?.client_type}
               theme={theme}
             />
+          )}
+
+          {activeTab === "team" && (
+            <TeamManager clientId={currentClient?.id} />
           )}
 
           {activeTab === "guardrails" && (
