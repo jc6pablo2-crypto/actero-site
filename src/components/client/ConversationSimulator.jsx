@@ -88,7 +88,7 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
     } catch (err) {
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: "Erreur: impossible de generer la reponse. Verifiez que GEMINI_API_KEY est configure.",
+        content: "Erreur: impossible de generer la reponse. Verifiez que ANTHROPIC_API_KEY est configure sur Vercel.",
         error: true,
       }])
     }
