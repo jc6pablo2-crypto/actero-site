@@ -63,6 +63,44 @@ import { AutoDiagnostic } from '../components/client/AutoDiagnostic'
 import { ClientEscalationsView } from '../components/client/ClientEscalationsView'
 import { ClientSatisfactionScore, SatisfactionKPI } from '../components/client/ClientSatisfactionScore'
 
+const FeedbackButtons = ({ eventId, currentFeedback, supabase }) => {
+  const [feedback, setFeedback] = useState(currentFeedback || null);
+  const [saving, setSaving] = useState(false);
+
+  const handleFeedback = async (value) => {
+    if (saving) return;
+    const newValue = feedback === value ? null : value;
+    setSaving(true);
+    setFeedback(newValue);
+    try {
+      await supabase
+        .from('automation_events')
+        .update({ feedback: newValue, feedback_at: newValue ? new Date().toISOString() : null })
+        .eq('id', eventId);
+    } catch {}
+    setSaving(false);
+  };
+
+  return (
+    <div className="flex items-center gap-0.5 flex-shrink-0">
+      <button
+        onClick={(e) => { e.stopPropagation(); handleFeedback('positive'); }}
+        className={`p-1 rounded transition-colors ${feedback === 'positive' ? 'text-[#003725] bg-emerald-50' : 'text-gray-300 hover:text-[#003725] hover:bg-emerald-50'}`}
+        title="Bonne reponse"
+      >
+        <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" /></svg>
+      </button>
+      <button
+        onClick={(e) => { e.stopPropagation(); handleFeedback('negative'); }}
+        className={`p-1 rounded transition-colors ${feedback === 'negative' ? 'text-red-500 bg-red-50' : 'text-gray-300 hover:text-red-500 hover:bg-red-50'}`}
+        title="Mauvaise reponse"
+      >
+        <svg className="w-3.5 h-3.5 rotate-180" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" /></svg>
+      </button>
+    </div>
+  );
+};
+
 const LiveActivityWidget = ({ supabase, setActiveTab, isLight }) => {
   const { events, isConnected } = useLiveActivityFeed(supabase);
   const recent = events.slice(0, 6);
@@ -98,6 +136,7 @@ const LiveActivityWidget = ({ supabase, setActiveTab, isLight }) => {
               <div key={event.id || i} className="flex items-center gap-3 px-5 py-3 hover:bg-[#F9F7F1] transition-colors">
                 <span className="text-lg flex-shrink-0">{formatted.icon}</span>
                 <p className="text-sm text-[#262626] flex-1 truncate">{formatted.message}</p>
+                <FeedbackButtons eventId={event.id} currentFeedback={event.feedback} supabase={supabase} />
                 <span className="text-[10px] text-[#716D5C] flex-shrink-0 whitespace-nowrap">
                   {formatRelativeTime(event.created_at)}
                 </span>
