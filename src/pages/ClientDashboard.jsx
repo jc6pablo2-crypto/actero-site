@@ -68,6 +68,7 @@ import { ClientReferralView } from '../components/client/ClientReferralView'
 import { ClientKnowledgeBaseView } from '../components/client/ClientKnowledgeBaseView'
 import { ClientIntegrationsView } from '../components/client/ClientIntegrationsView'
 import { OnboardingChecklist } from '../components/client/OnboardingChecklist'
+import { OnboardingWizard } from '../components/client/OnboardingWizard'
 import { AutoDiagnostic } from '../components/client/AutoDiagnostic'
 import { GuardrailsEditor } from '../components/client/GuardrailsEditor'
 import { PromptEditor } from '../components/client/PromptEditor'
@@ -648,7 +649,16 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 </div>
               )}
 
-              {/* Onboarding Checklist */}
+              {/* Onboarding Wizard (replaces old checklist) */}
+              <OnboardingWizard
+                clientId={currentClient?.id}
+                clientType={currentClient?.client_type}
+                setActiveTab={setActiveTab}
+                theme={theme}
+                onNavigate={onNavigate}
+              />
+
+              {/* Legacy Onboarding Checklist (shown if wizard dismissed) */}
               <OnboardingChecklist
                 clientId={currentClient?.id}
                 clientType={currentClient?.client_type}
