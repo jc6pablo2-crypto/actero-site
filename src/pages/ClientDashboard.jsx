@@ -86,6 +86,7 @@ import { SupplierNegotiationView } from '../components/client/SupplierNegotiatio
 import { VoiceReportView } from '../components/client/VoiceReportView'
 import { NotificationCenterView } from '../components/client/NotificationCenterView'
 import { AgentImprovementWidget } from '../components/client/AgentImprovementWidget'
+import { ChannelsView } from '../components/client/ChannelsView'
 
 const FeedbackButtons = ({ eventId, currentFeedback, supabase }) => {
   const [feedback, setFeedback] = useState(currentFeedback || null);
@@ -210,6 +211,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/supplier-negotiation") return "supplier-negotiation";
     if (route === "/client/voice-report") return "voice-report";
     if (route === "/client/notifications") return "notifications";
+    if (route === "/client/channels") return "channels";
     if (route === "/client/profile") return "profile";
     return "overview";
   };
@@ -453,6 +455,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const sidebarItems = [
     { id: 'overview', label: 'Accueil', icon: LayoutDashboard },
     { id: 'activity', label: 'Activite', icon: Activity },
+    { id: 'channels', label: 'Mes Canaux', icon: Plug },
 
     { type: 'section', label: 'Mon Agent' },
     { id: 'agent-config', label: 'Configurer', icon: Sparkles },
@@ -589,6 +592,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               {activeTab === "supplier-negotiation" && "Negociation Fournisseur"}
               {activeTab === "voice-report" && "Rapports audio"}
               {activeTab === "notifications" && "Notifications"}
+              {activeTab === "channels" && "Mes Canaux"}
             </h1>
 
             <div className="hidden lg:flex items-center gap-3">
@@ -903,6 +907,10 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "notifications" && (
             <NotificationCenterView clientId={currentClient?.id} theme={theme} />
+          )}
+
+          {activeTab === "channels" && (
+            <ChannelsView clientId={currentClient?.id} theme={theme} />
           )}
 
         </main>
