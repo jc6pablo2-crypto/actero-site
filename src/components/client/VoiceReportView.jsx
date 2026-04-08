@@ -138,12 +138,35 @@ export function VoiceReportView({ clientId, theme }) {
       setIsPlaying(true)
       setProgress(0)
     } else {
-      // Fallback for mock reports
-      setPlayingId(reportId)
-      setIsPlaying(true)
-      setProgress(0)
+      // No real audio — trigger generation
+      handleGenerate()
     }
   }
+
+  // Derive display data: use real reports if available, else mock
+  const latestReport = reports.length > 0
+    ? {
+        id: reports[0].id,
+        title: `Semaine du ${new Date(reports[0].week_start).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })} au ${new Date(reports[0].week_end).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+        duration: reports[0].report_text ? `~${Math.ceil(reports[0].report_text.split(' ').length / 2.5)} sec` : '1 min 30 sec',
+        durationSeconds: reports[0].report_text ? Math.ceil(reports[0].report_text.split(' ').length / 2.5) : 90,
+        generatedAt: `Genere le ${new Date(reports[0].generated_at).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} a ${new Date(reports[0].generated_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`,
+        highlights: reports[0].report_text
+          ? reports[0].report_text.split('.').filter(s => s.trim().length > 10).slice(0, 4).map(s => s.trim())
+          : LATEST_REPORT.highlights,
+        hasAudio: !!reports[0].audio_base64,
+      }
+    : { ...LATEST_REPORT, hasAudio: false }
+
+  const previousReports = reports.length > 1
+    ? reports.slice(1).map(r => ({
+        id: r.id,
+        title: `Semaine du ${new Date(r.week_start).toLocaleDateString('fr-FR', { day: 'numeric' })} au ${new Date(r.week_end).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}`,
+        duration: r.report_text ? `~${Math.ceil(r.report_text.split(' ').length / 2.5)} sec` : '1 min 30 sec',
+        durationSeconds: r.report_text ? Math.ceil(r.report_text.split(' ').length / 2.5) : 90,
+        hasAudio: !!r.audio_base64,
+      }))
+    : PREVIOUS_REPORTS.map(r => ({ ...r, hasAudio: false }))
 
   const toggleContent = (id) => {
     setContentChecks(prev => ({ ...prev, [id]: !prev[id] }))
@@ -231,10 +254,10 @@ export function VoiceReportView({ clientId, theme }) {
             </div>
             <span className="text-xs text-white/60 flex items-center gap-1">
               <Clock className="w-3 h-3" />
-              {LATEST_REPORT.duration}
+              {latestReport.duration}
             </span>
           </div>
-          <h3 className="text-lg font-semibold text-white mt-2">{LATEST_REPORT.title}</h3>
+          <h3 className="text-lg font-semibold text-white mt-2">{latestReport.title}</h3>
         </div>
 
         <div className="p-6 space-y-5">
@@ -242,10 +265,10 @@ export function VoiceReportView({ clientId, theme }) {
           <div className="bg-[#F5F5F0] rounded-xl p-4 space-y-3">
             <div className="flex items-center gap-4">
               <button
-                onClick={() => handlePlay(LATEST_REPORT.id)}
+                onClick={() => handlePlay(latestReport.id)}
                 className="w-11 h-11 rounded-full bg-[#0F5F35] text-white flex items-center justify-center hover:bg-[#003725] transition-colors flex-shrink-0"
               >
-                {playingId === LATEST_REPORT.id && isPlaying ? (
+                {playingId === latestReport.id && isPlaying ? (
                   <Pause className="w-5 h-5" />
                 ) : (
                   <Play className="w-5 h-5 ml-0.5" />
@@ -257,17 +280,17 @@ export function VoiceReportView({ clientId, theme }) {
                     className="h-full bg-[#0F5F35] rounded-full"
                     initial={{ width: '0%' }}
                     animate={{
-                      width: playingId === LATEST_REPORT.id && isPlaying ? '100%' : `${progress}%`,
+                      width: playingId === latestReport.id && isPlaying ? '100%' : `${progress}%`,
                     }}
                     transition={
-                      playingId === LATEST_REPORT.id && isPlaying
-                        ? { duration: LATEST_REPORT.durationSeconds, ease: 'linear' }
+                      playingId === latestReport.id && isPlaying
+                        ? { duration: latestReport.durationSeconds, ease: 'linear' }
                         : { duration: 0.2 }
                     }
                   />
                 </div>
                 <div className="flex justify-between text-[11px] text-[#716D5C]">
-                  <span>{formatProgress(LATEST_REPORT.durationSeconds, playingId === LATEST_REPORT.id && isPlaying ? 0 : progress)}</span>
+                  <span>{formatProgress(latestReport.durationSeconds, playingId === latestReport.id && isPlaying ? 0 : progress)}</span>
                   <span>
                     {(() => {
                       const voice = VOICE_OPTIONS.find(v => v.id === selectedVoice)
@@ -285,7 +308,7 @@ export function VoiceReportView({ clientId, theme }) {
               Points cles
             </p>
             <ul className="space-y-2">
-              {LATEST_REPORT.highlights.map((highlight, idx) => (
+              {latestReport.highlights.map((highlight, idx) => (
                 <motion.li
                   key={idx}
                   initial={{ opacity: 0, x: -10 }}
@@ -302,7 +325,7 @@ export function VoiceReportView({ clientId, theme }) {
 
           <p className="text-xs text-[#716D5C] flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5" />
-            {LATEST_REPORT.generatedAt}
+            {latestReport.generatedAt}
           </p>
         </div>
       </motion.div>
@@ -318,7 +341,7 @@ export function VoiceReportView({ clientId, theme }) {
           Rapports precedents
         </p>
         <div className="space-y-3">
-          {PREVIOUS_REPORTS.map((report, idx) => (
+          {previousReports.map((report, idx) => (
             <motion.div
               key={report.id}
               initial={{ opacity: 0, y: 10 }}
