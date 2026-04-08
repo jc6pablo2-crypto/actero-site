@@ -5,6 +5,7 @@ import {
   Wand2, Save, Loader2, CheckCircle2, AlertCircle,
   Globe, MessageCircle, ShieldAlert, Package, Sparkles,
   ShoppingBag, Crown, Building2, Headphones, Zap, ChevronDown,
+  Upload, Link2, FileText, Plus,
 } from 'lucide-react'
 import { useToast } from '../ui/Toast'
 import { supabase } from '../../lib/supabase'
@@ -108,6 +109,68 @@ export const PromptEditor = ({ clientId, theme }) => {
   const [error, setError] = useState(null)
   const [showTemplates, setShowTemplates] = useState(false)
   const [activeTemplate, setActiveTemplate] = useState(null)
+  const [importUrl, setImportUrl] = useState('')
+  const [importing, setImporting] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [kbEntries, setKbEntries] = useState([])
+
+  // Fetch existing KB entries count
+  const { data: kbCount = 0 } = useQuery({
+    queryKey: ['kb-count', clientId],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from('client_knowledge_base')
+        .select('*', { count: 'exact', head: true })
+        .eq('client_id', clientId)
+      return count || 0
+    },
+    enabled: !!clientId,
+  })
+
+  const handleImportUrl = async () => {
+    if (!importUrl.trim()) return
+    setImporting(true)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/knowledge/import-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ url: importUrl.trim(), client_id: clientId }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Erreur')
+      toast.success(`${data.imported} entrees importees`)
+      setImportUrl('')
+      queryClient.invalidateQueries({ queryKey: ['kb-count', clientId] })
+    } catch (err) {
+      toast.error(err.message)
+    }
+    setImporting(false)
+  }
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 4 * 1024 * 1024) { toast.error('Fichier trop volumineux (max 4 Mo)'); return }
+    setUploading(true)
+    try {
+      const text = await file.text()
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/knowledge/import-file', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ content: text.substring(0, 50000), filename: file.name, client_id: clientId }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Erreur')
+      toast.success(`${data.imported} entrees importees depuis "${file.name}"`)
+      queryClient.invalidateQueries({ queryKey: ['kb-count', clientId] })
+    } catch (err) {
+      toast.error(err.message)
+    }
+    setUploading(false)
+    e.target.value = ''
+  }
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ['client-prompt-settings', clientId],
@@ -373,6 +436,62 @@ export const PromptEditor = ({ clientId, theme }) => {
           placeholder="Ex: Toujours proposer un code promo de 10% si le client hesite. Mentionner le programme de fidelite dans les reponses aux clients reguliers."
           className={inputClass + " resize-y"}
         />
+      </div>
+
+      {/* Base de connaissances — Import */}
+      <div className="bg-white border border-gray-200 rounded-2xl p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <FileText className="w-4 h-4 text-[#003725]" />
+            <h3 className="text-sm font-bold text-[#262626]">Base de connaissances</h3>
+          </div>
+          {kbCount > 0 && (
+            <span className="text-xs text-[#716D5C] bg-[#F9F7F1] px-2 py-0.5 rounded-full">{kbCount} entree{kbCount > 1 ? 's' : ''}</span>
+          )}
+        </div>
+        <p className="text-xs text-[#716D5C]">Importez vos FAQ, politiques et infos produits. L'agent les utilisera pour repondre aux clients.</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {/* URL Import */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider flex items-center gap-1">
+              <Link2 className="w-3 h-3" /> Importer depuis une URL
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="url"
+                value={importUrl}
+                onChange={(e) => setImportUrl(e.target.value)}
+                placeholder="https://votre-site.com/faq"
+                className={inputClass}
+              />
+              <button
+                onClick={handleImportUrl}
+                disabled={!importUrl.trim() || importing}
+                className="px-4 py-3 bg-[#0F5F35] text-white rounded-xl text-sm font-bold hover:bg-[#003725] disabled:opacity-50 transition-colors flex-shrink-0"
+              >
+                {importing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
+              </button>
+            </div>
+            <p className="text-[10px] text-[#716D5C]">L'IA scrape la page et genere des FAQ automatiquement</p>
+          </div>
+
+          {/* File Upload */}
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider flex items-center gap-1">
+              <Upload className="w-3 h-3" /> Importer un fichier
+            </label>
+            <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-[#0F5F35]/30 hover:bg-[#F9F7F1] transition-all">
+              {uploading ? (
+                <><Loader2 className="w-4 h-4 animate-spin text-[#716D5C]" /><span className="text-sm text-[#716D5C]">Analyse...</span></>
+              ) : (
+                <><Upload className="w-4 h-4 text-[#716D5C]" /><span className="text-sm text-[#716D5C]">PDF, TXT, CSV — max 4 Mo</span></>
+              )}
+              <input type="file" accept=".pdf,.txt,.csv,.md,.doc,.docx" onChange={handleFileUpload} disabled={uploading} className="hidden" />
+            </label>
+            <p className="text-[10px] text-[#716D5C]">L'IA extrait les informations utiles du fichier</p>
+          </div>
+        </div>
       </div>
 
       {/* Save */}

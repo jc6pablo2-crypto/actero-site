@@ -467,7 +467,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
     { type: 'section', label: 'Connexions' },
     { id: 'integrations', label: 'Integrations', icon: Plug },
-    { id: 'knowledge', label: 'Base de savoir', icon: BookOpen },
 
     { type: 'expandable', label: 'Avance', icon: Database, defaultOpen: false, children: [
       { id: 'multi-agent', label: 'Multi-Agents', icon: Network },
