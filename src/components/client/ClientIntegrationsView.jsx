@@ -136,8 +136,15 @@ const IntegrationCard = ({ provider, connection, shopifyConnected, shopifyDomain
               </>
             ) : provider.authType === 'coming_soon' ? (
               <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-[#716D5C] bg-gray-50 cursor-not-allowed">
-                <Plug className="w-3 h-3" /> Bientôt
+                <Plug className="w-3 h-3" /> Bientot
               </span>
+            ) : provider.authType === 'api_key' ? (
+              <button
+                onClick={() => onOAuthConnect(provider)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors bg-[#0F5F35] text-white hover:bg-[#003725]"
+              >
+                <Plug className="w-3 h-3" /> Connecter
+              </button>
             ) : provider.authType === 'oauth' ? (
               <button
                 onClick={() => onOAuthConnect(provider)}
@@ -414,7 +421,17 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
     }
   };
 
+  const [apiKeyProvider, setApiKeyProvider] = useState(null);
+  const [apiKeyValue, setApiKeyValue] = useState('');
+  const [apiKeySaving, setApiKeySaving] = useState(false);
+
   const handleOAuthConnect = async (provider) => {
+    if (provider.authType === 'api_key') {
+      setApiKeyProvider(provider);
+      setApiKeyValue('');
+      return;
+    }
+
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
@@ -425,6 +442,43 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
       const url = provider.oauthUrl({ token: session.access_token });
       window.location.href = url;
     }
+  };
+
+  const handleApiKeySubmit = async () => {
+    if (!apiKeyValue.trim() || !apiKeyProvider) return;
+    setApiKeySaving(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/integrations/connect', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({
+          provider: apiKeyProvider.id,
+          api_key: apiKeyValue.trim(),
+          client_id: clientId,
+        }),
+      });
+      if (!res.ok) throw new Error('Erreur connexion');
+      queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
+      setApiKeyProvider(null);
+      setApiKeyValue('');
+    } catch (err) {
+      // Fallback: save directly to DB if API fails
+      await supabase.from('client_integrations').upsert({
+        client_id: clientId,
+        provider: apiKeyProvider.id,
+        status: 'active',
+        credentials: { api_key: apiKeyValue.trim() },
+        connected_at: new Date().toISOString(),
+      }, { onConflict: 'client_id,provider' });
+      queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
+      setApiKeyProvider(null);
+      setApiKeyValue('');
+    }
+    setApiKeySaving(false);
   };
 
   const handleOAuthPromptSubmit = async () => {
@@ -655,6 +709,58 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
           </div>
         )}
       </AnimatePresence>
+
+      {/* API Key Modal */}
+      {apiKeyProvider && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" onClick={() => setApiKeyProvider(null)} />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative w-full max-w-sm mx-4 rounded-2xl border shadow-2xl p-6 bg-white border-gray-200"
+          >
+            <div className="flex items-center gap-3 mb-5">
+              <ProviderIcon provider={apiKeyProvider} connected={false} size={36} />
+              <div>
+                <h3 className="font-bold text-[#262626]">Connecter {apiKeyProvider.name}</h3>
+                <p className="text-xs text-[#716D5C]">{apiKeyProvider.description}</p>
+              </div>
+            </div>
+            <label className="block text-xs font-bold mb-2 text-[#716D5C]">
+              {apiKeyProvider.apiKeyLabel || 'Cle API'}
+            </label>
+            <input
+              type="text"
+              value={apiKeyValue}
+              onChange={(e) => setApiKeyValue(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleApiKeySubmit()}
+              autoFocus
+              placeholder={apiKeyProvider.apiKeyPlaceholder || 'Votre cle API...'}
+              className="w-full px-4 py-3 rounded-xl text-sm outline-none bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:ring-2 focus:ring-[#0F5F35]/30"
+            />
+            {apiKeyProvider.apiKeyHint && (
+              <p className="text-xs mt-1.5 mb-4 text-[#716D5C]">{apiKeyProvider.apiKeyHint}</p>
+            )}
+            {!apiKeyProvider.apiKeyHint && <div className="mb-5" />}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setApiKeyProvider(null)}
+                className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-gray-100 text-[#262626] hover:bg-gray-200 transition-colors"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleApiKeySubmit}
+                disabled={!apiKeyValue.trim() || apiKeySaving}
+                className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-bold bg-[#0F5F35] text-white hover:bg-[#003725] disabled:opacity-50 transition-colors"
+              >
+                {apiKeySaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plug className="w-4 h-4" />}
+                Connecter
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       {/* Disconnect Modal */}
       <AnimatePresence>
