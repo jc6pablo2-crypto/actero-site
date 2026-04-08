@@ -40,13 +40,8 @@ export function buildSystemPrompt(config) {
   }
 
   // Brand context (compiled knowledge base summary)
-  if (settings.brand_context || client.brand_context) {
-    prompt += `\n\nCONTEXTE DE LA MARQUE:\n${settings.brand_context || client.brand_context}`
-  }
-
-  // Agency context (for real estate)
-  if (client.agency_context) {
-    prompt += `\n\nCONTEXTE DE L'AGENCE:\n${client.agency_context}`
+  if (settings.brand_context) {
+    prompt += `\n\nCONTEXTE DE LA MARQUE:\n${settings.brand_context}`
   }
 
   // Guardrails

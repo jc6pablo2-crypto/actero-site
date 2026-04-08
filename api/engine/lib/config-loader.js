@@ -7,7 +7,7 @@ export async function loadClientConfig(supabase, clientId) {
   const [clientRes, settingsRes, guardrailsRes, kbRes, integrationsRes, thresholdsRes] = await Promise.all([
     supabase
       .from('clients')
-      .select('id, brand_name, client_type, brand_context, agency_context, contact_email')
+      .select('id, brand_name, client_type, contact_email')
       .eq('id', clientId)
       .single(),
 
