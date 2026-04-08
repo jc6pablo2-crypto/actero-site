@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   BookOpen, FileText, HelpCircle, Package, Palette, CalendarClock,
   Plus, Save, Trash2, GripVertical, Loader2, CheckCircle2, AlertCircle,
-  ChevronRight, Clock, X
+  ChevronRight, Clock, X, Globe, Link2, ShoppingBag, Zap, BarChart3,
+  MessageCircle,
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 
@@ -316,9 +317,81 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
   const [isCreating, setIsCreating] = useState(false)
   const [toast, setToast] = useState(null)
 
+  const [importUrl, setImportUrl] = useState('')
+  const [importing, setImporting] = useState(false)
+  const [showImport, setShowImport] = useState(false)
+  const [showQA, setShowQA] = useState(false)
+  const [qaQuestion, setQaQuestion] = useState('')
+  const [qaAnswer, setQaAnswer] = useState('')
+
   const showToast = (message, type = 'success') => {
     setToast({ message, type })
     setTimeout(() => setToast(null), 4000)
+  }
+
+  const handleImportUrl = async () => {
+    if (!importUrl.trim()) return
+    setImporting(true)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      // Use Claude to extract FAQ content from the URL description
+      const res = await fetch('/api/simulator-chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({
+          prompt: `Genere 5-8 paires question/reponse FAQ a partir de cette URL: ${importUrl}. Reponds UNIQUEMENT en JSON valide: [{"question": "...", "answer": "..."}]`,
+          systemPrompt: 'Tu es un extracteur de FAQ. Genere des paires question/reponse pertinentes pour un agent de support client. JSON uniquement, pas de markdown.',
+          history: [],
+        }),
+      })
+      const data = await res.json()
+      if (res.ok && data.text) {
+        try {
+          const faqs = JSON.parse(data.text)
+          // Insert each FAQ as a knowledge base entry
+          for (const faq of faqs) {
+            await supabase.from('client_knowledge_base').insert({
+              client_id: clientId,
+              category: 'faq',
+              title: faq.question,
+              content: faq.answer,
+              sort_order: entries.length,
+            })
+          }
+          await syncBrandContext(clientId)
+          queryClient.invalidateQueries({ queryKey: ['knowledge-base', clientId] })
+          showToast(`${faqs.length} FAQ importees depuis l'URL`)
+          setImportUrl('')
+          setShowImport(false)
+          setSelectedCategory('faq')
+        } catch {
+          showToast('Erreur lors du parsing des FAQ', 'error')
+        }
+      }
+    } catch (err) {
+      showToast('Erreur lors de l\'import', 'error')
+    }
+    setImporting(false)
+  }
+
+  const handleAddQA = async () => {
+    if (!qaQuestion.trim() || !qaAnswer.trim()) return
+    await supabase.from('client_knowledge_base').insert({
+      client_id: clientId,
+      category: 'faq',
+      title: qaQuestion.trim(),
+      content: qaAnswer.trim(),
+      sort_order: entries.length,
+    })
+    await syncBrandContext(clientId)
+    queryClient.invalidateQueries({ queryKey: ['knowledge-base', clientId] })
+    showToast('FAQ ajoutee')
+    setQaQuestion('')
+    setQaAnswer('')
+    setSelectedCategory('faq')
   }
 
   const { data: entries = [], isLoading } = useQuery({
@@ -440,6 +513,129 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
             Derniere synchro : {formatTimeAgo(lastSync)}
           </div>
         )}
+      </div>
+
+      {/* Coverage Indicator */}
+      {entries.length > 0 && (
+        <div className="bg-white border border-gray-200 rounded-2xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-[#0F5F35]" />
+              <span className="text-sm font-bold text-[#262626]">Couverture de votre base</span>
+            </div>
+            <span className="text-xs text-[#716D5C]">{entries.length} entree{entries.length > 1 ? 's' : ''}</span>
+          </div>
+          <div className="grid grid-cols-5 gap-2">
+            {CATEGORIES.map(cat => {
+              const count = entries.filter(e => e.category === cat.id).length
+              const hasContent = count > 0
+              return (
+                <div key={cat.id} className={`text-center p-2 rounded-xl border ${hasContent ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-gray-100'}`}>
+                  <cat.icon className={`w-4 h-4 mx-auto mb-1 ${hasContent ? 'text-emerald-600' : 'text-gray-300'}`} />
+                  <p className={`text-[10px] font-bold ${hasContent ? 'text-emerald-700' : 'text-gray-400'}`}>{cat.label}</p>
+                  <p className={`text-[10px] ${hasContent ? 'text-emerald-600' : 'text-gray-300'}`}>{count} entree{count > 1 ? 's' : ''}</p>
+                </div>
+              )
+            })}
+          </div>
+          {entries.length < 5 && (
+            <p className="text-xs text-amber-600 mt-3 flex items-center gap-1">
+              <AlertCircle className="w-3 h-3" />
+              Ajoutez plus de contenu pour ameliorer les reponses de votre agent
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Quick Actions: Import URL + Q&A Builder */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* URL Import */}
+        <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+          <button
+            onClick={() => { setShowImport(!showImport); setShowQA(false) }}
+            className="w-full p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
+          >
+            <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center">
+              <Globe className="w-4 h-4 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-[#262626]">Importer depuis une URL</p>
+              <p className="text-[11px] text-[#716D5C]">Collez un lien vers votre FAQ ou site</p>
+            </div>
+          </button>
+          {showImport && (
+            <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} className="overflow-hidden border-t border-gray-100">
+              <div className="p-4 space-y-3">
+                <input
+                  type="url"
+                  value={importUrl}
+                  onChange={(e) => setImportUrl(e.target.value)}
+                  placeholder="https://votre-site.com/faq"
+                  className="w-full px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-1 focus:ring-blue-300"
+                />
+                <button
+                  onClick={handleImportUrl}
+                  disabled={!importUrl.trim() || importing}
+                  className="w-full py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+                >
+                  {importing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
+                  {importing ? 'Import en cours...' : 'Generer les FAQ'}
+                </button>
+                <p className="text-[10px] text-[#716D5C]">L'IA va analyser la page et generer des paires Question/Reponse automatiquement</p>
+              </div>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Q&A Builder */}
+        <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
+          <button
+            onClick={() => { setShowQA(!showQA); setShowImport(false) }}
+            className="w-full p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
+          >
+            <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center">
+              <MessageCircle className="w-4 h-4 text-emerald-600" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-[#262626]">Ajouter une FAQ rapide</p>
+              <p className="text-[11px] text-[#716D5C]">Question → Reponse en 30 secondes</p>
+            </div>
+          </button>
+          {showQA && (
+            <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} className="overflow-hidden border-t border-gray-100">
+              <div className="p-4 space-y-3">
+                <div>
+                  <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">Question du client</label>
+                  <input
+                    type="text"
+                    value={qaQuestion}
+                    onChange={(e) => setQaQuestion(e.target.value)}
+                    placeholder="Ex: Quels sont vos delais de livraison ?"
+                    className="mt-1 w-full px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-1 focus:ring-emerald-300"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">Reponse attendue</label>
+                  <textarea
+                    value={qaAnswer}
+                    onChange={(e) => setQaAnswer(e.target.value)}
+                    placeholder="La livraison est gratuite a partir de 50€. Delai: 2-5 jours ouvrés..."
+                    rows={3}
+                    className="mt-1 w-full px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-1 focus:ring-emerald-300 resize-none"
+                  />
+                </div>
+                <button
+                  onClick={handleAddQA}
+                  disabled={!qaQuestion.trim() || !qaAnswer.trim()}
+                  className="w-full py-2.5 bg-[#0F5F35] text-white text-sm font-bold rounded-xl hover:bg-[#003725] disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-4 h-4" />
+                  Ajouter la FAQ
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </div>
       </div>
 
       {/* Knowledge Gaps Detection */}
