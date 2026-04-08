@@ -124,15 +124,17 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
   const { data: memoryStats } = useQuery({
     queryKey: ['memory-stats', clientId],
     queryFn: async () => {
-      const { count: customerCount } = await supabase
-        .from('client_customer_memory')
-        .select('customer_email', { count: 'exact', head: true })
-        .eq('client_id', clientId)
       const { count: dataPoints } = await supabase
         .from('client_customer_memory')
-        .select('id', { count: 'exact', head: true })
+        .select('*', { count: 'exact', head: true })
         .eq('client_id', clientId)
-      return { customers: customerCount || 0, dataPoints: dataPoints || 0 }
+      // Count distinct customers by grouping
+      const { data: memRows } = await supabase
+        .from('client_customer_memory')
+        .select('customer_email')
+        .eq('client_id', clientId)
+      const uniqueCustomers = new Set((memRows || []).map(r => r.customer_email)).size
+      return { customers: uniqueCustomers, dataPoints: dataPoints || 0 }
     },
     enabled: !!clientId,
   })
