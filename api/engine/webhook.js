@@ -10,6 +10,7 @@
  */
 import { createClient } from '@supabase/supabase-js'
 import { processMessage } from './process.js'
+import { checkRateLimit } from './lib/rate-limiter.js'
 
 const ENGINE_SECRET = process.env.ENGINE_WEBHOOK_SECRET
 const INTERNAL_SECRET = process.env.INTERNAL_API_SECRET
@@ -65,6 +66,12 @@ export default async function handler(req, res) {
 
   if (clientError || !client) {
     return res.status(404).json({ error: 'Client non trouve' })
+  }
+
+  // --- Rate limiting ---
+  const rateCheck = await checkRateLimit(supabase, { clientId: client_id, customerEmail: customer_email })
+  if (!rateCheck.allowed) {
+    return res.status(429).json({ error: rateCheck.reason })
   }
 
   // --- Insert message into queue ---
