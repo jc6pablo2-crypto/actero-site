@@ -89,10 +89,12 @@ async function handleAutoReply(supabase, {
 
     // Also notify via Slack if integration is active (non-blocking)
     if (source !== 'slack' && config.activeIntegrations?.includes('slack')) {
-      sendViaSlack(supabase, {
-        clientId, response, customerEmail, customerName, subject, brandName,
-        isEscalation: false,
-      }).catch(() => {}) // Non-blocking
+      try {
+        sendViaSlack(supabase, {
+          clientId, response, customerEmail, customerName, subject, brandName,
+          isEscalation: false,
+        })
+      } catch {} // Non-blocking
     }
 
   } catch (err) {
@@ -132,10 +134,9 @@ async function handleEscalation(supabase, {
   source, config, processingTimeMs,
 }) {
   // 1. Create escalation ticket
-  await supabase.from('escalation_tickets').insert({
-    client_id: clientId,
-    status: 'pending',
-  }).catch(() => {}) // Non-critical
+  try {
+    await supabase.from('escalation_tickets').insert({ client_id: clientId, status: 'pending' })
+  } catch {} // Non-critical
 
   // 2. Send escalation alert email to client
   const { data: notifPrefs } = await supabase
@@ -172,11 +173,13 @@ async function handleEscalation(supabase, {
 
   // 2b. Send Slack notification if connected
   if (config.activeIntegrations?.includes('slack')) {
-    sendViaSlack(supabase, {
-      clientId, customerEmail, customerName, subject,
-      brandName: config.client?.brand_name || 'Actero',
-      isEscalation: true, escalationReason,
-    }).catch(() => {})
+    try {
+      sendViaSlack(supabase, {
+        clientId, customerEmail, customerName, subject,
+        brandName: config.client?.brand_name || 'Actero',
+        isEscalation: true, escalationReason,
+      })
+    } catch {} // Non-blocking
   }
 
   // 3. Log escalation response
