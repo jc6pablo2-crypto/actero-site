@@ -15,9 +15,11 @@ import { FaqPage } from "./pages/FaqPage";
 import { AuditPage } from "./pages/AuditPage";
 import { DashboardGate } from "./components/auth/DashboardGate"
 import { DemoDashboardPage } from "./components/ui/demo-dashboard";
+import { ProspectDemoPage } from "./pages/ProspectDemoPage";
 import { PromptLibraryPage } from "./components/ui/prompt-library-page";
 import { StartPage } from "./pages/StartPage";
 import { SuccessPage } from "./pages/SuccessPage";
+import { ShopifySuccessPage } from "./pages/ShopifySuccessPage";
 import { CancelPage } from "./pages/CancelPage";
 import { ReferralLanding } from "./pages/ReferralLanding";
 import { PartnerLandingPage } from "./pages/PartnerLandingPage";
@@ -95,16 +97,18 @@ function MainRouter() {
   else if (currentRoute === "/mentions-legales") page = <LegalPage onNavigate={navigate} />;
   else if (currentRoute === "/utilisation") page = <TermsPage onNavigate={navigate} />;
   else if (currentRoute === "/demo") page = <DemoDashboardPage onNavigate={navigate} />;
+  else if (currentRoute.startsWith("/demo-prospect")) page = <ProspectDemoPage onNavigate={navigate} />;
   else if (currentRoute === "/ressources") page = <PromptLibraryPage onNavigate={navigate} />;
   else if (currentRoute.startsWith("/r/")) {
     const referralCode = currentRoute.replace("/r/", "");
     page = <ReferralLanding code={referralCode} onNavigate={navigate} />;
   }
   else if (currentRoute.startsWith("/start/")) {
-    const clientSlug = currentRoute.replace("/start/", "");
+    const clientSlug = currentRoute.replace("/start/", "").split("?")[0];
     page = <StartPage clientSlug={clientSlug} />;
   }
   else if (currentRoute === "/success") page = <SuccessPage onNavigate={navigate} />;
+  else if (currentRoute === "/shopify-success") page = <ShopifySuccessPage onNavigate={navigate} />;
   else if (currentRoute === "/cancel") page = <CancelPage onNavigate={navigate} />;
   else if (currentRoute === "/partner") page = <PartnerLandingPage onNavigate={navigate} />;
   else if (currentRoute === "/ambassadeurs") page = <AmbassadorLandingPage onNavigate={navigate} />;
