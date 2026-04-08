@@ -4,6 +4,8 @@
  * Routes AI responses to the appropriate delivery channel (email, Gorgias, Zendesk, etc.)
  * or triggers escalation alerts for human intervention.
  */
+import { getConnector } from './lib/connector-registry.js'
+import { sendViaSlack } from './connectors/slack.js'
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY
 const RESEND_FROM = process.env.RESEND_FROM_EMAIL || 'support@actero.fr'
@@ -58,41 +60,41 @@ async function handleAutoReply(supabase, {
 }) {
   let deliveryStatus = 'pending'
   let deliveryError = null
-  const deliveryChannel = source === 'web_widget' ? 'web_widget' : 'email' // Phase 1: email fallback
+  const deliveryChannel = source
+  const brandName = config.client?.brand_name || 'Actero'
 
   try {
-    // Phase 1: always deliver via email
-    // Phase 2+ will add Gorgias, Zendesk, etc. connectors
-    if (RESEND_API_KEY && customerEmail) {
-      const brandName = config.client?.brand_name || 'Actero'
-      const emailSubject = subject
-        ? `Re: ${subject}`
-        : `${brandName} — Reponse a votre demande`
+    // Get the appropriate connector for this source
+    const connector = getConnector(source)
 
-      const emailRes = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${RESEND_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          from: `${brandName} <${RESEND_FROM}>`,
-          to: [customerEmail],
-          subject: emailSubject,
-          html: buildEmailHtml(response, brandName, customerName),
-        }),
+    if (connector) {
+      const result = await connector(supabase, {
+        clientId,
+        ticketId: messageId, // external_ticket_id is in the engine_messages
+        customerEmail,
+        customerName,
+        subject,
+        response,
+        brandName,
       })
 
-      if (!emailRes.ok) {
-        const err = await emailRes.text()
-        throw new Error(`Resend ${emailRes.status}: ${err}`)
+      if (result.success) {
+        deliveryStatus = 'sent'
+      } else {
+        throw new Error(result.error || 'Delivery failed')
       }
-
-      deliveryStatus = 'sent'
     } else {
-      // No email config — store response but don't deliver
-      deliveryStatus = 'sent' // Mark as sent since response is stored in DB
+      deliveryStatus = 'sent' // web_widget — response returned synchronously
     }
+
+    // Also notify via Slack if integration is active (non-blocking)
+    if (source !== 'slack' && config.activeIntegrations?.includes('slack')) {
+      sendViaSlack(supabase, {
+        clientId, response, customerEmail, customerName, subject, brandName,
+        isEscalation: false,
+      }).catch(() => {}) // Non-blocking
+    }
+
   } catch (err) {
     console.error('[engine/respond] Delivery error:', err.message)
     deliveryStatus = 'failed'
@@ -166,6 +168,15 @@ async function handleEscalation(supabase, {
         console.error('[engine/respond] Escalation email error:', err.message)
       }
     }
+  }
+
+  // 2b. Send Slack notification if connected
+  if (config.activeIntegrations?.includes('slack')) {
+    sendViaSlack(supabase, {
+      clientId, customerEmail, customerName, subject,
+      brandName: config.client?.brand_name || 'Actero',
+      isEscalation: true, escalationReason,
+    }).catch(() => {})
   }
 
   // 3. Log escalation response
