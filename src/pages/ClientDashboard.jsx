@@ -448,28 +448,35 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const escalationCount = pendingEscalations.length;
 
   const sidebarItems = [
-    { id: 'overview', label: "Vue d'ensemble", icon: LayoutDashboard },
+    { id: 'overview', label: 'Accueil', icon: LayoutDashboard },
     { id: 'activity', label: 'Activite', icon: Activity },
-    { type: 'section', label: 'IA & Automatisation' },
-    { id: 'agent-config', label: 'Agent IA', icon: Sparkles },
-    { id: 'simulator', label: 'Simulateur', icon: MessageCircle },
-    { id: 'guardrails', label: 'Garde-fous', icon: Shield },
-    { id: 'prompt-injection', label: 'Securite IA', icon: ShieldCheck },
-    { id: 'multi-agent', label: 'Multi-Agents', icon: Network },
-    { id: 'client-memory', label: 'Memoire Client', icon: Brain },
+
+    { type: 'section', label: 'Mon Agent' },
+    { id: 'agent-config', label: 'Configurer', icon: Sparkles },
+    { id: 'simulator', label: 'Tester', icon: MessageCircle },
     { id: 'escalations', label: 'Escalades', icon: AlertTriangle, badge: escalationCount > 0 ? escalationCount : null, badgeColor: 'bg-red-100 text-red-600' },
-    { id: 'sentiment', label: 'Sentiment', icon: Heart },
-    { id: 'supplier-negotiation', label: 'Negociation', icon: Handshake },
+    { id: 'guardrails', label: 'Regles & Limites', icon: Shield },
+
     { type: 'section', label: 'Vocal' },
-    { id: 'voice-agent', label: 'Agent Vocal', icon: Phone },
-    { id: 'voice-studio', label: 'Studio de Voix', icon: Mic },
-    { id: 'voice-report', label: 'Rapport Vocal', icon: Volume2 },
-    { type: 'section', label: 'Outils' },
-    { id: 'systems', label: 'Mes Systemes', icon: Database },
+    { id: 'voice-agent', label: 'Appels IA', icon: Phone },
+    { id: 'voice-studio', label: 'Voix', icon: Mic },
+    { id: 'voice-report', label: 'Rapports audio', icon: Volume2 },
+
+    { type: 'section', label: 'Connexions' },
     { id: 'integrations', label: 'Integrations', icon: Plug },
-    { id: 'knowledge', label: 'Base de connaissances', icon: BookOpen },
-    { id: 'support', label: 'Support', icon: MessageSquare },
+    { id: 'knowledge', label: 'Base de savoir', icon: BookOpen },
+
+    { type: 'expandable', label: 'Avance', icon: Database, defaultOpen: false, children: [
+      { id: 'multi-agent', label: 'Multi-Agents', icon: Network },
+      { id: 'prompt-injection', label: 'Securite', icon: ShieldCheck },
+      { id: 'client-memory', label: 'Memoire', icon: Brain },
+      { id: 'sentiment', label: 'Sentiment', icon: Heart },
+      { id: 'supplier-negotiation', label: 'Negociation', icon: Handshake },
+      { id: 'systems', label: 'Systemes', icon: Database },
+    ]},
+
     { type: 'section', label: 'Compte' },
+    { id: 'support', label: 'Aide', icon: MessageSquare },
     { id: 'team', label: 'Equipe', icon: Users },
     { id: 'referral', label: 'Parrainage', icon: Gift },
     { id: 'profile', label: 'Mon Profil', icon: User },
@@ -478,8 +485,16 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const userRole = currentClient?._userRole || 'owner';
 
   // Filter sidebar items based on user role
-  const filteredSidebarItems = sidebarItems.filter(item => {
-    if (item.type === 'section') return true; // keep section headers
+  const filteredSidebarItems = sidebarItems.map(item => {
+    // Filter children of expandable sections
+    if (item.type === 'expandable') {
+      const filteredChildren = (item.children || []).filter(c => canAccessTab(userRole, c.id))
+      if (filteredChildren.length === 0) return null
+      return { ...item, children: filteredChildren }
+    }
+    return item
+  }).filter(Boolean).filter(item => {
+    if (item.type === 'section' || item.type === 'expandable') return true
     return canAccessTab(userRole, item.id);
   }).filter((item, i, arr) => {
     // Remove section headers with no items after them
@@ -549,27 +564,27 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         <header className={`sticky top-0 z-40 backdrop-blur-md px-4 md:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b ${isLight ? "bg-white/80 border-gray-200" : "bg-[#F9F7F1]/80 border-gray-200"}`}>
           <div className="flex items-center gap-6">
             <h1 className={`text-xl font-bold tracking-tight whitespace-nowrap ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
-              {activeTab === "overview" && "Vue d'ensemble"}
+              {activeTab === "overview" && "Accueil"}
               {activeTab === "activity" && "Activite temps reel"}
               {activeTab === "systems" && "Mes Systemes"}
-              {activeTab === "knowledge" && "Base de connaissances"}
+              {activeTab === "knowledge" && "Base de savoir"}
               {activeTab === "intelligence" && "Intelligence"}
-              {activeTab === "support" && "Support & Demandes"}
+              {activeTab === "support" && "Aide"}
               {activeTab === "referral" && "Parrainage"}
               {activeTab === "integrations" && "Intégrations"}
-              {activeTab === "agent-config" && "Agent IA"}
-              {activeTab === "simulator" && "Simulateur"}
+              {activeTab === "agent-config" && "Configurer l'agent"}
+              {activeTab === "simulator" && "Tester l'agent"}
               {activeTab === "team" && "Equipe"}
-              {activeTab === "guardrails" && "Garde-fous"}
+              {activeTab === "guardrails" && "Regles & Limites"}
               {activeTab === "escalations" && "Escalades"}
-              {activeTab === "voice-agent" && "Agent Vocal IA"}
+              {activeTab === "voice-agent" && "Appels IA"}
               {activeTab === "multi-agent" && "Multi-Agents"}
               {activeTab === "prompt-injection" && "Securite IA"}
               {activeTab === "client-memory" && "Memoire Client"}
               {activeTab === "sentiment" && "Analyse de Sentiment"}
-              {activeTab === "voice-studio" && "Studio de Voix"}
+              {activeTab === "voice-studio" && "Voix"}
               {activeTab === "supplier-negotiation" && "Negociation Fournisseur"}
-              {activeTab === "voice-report" && "Rapport Vocal"}
+              {activeTab === "voice-report" && "Rapports audio"}
             </h1>
 
             <div className="hidden lg:flex items-center gap-3">
