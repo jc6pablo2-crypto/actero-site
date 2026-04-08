@@ -85,6 +85,7 @@ import { VoiceStudioView } from '../components/client/VoiceStudioView'
 import { SupplierNegotiationView } from '../components/client/SupplierNegotiationView'
 import { VoiceReportView } from '../components/client/VoiceReportView'
 import { NotificationCenterView } from '../components/client/NotificationCenterView'
+import { AgentImprovementWidget } from '../components/client/AgentImprovementWidget'
 
 const FeedbackButtons = ({ eventId, currentFeedback, supabase }) => {
   const [feedback, setFeedback] = useState(currentFeedback || null);
@@ -684,6 +685,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 setActiveTab={setActiveTab}
                 theme={theme}
               />
+
+              {/* Agent Improvement Suggestions */}
+              <AgentImprovementWidget clientId={currentClient?.id} theme={theme} />
 
               {/* Auto Diagnostic */}
               <AutoDiagnostic

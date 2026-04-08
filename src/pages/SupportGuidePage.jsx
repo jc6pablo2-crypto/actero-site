@@ -214,6 +214,136 @@ const GUIDES = [
       },
     ],
   },
+  {
+    id: 'configurer-agent-5-minutes',
+    category: 'agent-ia',
+    title: 'Configurer mon agent en 5 minutes',
+    summary: 'Le guide ultra-rapide pour avoir un agent fonctionnel en partant de zero.',
+    icon: Sparkles,
+    readTime: '5 min',
+    sections: [
+      {
+        title: 'Etape 1 : Choisir un modele',
+        content: "Allez dans Configurer dans la sidebar. En haut de la page, cliquez sur Partir d'un modele pre-configure. Choisissez le modele qui correspond a votre activite :\n\n- SAV E-commerce Standard : retours, colis, remboursements\n- SAV Premium + Upsell : SAV + recommandations et codes promo\n- Immobilier Qualification : leads, dispos, prises de RDV\n- Support Technique : troubleshooting et tickets\n\nLe modele pre-remplit automatiquement le ton, les instructions et le message d'accueil.",
+      },
+      {
+        title: 'Etape 2 : Personnaliser le ton',
+        content: "Toujours dans Configurer, ajustez le ton de marque si besoin. Vous pouvez choisir parmi 4 presets (Professionnel, Casual, Formel, Technique) ou ecrire votre propre description.\n\nAstuce : le ton 'Pro & Chaleureux' fonctionne pour 80% des marques e-commerce.",
+      },
+      {
+        title: 'Etape 3 : Ajouter vos FAQ',
+        content: "Allez dans Base de savoir. Deux options rapides :\n\n1. Import URL : collez l'adresse de votre page FAQ ou politique de retour. L'IA genere automatiquement des paires Question/Reponse.\n\n2. FAQ rapide : tapez directement une question et sa reponse.\n\nPlus votre base est riche, meilleures sont les reponses de l'agent.",
+      },
+      {
+        title: 'Etape 4 : Tester',
+        content: "Allez dans Tester. Choisissez un scenario pre-fait (Client mecontent, Suivi commande, etc.) ou tapez votre propre message. L'agent repond en utilisant votre configuration.\n\nChaque reponse est automatiquement notee sur 5 (pertinence et ton). Si le score est bas, ajustez vos instructions ou ajoutez une FAQ sur le sujet.",
+      },
+      {
+        title: 'Etape 5 : Activer',
+        content: "Une fois satisfait des reponses, votre agent est pret. Les nouveaux tickets seront traites automatiquement. Surveillez les escalades dans l'onglet Escalades et laissez des feedbacks (pouce haut/bas) dans l'Activite pour ameliorer l'agent en continu.",
+      },
+    ],
+  },
+  {
+    id: 'comprendre-escalades',
+    category: 'agent-ia',
+    title: 'Comprendre les escalades',
+    summary: 'Quand et pourquoi votre agent IA passe la main a un humain.',
+    icon: AlertTriangle,
+    readTime: '4 min',
+    sections: [
+      {
+        title: 'Qu\'est-ce qu\'une escalade ?',
+        content: "Une escalade se produit quand l'agent IA decide qu'il ne peut pas traiter une demande seul et la transfere a votre equipe. C'est un mecanisme de securite : mieux vaut transferer que mal repondre.\n\nVous voyez les escalades dans l'onglet Escalades, avec un badge rouge indiquant le nombre d'escalades en attente.",
+      },
+      {
+        title: 'Les 5 raisons d\'escalade',
+        content: "1. Seuil de confiance : si l'agent n'est pas sur a plus de 80% de sa reponse, il escalade.\n\n2. Regle de garde-fou : une de vos regles d'exclusion s'applique (ex: 'jamais de remboursement sans validation').\n\n3. Ton agressif : le client utilise un langage agressif ou menacant.\n\n4. Mot-cle declencheur : un mot specifique que vous avez defini (ex: 'avocat', 'plainte').\n\n5. Montant eleve : la commande depasse votre seuil configure (ex: > 200 euros).",
+      },
+      {
+        title: 'Comment reduire les escalades',
+        content: "- Enrichissez votre base de connaissances sur les sujets frequemment escalades (le bandeau ambre vous les indique)\n- Ajustez vos seuils dans Regles & Limites si vous trouvez que l'agent escalade trop\n- Validez les bonnes reponses avec le pouce haut dans l'Activite : l'agent apprend de vos feedbacks",
+      },
+    ],
+  },
+  {
+    id: 'optimiser-taux-resolution',
+    category: 'agent-ia',
+    title: 'Optimiser le taux de resolution',
+    summary: 'Les bonnes pratiques pour que votre agent resolve plus de tickets automatiquement.',
+    icon: CheckCircle2,
+    readTime: '5 min',
+    sections: [
+      {
+        title: 'Comprendre le taux de resolution',
+        content: "Le taux de resolution mesure le pourcentage de tickets traites par l'agent sans intervention humaine. Un bon taux est entre 70% et 85%. Au-dessus de 85%, vous pouvez etre fier — c'est excellent.\n\nSi votre taux est en dessous de 60%, c'est souvent un probleme de base de connaissances incomplete.",
+      },
+      {
+        title: '5 actions pour ameliorer',
+        content: "1. Couvrir les lacunes : regardez le bandeau ambre dans Base de savoir et ajoutez des FAQ sur les sujets escalades.\n\n2. Importer vos FAQ existantes : utilisez l'import URL pour copier automatiquement vos FAQ depuis votre site.\n\n3. Ajouter votre politique de retour : c'est la premiere source de questions. Soyez detaille (delais, conditions, processus).\n\n4. Utiliser les feedbacks : chaque pouce haut/bas dans l'Activite aide l'agent a s'ameliorer.\n\n5. Tester regulierement : utilisez le Simulateur avec les scenarios pre-faits pour verifier que l'agent repond bien.",
+      },
+      {
+        title: 'Les erreurs a eviter',
+        content: "- Ne pas mettre de politique de retour : c'est la question la plus posee, l'agent escalade systematiquement sans cette info.\n- Des instructions contradictoires : si vous dites 'soit amical' mais 'vouvoie toujours', l'agent hesite.\n- Trop de regles d'exclusion : si tout est interdit, l'agent ne peut rien faire et escalade tout.\n- Ne pas surveiller les escalades : les patterns se repetent, couvrez-les une fois pour toutes.",
+      },
+    ],
+  },
+  {
+    id: 'connecter-integrations-guide',
+    category: 'integrations',
+    title: 'Connecter vos integrations',
+    summary: 'Guide par outil : Shopify, Slack, Klaviyo, WhatsApp, Calendly et plus.',
+    icon: Plug,
+    readTime: '6 min',
+    sections: [
+      {
+        title: 'Shopify (OAuth)',
+        content: "1. Allez dans Integrations dans votre dashboard\n2. Cliquez Connecter sur Shopify\n3. Entrez votre domaine Shopify (ex: ma-boutique.myshopify.com)\n4. Vous etes redirige vers Shopify pour approuver l'installation\n5. C'est fait ! Les commandes, produits et clients sont synchronises.",
+      },
+      {
+        title: 'Slack (OAuth)',
+        content: "1. Cliquez Connecter sur Slack\n2. Selectionnez votre workspace Slack\n3. Choisissez le canal ou vous voulez recevoir les alertes\n4. Validez les permissions\n\nVous recevrez les alertes d'escalade et les rapports directement dans Slack.",
+      },
+      {
+        title: 'Klaviyo, WhatsApp, Intercom (Cle API)',
+        content: "Ces integrations utilisent une cle API :\n\n1. Cliquez Connecter sur l'integration souhaitee\n2. Un modal s'ouvre avec les instructions pour trouver votre cle API\n3. Collez la cle et cliquez Connecter\n4. La connexion est testee automatiquement\n\nChaque integration a un lien vers la documentation officielle pour trouver la cle.",
+      },
+      {
+        title: 'Calendly / Cal.com',
+        content: "Pour l'immobilier ou la prise de RDV :\n\n1. Creez un token personnel dans Calendly (Integrations → API & Webhooks) ou Cal.com (Settings → Developer)\n2. Collez-le dans Actero\n3. L'agent pourra proposer des creneaux et prendre des RDV automatiquement.",
+      },
+      {
+        title: 'Tester une integration',
+        content: "Apres connexion, cliquez le bouton Tester (icone refresh) sur la carte de l'integration. Un test automatique verifie que la connexion fonctionne. Si le test echoue, essayez Reconnecter ou verifiez que votre cle API est encore valide.",
+      },
+    ],
+  },
+  {
+    id: 'troubleshooting',
+    category: 'getting-started',
+    title: 'Problemes frequents et solutions',
+    summary: 'Mon agent repond mal, je ne recois plus d\'alertes, erreur de connexion...',
+    icon: RefreshCw,
+    readTime: '4 min',
+    sections: [
+      {
+        title: 'Mon agent repond mal',
+        content: "Verifiez dans cet ordre :\n1. Base de savoir : le sujet est-il couvert ? Sinon, ajoutez une FAQ.\n2. Instructions : allez dans Configurer et verifiez que les instructions ne sont pas contradictoires.\n3. Testez : utilisez le Simulateur avec le meme message pour voir la reponse et son score de qualite.\n4. Feedbacks : laissez un pouce bas sur la mauvaise reponse dans l'Activite — l'agent apprend.",
+      },
+      {
+        title: 'Je ne recois plus d\'alertes',
+        content: "1. Verifiez vos preferences dans Notifications : les toggles email sont peut-etre desactives.\n2. Regardez dans vos spams : les emails Actero viennent de notifications@actero.fr.\n3. Si vous utilisez Slack, verifiez que l'integration est toujours active dans Integrations.\n4. Mode silencieux : verifiez que les heures silencieuses ne couvrent pas la periode concernee.",
+      },
+      {
+        title: 'Erreur de connexion Shopify',
+        content: "Si Shopify affiche une erreur :\n1. Verifiez que votre domaine est correct (ma-boutique.myshopify.com, pas ma-boutique.com)\n2. Assurez-vous d'avoir les droits admin sur la boutique\n3. Essayez de deconnecter puis reconnecter l'integration\n4. Si l'erreur persiste, contactez-nous via le chat ou a support@actero.fr.",
+      },
+      {
+        title: 'Le dashboard ne charge pas',
+        content: "1. Essayez de rafraichir la page (Ctrl+R ou Cmd+R)\n2. Videz le cache du navigateur\n3. Essayez en navigation privee\n4. Si le probleme persiste, c'est peut-etre une maintenance — verifiez votre email pour des notifications de maintenance.",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
