@@ -459,7 +459,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const sidebarItems = [
     { id: 'overview', label: 'Accueil', icon: LayoutDashboard },
     { id: 'activity', label: 'Activite', icon: Activity },
-    { id: 'channels', label: 'Mes Canaux', icon: Plug },
     { id: 'playbooks', label: 'Automatisations', icon: Sparkles },
 
     { type: 'section', label: 'Mon Agent' },

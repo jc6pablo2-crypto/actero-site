@@ -121,8 +121,7 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-internal-secret': session?.access_token,
-          'x-engine-secret': 'test', // Will fall through to internal secret
+          'Authorization': `Bearer ${session?.access_token}`,
         },
         body: JSON.stringify({
           client_id: clientId,

@@ -262,6 +262,9 @@ export const PromptEditor = ({ clientId, theme }) => {
         excluded_products: settings.excluded_products || '',
         custom_instructions: settings.custom_instructions || '',
         greeting_template: settings.greeting_template || '',
+        tone_formality: settings.tone_formality ?? 30,
+        tone_warmth: settings.tone_warmth ?? 70,
+        tone_detail: settings.tone_detail ?? 50,
       })
     }
   }, [settings])

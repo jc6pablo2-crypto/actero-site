@@ -65,7 +65,7 @@ export const ClientBillingView = ({ theme }) => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${session?.access_token}`,
         },
-        body: JSON.stringify({ customer_id: client?.stripe_customer_id }),
+        body: JSON.stringify({ client_id: client?.id }),
       })
       const data = await res.json()
       if (data.url) {

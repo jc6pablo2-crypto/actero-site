@@ -27,8 +27,19 @@ export default async function handler(req, res) {
 
   // --- Auth ---
   const secret = req.headers['x-engine-secret'] || req.headers['x-internal-secret']
-  if (secret !== ENGINE_SECRET && secret !== INTERNAL_SECRET) {
-    return res.status(401).json({ error: 'Non autorise. Header x-engine-secret requis.' })
+  let isAuthed = (ENGINE_SECRET && secret === ENGINE_SECRET) || (INTERNAL_SECRET && secret === INTERNAL_SECRET)
+
+  // Also accept Bearer JWT (for dashboard testing)
+  if (!isAuthed) {
+    const token = req.headers.authorization?.replace('Bearer ', '')
+    if (token) {
+      const { error } = await supabase.auth.getUser(token)
+      if (!error) isAuthed = true
+    }
+  }
+
+  if (!isAuthed) {
+    return res.status(401).json({ error: 'Non autorise.' })
   }
 
   const { client_id, event_type, source, ...payload } = req.body || {}
