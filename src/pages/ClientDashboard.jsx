@@ -483,12 +483,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       { id: 'systems', label: 'Systemes', icon: Database },
     ]},
 
-    { type: 'section', label: 'Compte' },
-    { id: 'notifications', label: 'Notifications', icon: Volume2 },
     { id: 'support', label: 'Aide', icon: MessageSquare },
-    { id: 'team', label: 'Equipe', icon: Users },
-    { id: 'referral', label: 'Parrainage', icon: Gift },
-    { id: 'profile', label: 'Mon Profil', icon: User },
   ];
 
   const userRole = currentClient?._userRole || 'owner';

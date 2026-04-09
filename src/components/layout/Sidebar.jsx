@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { X, LogOut, ChevronDown } from 'lucide-react'
+import React, { useState, useRef, useEffect } from 'react'
+import { X, LogOut, ChevronDown, Bell, Users, Gift, User, Settings } from 'lucide-react'
 import { Logo } from './Logo'
 
 export const Sidebar = ({
@@ -15,15 +15,34 @@ export const Sidebar = ({
   userEmail,
 }) => {
   const [expandedSections, setExpandedSections] = useState({})
+  const [showAccountMenu, setShowAccountMenu] = useState(false)
+  const accountRef = useRef(null)
 
   const toggleSection = (label) => {
     setExpandedSections(prev => ({ ...prev, [label]: !prev[label] }))
   }
 
-  // Get initials for avatar
+  // Close account menu on click outside
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (accountRef.current && !accountRef.current.contains(e.target)) {
+        setShowAccountMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
   const initials = userName
     ? userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
     : userEmail ? userEmail[0].toUpperCase() : 'A'
+
+  const ACCOUNT_ITEMS = [
+    { id: 'profile', label: 'Mon Profil', icon: User },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'team', label: 'Equipe', icon: Users },
+    { id: 'referral', label: 'Parrainage', icon: Gift },
+  ]
 
   return (
     <div className="w-full md:w-[230px] flex flex-col h-full bg-white">
@@ -53,7 +72,6 @@ export const Sidebar = ({
             );
           }
 
-          // Expandable section
           if (item.type === 'expandable') {
             const isExpanded = expandedSections[item.label] ?? item.defaultOpen ?? false
             const hasActiveChild = (item.children || []).some(c => c.id === activeTab)
@@ -80,9 +98,7 @@ export const Sidebar = ({
                           key={child.id}
                           onClick={() => { setActiveTab(child.id); if (onClose) onClose() }}
                           className={`w-full flex items-center justify-between px-2.5 py-[5px] rounded-lg text-[12px] font-medium transition-all duration-150 ${
-                            isActive
-                              ? "text-[#0F5F35] bg-[#0F5F35]/[0.06]"
-                              : "text-[#71717a] hover:text-[#1a1a1a] hover:bg-[#f5f5f5]"
+                            isActive ? "text-[#0F5F35] bg-[#0F5F35]/[0.06]" : "text-[#71717a] hover:text-[#1a1a1a] hover:bg-[#f5f5f5]"
                           }`}
                         >
                           <div className="flex items-center gap-2">
@@ -109,9 +125,7 @@ export const Sidebar = ({
               key={item.id}
               onClick={() => { setActiveTab(item.id); if (onClose) onClose() }}
               className={`w-full flex items-center justify-between px-2.5 py-[7px] rounded-lg text-[13px] font-medium transition-all duration-150 group ${
-                isActive
-                  ? "text-[#0F5F35] bg-[#0F5F35]/[0.06]"
-                  : "text-[#71717a] hover:text-[#1a1a1a] hover:bg-[#f5f5f5]"
+                isActive ? "text-[#0F5F35] bg-[#0F5F35]/[0.06]" : "text-[#71717a] hover:text-[#1a1a1a] hover:bg-[#f5f5f5]"
               }`}
             >
               <div className="flex items-center gap-2.5">
@@ -132,10 +146,46 @@ export const Sidebar = ({
         })}
       </div>
 
-      {/* Footer — User profile */}
-      <div className="border-t border-[#f0f0f0]">
+      {/* Footer — User profile with dropdown */}
+      <div className="relative border-t border-[#f0f0f0]" ref={accountRef}>
+        {/* Dropdown menu */}
+        {showAccountMenu && (
+          <div className="absolute bottom-full left-2 right-2 mb-1 bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-[#f0f0f0] py-1.5 z-50">
+            {ACCOUNT_ITEMS.map(item => {
+              const Icon = item.icon
+              const isActive = activeTab === item.id
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id)
+                    setShowAccountMenu(false)
+                    if (onClose) onClose()
+                  }}
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium transition-colors ${
+                    isActive ? 'text-[#0F5F35] bg-[#0F5F35]/[0.04]' : 'text-[#71717a] hover:text-[#1a1a1a] hover:bg-[#f9f9f9]'
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-[#0F5F35]' : 'opacity-40'}`} />
+                  {item.label}
+                </button>
+              )
+            })}
+            <div className="border-t border-[#f0f0f0] mt-1.5 pt-1.5">
+              <button
+                onClick={onLogout}
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-red-500 hover:bg-red-50 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Deconnexion
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Profile button */}
         <button
-          onClick={onLogout}
+          onClick={() => setShowAccountMenu(!showAccountMenu)}
           className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#fafafa] transition-colors"
         >
           <div className="w-8 h-8 rounded-full bg-[#0F5F35]/10 text-[#0F5F35] flex items-center justify-center text-[11px] font-bold flex-shrink-0">
@@ -143,9 +193,9 @@ export const Sidebar = ({
           </div>
           <div className="flex-1 text-left min-w-0">
             <p className="text-[12px] font-semibold text-[#1a1a1a] truncate">{userName || 'Mon compte'}</p>
-            <p className="text-[10px] text-[#9ca3af] truncate">{userEmail || 'Deconnexion'}</p>
+            <p className="text-[10px] text-[#9ca3af] truncate">{userEmail || ''}</p>
           </div>
-          <ChevronDown className="w-3.5 h-3.5 text-[#c4c4c4] flex-shrink-0" />
+          <ChevronDown className={`w-3.5 h-3.5 text-[#c4c4c4] flex-shrink-0 transition-transform duration-200 ${showAccountMenu ? 'rotate-180' : ''}`} />
         </button>
       </div>
     </div>
