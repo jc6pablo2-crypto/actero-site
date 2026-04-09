@@ -19,7 +19,7 @@ export const Sidebar = ({
   }
 
   return (
-    <div className="w-full md:w-[220px] flex flex-col h-full bg-white border-r border-[#e5e5e5]">
+    <div className="w-full md:w-[220px] flex flex-col h-full bg-white border-r border-[#ebebeb]">
       {/* Header */}
       <div className="h-14 flex items-center px-4 justify-between md:justify-start border-b border-[#e5e5e5]">
         <div className="flex items-center gap-2">
