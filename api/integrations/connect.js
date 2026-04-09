@@ -23,31 +23,17 @@ const PROVIDER_TEST_ENDPOINTS = {
       'revision': '2024-02-15',
     }),
   },
-  freshdesk: {
+  resend: {
     method: 'GET',
-    url: (c) => `https://${c.domain}/api/v2/agents/me`,
+    url: () => 'https://api.resend.com/api-keys',
     headers: (c) => ({
-      'Authorization': `Basic ${Buffer.from(`${c.api_key}:X`).toString('base64')}`,
+      'Authorization': `Bearer ${c.api_key}`,
     }),
   },
   slack: {
     method: 'POST',
     url: (c) => c.webhook_url,
     body: { text: '✅ Actero est connecté à votre Slack !' },
-  },
-  calendly: {
-    method: 'GET',
-    url: () => 'https://api.calendly.com/users/me',
-    headers: (c) => ({
-      'Authorization': `Bearer ${c.api_key}`,
-    }),
-  },
-  trustpilot: {
-    method: 'GET',
-    url: (c) => `https://api.trustpilot.com/v1/business-units/${c.business_unit_id}`,
-    headers: (c) => ({
-      'apikey': c.api_key,
-    }),
   },
   apimo: {
     method: 'GET',
@@ -73,28 +59,6 @@ const PROVIDER_TEST_ENDPOINTS = {
   ipaidthat: {
     method: 'GET',
     url: () => 'https://app.ipaidthat.io/api/v2/me',
-    headers: (c) => ({
-      'Authorization': `Bearer ${c.api_key}`,
-    }),
-  },
-  intercom: {
-    method: 'GET',
-    url: () => 'https://api.intercom.io/me',
-    headers: (c) => ({
-      'Authorization': `Bearer ${c.api_key}`,
-      'Accept': 'application/json',
-    }),
-  },
-  crisp: {
-    method: 'GET',
-    url: () => 'https://api.crisp.chat/v1/website',
-    headers: (c) => ({
-      'Authorization': `Basic ${Buffer.from(c.api_key + ':').toString('base64')}`,
-    }),
-  },
-  cal_com: {
-    method: 'GET',
-    url: () => 'https://api.cal.com/v1/me',
     headers: (c) => ({
       'Authorization': `Bearer ${c.api_key}`,
     }),
