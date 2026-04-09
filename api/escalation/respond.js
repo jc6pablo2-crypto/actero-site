@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import nodemailer from 'nodemailer';
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
@@ -7,9 +6,21 @@ const supabase = createClient(
 );
 
 /**
- * Send email via client's own SMTP.
+ * Send email via SMTP using nodemailer (loaded dynamically to avoid bundle issues).
  */
 async function sendViaSMTP(smtpConfig, { to, subject, html, brandName }) {
+  // Dynamic require to avoid Vercel bundling issues
+  let nodemailer;
+  try {
+    nodemailer = (await import('nodemailer')).default;
+  } catch (e1) {
+    try {
+      nodemailer = require('nodemailer');
+    } catch (e2) {
+      throw new Error('nodemailer not available: ' + e1.message);
+    }
+  }
+
   const transporter = nodemailer.createTransport({
     host: smtpConfig.smtp_host,
     port: parseInt(smtpConfig.smtp_port) || 587,
@@ -20,7 +31,6 @@ async function sendViaSMTP(smtpConfig, { to, subject, html, brandName }) {
     },
     tls: {
       rejectUnauthorized: false,
-      minVersion: 'TLSv1.2',
     },
     connectionTimeout: 8000,
     greetingTimeout: 5000,
@@ -30,14 +40,25 @@ async function sendViaSMTP(smtpConfig, { to, subject, html, brandName }) {
   const fromEmail = smtpConfig.email || smtpConfig.username;
   const fromDisplay = brandName ? `${brandName} <${fromEmail}>` : fromEmail;
 
-  const info = await transporter.sendMail({
-    from: fromDisplay,
-    to,
-    subject,
-    html,
-  });
-
+  const info = await transporter.sendMail({ from: fromDisplay, to, subject, html });
   return { sent: true, from: fromEmail, messageId: info.messageId };
+}
+
+// Clean email subject mapping
+const SUBJECT_MAP = {
+  autre: 'Votre demande',
+  general: 'Votre demande',
+  suivi_commande: 'Suivi de votre commande',
+  order_tracking: 'Suivi de votre commande',
+  retour_produit: 'Votre retour produit',
+  return_exchange: 'Votre retour produit',
+  remboursement: 'Votre demande de remboursement',
+  question_produit: 'Votre question',
+  product_info: 'Votre question produit',
+  reclamation: 'Suite a votre reclamation',
+  billing: 'Votre demande facturation',
+  livraison: 'Votre livraison',
+  'Demande client': 'Votre demande',
 }
 
 export default async function handler(req, res) {
@@ -45,7 +66,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Auth check
   const token = req.headers.authorization?.replace('Bearer ', '');
   if (!token) return res.status(401).json({ error: 'Non autorise.' });
   const { data: { user }, error: authError } = await supabase.auth.getUser(token);
@@ -80,7 +100,6 @@ export default async function handler(req, res) {
 
     const brandName = clientRes.data?.brand_name || 'Support';
     const smtpConfig = smtpRes.data?.extra_config || null;
-    // Password stored in api_key field
     if (smtpConfig && smtpRes.data?.api_key) {
       smtpConfig.password = smtpRes.data.api_key;
     }
@@ -89,70 +108,43 @@ export default async function handler(req, res) {
     let emailResult = { sent: false, error: null };
     let sentVia = null;
 
-    // 3. Send email if customer has real email + SMTP configured
+    // 3. Send email via client's SMTP
     if (isRealEmail && smtpConfig?.smtp_host && smtpConfig?.username && smtpConfig?.password) {
-      // Generate a clean email subject (not technical classification)
-      const SUBJECT_MAP = {
-        autre: 'Votre demande',
-        general: 'Votre demande',
-        suivi_commande: 'Suivi de votre commande',
-        order_tracking: 'Suivi de votre commande',
-        retour_produit: 'Votre retour produit',
-        return_exchange: 'Votre retour produit',
-        remboursement: 'Votre demande de remboursement',
-        question_produit: 'Votre question',
-        product_info: 'Votre question produit',
-        reclamation: 'Suite a votre reclamation',
-        billing: 'Votre demande facturation',
-        livraison: 'Votre livraison',
-      }
       const rawSubject = conversation.subject || 'Votre demande'
-      const cleanSubject = SUBJECT_MAP[rawSubject.toLowerCase()] || (rawSubject.length > 3 && !rawSubject.match(/^[a-z_]+$/) ? rawSubject : 'Votre demande')
+      const cleanSubject = SUBJECT_MAP[rawSubject.toLowerCase()] || SUBJECT_MAP[rawSubject] || (rawSubject.length > 3 && !rawSubject.match(/^[a-z_]+$/) ? rawSubject : 'Votre demande')
       const subject = `${brandName} — ${cleanSubject}`;
+
       const escapedResponse = String(response)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;').replace(/\n/g, '<br>');
 
       const html = `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; padding: 20px;">
-          <p style="color: #262626; font-size: 15px; line-height: 1.6;">
-            ${conversation.customer_name ? `Bonjour ${conversation.customer_name},` : 'Bonjour,'}
-          </p>
-          <p style="color: #262626; font-size: 15px; line-height: 1.6;">
-            ${escapedResponse}
-          </p>
+          <p style="color: #262626; font-size: 15px; line-height: 1.6;">${conversation.customer_name ? `Bonjour ${conversation.customer_name},` : 'Bonjour,'}</p>
+          <p style="color: #262626; font-size: 15px; line-height: 1.6;">${escapedResponse}</p>
           <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;" />
           <p style="color: #999; font-size: 12px;">${brandName} — Service client</p>
         </div>
       `;
 
       try {
-        emailResult = await sendViaSMTP(smtpConfig, {
-          to: conversation.customer_email,
-          subject, html, brandName,
-        });
+        emailResult = await sendViaSMTP(smtpConfig, { to: conversation.customer_email, subject, html, brandName });
         sentVia = 'smtp';
         console.log(`[escalation] Email sent via SMTP from ${emailResult.from} to ${conversation.customer_email}`);
       } catch (smtpErr) {
-        console.error('[escalation] SMTP send failed:', smtpErr.message, smtpErr.code);
+        console.error('[escalation] SMTP send failed:', smtpErr.message);
         emailResult = { sent: false, error: smtpErr.message };
       }
     } else if (isRealEmail && !smtpConfig?.smtp_host) {
       emailResult = { sent: false, error: 'SMTP non configure. Connectez votre email dans Integrations.' };
-      console.log('[escalation] No SMTP configured — email not sent');
     }
 
-    // 4. Update conversation (always, even if email failed)
-    const { error: updateError } = await supabase
-      .from('ai_conversations')
-      .update({
-        human_response: response,
-        human_responded_at: new Date().toISOString(),
-        status: 'resolved',
-      })
-      .eq('id', conversation_id);
-
-    if (updateError) throw updateError;
+    // 4. Update conversation (always)
+    await supabase.from('ai_conversations').update({
+      human_response: response,
+      human_responded_at: new Date().toISOString(),
+      status: 'resolved',
+    }).eq('id', conversation_id);
 
     // 5. Add to KB if requested
     if (add_to_kb) {
@@ -162,11 +154,6 @@ export default async function handler(req, res) {
         title: conversation.subject || 'Question client',
         content: `Q: ${conversation.customer_message}\nR: ${response}`,
       });
-      fetch(`${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3000'}/api/sync-brand-context`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ client_id: conversation.client_id }),
-      }).catch(() => {});
     }
 
     // 6. Track event
@@ -174,14 +161,8 @@ export default async function handler(req, res) {
       client_id: conversation.client_id,
       event_category: 'ticket_human_resolved',
       event_type: 'escalation_response',
-      description: `Reponse humaine a ${conversation.customer_name || conversation.customer_email || 'un client'}${emailResult.sent ? ` — email envoye via ${sentVia} depuis ${emailResult.from}` : ''}`,
-      metadata: {
-        email_sent: emailResult.sent,
-        sent_via: sentVia,
-        sent_from: emailResult.from || null,
-        customer_email: conversation.customer_email,
-        error: emailResult.error || null,
-      },
+      description: `Reponse humaine a ${conversation.customer_name || conversation.customer_email || 'un client'}${emailResult.sent ? ` — email envoye depuis ${emailResult.from}` : ''}`,
+      metadata: { email_sent: emailResult.sent, sent_via: sentVia, error: emailResult.error },
     }).catch(() => {});
 
     return res.status(200).json({
@@ -189,7 +170,6 @@ export default async function handler(req, res) {
       email_sent: emailResult.sent,
       email_error: emailResult.error || null,
       sent_via: sentVia,
-      sent_from: emailResult.from || null,
       customer_email: isRealEmail ? conversation.customer_email : null,
     });
   } catch (error) {
