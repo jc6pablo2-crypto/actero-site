@@ -474,10 +474,10 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
                         <div className="flex items-start gap-2.5">
                           <Mail className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                           <div className="flex-1">
-                            <p className="text-[12px] font-semibold text-blue-900">Recommandation : activez l&apos;integration email</p>
+                            <p className="text-[12px] font-semibold text-blue-900">Recommandation : connectez votre email professionnel</p>
                             <p className="text-[11px] text-blue-700 mt-0.5 leading-relaxed">
                               Quand un client est agressif ou a besoin d&apos;un suivi, l&apos;IA lui demande son email dans le widget.
-                              Si vous connectez votre email (SMTP/IMAP), les reponses que vous redigez dans &quot;A traiter&quot; seront envoyees automatiquement au client.
+                              En connectant votre adresse email (SMTP/IMAP), vos reponses dans &quot;A traiter&quot; seront envoyees automatiquement <strong>depuis votre propre adresse</strong> (ex: contact@votreboutique.com).
                             </p>
                             <button
                               onClick={(e) => { e.stopPropagation(); setActiveTab('integrations') }}

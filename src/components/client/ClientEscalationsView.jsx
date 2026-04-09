@@ -187,9 +187,10 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
             {isRealEmail ? (
               <div className="flex items-center gap-2 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
                 <Mail className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                <p className="text-[12px] text-emerald-700">
-                  Votre reponse sera envoyee automatiquement par email a <span className="font-semibold">{conversation.customer_email}</span>
-                </p>
+                <div className="text-[12px] text-emerald-700">
+                  <p>Votre reponse sera envoyee automatiquement par email a <span className="font-semibold">{conversation.customer_email}</span></p>
+                  <p className="text-[11px] text-emerald-600 mt-0.5">Envoye depuis votre adresse email connectee (SMTP) ou via Actero si non configure.</p>
+                </div>
               </div>
             ) : (
               <div className="flex items-center gap-2 p-3 bg-amber-50 rounded-xl border border-amber-100">
