@@ -10,6 +10,7 @@ import {
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
 import { VocalAgentWizard } from './VocalAgentWizard'
+import { ComptabiliteWizard } from './ComptabiliteWizard'
 
 /* ═══════════ CATEGORIES ═══════════ */
 
@@ -115,7 +116,9 @@ const PLAYBOOK_META = {
   comptabilite_auto: {
     icon: TrendingUp, color: 'from-indigo-500 to-indigo-600',
     simpleDesc: 'Automatise vos relances de factures, exports comptables et alertes de tresorerie.',
-    requires: [{ type: 'all', providers: ['shopify'], label: 'Shopify' }],
+    requires: [],
+    hasConfig: true,
+    configType: 'comptabilite',
     channels: [
       { id: 'email', label: 'Email', desc: 'Relances et exports par email', icon: Mail, needsIntegration: ['gmail', 'smtp_imap'] },
       { id: 'slack', label: 'Slack', desc: 'Alertes de tresorerie dans Slack', icon: MessageSquare, needsIntegration: ['slack'] },
@@ -136,6 +139,7 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
   const toast = useToast()
   const queryClient = useQueryClient()
   const [showVocalWizard, setShowVocalWizard] = useState(false)
+  const [showComptaWizard, setShowComptaWizard] = useState(false)
   const [selectedChannels, setSelectedChannels] = useState({})
 
   const { data: playbooks = [], isLoading } = useQuery({
@@ -286,6 +290,12 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
         toast.error('Selectionnez au moins un canal (Email, Chat, etc.) et connectez l\'integration correspondante')
         return
       }
+    }
+
+    // Open wizard for comptabilite
+    if (playbookName === 'comptabilite_auto' && !isActive(playbookName)) {
+      setShowComptaWizard(true)
+      return
     }
 
     // Open wizard for vocal agent
@@ -460,6 +470,27 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
           </div>
         )
       })}
+      {/* Comptabilite Wizard Modal */}
+      {showComptaWizard && (
+        <ComptabiliteWizard
+          clientId={clientId}
+          connectedProviders={connectedProviders}
+          onComplete={() => {
+            setShowComptaWizard(false)
+            const pb = playbooks.find(p => p.name === 'comptabilite_auto')
+            if (pb) {
+              supabase.from('engine_client_playbooks').upsert({
+                client_id: clientId, playbook_id: pb.id, is_active: true, activated_at: new Date().toISOString(),
+              }, { onConflict: 'client_id,playbook_id' }).then(() => {
+                queryClient.invalidateQueries({ queryKey: ['client-playbooks', clientId] })
+              })
+            }
+            toast.success('Comptabilite automatisee configuree et activee !')
+          }}
+          onCancel={() => setShowComptaWizard(false)}
+        />
+      )}
+
       {/* Vocal Agent Wizard Modal */}
       {showVocalWizard && (
         <VocalAgentWizard
