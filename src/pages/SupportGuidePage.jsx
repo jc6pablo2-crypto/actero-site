@@ -344,11 +344,239 @@ const GUIDES = [
       },
     ],
   },
+  // ═══════════════════════════════════════
+  // NOUVEAUX GUIDES
+  // ═══════════════════════════════════════
+  {
+    id: 'activer-automatisations',
+    category: 'automatisations',
+    title: 'Activer vos automatisations',
+    summary: 'Comment activer et configurer les automatisations pour votre boutique.',
+    icon: Sparkles,
+    readTime: '5 min',
+    sections: [
+      {
+        title: 'Qu\'est-ce qu\'une automatisation ?',
+        content: "Une automatisation, c'est une tache que votre agent IA fait tout seul, sans que vous ayez besoin d'intervenir. Par exemple : repondre aux emails clients, relancer les paniers abandonnes, ou gerer la comptabilite.\n\nActero propose 4 automatisations principales :\n- SAV / Support Client : repond aux questions de vos clients\n- Relance Paniers Abandonnes : recupere les ventes perdues\n- Comptabilite Automatisee : relances factures et alertes\n- Agent Vocal IA : repond par la voix sur votre site",
+      },
+      {
+        title: 'Comment activer une automatisation',
+        content: "1. Allez dans Automatisations dans le menu a gauche\n2. Vous voyez les 4 automatisations disponibles\n3. Choisissez les canaux sur lesquels vous voulez qu'elle fonctionne (Email, Chat, Gorgias, Zendesk...)\n4. Cliquez sur le toggle pour activer\n5. C'est fait ! L'agent commence a travailler immediatement",
+      },
+      {
+        title: 'Choisir ses canaux',
+        content: "Chaque automatisation peut fonctionner sur un ou plusieurs canaux. Les canaux disponibles dependent de vos integrations connectees :\n\n- Email : necessite Gmail ou Email personnalise (SMTP) connecte\n- Chat sur le site : disponible immediatement, pas d'integration requise\n- Gorgias : necessite Gorgias connecte\n- Zendesk : necessite Zendesk connecte\n- SMS : necessite Klaviyo connecte\n\nSi un canal est grise, cela signifie que l'integration correspondante n'est pas encore connectee. Cliquez dessus pour etre redirige vers la page Integrations.",
+      },
+      {
+        title: 'Desactiver une automatisation',
+        content: "Pour desactiver une automatisation, cliquez simplement sur le toggle vert. L'automatisation s'arretera immediatement. Vos donnees et configurations sont conservees — vous pouvez la reactiver a tout moment.",
+      },
+    ],
+  },
+  {
+    id: 'configurer-agent-vocal',
+    category: 'automatisations',
+    title: 'Configurer l\'agent vocal',
+    summary: 'Mettre en place votre agent telephonique IA pas a pas.',
+    icon: Sparkles,
+    readTime: '6 min',
+    sections: [
+      {
+        title: 'Qu\'est-ce que l\'agent vocal ?',
+        content: "L'agent vocal est un assistant telephonique IA qui repond aux questions de vos clients par la voix, directement sur votre site web. Quand un visiteur clique sur le bouton d'appel, il parle a votre agent comme s'il appelait un vrai conseiller.\n\nL'agent peut : repondre aux questions sur les produits, donner le statut d'une commande, expliquer votre politique de retour, et transferer vers un humain si necessaire.",
+      },
+      {
+        title: 'Etapes de configuration',
+        content: "Quand vous activez l'agent vocal dans Automatisations, un assistant de configuration s'ouvre en 6 etapes :\n\n1. Choisir la voix : ecoutez les voix disponibles et selectionnez celle qui correspond a votre marque\n2. Message d'accueil : personnalisez la premiere phrase de votre agent\n3. Connaissances : ajoutez les informations cles (FAQ, politique retour, produits)\n4. Regles : definissez quand l'agent doit transferer vers un humain\n5. Tester : faites un appel test pour verifier que tout fonctionne\n6. Installer : un clic et le widget est installe sur votre boutique Shopify",
+      },
+      {
+        title: 'Choisir la bonne voix',
+        content: "Actero propose plusieurs voix francaises et internationales :\n- Clement : voix masculine, calme et claire (recommandee pour le SAV)\n- Chloe : voix feminine, commerciale et impactante\n- Sarah : voix feminine, mature et rassurante\n- George : voix masculine, chaleureuse\n\nCliquez sur le bouton lecture a cote de chaque voix pour l'ecouter avec votre message d'accueil.",
+      },
+      {
+        title: 'Quand l\'agent transfere vers un humain',
+        content: "L'agent transfere automatiquement dans ces cas :\n- Le client demande explicitement a parler a un humain\n- Le client est tres agressif malgre les tentatives de desescalade\n- Un remboursement depasse le montant que vous avez defini\n- Le client mentionne un avocat ou une plainte\n\nVous pouvez configurer le numero de telephone vers lequel l'agent transfere dans les reglages.",
+      },
+    ],
+  },
+  {
+    id: 'connecter-email-smtp',
+    category: 'integrations',
+    title: 'Connecter un email personnalise (SMTP/IMAP)',
+    summary: 'Utiliser votre propre adresse email professionnelle avec Actero.',
+    icon: Plug,
+    readTime: '5 min',
+    sections: [
+      {
+        title: 'Pourquoi connecter un email personnalise ?',
+        content: "Par defaut, Actero peut utiliser Gmail pour envoyer et recevoir des emails. Mais si vous avez une adresse professionnelle (contact@maboutique.com), vous pouvez la connecter via SMTP/IMAP.\n\nAvantage : vos clients recoivent les reponses depuis votre adresse officielle, pas depuis une adresse Gmail.",
+      },
+      {
+        title: 'Informations necessaires',
+        content: "Pour connecter votre email, vous aurez besoin de :\n- Votre adresse email (ex: contact@maboutique.com)\n- Le serveur SMTP (ex: smtp.ovh.net ou smtp.ionos.fr)\n- Le port SMTP (generalement 587 ou 465)\n- Le serveur IMAP (ex: imap.ovh.net)\n- Le port IMAP (generalement 993)\n- Votre identifiant (souvent l'adresse email elle-meme)\n- Votre mot de passe email\n\nCes informations sont fournies par votre hebergeur email (OVH, Ionos, Infomaniak, etc.).",
+      },
+      {
+        title: 'Comment connecter',
+        content: "1. Allez dans Integrations dans le menu\n2. Trouvez 'Email personnalise (SMTP/IMAP)' dans la liste\n3. Cliquez Configurer\n4. Remplissez les champs avec les informations de votre hebergeur\n5. Cliquez Connecter\n\nSi vous ne trouvez pas vos parametres SMTP/IMAP, contactez votre hebergeur email ou cherchez '[nom hebergeur] parametres SMTP' sur Google.",
+      },
+      {
+        title: 'Hebergeurs courants',
+        content: "OVH :\n- SMTP : ssl0.ovh.net, port 587\n- IMAP : ssl0.ovh.net, port 993\n\nIonos :\n- SMTP : smtp.ionos.fr, port 587\n- IMAP : imap.ionos.fr, port 993\n\nInfomaniak :\n- SMTP : mail.infomaniak.com, port 587\n- IMAP : mail.infomaniak.com, port 993\n\nO2switch :\n- SMTP : votre-domaine.com, port 465\n- IMAP : votre-domaine.com, port 993",
+      },
+    ],
+  },
+  {
+    id: 'connecter-whatsapp',
+    category: 'integrations',
+    title: 'Connecter WhatsApp',
+    summary: 'Configurer WhatsApp Business pour recevoir des messages clients.',
+    icon: Plug,
+    readTime: '4 min',
+    sections: [
+      {
+        title: 'Comment ca marche',
+        content: "Le WhatsApp Copilot d'Actero est votre assistant personnel. Vous pouvez lui poser des questions sur vos performances, vos KPIs, vos escalades — directement depuis WhatsApp.\n\nExemples de questions :\n- 'Combien de tickets resolus cette semaine ?'\n- 'Quel est mon taux de resolution ?'\n- 'Y a-t-il des escalades en attente ?'\n\nL'agent repond en temps reel avec vos vraies donnees Actero.",
+      },
+      {
+        title: 'Configuration',
+        content: "1. Allez dans Mes Canaux dans le menu\n2. Trouvez WhatsApp Copilot\n3. Entrez votre numero de telephone\n4. Un QR code apparait — scannez-le avec WhatsApp\n5. Envoyez le message de confirmation\n6. C'est active !",
+      },
+    ],
+  },
+  {
+    id: 'installer-widget-chat',
+    category: 'integrations',
+    title: 'Installer le chat sur votre site',
+    summary: 'Ajouter le widget de chat IA sur votre boutique Shopify ou autre site.',
+    icon: Plug,
+    readTime: '3 min',
+    sections: [
+      {
+        title: 'Installation automatique (Shopify)',
+        content: "Si votre boutique Shopify est connectee, le widget s'installe automatiquement :\n\n1. Allez dans Mes Canaux\n2. Trouvez 'Chat sur votre boutique'\n3. Cliquez Activer\n4. C'est fait ! Un bouton de chat vert apparait en bas a droite de votre site\n\nLe widget est injecte directement dans votre theme Shopify. Pas besoin de toucher au code.",
+      },
+      {
+        title: 'Installation manuelle (autre site)',
+        content: "Pour les sites non-Shopify (WordPress, Wix, etc.) :\n\n1. Allez dans Mes Canaux\n2. Trouvez 'Chat sur un autre site'\n3. Activez-le\n4. Entrez l'URL de votre site\n5. Suivez les instructions pour coller le code\n\nLe code est une seule ligne a ajouter avant la balise </body> de votre site.",
+      },
+    ],
+  },
+  {
+    id: 'comprendre-metriques',
+    category: 'dashboard',
+    title: 'Comprendre vos metriques',
+    summary: 'Que signifient les chiffres sur votre page d\'accueil.',
+    icon: BarChart3,
+    readTime: '4 min',
+    sections: [
+      {
+        title: 'Les 5 metriques principales',
+        content: "Sur votre page d'accueil, vous voyez 5 chiffres :\n\n1. Tickets resolus : le nombre de demandes clients traitees automatiquement par l'IA ce mois\n2. Escalades : les demandes que l'IA n'a pas pu traiter seule et qui attendent votre reponse\n3. Temps economise : le nombre d'heures que l'IA vous a fait gagner\n4. Actions IA : le nombre total d'actions executees (emails, reponses, tags...)\n5. ROI genere : l'estimation financiere de la valeur creee par l'automatisation",
+      },
+      {
+        title: 'Les pourcentages en vert et rouge',
+        content: "A cote de certains chiffres, vous voyez un pourcentage :\n- En vert avec une fleche vers le haut : ca augmente par rapport au mois precedent (c'est bien !)\n- En rouge avec une fleche vers le bas : ca diminue (peut necessiter une action)\n\nPar exemple : 'Tickets resolus 147 ▲ +12%' signifie que vous avez 12% de tickets resolus en plus que le mois dernier.",
+      },
+      {
+        title: 'Le feed d\'activite en direct',
+        content: "Sous les metriques, vous voyez l'activite en temps reel. Chaque evenement apparait au fur et a mesure :\n- Un ticket resolu\n- Un email de relance envoye\n- Un panier recupere\n- Une escalade\n\nVous pouvez donner votre avis sur chaque reponse avec les boutons pouce haut / pouce bas. Ca aide l'IA a s'ameliorer.",
+      },
+    ],
+  },
+  {
+    id: 'gerer-escalades',
+    category: 'agent-ia',
+    title: 'Gerer les escalades (A traiter)',
+    summary: 'Comment repondre aux demandes que l\'IA ne peut pas traiter seule.',
+    icon: AlertTriangle,
+    readTime: '4 min',
+    sections: [
+      {
+        title: 'Qu\'est-ce qu\'une escalade ?',
+        content: "Une escalade, c'est quand votre agent IA decide qu'il ne peut pas repondre seul a une demande. Plutot que de mal repondre, il transfere la demande a votre equipe.\n\nVous voyez les escalades dans l'onglet 'A traiter' dans le menu. Un badge rouge indique le nombre d'escalades en attente.",
+      },
+      {
+        title: 'Comment traiter une escalade',
+        content: "1. Allez dans A traiter\n2. Vous voyez le message du client et la reponse proposee par l'IA\n3. Trois options :\n   - Approuver : la reponse proposee est bonne, envoyez-la telle quelle\n   - Modifier : ajustez la reponse puis envoyez\n   - Rejeter : ne pas repondre (par exemple si c'est du spam)\n4. La reponse est envoyee au client automatiquement",
+      },
+      {
+        title: 'Reduire les escalades',
+        content: "Si vous avez trop d'escalades, c'est souvent que la base de connaissances manque d'informations :\n\n1. Regardez les sujets qui reviennent souvent dans les escalades\n2. Ajoutez des reponses a ces sujets dans Mon Agent → Base de connaissances\n3. L'IA saura y repondre la prochaine fois\n\nPlus votre base de connaissances est riche, moins vous aurez d'escalades.",
+      },
+    ],
+  },
+  {
+    id: 'configurer-notifications',
+    category: 'dashboard',
+    title: 'Configurer les notifications',
+    summary: 'Choisir quoi recevoir et ou (email, Slack, push).',
+    icon: BarChart3,
+    readTime: '3 min',
+    sections: [
+      {
+        title: 'Acceder aux notifications',
+        content: "Cliquez sur votre nom en bas a gauche de l'ecran, puis selectionnez Notifications dans le menu.",
+      },
+      {
+        title: 'Types de notifications',
+        content: "Il y a 3 categories de notifications :\n\n1. Alertes critiques : escalades, tickets urgents, anomalies, tentatives de fraude\n2. Rapports : resume quotidien, hebdomadaire, mensuel\n3. Activite : nouvelles integrations, suggestions d'amelioration, jalons atteints\n\nPour chaque notification, vous choisissez par quel canal la recevoir : Email, Slack, Rapport vocal, ou Push navigateur.",
+      },
+      {
+        title: 'Mode silencieux',
+        content: "Vous pouvez activer le mode silencieux pour ne pas recevoir de notifications pendant certaines heures (par exemple la nuit). Allez dans Notifications → Horaires → Mode silencieux et definissez la plage horaire.",
+      },
+    ],
+  },
+  {
+    id: 'gerer-facturation',
+    category: 'billing',
+    title: 'Gerer votre facturation',
+    summary: 'Abonnement, factures, moyen de paiement.',
+    icon: Shield,
+    readTime: '3 min',
+    sections: [
+      {
+        title: 'Acceder a la facturation',
+        content: "Cliquez sur votre nom en bas a gauche de l'ecran, puis selectionnez Facturation.",
+      },
+      {
+        title: 'Votre plan',
+        content: "La page affiche votre plan actuel avec :\n- Le nom du plan et son prix mensuel\n- Le statut de votre abonnement (Actif, En attente, Annule)\n- La date de debut de votre abonnement\n- Les fonctionnalites incluses dans votre plan",
+      },
+      {
+        title: 'Portail Stripe',
+        content: "Pour modifier votre abonnement, mettre a jour votre carte bancaire, ou telecharger vos factures, cliquez sur 'Portail Stripe'. Vous serez redirige vers le portail securise de Stripe ou vous pouvez tout gerer.",
+      },
+      {
+        title: 'Consommation',
+        content: "En bas de la page, vous voyez votre consommation du mois en cours : nombre de runs du moteur IA et nombre d'evenements traites. Ces chiffres vous donnent une idee de l'activite de votre agent.",
+      },
+    ],
+  },
+  {
+    id: 'connecter-slack-guide',
+    category: 'integrations',
+    title: 'Connecter Slack',
+    summary: 'Recevoir les alertes et escalades directement dans Slack.',
+    icon: Plug,
+    readTime: '3 min',
+    sections: [
+      {
+        title: 'Pourquoi connecter Slack',
+        content: "Avec Slack connecte, vous recevez en temps reel :\n- Les alertes d'escalade quand l'IA transfere une demande\n- Les notifications de tickets urgents\n- Les rapports d'activite\n- Les alertes de performance\n\nTout arrive directement dans votre canal Slack, pas besoin d'aller sur le dashboard.",
+      },
+      {
+        title: 'Comment connecter',
+        content: "1. Allez dans Integrations\n2. Trouvez Slack (marque 'Recommande')\n3. Cliquez Connecter\n4. Selectionnez votre workspace Slack\n5. Choisissez le canal ou envoyer les notifications\n6. Validez les permissions\n\nC'est fait ! Vous recevrez les alertes dans le canal choisi.",
+      },
+    ],
+  },
 ];
 
 const CATEGORIES = [
   { id: 'getting-started', icon: Zap, title: 'Premiers pas', desc: 'Comprendre et demarrer avec Actero' },
   { id: 'integrations', icon: Plug, title: 'Integrations', desc: 'Connecter vos outils' },
+  { id: 'automatisations', icon: Sparkles, title: 'Automatisations', desc: 'Activer et configurer vos automatisations' },
   { id: 'agent-ia', icon: Sparkles, title: 'Agent IA', desc: 'Configurer et optimiser votre agent' },
   { id: 'dashboard', icon: BarChart3, title: 'Dashboard', desc: 'Comprendre vos metriques' },
   { id: 'billing', icon: Shield, title: 'Facturation', desc: 'Abonnement et factures' },
