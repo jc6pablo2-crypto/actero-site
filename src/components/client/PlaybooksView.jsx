@@ -123,13 +123,10 @@ const PLAYBOOK_META = {
   },
   agent_vocal: {
     icon: Headphones, color: 'from-violet-500 to-violet-600',
-    simpleDesc: 'Un agent vocal IA qui repond aux questions de vos clients par la voix, directement sur votre site.',
+    simpleDesc: 'Un agent vocal IA qui repond aux questions de vos clients par la voix. Bientot disponible.',
     requires: [],
-    hasConfig: true,
-    configType: 'vocal',
-    channels: [
-      { id: 'widget_vocal', label: 'Widget vocal sur le site', desc: 'Bouton d\'appel sur votre boutique', icon: Phone, needsIntegration: ['shopify'] },
-    ],
+    comingSoon: true,
+    channels: [],
   },
 }
 
@@ -412,7 +409,11 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
                       )}
                     </div>
 
-                    {reqs.met ? (
+                    {meta.comingSoon ? (
+                      <span className="px-3 py-1.5 text-[11px] font-semibold text-[#9ca3af] bg-[#f5f5f5] rounded-full flex-shrink-0">
+                        Bientot disponible
+                      </span>
+                    ) : reqs.met ? (
                       <button
                         onClick={() => handleToggle(pb.name)}
                         className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${active ? 'bg-[#0F5F35]' : 'bg-[#e5e5e5]'}`}
