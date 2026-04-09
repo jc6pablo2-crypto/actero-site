@@ -39,10 +39,7 @@ export function buildSystemPrompt(config) {
     prompt += `\n\nINSTRUCTIONS SPECIFIQUES:\n${settings.custom_instructions}`
   }
 
-  // Brand context (compiled knowledge base summary)
-  if (settings.brand_context) {
-    prompt += `\n\nCONTEXTE DE LA MARQUE:\n${settings.brand_context}`
-  }
+  // Brand context removed — knowledge base is used directly instead
 
   // Guardrails
   if (guardrails.length > 0) {

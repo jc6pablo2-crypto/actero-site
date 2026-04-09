@@ -68,7 +68,7 @@ export async function runExecutor(supabase, { event, playbook, clientId, normali
                   <p><strong>Client:</strong> ${normalized.customer_name || normalized.customer_email}</p>
                   <p><strong>Classification:</strong> ${classification}</p>
                   <p><strong>Message:</strong> ${normalized.message.substring(0, 300)}</p>
-                  <p><a href="https://actero.fr/client/escalations" style="display:inline-block;padding:10px 20px;background:#0F5F35;color:white;text-decoration:none;border-radius:8px;font-weight:bold">Voir dans Actero</a></p>
+                  <p><a href="${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://actero.fr'}/client/escalations" style="display:inline-block;padding:10px 20px;background:#0F5F35;color:white;text-decoration:none;border-radius:8px;font-weight:bold">Voir dans Actero</a></p>
                 </div>`,
               }),
             })

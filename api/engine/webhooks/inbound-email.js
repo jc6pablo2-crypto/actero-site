@@ -26,6 +26,13 @@ const supabase = createClient(
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
+  // Auth: require engine secret or internal secret
+  const secret = req.headers['x-engine-secret'] || req.headers['x-internal-secret']
+  const ENGINE_SECRET = process.env.ENGINE_WEBHOOK_SECRET
+  const INTERNAL_SECRET = process.env.INTERNAL_API_SECRET
+  const isAuthed = (ENGINE_SECRET && secret === ENGINE_SECRET) || (INTERNAL_SECRET && secret === INTERNAL_SECRET)
+  if (!isAuthed) return res.status(401).json({ error: 'Non autorise' })
+
   const clientId = req.query?.client_id
 
   // Try to identify client from email address if no client_id
