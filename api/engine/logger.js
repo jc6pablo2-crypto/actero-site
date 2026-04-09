@@ -99,32 +99,46 @@ export async function logRun(supabase, {
 
   if (runError) console.error('[logger] Run insert error:', runError.message)
 
-  // For follow-up messages: don't create new events/metrics, but if this is
-  // an escalation, update the existing ai_conversation to 'escalated'
+  // For follow-up messages: don't create new events/metrics
+  // But: update the existing ai_conversation with new info (email, escalation, response)
   if (isFollowUp) {
-    const isEscalatedNow = status === 'needs_review' || actionPlan?.includes('escalate')
-    if (isEscalatedNow && normalized?.customer_email) {
-      try {
-        // Update the most recent ai_conversation for this session to escalated
-        const { data: existing } = await supabase
-          .from('ai_conversations')
-          .select('id')
-          .eq('client_id', clientId)
-          .eq('status', 'resolved')
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle()
-        if (existing) {
-          const escalationReason = confidence < 0.6 ? 'low_confidence' : 'out_of_policy'
-          await supabase.from('ai_conversations').update({
-            status: 'escalated',
-            escalation_reason: escalationReason,
-            customer_email: normalized.customer_email,
-          }).eq('id', existing.id)
+    try {
+      // Find the most recent ai_conversation for this client
+      const { data: existing } = await supabase
+        .from('ai_conversations')
+        .select('id, status, customer_email')
+        .eq('client_id', clientId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle()
+
+      if (existing) {
+        const isEscalatedNow = status === 'needs_review' || actionPlan?.includes('escalate')
+        const hasRealEmail = normalized?.customer_email && !normalized.customer_email.includes('@anonymous.actero.fr')
+        const updates = {}
+
+        // Update email if a real one was detected
+        if (hasRealEmail && existing.customer_email?.includes('@anonymous.actero.fr')) {
+          updates.customer_email = normalized.customer_email
         }
-      } catch (err) {
-        console.error('[logger] follow-up escalation update error:', err.message)
+
+        // Update to escalated if this follow-up triggers escalation
+        if (isEscalatedNow && existing.status !== 'escalated') {
+          updates.status = 'escalated'
+          updates.escalation_reason = confidence < 0.6 ? 'low_confidence' : 'out_of_policy'
+        }
+
+        // Update AI response if we have a better one
+        if (aiResponse && aiResponse.length > 20) {
+          updates.ai_response = aiResponse
+        }
+
+        if (Object.keys(updates).length > 0) {
+          await supabase.from('ai_conversations').update(updates).eq('id', existing.id)
+        }
       }
+    } catch (err) {
+      console.error('[logger] follow-up update error:', err.message)
     }
     return run
   }
