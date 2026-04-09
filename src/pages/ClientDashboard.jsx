@@ -89,6 +89,7 @@ import { AgentImprovementWidget } from '../components/client/AgentImprovementWid
 import { ChannelsView } from '../components/client/ChannelsView'
 import { PlaybooksView } from '../components/client/PlaybooksView'
 import { ClientBillingView } from '../components/client/ClientBillingView'
+import { HelpCenterView } from '../components/client/HelpCenterView'
 import { ROISettingsView } from '../components/client/ROISettingsView'
 
 const FeedbackButtons = ({ eventId, currentFeedback, supabase }) => {
@@ -712,11 +713,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "roi" && <ROISettingsView clientId={currentClient?.id} theme={theme} />}
 
           {activeTab === "support" && (
-            <SupportTicketsView
-              supabase={supabase}
-              clientId={currentClient?.id}
-              theme={theme}
-            />
+            <HelpCenterView theme={theme} />
           )}
 
           {activeTab === "referral" && (
