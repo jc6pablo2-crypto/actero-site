@@ -2,77 +2,105 @@ import React, { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Zap, ShoppingBag, Headphones, Loader2, Play, Pause,
-  CheckCircle2, AlertTriangle, Plug, ArrowRight, Star,
-  Mail, MessageSquare, Clock, Gift, Shield, Heart,
-  Search, TrendingUp, Package,
+  Zap, ShoppingBag, Headphones, Loader2, Play,
+  CheckCircle2, AlertTriangle, Plug, Star, Shield,
+  Heart, Search, TrendingUp, Package, Gift, Mail,
+  MessageSquare, ArrowRight,
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
 
-/* ═══════════ PLAYBOOK METADATA ═══════════ */
+/* ═══════════ CATEGORIES ═══════════ */
+
+const CATEGORIES = [
+  {
+    id: 'essentials',
+    label: 'Recommande pour vous',
+    desc: 'Activez ces automatisations en premier pour un impact immediat.',
+    playbooks: ['sav_ecommerce', 'abandoned_cart', 'shipping_tracker'],
+    highlight: true,
+  },
+  {
+    id: 'sales',
+    label: 'Ventes & Conversion',
+    desc: 'Augmentez votre chiffre d\'affaires automatiquement.',
+    playbooks: ['abandoned_cart', 'promo_code_handler', 'post_purchase_followup', 'review_collector'],
+  },
+  {
+    id: 'support',
+    label: 'Support Client',
+    desc: 'Repondez aux demandes de vos clients 24h/24.',
+    playbooks: ['sav_ecommerce', 'shipping_tracker', 'order_issue_handler', 'support_technique'],
+  },
+  {
+    id: 'retention',
+    label: 'Fidelisation',
+    desc: 'Gardez vos clients et augmentez leur valeur.',
+    playbooks: ['vip_customer_care', 'anti_churn', 'winback_inactive'],
+  },
+]
 
 const PLAYBOOK_META = {
   sav_ecommerce: {
-    icon: Headphones, color: 'from-emerald-500 to-emerald-700',
+    icon: Headphones, color: 'from-emerald-500 to-emerald-600',
+    simpleDesc: 'Repond automatiquement aux questions de vos clients (commandes, retours, produits).',
     requires: [{ type: 'any', providers: ['gmail', 'gorgias', 'zendesk'], label: 'Gmail, Gorgias ou Zendesk' }],
-    recommended: ['slack'],
   },
   abandoned_cart: {
-    icon: ShoppingBag, color: 'from-amber-500 to-amber-700',
+    icon: ShoppingBag, color: 'from-amber-500 to-amber-600',
+    simpleDesc: 'Relance les clients qui ont abandonne leur panier avec un email personnalise.',
     requires: [{ type: 'all', providers: ['shopify'], label: 'Shopify' }],
-    recommended: [],
   },
   shipping_tracker: {
-    icon: Package, color: 'from-blue-500 to-blue-700',
+    icon: Package, color: 'from-blue-500 to-blue-600',
+    simpleDesc: 'Repond aux questions "ou est mon colis ?" avec le vrai statut de la commande.',
     requires: [
       { type: 'all', providers: ['shopify'], label: 'Shopify' },
       { type: 'any', providers: ['gmail', 'gorgias', 'zendesk'], label: 'Gmail, Gorgias ou Zendesk' },
     ],
-    recommended: [],
   },
   order_issue_handler: {
-    icon: AlertTriangle, color: 'from-red-500 to-red-700',
+    icon: AlertTriangle, color: 'from-red-500 to-red-600',
+    simpleDesc: 'Gere les problemes de commande : retard, colis abime, article manquant.',
     requires: [{ type: 'any', providers: ['gmail', 'gorgias', 'zendesk'], label: 'Gmail, Gorgias ou Zendesk' }],
-    recommended: ['slack'],
   },
   promo_code_handler: {
-    icon: Gift, color: 'from-pink-500 to-pink-700',
-    requires: [{ type: 'any', providers: ['gmail'], label: 'Gmail ou widget' }],
-    recommended: [],
+    icon: Gift, color: 'from-pink-500 to-pink-600',
+    simpleDesc: 'Aide les clients dont le code promo ne fonctionne pas.',
+    requires: [{ type: 'any', providers: ['gmail'], label: 'Gmail' }],
   },
   vip_customer_care: {
-    icon: Star, color: 'from-violet-500 to-violet-700',
+    icon: Star, color: 'from-violet-500 to-violet-600',
+    simpleDesc: 'Detecte vos meilleurs clients et leur repond en priorite.',
     requires: [
       { type: 'any', providers: ['gmail', 'gorgias', 'zendesk'], label: 'Gmail, Gorgias ou Zendesk' },
       { type: 'all', providers: ['slack'], label: 'Slack' },
     ],
-    recommended: ['shopify'],
   },
   anti_churn: {
-    icon: Shield, color: 'from-rose-500 to-rose-700',
+    icon: Shield, color: 'from-rose-500 to-rose-600',
+    simpleDesc: 'Detecte les clients mecontents et lance une action de retention.',
     requires: [{ type: 'any', providers: ['gmail', 'gorgias', 'zendesk'], label: 'Gmail, Gorgias ou Zendesk' }],
-    recommended: ['slack'],
   },
   post_purchase_followup: {
-    icon: Mail, color: 'from-cyan-500 to-cyan-700',
+    icon: Mail, color: 'from-cyan-500 to-cyan-600',
+    simpleDesc: 'Envoie un email de remerciement et conseils 3 jours apres la commande.',
     requires: [{ type: 'all', providers: ['shopify'], label: 'Shopify' }],
-    recommended: [],
   },
   winback_inactive: {
-    icon: TrendingUp, color: 'from-indigo-500 to-indigo-700',
+    icon: TrendingUp, color: 'from-indigo-500 to-indigo-600',
+    simpleDesc: 'Relance les clients qui n\'ont pas commande depuis 60 jours.',
     requires: [{ type: 'all', providers: ['shopify'], label: 'Shopify' }],
-    recommended: [],
   },
   review_collector: {
-    icon: MessageSquare, color: 'from-teal-500 to-teal-700',
+    icon: MessageSquare, color: 'from-teal-500 to-teal-600',
+    simpleDesc: 'Demande un avis client 7 jours apres la livraison.',
     requires: [{ type: 'all', providers: ['shopify'], label: 'Shopify' }],
-    recommended: [],
   },
   support_technique: {
-    icon: Headphones, color: 'from-gray-500 to-gray-700',
+    icon: Headphones, color: 'from-gray-500 to-gray-600',
+    simpleDesc: 'Repond aux questions techniques et cree des tickets si besoin.',
     requires: [{ type: 'any', providers: ['gmail', 'gorgias', 'zendesk'], label: 'Gmail, Gorgias ou Zendesk' }],
-    recommended: [],
   },
 }
 
@@ -81,10 +109,8 @@ const PLAYBOOK_META = {
 export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
   const toast = useToast()
   const queryClient = useQueryClient()
-  const [expandedPlaybook, setExpandedPlaybook] = useState(null)
 
-  // All playbooks
-  const { data: playbooks = [], isLoading: loadingPb } = useQuery({
+  const { data: playbooks = [], isLoading } = useQuery({
     queryKey: ['playbooks-list'],
     queryFn: async () => {
       const { data } = await supabase.from('engine_playbooks').select('*').eq('is_active', true).order('display_name')
@@ -92,7 +118,6 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
     },
   })
 
-  // Client's associations
   const { data: clientPlaybooks = [] } = useQuery({
     queryKey: ['client-playbooks', clientId],
     queryFn: async () => {
@@ -102,7 +127,6 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
     enabled: !!clientId,
   })
 
-  // Connected integrations
   const { data: connectedProviders = [] } = useQuery({
     queryKey: ['connected-providers', clientId],
     queryFn: async () => {
@@ -117,64 +141,32 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
     enabled: !!clientId,
   })
 
-  // Recent runs
-  const { data: recentRuns = [] } = useQuery({
-    queryKey: ['client-runs-stats', clientId],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('engine_runs_v2')
-        .select('playbook_id, status, confidence')
-        .eq('client_id', clientId)
-        .order('created_at', { ascending: false })
-        .limit(100)
-      return data || []
-    },
-    enabled: !!clientId,
-  })
+  const isActive = (playbookName) => {
+    const pb = playbooks.find(p => p.name === playbookName)
+    return pb ? clientPlaybooks.some(cp => cp.playbook_id === pb.id && cp.is_active) : false
+  }
 
-  // Check if requirements are met for a playbook
-  const checkRequirements = (playbookName) => {
+  const checkReqs = (playbookName) => {
     const meta = PLAYBOOK_META[playbookName]
     if (!meta?.requires) return { met: true, missing: [] }
-
     const missing = []
     for (const req of meta.requires) {
-      if (req.type === 'all') {
-        const allConnected = req.providers.every(p => connectedProviders.includes(p))
-        if (!allConnected) missing.push(req.label)
-      } else if (req.type === 'any') {
-        const anyConnected = req.providers.some(p => connectedProviders.includes(p))
-        if (!anyConnected) missing.push(req.label)
-      }
+      if (req.type === 'all' && !req.providers.every(p => connectedProviders.includes(p))) missing.push(req.label)
+      if (req.type === 'any' && !req.providers.some(p => connectedProviders.includes(p))) missing.push(req.label)
     }
-
     return { met: missing.length === 0, missing }
   }
 
-  const getRecommended = (playbookName) => {
-    const meta = PLAYBOOK_META[playbookName]
-    if (!meta?.recommended) return []
-    return meta.recommended.filter(p => !connectedProviders.includes(p))
-  }
-
-  const isActive = (playbookId) => clientPlaybooks.some(cp => cp.playbook_id === playbookId && cp.is_active)
-
-  const getStats = (playbookId) => {
-    const runs = recentRuns.filter(r => r.playbook_id === playbookId)
-    const completed = runs.filter(r => r.status === 'completed').length
-    return { total: runs.length, rate: runs.length > 0 ? Math.round(completed / runs.length * 100) : 0 }
-  }
-
-  const handleToggle = async (playbook) => {
-    const reqs = checkRequirements(playbook.name)
+  const handleToggle = async (playbookName) => {
+    const pb = playbooks.find(p => p.name === playbookName)
+    if (!pb) return
+    const reqs = checkReqs(playbookName)
     if (!reqs.met) {
       toast.error(`Connectez d'abord : ${reqs.missing.join(', ')}`)
       return
     }
-
-    const existing = clientPlaybooks.find(cp => cp.playbook_id === playbook.id)
+    const existing = clientPlaybooks.find(cp => cp.playbook_id === pb.id)
     const currentlyActive = existing?.is_active || false
-
     if (existing) {
       await supabase.from('engine_client_playbooks').update({
         is_active: !currentlyActive,
@@ -182,181 +174,106 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
       }).eq('id', existing.id)
     } else {
       await supabase.from('engine_client_playbooks').insert({
-        client_id: clientId,
-        playbook_id: playbook.id,
-        is_active: true,
-        activated_at: new Date().toISOString(),
+        client_id: clientId, playbook_id: pb.id, is_active: true, activated_at: new Date().toISOString(),
       })
     }
-
     queryClient.invalidateQueries({ queryKey: ['client-playbooks', clientId] })
-    toast.success(!currentlyActive ? `"${playbook.display_name}" active` : `"${playbook.display_name}" desactive`)
+    toast.success(!currentlyActive ? `"${pb.display_name}" active` : `"${pb.display_name}" desactive`)
   }
 
-  if (loadingPb) return <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 animate-spin text-[#716D5C]" /></div>
+  if (isLoading) return <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 animate-spin text-[#9ca3af]" /></div>
 
-  const activeCount = playbooks.filter(p => isActive(p.id)).length
+  const activeCount = playbooks.filter(p => isActive(p.name)).length
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-[#262626]">Mes Playbooks</h2>
-        <p className="text-sm text-[#716D5C] mt-1">
+        <h2 className="text-[22px] font-semibold text-[#1a1a1a]">Automatisations</h2>
+        <p className="text-[13px] text-[#9ca3af] mt-1">
           {activeCount > 0
-            ? `${activeCount} playbook${activeCount > 1 ? 's' : ''} actif${activeCount > 1 ? 's' : ''} — votre agent traite automatiquement les evenements correspondants.`
-            : 'Activez un playbook pour que votre agent commence a traiter les demandes automatiquement.'}
+            ? `${activeCount} automatisation${activeCount > 1 ? 's' : ''} active${activeCount > 1 ? 's' : ''}. Votre agent traite les demandes en continu.`
+            : 'Activez vos premieres automatisations pour que votre agent commence a travailler.'}
         </p>
       </div>
 
-      <div className="space-y-3">
-        {playbooks.map(playbook => {
-          const meta = PLAYBOOK_META[playbook.name] || { icon: Zap, color: 'from-gray-500 to-gray-700' }
-          const Icon = meta.icon
-          const active = isActive(playbook.id)
-          const reqs = checkRequirements(playbook.name)
-          const recommended = getRecommended(playbook.name)
-          const stats = getStats(playbook.id)
-          const isExpanded = expandedPlaybook === playbook.id
+      {/* Categories */}
+      {CATEGORIES.map(cat => {
+        const catPlaybooks = cat.playbooks
+          .map(name => {
+            const pb = playbooks.find(p => p.name === name)
+            return pb ? { ...pb, meta: PLAYBOOK_META[name] || {} } : null
+          })
+          .filter(Boolean)
 
-          return (
-            <div
-              key={playbook.id}
-              className={`bg-white border rounded-2xl overflow-hidden transition-all ${
-                active ? 'border-[#0F5F35] ring-1 ring-[#0F5F35]/20' : reqs.met ? 'border-gray-200' : 'border-gray-100 opacity-70'
-              }`}
-            >
-              {/* Main row */}
-              <div className="p-4 flex items-center gap-4">
-                <div className={`w-11 h-11 rounded-xl flex items-center justify-center bg-gradient-to-br ${meta.color} flex-shrink-0`}>
-                  <Icon className="w-5 h-5 text-white" />
-                </div>
+        if (catPlaybooks.length === 0) return null
 
-                <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setExpandedPlaybook(isExpanded ? null : playbook.id)}>
-                  <div className="flex items-center gap-2">
-                    <p className="font-bold text-sm text-[#262626]">{playbook.display_name}</p>
-                    {active && (
-                      <span className="flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded-full">
-                        <Play className="w-3 h-3" /> Actif
-                      </span>
-                    )}
-                    {!reqs.met && (
-                      <span className="flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-600 text-[10px] font-bold rounded-full">
-                        <Plug className="w-3 h-3" /> Integration requise
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-[#716D5C] mt-0.5 line-clamp-1">{playbook.description}</p>
-                </div>
-
-                {/* Stats */}
-                {stats.total > 0 && (
-                  <div className="hidden md:flex gap-3 flex-shrink-0 text-center">
-                    <div>
-                      <p className="text-sm font-bold text-[#262626]">{stats.total}</p>
-                      <p className="text-[9px] text-[#716D5C] uppercase">Runs</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-emerald-600">{stats.rate}%</p>
-                      <p className="text-[9px] text-[#716D5C] uppercase">Auto</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Toggle or Connect button */}
-                {reqs.met ? (
-                  <button
-                    onClick={() => handleToggle(playbook)}
-                    className={`relative w-12 h-6 rounded-full transition-colors flex-shrink-0 ${active ? 'bg-[#0F5F35]' : 'bg-gray-300'}`}
-                  >
-                    <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${active ? 'translate-x-6' : 'translate-x-0.5'}`} />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setActiveTab('integrations')}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 text-xs font-bold rounded-full hover:bg-amber-100 transition-colors flex-shrink-0"
-                  >
-                    <Plug className="w-3 h-3" /> Connecter
-                  </button>
-                )}
-              </div>
-
-              {/* Expanded details */}
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden border-t border-gray-100"
-                  >
-                    <div className="p-4 space-y-3">
-                      {/* Requirements */}
-                      <div>
-                        <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-2">Prerequis</p>
-                        <div className="space-y-1.5">
-                          {(PLAYBOOK_META[playbook.name]?.requires || []).map((req, i) => {
-                            const isMet = req.type === 'all'
-                              ? req.providers.every(p => connectedProviders.includes(p))
-                              : req.providers.some(p => connectedProviders.includes(p))
-                            return (
-                              <div key={i} className="flex items-center gap-2">
-                                {isMet
-                                  ? <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                                  : <AlertTriangle className="w-4 h-4 text-amber-500" />}
-                                <span className={`text-xs ${isMet ? 'text-[#262626]' : 'text-amber-700'}`}>
-                                  {req.label} {isMet ? '— connecte' : '— a connecter'}
-                                </span>
-                                {!isMet && (
-                                  <button onClick={() => setActiveTab('integrations')} className="text-[10px] text-[#0F5F35] font-bold hover:underline">
-                                    Connecter →
-                                  </button>
-                                )}
-                              </div>
-                            )
-                          })}
-                        </div>
-                      </div>
-
-                      {/* Recommended */}
-                      {recommended.length > 0 && (
-                        <div className="p-2.5 bg-blue-50 rounded-lg">
-                          <p className="text-[10px] text-blue-700 font-bold">
-                            Recommande : connectez {recommended.join(', ')} pour une meilleure experience
-                          </p>
-                        </div>
-                      )}
-
-                      {/* How it works */}
-                      <div>
-                        <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-1">Comment ca marche</p>
-                        <p className="text-xs text-[#716D5C]">
-                          Quand un evenement ({(playbook.event_types || []).join(', ')}) arrive pour votre compte,
-                          le moteur Actero le classifie automatiquement et execute les actions du playbook
-                          (seuil de confiance : {Math.round((playbook.confidence_threshold || 0.85) * 100)}%).
-                          Si l'IA n'est pas assez confiante, l'evenement passe en review humaine dans l'onglet Escalades.
-                        </p>
-                      </div>
-
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-1.5">
-                        {(playbook.event_types || []).map(et => (
-                          <span key={et} className="px-2 py-0.5 bg-[#F9F7F1] rounded text-[9px] font-mono text-[#716D5C]">{et}</span>
-                        ))}
-                        <span className="px-2 py-0.5 bg-blue-50 rounded text-[9px] text-blue-600 font-bold">
-                          {(playbook.actions_available || []).length} actions
-                        </span>
-                        <span className="px-2 py-0.5 bg-violet-50 rounded text-[9px] text-violet-600 font-bold">
-                          Seuil: {Math.round((playbook.confidence_threshold || 0.85) * 100)}%
-                        </span>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+        return (
+          <div key={cat.id}>
+            <div className="mb-4">
+              <h3 className={`text-[15px] font-semibold ${cat.highlight ? 'text-[#0F5F35]' : 'text-[#1a1a1a]'}`}>
+                {cat.highlight && <span className="inline-block w-2 h-2 rounded-full bg-[#0F5F35] mr-2 mb-0.5" />}
+                {cat.label}
+              </h3>
+              <p className="text-[12px] text-[#9ca3af] mt-0.5">{cat.desc}</p>
             </div>
-          )
-        })}
-      </div>
+
+            <div className="space-y-2.5">
+              {catPlaybooks.map(pb => {
+                const meta = pb.meta
+                const Icon = meta.icon || Zap
+                const active = isActive(pb.name)
+                const reqs = checkReqs(pb.name)
+
+                return (
+                  <div
+                    key={`${cat.id}-${pb.id}`}
+                    className={`flex items-center gap-4 px-5 py-4 rounded-xl transition-all ${
+                      active
+                        ? 'bg-[#0F5F35]/[0.04] border border-[#0F5F35]/20'
+                        : 'bg-white border border-[#f0f0f0] shadow-[0_1px_2px_rgba(0,0,0,0.04)]'
+                    }`}
+                  >
+                    {/* Icon */}
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br ${meta.color || 'from-gray-400 to-gray-500'} flex-shrink-0`}>
+                      <Icon className="w-5 h-5 text-white" />
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-[13px] font-semibold text-[#1a1a1a]">{pb.display_name}</p>
+                        {active && (
+                          <span className="flex items-center gap-1 px-1.5 py-0.5 bg-[#0F5F35]/10 text-[#0F5F35] text-[9px] font-bold rounded-full">
+                            <CheckCircle2 className="w-2.5 h-2.5" /> Actif
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-[#9ca3af] mt-0.5 leading-relaxed">{meta.simpleDesc || pb.description}</p>
+                    </div>
+
+                    {/* Toggle or Connect */}
+                    {reqs.met ? (
+                      <button
+                        onClick={() => handleToggle(pb.name)}
+                        className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${active ? 'bg-[#0F5F35]' : 'bg-[#e5e5e5]'}`}
+                      >
+                        <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${active ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setActiveTab('integrations')}
+                        className="flex items-center gap-1 px-3 py-1.5 text-[11px] font-semibold text-amber-700 bg-amber-50 rounded-full hover:bg-amber-100 transition-colors flex-shrink-0"
+                      >
+                        <Plug className="w-3 h-3" /> Connecter
+                      </button>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })}
     </div>
   )
 }
