@@ -13,6 +13,8 @@
   const sessionId = 'actero_' + Math.random().toString(36).substring(2, 10)
   let isOpen = false
   let messages = []
+  let customerEmail = null
+  let customerName = null
 
   // Styles
   const style = document.createElement('style')
@@ -125,8 +127,27 @@
   const sendBtn = document.getElementById('actero-send')
   let sending = false
 
+  // Try to extract email from message text
+  function extractEmail(text) {
+    const match = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)
+    return match ? match[0] : null
+  }
+
+  // Try to extract name from message text
+  function extractName(text) {
+    const patterns = [
+      /(?:je (?:suis|m'appelle|me nomme))\s+([A-ZÀ-Ü][a-zà-ü]+(?:\s+[A-ZÀ-Ü][a-zà-ü]+)?)/i,
+      /(?:my name is|i'm|i am)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/i,
+    ]
+    for (const pat of patterns) {
+      const match = text.match(pat)
+      if (match) return match[1]
+    }
+    return null
+  }
+
   function addBotMessage(text) {
-    messages.push({ role: 'bot', text })
+    messages.push({ role: 'assistant', text })
     const el = document.createElement('div')
     el.className = 'actero-msg bot'
     el.textContent = text
@@ -143,11 +164,27 @@
     msgsEl.scrollTop = msgsEl.scrollHeight
   }
 
+  // Build conversation history for the API (last 10 exchanges max)
+  function getConversationHistory() {
+    // Skip the initial greeting, send real exchanges only
+    const history = messages
+      .filter(m => m.role === 'user' || m.role === 'assistant')
+      .slice(-20) // last 20 messages (10 exchanges)
+      .map(m => ({ role: m.role, content: m.text }))
+    return history
+  }
+
   async function send() {
     const text = inputEl.value.trim()
     if (!text || sending) return
     inputEl.value = ''
     addUserMessage(text)
+
+    // Extract email/name from user messages
+    const foundEmail = extractEmail(text)
+    if (foundEmail) customerEmail = foundEmail
+    const foundName = extractName(text)
+    if (foundName) customerName = foundName
 
     sending = true
     sendBtn.disabled = true
@@ -163,7 +200,13 @@
       const res = await fetch(ACTERO_URL + '/api/engine/webhooks/widget?api_key=' + apiKey, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text, session_id: sessionId }),
+        body: JSON.stringify({
+          message: text,
+          session_id: sessionId,
+          email: customerEmail,
+          name: customerName,
+          history: getConversationHistory(),
+        }),
       })
       const data = await res.json()
       loader.remove()

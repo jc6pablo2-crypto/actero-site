@@ -50,10 +50,12 @@ export default async function handler(req, res) {
 
   if (!clientId) return res.status(404).json({ error: 'Client not found for this API key' })
 
-  const { message, email, name, session_id } = req.body || {}
+  const { message, email, name, session_id, history } = req.body || {}
   if (!message) return res.status(400).json({ error: 'message required' })
 
   const customerEmail = email || `widget-${session_id || Date.now()}@anonymous.actero.fr`
+  // Conversation history from widget (array of {role, content})
+  const conversationHistory = Array.isArray(history) ? history.slice(-20) : []
 
   // Insert message
   const { data: engineMessage, error: insertError } = await supabase
@@ -109,12 +111,13 @@ export default async function handler(req, res) {
       status: 'processing',
     }).select().single()
 
-    // Run Brain
+    // Run Brain (with conversation history for memory)
     const brainResult = await runBrain(supabase, {
       event: event || { id: engineMessage.id, source: 'web_widget' },
       playbook,
       clientId,
       normalized,
+      conversationHistory,
     })
 
     // Execute
@@ -139,6 +142,8 @@ export default async function handler(req, res) {
         steps: executorResult.steps,
         durationMs: Date.now() - startTime,
         error: executorResult.error,
+        normalized,
+        aiResponse: brainResult.aiResponse,
       })
 
       if (event) {
@@ -146,7 +151,7 @@ export default async function handler(req, res) {
       }
     } else {
       // Needs review
-      await logRun(supabase, {
+      const runResult = await logRun(supabase, {
         clientId,
         eventId: event?.id,
         playbookId: playbook.id,
@@ -156,7 +161,30 @@ export default async function handler(req, res) {
         actionPlan: brainResult.actionPlan,
         steps: [],
         durationMs: Date.now() - startTime,
+        normalized,
+        aiResponse: brainResult.aiResponse,
       })
+
+      // Create review entry for admin/client dashboard
+      if (runResult?.id) {
+        try {
+          await supabase.from('engine_reviews_v2').insert({
+            run_id: runResult.id,
+            client_id: clientId,
+            event_id: event?.id,
+            proposed_action: { classification: brainResult.classification, action_plan: brainResult.actionPlan, ai_response: brainResult.aiResponse },
+            reason: brainResult.reviewReason || 'aggressive',
+            status: 'pending',
+          })
+        } catch (err) {
+          console.error('[widget] engine_reviews_v2 insert error:', err.message)
+        }
+      }
+
+      // Update event status
+      if (event) {
+        await supabase.from('engine_events').update({ status: 'needs_review', processed_at: new Date().toISOString() }).eq('id', event.id)
+      }
     }
 
     return res.status(200).json({

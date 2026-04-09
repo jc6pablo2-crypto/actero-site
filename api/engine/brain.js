@@ -15,7 +15,7 @@ import { buildSystemPrompt } from './lib/prompt-builder.js'
  * Run the Brain on a normalized event.
  * Returns: { classification, confidence, actionPlan, aiResponse, needsReview, reviewReason }
  */
-export async function runBrain(supabase, { event, playbook, clientId, normalized }) {
+export async function runBrain(supabase, { event, playbook, clientId, normalized, conversationHistory }) {
   // Load full client context
   const clientConfig = await loadClientConfig(supabase, clientId)
 
@@ -57,9 +57,22 @@ ${clientConfig.guardrails.length > 0 ? `\nREGLES:\n${clientConfig.guardrails.map
     let proposedResponse = null
     try {
       const responsePrompt = buildSystemPrompt(clientConfig)
+      // Build messages with conversation history
+      let lowConfMessages = []
+      if (conversationHistory && conversationHistory.length > 0) {
+        const prevMessages = conversationHistory.slice(0, -1)
+        for (const msg of prevMessages) {
+          if (msg.role === 'user') {
+            lowConfMessages.push({ role: 'user', content: msg.content })
+          } else if (msg.role === 'assistant') {
+            lowConfMessages.push({ role: 'assistant', content: JSON.stringify({ response: msg.content, confidence: 0.9 }) })
+          }
+        }
+      }
+      lowConfMessages.push({ role: 'user', content: normalized.message })
       const respResult = await callClaude({
         systemPrompt: responsePrompt,
-        messages: [{ role: 'user', content: normalized.message }],
+        messages: lowConfMessages,
         maxTokens: 300,
       })
       proposedResponse = respResult.response || respResult.rawText
@@ -76,19 +89,45 @@ ${clientConfig.guardrails.length > 0 ? `\nREGLES:\n${clientConfig.guardrails.map
   }
 
   // --- Step 2: Decision (get action plan from playbook rules) ---
-  const actionPlan = getActionPlan(playbook, classification)
+  let actionPlan = getActionPlan(playbook, classification)
 
   // --- Step 3: Generate AI response if action plan includes send_reply ---
   let aiResponse = null
+  let shouldEscalate = false
+  let escalationReason = null
+  let sentimentScore = 5
+
   if (actionPlan.includes('send_reply') || actionPlan.includes('send_email')) {
     try {
       const responsePrompt = buildSystemPrompt(clientConfig)
+
+      // Build messages with conversation history for context/memory
+      let claudeMessages = []
+      if (conversationHistory && conversationHistory.length > 0) {
+        // Include previous exchanges (skip the current message which is last)
+        const prevMessages = conversationHistory.slice(0, -1)
+        for (const msg of prevMessages) {
+          if (msg.role === 'user') {
+            claudeMessages.push({ role: 'user', content: msg.content })
+          } else if (msg.role === 'assistant') {
+            // Wrap assistant responses as JSON like Claude expects
+            claudeMessages.push({ role: 'assistant', content: JSON.stringify({ response: msg.content, confidence: 0.9 }) })
+          }
+        }
+      }
+      // Add current message
+      claudeMessages.push({ role: 'user', content: normalized.message })
+
       const respResult = await callClaude({
         systemPrompt: responsePrompt,
-        messages: [{ role: 'user', content: normalized.message }],
+        messages: claudeMessages,
         maxTokens: 400,
       })
       aiResponse = respResult.response || respResult.rawText
+      shouldEscalate = respResult.should_escalate === true
+      escalationReason = respResult.escalation_reason || null
+      sentimentScore = respResult.sentiment_score || 5
+
       // Clean markdown
       if (aiResponse) {
         aiResponse = aiResponse.replace(/\*\*/g, '').replace(/\*/g, '').replace(/^#+\s/gm, '').replace(/`([^`]+)`/g, '$1').trim()
@@ -103,6 +142,23 @@ ${clientConfig.guardrails.length > 0 ? `\nREGLES:\n${clientConfig.guardrails.map
         needsReview: true,
         reviewReason: 'error',
       }
+    }
+  }
+
+  // --- Step 4: Check escalation signals from Claude ---
+  // Escalate if: Claude flagged should_escalate, or sentiment is very negative (<=2),
+  // or classification is 'aggressive', or injection detected
+  if (shouldEscalate || sentimentScore <= 2 || classification === 'aggressive') {
+    if (!actionPlan.includes('escalate')) {
+      actionPlan = [...actionPlan, 'escalate']
+    }
+    return {
+      classification,
+      confidence,
+      actionPlan,
+      aiResponse,
+      needsReview: true,
+      reviewReason: shouldEscalate ? (escalationReason || 'aggressive') : 'aggressive',
     }
   }
 

@@ -2,15 +2,17 @@
  * Actero Engine V2 — Logger
  *
  * Enregistre chaque run avec ses steps, met à jour les métriques.
- * Écrit dans engine_runs_v2 + automation_events + metrics_daily.
+ * Écrit dans engine_runs_v2 + automation_events + metrics_daily + ai_conversations.
  */
 
 /**
  * Log a complete run.
+ * Also accepts optional normalized event data for ai_conversations logging.
  */
 export async function logRun(supabase, {
   clientId, eventId, playbookId, status, classification,
   confidence, actionPlan, steps, durationMs, error,
+  normalized, aiResponse,
 }) {
   // 1. Create run record
   const { data: run, error: runError } = await supabase
@@ -33,26 +35,35 @@ export async function logRun(supabase, {
   if (runError) console.error('[logger] Run insert error:', runError.message)
 
   // 2. Log to automation_events (feeds the existing dashboard)
+  const isEscalated = status === 'needs_review' || actionPlan?.includes('escalate')
   const eventCategory = status === 'completed'
     ? (actionPlan?.includes('escalate') ? 'ticket_escalated' : 'ticket_resolved')
     : status === 'needs_review'
       ? 'ticket_escalated'
       : 'ticket_error'
 
-  // Get client's avg ticket time from settings
+  // Get client's settings (avg ticket time + hourly cost for ROI)
   let avgTicketTimeSec = 300 // default 5 min
+  let hourlyCost = 25 // default 25€/h
   try {
     const { data: clientSettings } = await supabase
       .from('client_settings')
-      .select('avg_ticket_time_min')
+      .select('avg_ticket_time_min, hourly_cost')
       .eq('client_id', clientId)
       .maybeSingle()
     if (clientSettings?.avg_ticket_time_min) {
       avgTicketTimeSec = clientSettings.avg_ticket_time_min * 60
     }
+    if (clientSettings?.hourly_cost) {
+      hourlyCost = clientSettings.hourly_cost
+    }
   } catch {}
 
-  const timeSaved = status === 'completed' && !actionPlan?.includes('escalate') ? avgTicketTimeSec : 0
+  const isResolved = status === 'completed' && !actionPlan?.includes('escalate')
+  const timeSaved = isResolved ? avgTicketTimeSec : 0
+  const timeSavedMinutes = Math.round(timeSaved / 60)
+  // ROI = time saved in hours * hourly cost
+  const estimatedRoi = isResolved ? Math.round((timeSaved / 3600) * hourlyCost * 100) / 100 : 0
 
   try {
     await supabase.from('automation_events').insert({
@@ -61,7 +72,7 @@ export async function logRun(supabase, {
       event_type: classification || 'engine_run',
       ticket_type: classification || 'general',
       time_saved_seconds: timeSaved,
-      description: `[Engine] ${classification} — ${status} (${Math.round(confidence * 100)}% confiance, ${durationMs}ms)`,
+      description: `[Engine] ${classification} — ${status} (${Math.round((confidence || 0) * 100)}% confiance, ${durationMs}ms)`,
       metadata: {
         run_id: run?.id,
         event_id: eventId,
@@ -77,7 +88,33 @@ export async function logRun(supabase, {
     console.error('[logger] automation_events insert error:', err.message)
   }
 
-  // 3. Update metrics_daily (upsert for today)
+  // 3. Write to ai_conversations (feeds "A traiter" tab + activity feed)
+  try {
+    const conversationStatus = isEscalated ? 'escalated' : 'resolved'
+    const escalationReason = status === 'needs_review'
+      ? (confidence < 0.6 ? 'low_confidence' : 'error')
+      : actionPlan?.includes('escalate')
+        ? 'aggressive'
+        : null
+
+    await supabase.from('ai_conversations').insert({
+      client_id: clientId,
+      customer_email: normalized?.customer_email || null,
+      customer_name: normalized?.customer_name || null,
+      subject: normalized?.subject || classification || 'general',
+      customer_message: normalized?.message || 'N/A',
+      ai_response: aiResponse || 'Pas de réponse générée',
+      status: conversationStatus,
+      ticket_type: classification || 'general',
+      confidence_score: confidence,
+      response_time_ms: durationMs,
+      escalation_reason: escalationReason,
+    })
+  } catch (err) {
+    console.error('[logger] ai_conversations insert error:', err.message)
+  }
+
+  // 4. Update metrics_daily (upsert for today)
   try {
     const today = new Date().toISOString().split('T')[0]
     const { data: existing } = await supabase
@@ -88,27 +125,33 @@ export async function logRun(supabase, {
       .maybeSingle()
 
     if (existing) {
-      const isResolved = status === 'completed' && !actionPlan?.includes('escalate')
+      const newTicketsTotal = (existing.tickets_total || 0) + 1
+      const newTicketsAuto = (existing.tickets_auto || 0) + (isResolved ? 1 : 0)
+      const newTasksExecuted = (existing.tasks_executed || 0) + 1
+      const newTimeSaved = (existing.time_saved_minutes || 0) + timeSavedMinutes
+      const newRoi = (existing.estimated_roi || 0) + estimatedRoi
+
       await supabase.from('metrics_daily').update({
-        tickets_total: (existing.tickets_total || 0) + 1,
-        tickets_auto: (existing.tickets_auto || 0) + (isResolved ? 1 : 0),
-        tasks_executed: (existing.tasks_executed || 0) + (steps?.length || 0),
-        time_saved_minutes: (existing.time_saved_minutes || 0) + Math.round(timeSaved / 60),
+        tickets_total: newTicketsTotal,
+        tickets_auto: newTicketsAuto,
+        tasks_executed: newTasksExecuted,
+        time_saved_minutes: newTimeSaved,
         conversations_handled: (existing.conversations_handled || 0) + 1,
-        resolution_rate: existing.tickets_total > 0
-          ? Math.round(((existing.tickets_auto || 0) + (isResolved ? 1 : 0)) / ((existing.tickets_total || 0) + 1) * 100)
-          : (isResolved ? 100 : 0),
+        estimated_roi: Math.round(newRoi * 100) / 100,
+        resolution_rate: newTicketsTotal > 0
+          ? Math.round(newTicketsAuto / newTicketsTotal * 100)
+          : 0,
       }).eq('id', existing.id)
     } else {
-      const isResolved = status === 'completed' && !actionPlan?.includes('escalate')
       await supabase.from('metrics_daily').insert({
         client_id: clientId,
         date: today,
         tickets_total: 1,
         tickets_auto: isResolved ? 1 : 0,
-        tasks_executed: steps?.length || 0,
-        time_saved_minutes: Math.round(timeSaved / 60),
+        tasks_executed: 1,
+        time_saved_minutes: timeSavedMinutes,
         conversations_handled: 1,
+        estimated_roi: estimatedRoi,
         resolution_rate: isResolved ? 100 : 0,
       })
     }

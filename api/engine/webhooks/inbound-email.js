@@ -144,6 +144,7 @@ export default async function handler(req, res) {
         status: 'needs_review', classification: brainResult.classification,
         confidence: brainResult.confidence, actionPlan: brainResult.actionPlan,
         steps: [], durationMs: Date.now() - startTime,
+        normalized, aiResponse: brainResult.aiResponse,
       })
 
       await supabase.from('engine_reviews_v2').insert({
@@ -164,6 +165,7 @@ export default async function handler(req, res) {
         classification: brainResult.classification, confidence: brainResult.confidence,
         actionPlan: brainResult.actionPlan, steps: executorResult.steps,
         durationMs: Date.now() - startTime, error: executorResult.error,
+        normalized, aiResponse: brainResult.aiResponse,
       })
 
       await supabase.from('engine_events').update({

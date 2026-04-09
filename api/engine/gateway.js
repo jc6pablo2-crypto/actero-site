@@ -110,6 +110,8 @@ export default async function handler(req, res) {
         actionPlan: brainResult.actionPlan,
         steps: [],
         durationMs: Date.now() - startTime,
+        normalized,
+        aiResponse: brainResult.aiResponse,
       })
 
       // Create review entry
@@ -147,6 +149,8 @@ export default async function handler(req, res) {
         steps: executorResult.steps,
         durationMs: Date.now() - startTime,
         error: executorResult.error,
+        normalized,
+        aiResponse: brainResult.aiResponse,
       })
 
       // Update event status
