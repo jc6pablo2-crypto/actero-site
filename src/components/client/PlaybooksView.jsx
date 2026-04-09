@@ -249,6 +249,22 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
                         )}
                       </div>
                       <p className="text-[11px] text-[#9ca3af] mt-0.5 leading-relaxed">{meta.simpleDesc || pb.description}</p>
+                      {/* Required integrations */}
+                      <div className="flex flex-wrap gap-1.5 mt-2">
+                        {(meta.requires || []).map((req, ri) => {
+                          const isMet = req.type === 'all'
+                            ? req.providers.every(p => connectedProviders.includes(p))
+                            : req.providers.some(p => connectedProviders.includes(p))
+                          return (
+                            <span key={ri} className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                              isMet ? 'bg-emerald-50 text-emerald-600' : 'bg-[#f5f5f5] text-[#9ca3af]'
+                            }`}>
+                              {isMet ? <CheckCircle2 className="w-2.5 h-2.5" /> : <Plug className="w-2.5 h-2.5" />}
+                              {req.label}
+                            </span>
+                          )
+                        })}
+                      </div>
                     </div>
 
                     {/* Toggle or Connect */}
