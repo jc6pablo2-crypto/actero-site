@@ -53,9 +53,23 @@ export default async function handler(req, res) {
   const { message, email, name, session_id, history } = req.body || {}
   if (!message) return res.status(400).json({ error: 'message required' })
 
-  const customerEmail = email || `widget-${session_id || Date.now()}@anonymous.actero.fr`
   // Conversation history from widget (array of {role, content})
   const conversationHistory = Array.isArray(history) ? history.slice(-20) : []
+
+  // Extract email from current message or use provided one
+  const emailFromMessage = message.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)?.[0]
+  // Also scan conversation history for email if not provided
+  let emailFromHistory = null
+  if (!email && !emailFromMessage && conversationHistory.length > 0) {
+    for (const msg of conversationHistory) {
+      if (msg.role === 'user' && msg.content) {
+        const found = msg.content.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)
+        if (found) { emailFromHistory = found[0]; break }
+      }
+    }
+  }
+  const customerEmail = email || emailFromMessage || emailFromHistory || `widget-${session_id || Date.now()}@anonymous.actero.fr`
+  const isRealEmail = !customerEmail.includes('@anonymous.actero.fr')
 
   // Insert message
   const { data: engineMessage, error: insertError } = await supabase

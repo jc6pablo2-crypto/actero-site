@@ -468,6 +468,29 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
                     )}
                     </div>
 
+                    {/* Email integration recommendation — when widget is active but no email integration */}
+                    {active && pb.name === 'sav_ecommerce' && selectedChannels[`${pb.name}_widget`] && !connectedProviders.includes('smtp_imap') && !connectedProviders.includes('gmail') && (
+                      <div className="mx-5 mb-4 mt-1 p-3.5 bg-blue-50 rounded-xl border border-blue-100">
+                        <div className="flex items-start gap-2.5">
+                          <Mail className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                          <div className="flex-1">
+                            <p className="text-[12px] font-semibold text-blue-900">Recommandation : activez l&apos;integration email</p>
+                            <p className="text-[11px] text-blue-700 mt-0.5 leading-relaxed">
+                              Quand un client est agressif ou a besoin d&apos;un suivi, l&apos;IA lui demande son email dans le widget.
+                              Si vous connectez votre email (SMTP/IMAP), les reponses que vous redigez dans &quot;A traiter&quot; seront envoyees automatiquement au client.
+                            </p>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); setActiveTab('integrations') }}
+                              className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-blue-700 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors"
+                            >
+                              <Plug className="w-3 h-3" /> Connecter mon email
+                              <ArrowRight className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {/* Vocal agent config — shown when active */}
                     {active && meta.configType === 'vocal' && (
                       <div className="px-5 pb-4 pt-3 border-t border-[#f0f0f0]">

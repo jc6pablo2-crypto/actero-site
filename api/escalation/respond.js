@@ -5,6 +5,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const RESEND_FROM = process.env.RESEND_FROM_EMAIL || 'support@actero.fr';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -35,21 +38,50 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'Conversation not found' });
     }
 
-    // 2. Send email to customer via Resend (if configured)
-    if (conversation.customer_email && process.env.RESEND_API_KEY) {
+    // Get brand name for the email
+    const { data: client } = await supabase
+      .from('clients')
+      .select('brand_name, contact_email')
+      .eq('id', conversation.client_id)
+      .single();
+
+    const brandName = client?.brand_name || 'Actero';
+    const isRealEmail = conversation.customer_email && !conversation.customer_email.includes('@anonymous.actero.fr');
+    let emailSent = false;
+
+    // 2. Send email to customer via Resend (if real email + configured)
+    if (isRealEmail && RESEND_API_KEY) {
       try {
-        const { Resend } = await import('resend');
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        await resend.emails.send({
-          from: process.env.RESEND_FROM_EMAIL || 'support@actero.fr',
-          to: conversation.customer_email,
-          subject: `Re: ${conversation.subject || 'Votre demande'}`,
-          html: `
-            <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto;">
-              <p>${String(response).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g, '<br>')}</p>
-            </div>
-          `,
+        const emailRes = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${RESEND_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: `${brandName} <${RESEND_FROM}>`,
+            to: [conversation.customer_email],
+            subject: `Re: ${conversation.subject || 'Votre demande'}`,
+            html: `
+              <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; padding: 20px;">
+                <p style="color: #262626; font-size: 15px; line-height: 1.6;">
+                  ${conversation.customer_name ? `Bonjour ${conversation.customer_name},` : 'Bonjour,'}
+                </p>
+                <p style="color: #262626; font-size: 15px; line-height: 1.6;">
+                  ${String(response).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g, '<br>')}
+                </p>
+                <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;" />
+                <p style="color: #999; font-size: 12px;">${brandName} — Service client</p>
+              </div>
+            `,
+          }),
         });
+
+        if (emailRes.ok) {
+          emailSent = true;
+        } else {
+          console.error('Resend error:', await emailRes.text());
+        }
       } catch (emailErr) {
         console.error('Email send error (non-blocking):', emailErr.message);
       }
@@ -89,10 +121,15 @@ export default async function handler(req, res) {
       client_id: conversation.client_id,
       event_category: 'ticket_human_resolved',
       event_type: 'escalation_response',
-      description: `Reponse humaine a ${conversation.customer_name || conversation.customer_email || 'un client'}`,
+      description: `Reponse humaine a ${conversation.customer_name || conversation.customer_email || 'un client'}${emailSent ? ' — email envoye' : ''}`,
+      metadata: { email_sent: emailSent, customer_email: conversation.customer_email },
     }).catch(() => {});
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({
+      success: true,
+      email_sent: emailSent,
+      customer_email: isRealEmail ? conversation.customer_email : null,
+    });
   } catch (error) {
     console.error('escalation/respond error:', error);
     return res.status(500).json({ error: error.message });

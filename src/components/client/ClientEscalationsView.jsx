@@ -37,11 +37,18 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
   const [response, setResponse] = useState('')
   const [addToKb, setAddToKb] = useState(false)
 
+  const [emailSentStatus, setEmailSentStatus] = useState(null)
+  const isRealEmail = conversation.customer_email && !conversation.customer_email.includes('@anonymous.actero.fr')
+
   const respondMutation = useMutation({
     mutationFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession()
       const res = await fetch('/api/escalation/respond', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`,
+        },
         body: JSON.stringify({
           conversation_id: conversation.id,
           response,
@@ -73,12 +80,16 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
             body: JSON.stringify({ client_id: clientId }),
           }).catch(() => {})
         }
+        return { email_sent: false }
       }
+      return await res.json()
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setEmailSentStatus(data?.email_sent ? 'sent' : 'not_sent')
       queryClient.invalidateQueries({ queryKey: ['escalations', clientId] })
       queryClient.invalidateQueries({ queryKey: ['escalation-stats', clientId] })
-      onClose()
+      // Wait briefly to show email status before closing
+      setTimeout(() => onClose(), data?.email_sent ? 2000 : 0)
     },
   })
 
@@ -172,6 +183,31 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
         {/* Response area */}
         {!conversation.human_response ? (
           <div className="p-6 border-t border-[#f0f0f0] space-y-4">
+            {/* Email notification banner */}
+            {isRealEmail ? (
+              <div className="flex items-center gap-2 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+                <Mail className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                <p className="text-[12px] text-emerald-700">
+                  Votre reponse sera envoyee automatiquement par email a <span className="font-semibold">{conversation.customer_email}</span>
+                </p>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 p-3 bg-amber-50 rounded-xl border border-amber-100">
+                <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+                <p className="text-[12px] text-amber-700">
+                  Ce client n&apos;a pas fourni d&apos;email. Votre reponse sera enregistree mais ne sera pas envoyee.
+                </p>
+              </div>
+            )}
+
+            {/* Email sent confirmation */}
+            {emailSentStatus === 'sent' && (
+              <div className="flex items-center gap-2 p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <p className="text-[12px] text-emerald-700 font-semibold">Email envoye a {conversation.customer_email}</p>
+              </div>
+            )}
+
             <div>
               <label className="block text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-2">Votre reponse</label>
               <textarea
@@ -207,7 +243,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
                 className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[12px] font-semibold bg-[#0F5F35] text-white hover:bg-[#003725] transition-all disabled:opacity-50"
               >
                 {respondMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                Envoyer la reponse
+                {isRealEmail ? 'Envoyer par email' : 'Enregistrer la reponse'}
               </button>
               <button
                 onClick={() => ignoreMutation.mutate()}
@@ -432,10 +468,17 @@ export const ClientEscalationsView = ({ clientId, theme = 'dark' }) => {
                         {formatTimeAgo(conv.created_at)}
                       </span>
                     </div>
-                    <p className={`text-sm font-medium text-[#1a1a1a]`}>
-                      {conv.customer_name || conv.customer_email || 'Client'}
-                      {conv.subject ? ` — ${conv.subject}` : ''}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className={`text-sm font-medium text-[#1a1a1a]`}>
+                        {conv.customer_name || conv.customer_email || 'Client'}
+                        {conv.subject ? ` — ${conv.subject}` : ''}
+                      </p>
+                      {conv.customer_email && !conv.customer_email.includes('@anonymous.actero.fr') && (
+                        <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-blue-50 text-blue-600 border border-blue-100">
+                          <Mail className="w-2.5 h-2.5" /> Email
+                        </span>
+                      )}
+                    </div>
                     <p className={`text-xs mt-1 line-clamp-1 text-[#9ca3af]`}>
                       {conv.customer_message}
                     </p>
