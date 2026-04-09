@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import nodemailer from 'nodemailer';
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
@@ -6,35 +7,37 @@ const supabase = createClient(
 );
 
 /**
- * Send email via client's own SMTP (their custom email address).
- * Returns { sent: true, from: 'xxx@xxx.com' } or { sent: false, error: '...' }
+ * Send email via client's own SMTP.
  */
 async function sendViaSMTP(smtpConfig, { to, subject, html, brandName }) {
-  const nodemailer = await import('nodemailer').then(m => m.default || m);
   const transporter = nodemailer.createTransport({
     host: smtpConfig.smtp_host,
     port: parseInt(smtpConfig.smtp_port) || 587,
-    secure: smtpConfig.use_ssl === true || parseInt(smtpConfig.smtp_port) === 465,
+    secure: parseInt(smtpConfig.smtp_port) === 465,
     auth: {
       user: smtpConfig.username,
       pass: smtpConfig.password,
     },
-    tls: { rejectUnauthorized: false },
+    tls: {
+      rejectUnauthorized: false,
+      minVersion: 'TLSv1.2',
+    },
     connectionTimeout: 8000,
     greetingTimeout: 5000,
+    socketTimeout: 8000,
   });
 
   const fromEmail = smtpConfig.email || smtpConfig.username;
   const fromDisplay = brandName ? `${brandName} <${fromEmail}>` : fromEmail;
 
-  await transporter.sendMail({
+  const info = await transporter.sendMail({
     from: fromDisplay,
     to,
     subject,
     html,
   });
 
-  return { sent: true, from: fromEmail };
+  return { sent: true, from: fromEmail, messageId: info.messageId };
 }
 
 export default async function handler(req, res) {
@@ -77,17 +80,17 @@ export default async function handler(req, res) {
 
     const brandName = clientRes.data?.brand_name || 'Support';
     const smtpConfig = smtpRes.data?.extra_config || null;
-    // Merge password from api_key field if stored there
-    if (smtpConfig && smtpRes.data?.api_key && !smtpConfig.password) {
+    // Password stored in api_key field
+    if (smtpConfig && smtpRes.data?.api_key) {
       smtpConfig.password = smtpRes.data.api_key;
     }
 
     const isRealEmail = conversation.customer_email && !conversation.customer_email.includes('@anonymous.actero.fr');
-    let emailResult = { sent: false };
+    let emailResult = { sent: false, error: null };
     let sentVia = null;
 
-    // 3. Send email if customer has a real email
-    if (isRealEmail) {
+    // 3. Send email if customer has real email + SMTP configured
+    if (isRealEmail && smtpConfig?.smtp_host && smtpConfig?.username && smtpConfig?.password) {
       const subject = `Re: ${conversation.subject || 'Votre demande'}`;
       const escapedResponse = String(response)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -106,25 +109,23 @@ export default async function handler(req, res) {
         </div>
       `;
 
-      // Priority 1: Client's own SMTP
-      if (smtpConfig?.smtp_host && smtpConfig?.username && smtpConfig?.password) {
-        try {
-          emailResult = await sendViaSMTP(smtpConfig, {
-            to: conversation.customer_email,
-            subject, html, brandName,
-          });
-          sentVia = 'smtp';
-        } catch (smtpErr) {
-          console.error('[escalation] SMTP send failed:', smtpErr.message);
-        }
+      try {
+        emailResult = await sendViaSMTP(smtpConfig, {
+          to: conversation.customer_email,
+          subject, html, brandName,
+        });
+        sentVia = 'smtp';
+        console.log(`[escalation] Email sent via SMTP from ${emailResult.from} to ${conversation.customer_email}`);
+      } catch (smtpErr) {
+        console.error('[escalation] SMTP send failed:', smtpErr.message, smtpErr.code);
+        emailResult = { sent: false, error: smtpErr.message };
       }
-      // No SMTP configured → email won't be sent (client must configure SMTP/IMAP)
-      if (!emailResult.sent && !smtpConfig?.smtp_host) {
-        console.log('[escalation] No SMTP configured — email not sent. Client must connect SMTP/IMAP integration.');
-      }
+    } else if (isRealEmail && !smtpConfig?.smtp_host) {
+      emailResult = { sent: false, error: 'SMTP non configure. Connectez votre email dans Integrations.' };
+      console.log('[escalation] No SMTP configured — email not sent');
     }
 
-    // 4. Update conversation
+    // 4. Update conversation (always, even if email failed)
     const { error: updateError } = await supabase
       .from('ai_conversations')
       .update({
@@ -160,20 +161,22 @@ export default async function handler(req, res) {
       metadata: {
         email_sent: emailResult.sent,
         sent_via: sentVia,
-        sent_from: emailResult.from,
+        sent_from: emailResult.from || null,
         customer_email: conversation.customer_email,
+        error: emailResult.error || null,
       },
     }).catch(() => {});
 
     return res.status(200).json({
       success: true,
       email_sent: emailResult.sent,
+      email_error: emailResult.error || null,
       sent_via: sentVia,
       sent_from: emailResult.from || null,
       customer_email: isRealEmail ? conversation.customer_email : null,
     });
   } catch (error) {
-    console.error('escalation/respond error:', error);
+    console.error('escalation/respond error:', error.message || error);
     return res.status(500).json({ error: error.message });
   }
 }

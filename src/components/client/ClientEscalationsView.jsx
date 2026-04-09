@@ -76,6 +76,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
   const [addToKb, setAddToKb] = useState(false)
 
   const [emailSentStatus, setEmailSentStatus] = useState(null)
+  const [emailErrorMsg, setEmailErrorMsg] = useState(null)
   const isRealEmail = conversation.customer_email && !conversation.customer_email.includes('@anonymous.actero.fr')
 
   const respondMutation = useMutation({
@@ -123,11 +124,19 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
       return await res.json()
     },
     onSuccess: (data) => {
-      setEmailSentStatus(data?.email_sent ? 'sent' : 'not_sent')
+      if (data?.email_sent) {
+        setEmailSentStatus('sent')
+      } else if (data?.email_error) {
+        setEmailSentStatus('error')
+        setEmailErrorMsg(data.email_error)
+      } else {
+        setEmailSentStatus('not_sent')
+      }
       queryClient.invalidateQueries({ queryKey: ['escalations', clientId] })
       queryClient.invalidateQueries({ queryKey: ['escalation-stats', clientId] })
-      // Wait briefly to show email status before closing
-      setTimeout(() => onClose(), data?.email_sent ? 2000 : 0)
+      queryClient.invalidateQueries({ queryKey: ['all-escalations', clientId] })
+      // Wait to show status, longer for errors so user can read
+      setTimeout(() => onClose(), data?.email_sent ? 2000 : data?.email_error ? 5000 : 500)
     },
   })
 
@@ -245,6 +254,15 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
               <div className="flex items-center gap-2 p-3 bg-emerald-50 rounded-xl border border-emerald-200">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <p className="text-[12px] text-emerald-700 font-semibold">Email envoye a {conversation.customer_email}</p>
+              </div>
+            )}
+            {emailSentStatus === 'error' && (
+              <div className="flex items-start gap-2 p-3 bg-red-50 rounded-xl border border-red-200">
+                <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-[12px] text-red-700 font-semibold">Email non envoye</p>
+                  <p className="text-[11px] text-red-600 mt-0.5">{emailErrorMsg || 'Verifiez votre configuration SMTP dans Integrations.'}</p>
+                </div>
               </div>
             )}
 
