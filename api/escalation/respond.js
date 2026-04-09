@@ -91,7 +91,24 @@ export default async function handler(req, res) {
 
     // 3. Send email if customer has real email + SMTP configured
     if (isRealEmail && smtpConfig?.smtp_host && smtpConfig?.username && smtpConfig?.password) {
-      const subject = `Re: ${conversation.subject || 'Votre demande'}`;
+      // Generate a clean email subject (not technical classification)
+      const SUBJECT_MAP = {
+        autre: 'Votre demande',
+        general: 'Votre demande',
+        suivi_commande: 'Suivi de votre commande',
+        order_tracking: 'Suivi de votre commande',
+        retour_produit: 'Votre retour produit',
+        return_exchange: 'Votre retour produit',
+        remboursement: 'Votre demande de remboursement',
+        question_produit: 'Votre question',
+        product_info: 'Votre question produit',
+        reclamation: 'Suite a votre reclamation',
+        billing: 'Votre demande facturation',
+        livraison: 'Votre livraison',
+      }
+      const rawSubject = conversation.subject || 'Votre demande'
+      const cleanSubject = SUBJECT_MAP[rawSubject.toLowerCase()] || (rawSubject.length > 3 && !rawSubject.match(/^[a-z_]+$/) ? rawSubject : 'Votre demande')
+      const subject = `${brandName} — ${cleanSubject}`;
       const escapedResponse = String(response)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;').replace(/\n/g, '<br>');

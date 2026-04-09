@@ -314,7 +314,7 @@ export async function logRun(supabase, {
         session_id: sessionId,
         customer_email: normalized?.customer_email || null,
         customer_name: normalized?.customer_name || null,
-        subject: normalized?.subject || classification || 'general',
+        subject: normalized?.subject || 'Demande client',
         customer_message: displayMessage,
         ai_response: aiResponse || 'Pas de reponse generee',
         status: conversationStatus,
