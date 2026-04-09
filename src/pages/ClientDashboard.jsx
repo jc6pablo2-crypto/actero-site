@@ -88,6 +88,7 @@ import { NotificationCenterView } from '../components/client/NotificationCenterV
 import { AgentImprovementWidget } from '../components/client/AgentImprovementWidget'
 import { ChannelsView } from '../components/client/ChannelsView'
 import { PlaybooksView } from '../components/client/PlaybooksView'
+import { ClientBillingView } from '../components/client/ClientBillingView'
 
 const FeedbackButtons = ({ eventId, currentFeedback, supabase }) => {
   const [feedback, setFeedback] = useState(currentFeedback || null);
@@ -724,7 +725,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "profile" && <ClientProfileView theme={theme} />}
 
-          {activeTab === "billing" && <ClientProfileView theme={theme} />}
+          {activeTab === "billing" && <ClientBillingView theme={theme} />}
 
           {activeTab === "support" && (
             <SupportTicketsView
