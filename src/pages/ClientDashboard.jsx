@@ -532,13 +532,15 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
       {/* Sidebar Desktop */}
       <div className="hidden md:block">
-        <Sidebar 
-          title="Actero OS"
+        <Sidebar
+          title="Actero"
           items={filteredSidebarItems}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           onLogout={onLogout}
           theme={theme}
+          userName={currentClient?.brand_name}
+          userEmail={currentClient?.contact_email}
         />
       </div>
 
@@ -555,14 +557,16 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               initial={{ x: -280 }} animate={{ x: 0 }} exit={{ x: -280 }}
               className={`relative w-4/5 max-w-xs h-full shadow-2xl ${isLight ? "bg-white" : "bg-[#F9F7F1]"}`}
             >
-              <Sidebar 
-                title="Actero OS"
+              <Sidebar
+                title="Actero"
                 items={filteredSidebarItems}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 onLogout={onLogout}
                 onClose={() => setIsMobileMenuOpen(false)}
                 theme={theme}
+                userName={currentClient?.brand_name}
+                userEmail={currentClient?.contact_email}
               />
             </motion.div>
           </div>
@@ -570,58 +574,44 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       </AnimatePresence>
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        <header className="sticky top-0 z-40 bg-[#fafafa] px-4 md:px-10 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#ebebeb]">
-          <div className="flex items-center gap-6">
-            <h1 className="text-[15px] font-semibold tracking-tight whitespace-nowrap text-[#1a1a1a]">
-              {activeTab === "overview" && "Accueil"}
-              {activeTab === "activity" && "Activite temps reel"}
-              {activeTab === "systems" && "Mes Systemes"}
-              {activeTab === "knowledge" && "Base de savoir"}
-              {activeTab === "intelligence" && "Intelligence"}
-              {activeTab === "support" && "Aide"}
-              {activeTab === "referral" && "Parrainage"}
-              {activeTab === "integrations" && "Intégrations"}
-              {activeTab === "agent-config" && "Configurer l'agent"}
-              {activeTab === "simulator" && "Tester l'agent"}
-              {activeTab === "team" && "Equipe"}
-              {activeTab === "guardrails" && "Regles & Limites"}
-              {activeTab === "escalations" && "Escalades"}
-              {activeTab === "voice-agent" && "Appels IA"}
-              {activeTab === "multi-agent" && "Multi-Agents"}
-              {activeTab === "prompt-injection" && "Securite IA"}
-              {activeTab === "client-memory" && "Memoire Client"}
-              {activeTab === "sentiment" && "Analyse de Sentiment"}
-              {activeTab === "voice-studio" && "Voix"}
-              {activeTab === "supplier-negotiation" && "Negociation Fournisseur"}
-              {activeTab === "voice-report" && "Rapports audio"}
-              {activeTab === "notifications" && "Notifications"}
-              {activeTab === "channels" && "Mes Canaux"}
-              {activeTab === "playbooks" && "Playbooks"}
-            </h1>
-
-            <div className="hidden lg:flex items-center gap-3">
-              <HealthScoreIndicator metricsData={dailyMetrics.slice(-7)} eventsData={events} theme={theme} />
-              <div className={`h-4 w-px mx-1 ${isLight ? "bg-gray-200" : "bg-gray-50"}`}></div>
-              <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg ${isLight ? "bg-[#F9F7F1] border-gray-200" : "bg-gray-50 border-gray-200"}`}>
-                <Clock className="w-3.5 h-3.5 text-[#003725]" />
-                <span className={`text-xs font-bold ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
-                  <AnimatedCounter value={metrics?.time_saved_minutes ? Math.round(metrics.time_saved_minutes/60) : 0} />h <span className="font-normal opacity-60">/mois</span>
-                </span>
-              </div>
-              <div className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg ${isLight ? "bg-[#F9F7F1] border-gray-200" : "bg-gray-50 border-gray-200"}`}>
-                <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
-                <span className={`text-xs font-bold ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>
-                  <AnimatedCounter value={metrics?.estimated_roi || 0} />€ <span className="font-normal opacity-60">/mois</span>
-                </span>
-              </div>
-            </div>
+        {/* Header — clean, minimal like Instantly */}
+        <header className="sticky top-0 z-40 bg-white px-5 md:px-8 h-[48px] flex items-center justify-between border-b border-[#f0f0f0]">
+          <h1 className="text-[14px] font-semibold text-[#1a1a1a]">
+            {activeTab === "overview" && "Accueil"}
+            {activeTab === "activity" && "Activite"}
+            {activeTab === "systems" && "Systemes"}
+            {activeTab === "knowledge" && "Base de savoir"}
+            {activeTab === "intelligence" && "Intelligence"}
+            {activeTab === "support" && "Aide"}
+            {activeTab === "referral" && "Parrainage"}
+            {activeTab === "integrations" && "Integrations"}
+            {activeTab === "agent-config" && "Configurer"}
+            {activeTab === "simulator" && "Tester"}
+            {activeTab === "team" && "Equipe"}
+            {activeTab === "guardrails" && "Regles & Limites"}
+            {activeTab === "escalations" && "Escalades"}
+            {activeTab === "voice-agent" && "Appels IA"}
+            {activeTab === "multi-agent" && "Multi-Agents"}
+            {activeTab === "prompt-injection" && "Securite IA"}
+            {activeTab === "client-memory" && "Memoire Client"}
+            {activeTab === "sentiment" && "Sentiment"}
+            {activeTab === "voice-studio" && "Voix"}
+            {activeTab === "supplier-negotiation" && "Negociation"}
+            {activeTab === "voice-report" && "Rapports audio"}
+            {activeTab === "notifications" && "Notifications"}
+            {activeTab === "channels" && "Mes Canaux"}
+            {activeTab === "playbooks" && "Playbooks"}
+          </h1>
+          <div className="flex items-center gap-3">
+            {escalationCount > 0 && (
+              <button
+                onClick={() => setActiveTab('escalations')}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-[11px] font-semibold hover:bg-red-100 transition-colors"
+              >
+                <AlertTriangle className="w-3 h-3" /> {escalationCount}
+              </button>
+            )}
           </div>
-          <button
-            onClick={() => setActiveTab("activity")}
-            className="text-sm font-bold text-[#716D5C] hover:text-[#716D5C] flex items-center gap-2 transition-colors"
-          >
-            Voir l'activité <ArrowRight className="w-4 h-4" />
-          </button>
         </header>
 
         <main className="flex-1 overflow-y-auto p-4 md:px-10 md:py-8 bg-[#fafafa]">
@@ -683,24 +673,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 </div>
               </div>
 
-              {/* ── Escalation alert ── */}
-              {escalationCount > 0 && (
-                <button
-                  onClick={() => setActiveTab('escalations')}
-                  className="w-full mb-6 flex items-center gap-3 px-5 py-3.5 rounded-xl bg-amber-50 border border-amber-100 hover:bg-amber-100 transition-colors text-left shadow-sm"
-                >
-                  <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-                    <AlertTriangle className="w-4 h-4 text-amber-600" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-[13px] font-semibold text-amber-900">
-                      {escalationCount} escalade{escalationCount > 1 ? 's' : ''} en attente
-                    </p>
-                    <p className="text-[11px] text-amber-600">L'IA a besoin de votre validation</p>
-                  </div>
-                  <span className="text-[12px] font-medium text-amber-700">Voir →</span>
-                </button>
-              )}
+              {/* Escalation alert moved to header */}
 
               {/* ── Onboarding ── */}
               <OnboardingWizard
