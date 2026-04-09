@@ -136,6 +136,12 @@ export default async function handler(req, res) {
       status: 'processing',
     }).select().single()
 
+    // Determine if this is a follow-up message (not the first in the conversation)
+    // A follow-up means there's at least 1 previous user message in the history
+    const previousUserMessages = conversationHistory.filter(m => m.role === 'user').length
+    // The current message is included in history, so >1 means there were previous messages
+    const isFollowUp = previousUserMessages > 1
+
     // Run Brain (with conversation history for memory)
     const brainResult = await runBrain(supabase, {
       event: event || { id: engineMessage.id, source: 'web_widget' },
@@ -169,6 +175,7 @@ export default async function handler(req, res) {
         error: executorResult.error,
         normalized,
         aiResponse: brainResult.aiResponse,
+        isFollowUp,
       })
 
       if (event) {
@@ -188,6 +195,7 @@ export default async function handler(req, res) {
         durationMs: Date.now() - startTime,
         normalized,
         aiResponse: brainResult.aiResponse,
+        isFollowUp,
       })
 
       // Create review entry for admin/client dashboard

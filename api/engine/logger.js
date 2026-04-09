@@ -77,7 +77,7 @@ function mapTicketType(classification) {
 export async function logRun(supabase, {
   clientId, eventId, playbookId, status, classification,
   confidence, actionPlan, steps, durationMs, error,
-  normalized, aiResponse,
+  normalized, aiResponse, isFollowUp,
 }) {
   // 1. Create run record
   const { data: run, error: runError } = await supabase
@@ -98,6 +98,12 @@ export async function logRun(supabase, {
     .single()
 
   if (runError) console.error('[logger] Run insert error:', runError.message)
+
+  // Skip duplicate counting for follow-up messages in the same conversation
+  // Only the first message of a session should create events/metrics
+  if (isFollowUp) {
+    return run
+  }
 
   // 2. Log to automation_events (feeds the existing dashboard)
   const isEscalated = status === 'needs_review' || actionPlan?.includes('escalate')
