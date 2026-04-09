@@ -99,9 +99,33 @@ export async function logRun(supabase, {
 
   if (runError) console.error('[logger] Run insert error:', runError.message)
 
-  // Skip duplicate counting for follow-up messages in the same conversation
-  // Only the first message of a session should create events/metrics
+  // For follow-up messages: don't create new events/metrics, but if this is
+  // an escalation, update the existing ai_conversation to 'escalated'
   if (isFollowUp) {
+    const isEscalatedNow = status === 'needs_review' || actionPlan?.includes('escalate')
+    if (isEscalatedNow && normalized?.customer_email) {
+      try {
+        // Update the most recent ai_conversation for this session to escalated
+        const { data: existing } = await supabase
+          .from('ai_conversations')
+          .select('id')
+          .eq('client_id', clientId)
+          .eq('status', 'resolved')
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle()
+        if (existing) {
+          const escalationReason = confidence < 0.6 ? 'low_confidence' : 'out_of_policy'
+          await supabase.from('ai_conversations').update({
+            status: 'escalated',
+            escalation_reason: escalationReason,
+            customer_email: normalized.customer_email,
+          }).eq('id', existing.id)
+        }
+      } catch (err) {
+        console.error('[logger] follow-up escalation update error:', err.message)
+      }
+    }
     return run
   }
 

@@ -171,15 +171,16 @@ ${clientConfig.guardrails.length > 0 ? `\nREGLES:\n${clientConfig.guardrails.map
   }
 
   // --- Step 4: Check escalation signals from Claude ---
-  // Only escalate on STRONG signals:
+  // Escalate when:
   // - Sentiment very negative (<=2) = truly angry/aggressive customer
-  // - Classification is 'aggressive' or 'reclamation' (explicit complaint)
-  // - should_escalate + low sentiment (<=4) = Claude flags AND customer is unhappy
+  // - Classification is 'aggressive' or 'reclamation'
+  // - should_escalate + sentiment <= 4 = Claude flags AND customer unhappy
+  // - Claude explicitly flags should_escalate (customer asked for human)
   const shouldForceEscalate =
     sentimentScore <= 2 ||
     classification === 'aggressive' ||
     classification === 'reclamation' ||
-    (shouldEscalate && sentimentScore <= 4)
+    (shouldEscalate && sentimentScore <= 6)
 
   if (shouldForceEscalate) {
     if (!actionPlan.includes('escalate')) {
