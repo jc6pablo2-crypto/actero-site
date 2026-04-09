@@ -56,6 +56,49 @@ const PROVIDER_TEST_ENDPOINTS = {
       'Authorization': `Bearer ${c.api_key}`,
     }),
   },
+  axonaut: {
+    method: 'GET',
+    url: () => 'https://axonaut.com/api/v2/companies?limit=1',
+    headers: (c) => ({
+      'userApiKey': c.api_key,
+    }),
+  },
+  pennylane: {
+    method: 'GET',
+    url: () => 'https://app.pennylane.com/api/external/v1/me',
+    headers: (c) => ({
+      'Authorization': `Bearer ${c.api_key}`,
+    }),
+  },
+  ipaidthat: {
+    method: 'GET',
+    url: () => 'https://app.ipaidthat.io/api/v2/me',
+    headers: (c) => ({
+      'Authorization': `Bearer ${c.api_key}`,
+    }),
+  },
+  intercom: {
+    method: 'GET',
+    url: () => 'https://api.intercom.io/me',
+    headers: (c) => ({
+      'Authorization': `Bearer ${c.api_key}`,
+      'Accept': 'application/json',
+    }),
+  },
+  crisp: {
+    method: 'GET',
+    url: () => 'https://api.crisp.chat/v1/website',
+    headers: (c) => ({
+      'Authorization': `Basic ${Buffer.from(c.api_key + ':').toString('base64')}`,
+    }),
+  },
+  cal_com: {
+    method: 'GET',
+    url: () => 'https://api.cal.com/v1/me',
+    headers: (c) => ({
+      'Authorization': `Bearer ${c.api_key}`,
+    }),
+  },
 };
 
 async function testProvider(provider, credentials) {

@@ -472,7 +472,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
   };
 
   const handleApiKeySubmit = async () => {
-    if (!apiKeyValue.trim() || !apiKeyProvider) return;
+    if (!apiKeyValue.trim() || !apiKeyProvider || !clientId) return;
     setApiKeySaving(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -484,26 +484,44 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
         },
         body: JSON.stringify({
           provider: apiKeyProvider.id,
-          api_key: apiKeyValue.trim(),
-          client_id: clientId,
+          provider_label: apiKeyProvider.name,
+          credentials: { api_key: apiKeyValue.trim() },
         }),
       });
-      if (!res.ok) throw new Error('Erreur connexion');
+      const data = await res.json();
+      if (!res.ok) {
+        // If API test failed, save anyway but show warning
+        if (data.test_failed) {
+          alert('Attention : le test de connexion a echoue (' + data.error + '). La cle a ete sauvegardee mais verifiez vos identifiants.');
+        } else {
+          throw new Error(data.error || 'Erreur connexion');
+        }
+      }
       queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
       setApiKeyProvider(null);
       setApiKeyValue('');
     } catch (err) {
-      // Fallback: save directly to DB if API fails
-      await supabase.from('client_integrations').upsert({
-        client_id: clientId,
-        provider: apiKeyProvider.id,
-        status: 'active',
-        credentials: { api_key: apiKeyValue.trim() },
-        connected_at: new Date().toISOString(),
-      }, { onConflict: 'client_id,provider' });
-      queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
-      setApiKeyProvider(null);
-      setApiKeyValue('');
+      // Fallback: save directly to DB
+      try {
+        const { error } = await supabase.from('client_integrations').upsert({
+          client_id: clientId,
+          provider: apiKeyProvider.id,
+          provider_label: apiKeyProvider.name || apiKeyProvider.id,
+          auth_type: 'api_key',
+          status: 'active',
+          api_key: apiKeyValue.trim(),
+          connected_at: new Date().toISOString(),
+        }, { onConflict: 'client_id,provider' });
+        if (error) {
+          alert('Erreur: ' + error.message);
+        } else {
+          queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
+          setApiKeyProvider(null);
+          setApiKeyValue('');
+        }
+      } catch (e) {
+        alert('Erreur: ' + e.message);
+      }
     }
     setApiKeySaving(false);
   };
