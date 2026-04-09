@@ -53,14 +53,16 @@ export default async function handler(req, res) {
 
   const { access_token, scope } = await tokenResponse.json();
 
-  // 5. Look up client_id from funnel_clients using the slug cookie
+  // 5. Look up client_id — try multiple methods
   const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const clientSlug = cookies.actero_client ? decodeURIComponent(cookies.actero_client) : null;
+  const authToken = cookies.actero_token ? decodeURIComponent(cookies.actero_token) : null;
 
   let onboardedClientId = null;
 
-  if (clientSlug) {
+  // Method 1: From funnel_clients slug cookie
+  if (clientSlug && !onboardedClientId) {
     try {
       const lookupRes = await fetch(
         `${supabaseUrl}/rest/v1/funnel_clients?slug=eq.${encodeURIComponent(clientSlug)}&select=onboarded_client_id`,
@@ -76,7 +78,46 @@ export default async function handler(req, res) {
         onboardedClientId = lookupData[0].onboarded_client_id;
       }
     } catch (err) {
-      console.error('Failed to look up client:', err);
+      console.error('Failed to look up client by slug:', err);
+    }
+  }
+
+  // Method 2: From auth token — find user, then find their client
+  if (authToken && !onboardedClientId) {
+    try {
+      // Get user from token
+      const userRes = await fetch(`${supabaseUrl}/auth/v1/user`, {
+        headers: {
+          apikey: supabaseServiceKey,
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      const userData = await userRes.json();
+      const userId = userData?.id;
+
+      if (userId) {
+        // Check client_users table first
+        const linkRes = await fetch(
+          `${supabaseUrl}/rest/v1/client_users?user_id=eq.${userId}&select=client_id&limit=1`,
+          { headers: { apikey: supabaseServiceKey, Authorization: `Bearer ${supabaseServiceKey}` } }
+        );
+        const linkData = await linkRes.json();
+        if (linkData?.[0]?.client_id) {
+          onboardedClientId = linkData[0].client_id;
+        } else {
+          // Fallback: check clients.owner_user_id
+          const ownerRes = await fetch(
+            `${supabaseUrl}/rest/v1/clients?owner_user_id=eq.${userId}&select=id&limit=1`,
+            { headers: { apikey: supabaseServiceKey, Authorization: `Bearer ${supabaseServiceKey}` } }
+          );
+          const ownerData = await ownerRes.json();
+          if (ownerData?.[0]?.id) {
+            onboardedClientId = ownerData[0].id;
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Failed to look up client by token:', err);
     }
   }
 
@@ -111,6 +152,7 @@ export default async function handler(req, res) {
   res.setHeader('Set-Cookie', [
     'shopify_nonce=; Path=/; HttpOnly; Secure; Max-Age=0',
     'actero_client=; Path=/; HttpOnly; Secure; Max-Age=0',
+    'actero_token=; Path=/; HttpOnly; Secure; Max-Age=0',
   ]);
 
   // 8. Redirect to Shopify success page (React route)

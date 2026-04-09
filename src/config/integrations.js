@@ -10,7 +10,7 @@ export const INTEGRATIONS = {
       oauthPromptLabel: 'Votre domaine Shopify',
       oauthPromptPlaceholder: 'ma-boutique.myshopify.com',
       oauthPromptHint: 'Trouvez-le dans Shopify Admin → Settings → Domains',
-      oauthUrl: (params) => `/api/shopify/install?shop=${encodeURIComponent(params.shop)}`,
+      oauthUrl: (params) => `/api/shopify/install?shop=${encodeURIComponent(params.shop)}&token=${encodeURIComponent(params.token || '')}`,
       category: 'ecommerce',
       docsUrl: 'https://help.shopify.com/en/manual/apps',
       color: '#96BF48',
