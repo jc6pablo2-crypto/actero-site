@@ -140,23 +140,41 @@ export async function logRun(supabase, {
     }
 
     // If this follow-up escalates, also update automation_event and metrics_daily
-    // Convert the "ticket_resolved" into "ticket_escalated"
-    if (isEscalatedNow) {
+    // Convert the "ticket_resolved" into "ticket_escalated" for THIS session only
+    if (isEscalatedNow && sessionId) {
       try {
-        // Update the automation_event from ticket_resolved → ticket_escalated
-        const { data: existingEvent } = await supabase
-          .from('automation_events')
-          .select('id, event_category')
+        // Find the automation_event for this session by matching event_id from same session
+        // We use the ai_conversation's created_at as a time anchor (within 2 min window)
+        const { data: sessionConvo } = await supabase
+          .from('ai_conversations')
+          .select('created_at')
           .eq('client_id', clientId)
-          .eq('event_category', 'ticket_resolved')
+          .eq('session_id', sessionId)
           .order('created_at', { ascending: false })
           .limit(1)
           .maybeSingle()
 
-        if (existingEvent) {
-          await supabase.from('automation_events')
-            .update({ event_category: 'ticket_escalated' })
-            .eq('id', existingEvent.id)
+        if (sessionConvo) {
+          // Find the automation_event created within 5 seconds of the session's ai_conversation
+          const convoTime = new Date(sessionConvo.created_at)
+          const windowStart = new Date(convoTime.getTime() - 5000).toISOString()
+          const windowEnd = new Date(convoTime.getTime() + 5000).toISOString()
+
+          const { data: existingEvent } = await supabase
+            .from('automation_events')
+            .select('id, event_category')
+            .eq('client_id', clientId)
+            .eq('event_category', 'ticket_resolved')
+            .gte('created_at', windowStart)
+            .lte('created_at', windowEnd)
+            .limit(1)
+            .maybeSingle()
+
+          if (existingEvent) {
+            await supabase.from('automation_events')
+              .update({ event_category: 'ticket_escalated' })
+              .eq('id', existingEvent.id)
+          }
         }
       } catch (err) {
         console.error('[logger] follow-up automation_event update error:', err.message)
