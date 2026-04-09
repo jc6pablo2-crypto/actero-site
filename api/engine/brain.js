@@ -108,19 +108,21 @@ ${clientConfig.guardrails.length > 0 ? `\nREGLES:\n${clientConfig.guardrails.map
 
   if (actionPlan.includes('send_reply') || actionPlan.includes('send_email')) {
     try {
-      const responsePrompt = buildSystemPrompt(clientConfig)
+      const basePrompt = buildSystemPrompt(clientConfig)
 
       // Build messages with conversation history for context/memory
       let claudeMessages = []
-      if (conversationHistory && conversationHistory.length > 0) {
+      const hasHistory = conversationHistory && conversationHistory.length > 1
+
+      if (hasHistory) {
         // Include previous exchanges (skip the current message which is last)
         const prevMessages = conversationHistory.slice(0, -1)
         for (const msg of prevMessages) {
           if (msg.role === 'user') {
             claudeMessages.push({ role: 'user', content: msg.content })
           } else if (msg.role === 'assistant') {
-            // Send previous assistant responses as plain text (not JSON) to avoid Claude mimicking JSON format
-            claudeMessages.push({ role: 'assistant', content: msg.content })
+            // Wrap assistant text in the JSON format Claude expects, so it recognizes the conversation
+            claudeMessages.push({ role: 'assistant', content: `{"response": ${JSON.stringify(msg.content)}, "confidence": 0.9, "should_escalate": false, "detected_intent": "general", "sentiment_score": 7, "injection_detected": false}` })
           }
         }
         // Ensure messages start with a user message (Claude API requirement)
@@ -135,6 +137,11 @@ ${clientConfig.guardrails.length > 0 ? `\nREGLES:\n${clientConfig.guardrails.map
       }
       // Add current message
       claudeMessages.push({ role: 'user', content: normalized.message })
+
+      // Add conversation context reminder to system prompt when there's history
+      const responsePrompt = hasHistory
+        ? basePrompt + `\n\nIMPORTANT: Ceci est une conversation EN COURS. Les messages precedents sont dans l'historique ci-dessous. Continue la conversation naturellement, ne te re-presente pas, ne dis pas "Bonjour" a nouveau. Reponds dans le contexte de ce qui a deja ete dit.`
+        : basePrompt
 
       const respResult = await callClaude({
         systemPrompt: responsePrompt,
