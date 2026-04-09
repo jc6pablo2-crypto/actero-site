@@ -13,10 +13,25 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 )
 
+const ELEVENLABS_WEBHOOK_SECRET = process.env.ELEVENLABS_WEBHOOK_SECRET
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  // ElevenLabs sends the call data as JSON
+  // Verify HMAC signature if secret is configured
+  if (ELEVENLABS_WEBHOOK_SECRET) {
+    const signature = req.headers['elevenlabs-signature']
+    if (signature) {
+      const crypto = await import('crypto')
+      const body = JSON.stringify(req.body)
+      const expected = crypto.createHmac('sha256', ELEVENLABS_WEBHOOK_SECRET).update(body).digest('hex')
+      if (signature !== expected) {
+        console.warn('[elevenlabs-postcall] Invalid HMAC signature')
+        return res.status(401).json({ error: 'Invalid signature' })
+      }
+    }
+  }
+
   const data = req.body
 
   try {
