@@ -199,6 +199,19 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
     const newChannels = isSelected
       ? [...currentChannels, channelId]
       : currentChannels.filter(c => c !== channelId)
+
+    // Auto-setup email polling when email channel is activated
+    if (channelId === 'email' && isSelected) {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        await fetch('/api/engine/setup-email-polling', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+          body: JSON.stringify({ client_id: clientId }),
+        })
+      } catch {} // Non-blocking
+    }
+
     if (cp) {
       await supabase.from('engine_client_playbooks').update({
         custom_config: { ...(cp.custom_config || {}), channels: newChannels },
