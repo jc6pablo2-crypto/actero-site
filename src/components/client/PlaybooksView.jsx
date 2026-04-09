@@ -315,59 +315,77 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
 const ELEVENLABS_AGENT_ID = 'agent_6901kns1pd7yfxz9nk6cq0f7gaq4'
 
 const VocalAgentConfig = ({ clientId }) => {
-  const [copied, setCopied] = useState(false)
+  const toast = useToast()
+  const [installing, setInstalling] = useState(false)
+  const [installed, setInstalled] = useState(false)
 
-  const widgetCode = `<elevenlabs-convai agent-id="${ELEVENLABS_AGENT_ID}"></elevenlabs-convai>
-<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>`
+  const handleInstallOnShopify = async () => {
+    setInstalling(true)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/engine/shopify-vocal-widget', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ action: 'install', client_id: clientId }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Erreur')
+      setInstalled(true)
+      toast.success('Agent vocal installe sur votre boutique !')
+    } catch (err) {
+      toast.error(err.message)
+    }
+    setInstalling(false)
+  }
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(widgetCode)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+  const handleUninstall = async () => {
+    setInstalling(true)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      await fetch('/api/engine/shopify-vocal-widget', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ action: 'uninstall', client_id: clientId }),
+      })
+      setInstalled(false)
+      toast.success('Agent vocal retire de votre boutique')
+    } catch {}
+    setInstalling(false)
   }
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <Phone className="w-4 h-4 text-violet-600" />
-        <p className="text-[13px] font-semibold text-[#1a1a1a]">Configuration de l'agent vocal</p>
-      </div>
-
       <div className="p-4 bg-violet-50 rounded-xl border border-violet-100">
-        <p className="text-[12px] text-violet-800 font-medium mb-1">Votre agent vocal est pret</p>
+        <p className="text-[12px] text-violet-800 font-medium mb-1">Agent vocal IA actif</p>
         <p className="text-[11px] text-violet-600">
-          Il repond aux questions de vos clients par la voix : suivi commande, retours, reclamations, questions produits. Il escalade vers vous si necessaire.
+          Vos clients peuvent parler a votre agent directement sur votre site. Il repond aux questions, suit les commandes et escalade si besoin.
         </p>
       </div>
 
-      <div>
-        <p className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-2">Integrez sur votre site</p>
-        <p className="text-[11px] text-[#9ca3af] mb-2">Copiez ce code et collez-le dans votre site web. Un bouton d'appel apparaitra.</p>
-        <div className="relative">
-          <pre className="p-3 bg-[#1a1a1a] text-green-400 rounded-lg text-[11px] font-mono overflow-x-auto">
-            {widgetCode}
-          </pre>
+      {!installed ? (
+        <button
+          onClick={handleInstallOnShopify}
+          disabled={installing}
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-violet-600 text-white text-[13px] font-semibold rounded-xl hover:bg-violet-700 disabled:opacity-50 transition-colors"
+        >
+          {installing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Phone className="w-4 h-4" />}
+          {installing ? 'Installation en cours...' : 'Installer sur ma boutique Shopify'}
+        </button>
+      ) : (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <p className="text-[12px] text-emerald-700 font-medium">Installe sur votre boutique Shopify</p>
+          </div>
           <button
-            onClick={handleCopy}
-            className="absolute top-2 right-2 p-1.5 bg-[#333] hover:bg-[#444] rounded-md transition-colors"
+            onClick={handleUninstall}
+            disabled={installing}
+            className="text-[11px] text-[#9ca3af] hover:text-red-500 transition-colors"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5 text-gray-400" />}
+            Retirer de ma boutique
           </button>
         </div>
-      </div>
-
-      <div>
-        <p className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-2">Tester maintenant</p>
-        <p className="text-[11px] text-[#9ca3af] mb-3">Cliquez pour demarrer un appel test avec votre agent vocal.</p>
-        <a
-          href={`https://elevenlabs.io/app/conversational-ai/agents/${ELEVENLABS_AGENT_ID}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-violet-600 text-white text-[12px] font-semibold rounded-lg hover:bg-violet-700 transition-colors"
-        >
-          <Phone className="w-3.5 h-3.5" /> Tester l'agent vocal
-        </a>
-      </div>
+      )}
     </div>
   )
 }
