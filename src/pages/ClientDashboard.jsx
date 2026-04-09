@@ -827,7 +827,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
 
           {activeTab === "playbooks" && (
-            <PlaybooksView clientId={currentClient?.id} theme={theme} />
+            <PlaybooksView clientId={currentClient?.id} setActiveTab={setActiveTab} theme={theme} />
           )}
 
         </main>
