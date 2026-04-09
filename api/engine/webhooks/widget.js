@@ -53,9 +53,33 @@ export default async function handler(req, res) {
   const { message, email, name, session_id, history } = req.body || {}
   if (!message) return res.status(400).json({ error: 'message required' })
 
-  // Conversation history from widget (array of {role, content})
-  const conversationHistory = Array.isArray(history) ? history.slice(-20) : []
-  console.log(`[widget] session=${session_id} message="${message.substring(0,50)}" history_length=${conversationHistory.length} email=${email || 'none'}`)
+  // Conversation history: prefer from widget, but fallback to DB (in case widget.js is cached)
+  let conversationHistory = Array.isArray(history) ? history.slice(-20) : []
+
+  // If widget didn't send history, rebuild from engine_messages DB
+  if (conversationHistory.length === 0 && session_id) {
+    try {
+      const { data: prevMessages } = await supabase
+        .from('engine_messages')
+        .select('message_body, metadata')
+        .eq('client_id', clientId)
+        .eq('external_ticket_id', session_id)
+        .order('created_at', { ascending: true })
+        .limit(20)
+
+      if (prevMessages && prevMessages.length > 0) {
+        for (const msg of prevMessages) {
+          conversationHistory.push({ role: 'user', content: msg.message_body })
+          // Add the AI response if stored in metadata
+          if (msg.metadata?.ai_response) {
+            conversationHistory.push({ role: 'assistant', content: msg.metadata.ai_response })
+          }
+        }
+      }
+    } catch {}
+  }
+
+  console.log(`[widget] session=${session_id} message="${message.substring(0,50)}" history_length=${conversationHistory.length} from=${conversationHistory.length > 0 && !Array.isArray(history) ? 'db' : 'widget'}`)
 
   // Extract email from current message or use provided one
   const emailFromMessage = message.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/)?.[0]
@@ -234,6 +258,13 @@ export default async function handler(req, res) {
     }
     // Strip any remaining markdown/code artifacts
     cleanResponse = cleanResponse.replace(/^```(?:json)?\s*/gm, '').replace(/```\s*$/gm, '').trim()
+
+    // Save AI response in the engine_message metadata (for DB-based memory)
+    try {
+      await supabase.from('engine_messages')
+        .update({ metadata: { session_id, ai_response: cleanResponse, user_agent: req.headers['user-agent'] } })
+        .eq('id', engineMessage.id)
+    } catch {}
 
     return res.status(200).json({
       response: cleanResponse,
