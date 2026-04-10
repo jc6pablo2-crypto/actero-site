@@ -281,19 +281,8 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
       return
     }
 
-    // Check at least one channel is selected with its integration connected
+    // Channels are now selected AFTER activation via toggles inside the card
     const meta = PLAYBOOK_META[playbookName]
-    if (meta?.channels && !isActive(playbookName)) {
-      const activeChannels = meta.channels.filter(ch => {
-        const isSelected = selectedChannels[`${playbookName}_${ch.id}`]
-        const isConnected = ch.needsIntegration.length === 0 || ch.needsIntegration.some(p => connectedProviders.includes(p))
-        return isSelected && isConnected
-      })
-      if (activeChannels.length === 0) {
-        toast.error('Selectionnez au moins un canal (Email, Chat, etc.) et connectez l\'integration correspondante')
-        return
-      }
-    }
 
     // Open wizard for comptabilite
     if (playbookName === 'comptabilite_auto' && !isActive(playbookName)) {
@@ -410,40 +399,6 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
                           </button>
                         )}
                       </p>
-                      {/* Channel selector */}
-                      {meta.channels && meta.channels.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-2.5">
-                          <span className="text-[9px] text-[#c4c4c4] font-semibold uppercase tracking-wider self-center mr-1">Canaux :</span>
-                          {meta.channels.map(ch => {
-                            const ChIcon = ch.icon || MessageSquare
-                            const channelConnected = ch.needsIntegration.length === 0 || ch.needsIntegration.some(p => connectedProviders.includes(p))
-                            const isSelected = selectedChannels[`${pb.name}_${ch.id}`]
-                            return (
-                              <button
-                                key={ch.id}
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  const newVal = !selectedChannels[`${pb.name}_${ch.id}`]
-                                  setSelectedChannels(prev => ({ ...prev, [`${pb.name}_${ch.id}`]: newVal }))
-                                  saveChannels(pb.name, ch.id, newVal)
-                                }}
-                                disabled={!channelConnected}
-                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all ${
-                                  isSelected
-                                    ? 'bg-[#0F5F35] text-white'
-                                    : channelConnected
-                                      ? 'bg-white text-[#71717a] border border-[#e5e5e5] hover:border-[#0F5F35] hover:text-[#0F5F35]'
-                                      : 'bg-[#f5f5f5] text-[#d4d4d4] cursor-not-allowed border border-transparent'
-                                }`}
-                                title={channelConnected ? ch.desc : `Connectez ${ch.needsIntegration.join(' ou ')} d'abord`}
-                              >
-                                <ChIcon className="w-3 h-3" />
-                                {ch.label}
-                              </button>
-                            )
-                          })}
-                        </div>
-                      )}
                     </div>
 
                     {meta.comingSoon ? (
@@ -466,6 +421,58 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
                       </button>
                     )}
                     </div>
+
+                    {/* Channels — toggles per channel, shown when playbook is active */}
+                    {active && meta.channels && meta.channels.length > 0 && (
+                      <div className="px-5 pb-4 pt-3 border-t border-[#f0f0f0]">
+                        <p className="text-[10px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-3">Canaux actifs</p>
+                        <div className="space-y-2">
+                          {meta.channels.map(ch => {
+                            const ChIcon = ch.icon || MessageSquare
+                            const channelConnected = ch.needsIntegration.length === 0 || ch.needsIntegration.some(p => connectedProviders.includes(p))
+                            const isSelected = !!selectedChannels[`${pb.name}_${ch.id}`]
+                            return (
+                              <div
+                                key={ch.id}
+                                className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                                  isSelected ? 'bg-[#0F5F35]/5 border-[#0F5F35]/20' : 'bg-white border-[#f0f0f0]'
+                                }`}
+                              >
+                                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                                  isSelected ? 'bg-[#0F5F35] text-white' : 'bg-[#fafafa] text-[#9ca3af]'
+                                }`}>
+                                  <ChIcon className="w-4 h-4" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-[12px] font-semibold text-[#1a1a1a]">{ch.label}</p>
+                                  <p className="text-[10px] text-[#9ca3af] mt-0.5">{ch.desc}</p>
+                                </div>
+                                {!channelConnected ? (
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); setActiveTab('integrations') }}
+                                    className="flex items-center gap-1 px-2.5 py-1 text-[10px] font-semibold text-amber-700 bg-amber-50 rounded-full hover:bg-amber-100 transition-colors flex-shrink-0"
+                                  >
+                                    <Plug className="w-2.5 h-2.5" /> Connecter
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      const newVal = !isSelected
+                                      setSelectedChannels(prev => ({ ...prev, [`${pb.name}_${ch.id}`]: newVal }))
+                                      saveChannels(pb.name, ch.id, newVal)
+                                    }}
+                                    className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 ${isSelected ? 'bg-[#0F5F35]' : 'bg-[#e5e5e5]'}`}
+                                  >
+                                    <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${isSelected ? 'translate-x-4' : 'translate-x-0.5'}`} />
+                                  </button>
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Email integration recommendation — when widget is active but no email integration */}
                     {active && pb.name === 'sav_ecommerce' && selectedChannels[`${pb.name}_widget`] && !connectedProviders.includes('smtp_imap') && !connectedProviders.includes('gmail') && (
