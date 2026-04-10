@@ -41,6 +41,9 @@ import {
   Volume2,
   Handshake,
   ShieldCheck,
+  TrendingDown,
+  Store,
+  Package,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
@@ -57,9 +60,11 @@ import { ActivityView, useLiveActivityFeed, formatEvent, formatRelativeTime } fr
 import { SupportTicketsView } from '../components/dashboard/SupportTicketsView'
 import { ClientProfileView } from '../components/client/ClientProfileView'
 import { ClientCopilotBubble } from '../components/client/ClientCopilotBubble'
+import { OnboardingConcierge } from '../components/client/OnboardingConcierge'
 import { ClientConversationsView } from '../components/client/ClientConversationsView'
 import { ClientSystemsView } from '../components/client/ClientSystemsView'
 import { ClientReferralView } from '../components/client/ClientReferralView'
+import { PartnerDashboardView } from '../components/client/PartnerDashboardView'
 import { ClientKnowledgeBaseView } from '../components/client/ClientKnowledgeBaseView'
 import { ClientIntegrationsView } from '../components/client/ClientIntegrationsView'
 import { OnboardingChecklist } from '../components/client/OnboardingChecklist'
@@ -72,9 +77,11 @@ import { ClientEscalationsView } from '../components/client/ClientEscalationsVie
 import { ResponseTemplatesView } from '../components/client/ResponseTemplatesView'
 import { ClientSatisfactionScore, SatisfactionKPI } from '../components/client/ClientSatisfactionScore'
 import { VoiceAgentView } from '../components/client/VoiceAgentView'
+import { VoiceCallsView } from '../components/client/VoiceCallsView'
 import { MultiAgentView } from '../components/client/MultiAgentView'
 import { PromptInjectionView } from '../components/client/PromptInjectionView'
 import { ClientMemoryView } from '../components/client/ClientMemoryView'
+import { CustomerMemoryView } from '../components/client/CustomerMemoryView'
 import { SentimentAnalysisView } from '../components/client/SentimentAnalysisView'
 import { VoiceStudioView } from '../components/client/VoiceStudioView'
 import { SupplierNegotiationView } from '../components/client/SupplierNegotiationView'
@@ -90,6 +97,8 @@ import { WeeklySummary } from '../components/client/WeeklySummary'
 import { PeakHoursChart } from '../components/client/PeakHoursChart'
 import { SetupChecklist } from '../components/client/SetupChecklist'
 import { QuickTestButton } from '../components/client/QuickTestButton'
+import { ChurnPredictionsView } from '../components/client/ChurnPredictionsView'
+import { MyMarketplaceTemplatesView } from '../components/client/MyMarketplaceTemplatesView'
 import { HelpTooltip } from '../components/ui/HelpTooltip'
 
 const FeedbackButtons = ({ eventId, currentFeedback, supabase }) => {
@@ -194,14 +203,17 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/reports") return "reports";
     if (route === "/client/support") return "support";
     if (route === "/client/referral") return "referral";
+    if (route === "/client/partner") return "partner";
     if (route === "/client/integrations") return "integrations";
     if (route === "/client/team") return "team";
     if (route === "/client/agent-config") return "agent-config";
     if (route === "/client/simulator") return "simulator";
     if (route === "/client/guardrails") return "guardrails";
     if (route === "/client/escalations") return "escalations";
+    if (route === "/client/churn") return "churn";
     if (route === "/client/response-templates") return "response-templates";
     if (route === "/client/voice-agent") return "voice-agent";
+    if (route === "/client/voice-calls") return "voice-calls";
     if (route === "/client/multi-agent") return "multi-agent";
     if (route === "/client/prompt-injection") return "prompt-injection";
     if (route === "/client/client-memory") return "client-memory";
@@ -215,12 +227,18 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/roi") return "roi";
     if (route === "/client/playbooks") return "playbooks";
     if (route === "/client/profile") return "profile";
+    if (route === "/client/my-marketplace") return "my-marketplace";
     return "overview";
   };
 
   const activeTab = getTabFromRoute(currentRoute);
   
   const setActiveTab = (tab) => {
+    // Marketplace: open the public marketplace page in a new tab
+    if (tab === "marketplace") {
+      window.open("/marketplace", "_blank", "noopener,noreferrer");
+      return;
+    }
     const route = tab === "overview" ? "/client" : `/client/${tab}`;
     onNavigate(route);
   };
@@ -516,12 +534,19 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { id: 'agent-config', label: 'Mon Agent', icon: MessageCircle },
     { id: 'simulator', label: 'Tester', icon: Activity },
     { id: 'escalations', label: 'A traiter', icon: AlertTriangle, badge: urgentEscalationCount > 0 ? urgentEscalationCount : null, badgeColor: 'bg-red-100 text-red-600' },
+    { id: 'churn', label: 'Predictions', icon: TrendingDown },
+    { id: 'voice-calls', label: 'Appels vocaux', icon: Phone },
     { id: 'response-templates', label: 'Templates', icon: FileText },
+    { id: 'customer-memory', label: 'Memoire client', icon: Brain },
     { id: 'guardrails', label: 'Regles', icon: Shield },
 
     { type: 'section', label: 'Connexions' },
     { id: 'integrations', label: 'Integrations', icon: Plug },
     { id: 'knowledge', label: 'Base de savoir', icon: BookOpen },
+
+    { type: 'section', label: 'Parametres' },
+    { id: 'marketplace', label: 'Marketplace', icon: Store },
+    { id: 'my-marketplace', label: 'Mes templates', icon: Package },
 
     { id: 'support', label: 'Aide', icon: MessageSquare },
   ];
@@ -624,17 +649,21 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "intelligence" && "Intelligence"}
             {activeTab === "support" && "Aide"}
             {activeTab === "referral" && "Parrainage"}
+            {activeTab === "partner" && "Actero Partners"}
             {activeTab === "integrations" && "Integrations"}
             {activeTab === "agent-config" && "Mon Agent"}
             {activeTab === "simulator" && "Tester"}
             {activeTab === "team" && "Equipe"}
             {activeTab === "guardrails" && "Regles"}
             {activeTab === "escalations" && "A traiter"}
+            {activeTab === "churn" && "Predictions de churn"}
             {activeTab === "response-templates" && "Templates de reponses"}
             {activeTab === "voice-agent" && "Appels IA"}
+            {activeTab === "voice-calls" && "Appels vocaux"}
             {activeTab === "multi-agent" && "Multi-Agents"}
             {activeTab === "prompt-injection" && "Securite IA"}
             {activeTab === "client-memory" && "Memoire Client"}
+            {activeTab === "customer-memory" && "Memoire client"}
             {activeTab === "sentiment" && "Sentiment"}
             {activeTab === "voice-studio" && "Voix"}
             {activeTab === "supplier-negotiation" && "Negociation"}
@@ -642,6 +671,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "notifications" && "Notifications"}
             {activeTab === "channels" && "Mes Canaux"}
             {activeTab === "playbooks" && "Automatisations"}
+            {activeTab === "my-marketplace" && "Mes templates"}
           </h1>
           <div className="flex items-center gap-3">
             {urgentEscalationCount > 0 && (
@@ -831,6 +861,10 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             />
           )}
 
+          {activeTab === "partner" && (
+            <PartnerDashboardView theme={theme} />
+          )}
+
           {activeTab === "systems" && (
             <ClientSystemsView
               clientId={currentClient?.id}
@@ -857,6 +891,13 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "escalations" && (
             <ClientEscalationsView
+              clientId={currentClient?.id}
+              theme={theme}
+            />
+          )}
+
+          {activeTab === "churn" && (
+            <ChurnPredictionsView
               clientId={currentClient?.id}
               theme={theme}
             />
@@ -899,6 +940,10 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             <VoiceAgentView clientId={currentClient?.id} theme={theme} />
           )}
 
+          {activeTab === "voice-calls" && (
+            <VoiceCallsView clientId={currentClient?.id} theme={theme} />
+          )}
+
           {activeTab === "multi-agent" && (
             <MultiAgentView clientId={currentClient?.id} theme={theme} />
           )}
@@ -909,6 +954,10 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "client-memory" && (
             <ClientMemoryView clientId={currentClient?.id} theme={theme} />
+          )}
+
+          {activeTab === "customer-memory" && (
+            <CustomerMemoryView clientId={currentClient?.id} />
           )}
 
           {activeTab === "sentiment" && (
@@ -939,11 +988,18 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             <PlaybooksView clientId={currentClient?.id} setActiveTab={setActiveTab} theme={theme} />
           )}
 
+          {activeTab === "my-marketplace" && (
+            <MyMarketplaceTemplatesView clientId={currentClient?.id} />
+          )}
+
         </main>
       </div>
 
       {/* Copilot Chat Bubble */}
       {currentClient?.id && <ClientCopilotBubble clientId={currentClient.id} clientType={currentClient.client_type} theme={theme} />}
+
+      {/* Onboarding Concierge — auto-hides once the 7 setup steps are done */}
+      {currentClient?.id && <OnboardingConcierge clientId={currentClient.id} setActiveTab={setActiveTab} />}
     </div>
   );
 };

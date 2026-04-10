@@ -84,6 +84,27 @@
       text-align: center; padding: 6px; font-size: 10px; color: #999;
     }
     .actero-powered a { color: #0F5F35; text-decoration: none; font-weight: 600; }
+    .actero-products {
+      display: flex; flex-direction: column; gap: 6px;
+      align-self: flex-start; max-width: 80%;
+    }
+    .actero-product-card {
+      display: flex; align-items: center; gap: 10px; padding: 8px;
+      background: white; border: 1px solid #e5e5e5; border-radius: 10px;
+      text-decoration: none; color: inherit; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .actero-product-card:hover { border-color: #0F5F35; box-shadow: 0 2px 8px rgba(15,95,53,0.08); }
+    .actero-product-card img {
+      width: 48px; height: 48px; border-radius: 6px; object-fit: cover; flex-shrink: 0;
+    }
+    .actero-product-card > div { flex: 1; min-width: 0; }
+    .actero-product-title {
+      margin: 0; font-size: 12px; font-weight: 600; color: #262626;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .actero-product-price {
+      margin: 2px 0 0; font-size: 12px; color: #0F5F35; font-weight: 700;
+    }
   `
   document.head.appendChild(style)
 
@@ -155,6 +176,32 @@
     msgsEl.scrollTop = msgsEl.scrollHeight
   }
 
+  function addProductCards(products) {
+    if (!products || products.length === 0) return
+    const container = document.createElement('div')
+    container.className = 'actero-products'
+    products.slice(0, 3).forEach(function(p) {
+      const card = document.createElement('a')
+      card.href = p.url || '#'
+      card.target = '_blank'
+      card.rel = 'noopener noreferrer'
+      card.className = 'actero-product-card'
+      const safeTitle = String(p.title || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      const safeImg = p.image ? String(p.image).replace(/"/g, '&quot;') : ''
+      const priceText = p.price ? `${p.price} ${p.currency === 'EUR' ? '€' : (p.currency || '')}` : ''
+      card.innerHTML = `
+        ${safeImg ? `<img src="${safeImg}" alt="${safeTitle}" />` : ''}
+        <div>
+          <p class="actero-product-title">${safeTitle}</p>
+          ${priceText ? `<p class="actero-product-price">${priceText}</p>` : ''}
+        </div>
+      `
+      container.appendChild(card)
+    })
+    msgsEl.appendChild(container)
+    msgsEl.scrollTop = msgsEl.scrollHeight
+  }
+
   function addUserMessage(text) {
     messages.push({ role: 'user', text })
     const el = document.createElement('div')
@@ -211,6 +258,9 @@
       const data = await res.json()
       loader.remove()
       addBotMessage(data.response || 'Merci, un agent va vous repondre.')
+      if (data.product_recommendations && data.product_recommendations.length > 0) {
+        addProductCards(data.product_recommendations)
+      }
     } catch {
       loader.remove()
       addBotMessage('Erreur de connexion. Reessayez dans un instant.')

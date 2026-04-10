@@ -60,6 +60,12 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
             >
               Entreprise
             </button>
+            <button
+              onClick={() => onNavigate("/academy")}
+              className="text-[14px] font-semibold text-[#262626] hover:text-[#003725] transition-colors"
+            >
+              Academy
+            </button>
           </div>
 
           <div className="flex items-center gap-3">
@@ -123,6 +129,13 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
                 action: () => {
                   setIsMobileMenuOpen(false);
                   onNavigate("/entreprise");
+                },
+              },
+              {
+                label: "Academy",
+                action: () => {
+                  setIsMobileMenuOpen(false);
+                  onNavigate("/academy");
                 },
               },
               {

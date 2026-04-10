@@ -3,7 +3,9 @@
  *
  * Enregistre chaque run avec ses steps, met à jour les métriques.
  * Écrit dans engine_runs_v2 + automation_events + metrics_daily + ai_conversations.
+ * Persiste aussi une "customer memory" pour les interactions réussies (Actero Memory).
  */
+import { storeMemory } from './lib/memory.js'
 
 /**
  * Map a free-text classification to a valid ticket_type enum value.
@@ -98,6 +100,33 @@ export async function logRun(supabase, {
     .single()
 
   if (runError) console.error('[logger] Run insert error:', runError.message)
+
+  // --- Actero Memory: persist this exchange as a customer memory ---
+  // No-op for anonymous emails (handled inside storeMemory).
+  // Fire-and-forget to avoid blocking the logger.
+  try {
+    const hasRealEmail = normalized?.customer_email && !normalized.customer_email.includes('@anonymous.actero.fr')
+    if (hasRealEmail && status === 'completed' && aiResponse && aiResponse.length > 10) {
+      const memoryContent = `Client a ecrit: "${normalized.message || ''}"\nAgent a repondu: "${aiResponse}"`
+      storeMemory(supabase, {
+        clientId,
+        customerEmail: normalized.customer_email,
+        type: 'conversation',
+        content: memoryContent,
+        metadata: {
+          classification,
+          confidence,
+          run_id: run?.id || null,
+          event_id: eventId,
+          session_id: normalized?.session_id || null,
+          is_follow_up: !!isFollowUp,
+          subject: normalized?.subject || null,
+        },
+      }).catch(err => console.error('[logger] memory store error:', err.message))
+    }
+  } catch (err) {
+    console.error('[logger] memory store exception:', err.message)
+  }
 
   // For follow-up messages: don't create new events/metrics
   // But: update the existing ai_conversation + automation_event + metrics when escalating

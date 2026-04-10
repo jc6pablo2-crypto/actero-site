@@ -36,9 +36,27 @@ export const VocalAgentWizard = ({ clientId, onComplete, onCancel }) => {
   const [maxAmount, setMaxAmount] = useState('100')
   const [installing, setInstalling] = useState(false)
   const [installed, setInstalled] = useState(false)
-  const [testing, setTesting] = useState(false)
   const [previewPlaying, setPreviewPlaying] = useState(null)
   const audioRef = useRef(null)
+
+  // Load existing config if any
+  useEffect(() => {
+    if (!clientId) return
+    ;(async () => {
+      const { data } = await supabase
+        .from('voice_agent_config')
+        .select('*')
+        .eq('client_id', clientId)
+        .maybeSingle()
+      if (data) {
+        if (data.voice_id) setSelectedVoice(data.voice_id)
+        if (data.greeting_message) setGreeting(data.greeting_message)
+        if (data.knowledge_base) setKnowledge(data.knowledge_base)
+        if (data.transfer_number) setTransferNumber(data.transfer_number)
+        if (data.max_amount_before_escalation != null) setMaxAmount(String(data.max_amount_before_escalation))
+      }
+    })()
+  }, [clientId])
 
   const handlePreviewVoice = async (voiceId) => {
     if (previewPlaying === voiceId) {
@@ -77,12 +95,15 @@ export const VocalAgentWizard = ({ clientId, onComplete, onCancel }) => {
   const handleInstall = async () => {
     setInstalling(true)
     try {
-      // Save voice config
+      // Save voice config (full)
       await supabase.from('voice_agent_config').upsert({
         client_id: clientId,
         is_active: true,
         voice_id: selectedVoice,
         greeting_message: greeting,
+        knowledge_base: knowledge || null,
+        transfer_number: transferNumber || null,
+        max_amount_before_escalation: maxAmount ? Number(maxAmount) : null,
         escalation_enabled: true,
         updated_at: new Date().toISOString(),
       }, { onConflict: 'client_id' })

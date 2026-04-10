@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { createClient } from '@supabase/supabase-js';
+import { finalizeInstall as finalizeMarketplaceInstall } from './marketplace/install.js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -150,6 +151,206 @@ export default async function handler(req, res) {
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object;
+
+      // --- Marketplace template purchase ---
+      if (session.metadata?.template_id && session.metadata?.buyer_client_id) {
+        try {
+          const templateId = session.metadata.template_id;
+          const buyerClientId = session.metadata.buyer_client_id;
+          const creatorClientId = session.metadata.creator_client_id || null;
+          const paidAmount = session.amount_total ? session.amount_total / 100 : 0;
+
+          // Idempotency: skip if already installed
+          const { data: existingInstall } = await supabase
+            .from('marketplace_installs')
+            .select('id')
+            .eq('template_id', templateId)
+            .eq('client_id', buyerClientId)
+            .eq('status', 'active')
+            .maybeSingle();
+
+          if (existingInstall) {
+            console.log('[MARKETPLACE] Install already exists, skipping:', existingInstall.id);
+            return res.status(200).json({ received: true });
+          }
+
+          const { data: template, error: tplErr } = await supabase
+            .from('marketplace_templates')
+            .select('*')
+            .eq('id', templateId)
+            .maybeSingle();
+
+          if (tplErr || !template) {
+            console.error('[MARKETPLACE] Template not found:', tplErr);
+            return res.status(200).json({ received: true });
+          }
+
+          const install = await finalizeMarketplaceInstall({
+            template,
+            client_id: buyerClientId,
+            paid_amount: paidAmount,
+          });
+
+          console.log('[MARKETPLACE] Install finalized:', install.id);
+
+          // Pay the creator via Stripe Connect (mocked — real impl needs creator stripe_account_id)
+          try {
+            const commission = Number((paidAmount * 0.2).toFixed(2));
+            const payout = Number((paidAmount - commission).toFixed(2));
+
+            if (creatorClientId) {
+              const { data: creator } = await supabase
+                .from('clients')
+                .select('id, brand_name, stripe_connect_account_id')
+                .eq('id', creatorClientId)
+                .maybeSingle();
+
+              if (creator?.stripe_connect_account_id && payout > 0) {
+                // Real Stripe Connect transfer
+                const transfer = await stripe.transfers.create({
+                  amount: Math.round(payout * 100),
+                  currency: 'eur',
+                  destination: creator.stripe_connect_account_id,
+                  metadata: {
+                    template_id: templateId,
+                    buyer_client_id: buyerClientId,
+                    install_id: install.id,
+                  },
+                });
+                console.log('[MARKETPLACE] Stripe transfer created:', transfer.id);
+              } else {
+                // Mock mode: just log — creator has no Stripe Connect yet
+                console.log(
+                  `[MARKETPLACE][MOCK] Would pay creator ${creatorClientId} = ${payout} EUR (commission ${commission} EUR)`
+                );
+              }
+            }
+          } catch (payErr) {
+            console.error('[MARKETPLACE] Creator payout failed:', payErr.message);
+          }
+        } catch (mpErr) {
+          console.error('[MARKETPLACE] Install handling failed:', mpErr);
+        }
+        return res.status(200).json({ received: true });
+      }
+
+      // --- Actero Partners certification payment ---
+      if (session.metadata?.kind === 'partner_certification' && session.metadata?.application_id) {
+        try {
+          const applicationId = session.metadata.application_id;
+          const { data: application, error: appErr } = await supabase
+            .from('partner_applications')
+            .select('*')
+            .eq('id', applicationId)
+            .maybeSingle();
+
+          if (appErr || !application) {
+            console.error('[PARTNERS] Application not found:', appErr);
+            return res.status(200).json({ received: true });
+          }
+
+          // Idempotency: if already certified, skip
+          const { data: existingPartner } = await supabase
+            .from('partners')
+            .select('id')
+            .eq('application_id', applicationId)
+            .maybeSingle();
+          if (existingPartner) {
+            console.log('[PARTNERS] Partner already exists, skipping:', existingPartner.id);
+            return res.status(200).json({ received: true });
+          }
+
+          // Mark application as paid
+          await supabase
+            .from('partner_applications')
+            .update({
+              status: 'paid',
+              stripe_session_id: session.id,
+            })
+            .eq('id', applicationId);
+
+          // Find or invite user by email
+          let partnerUserId = application.user_id;
+          if (!partnerUserId) {
+            const { data: existingUsers } = await supabase.auth.admin.listUsers();
+            const existingUser = existingUsers?.users?.find(
+              (u) => u.email?.toLowerCase() === application.email.toLowerCase()
+            );
+            if (existingUser) {
+              partnerUserId = existingUser.id;
+            } else {
+              const { data: invited, error: inviteErr } =
+                await supabase.auth.admin.inviteUserByEmail(application.email, {
+                  redirectTo: 'https://actero.fr/setup-password',
+                  data: {
+                    partner_application_id: applicationId,
+                    full_name: application.full_name || `${application.first_name} ${application.last_name}`,
+                  },
+                });
+              if (inviteErr) {
+                console.error('[PARTNERS] Failed to invite user:', inviteErr);
+              } else {
+                partnerUserId = invited?.user?.id || null;
+              }
+            }
+          }
+
+          // Generate slug + referral code
+          const baseName = (application.full_name || `${application.first_name} ${application.last_name}`)
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+          let slug = baseName || `partner-${applicationId.slice(0, 8)}`;
+          // Ensure slug is unique
+          const { data: slugTaken } = await supabase
+            .from('partners')
+            .select('id')
+            .eq('slug', slug)
+            .maybeSingle();
+          if (slugTaken) slug = `${slug}-${applicationId.slice(0, 6)}`;
+
+          const referralCode = `P${Math.random().toString(36).slice(2, 8).toUpperCase()}${applicationId.slice(0, 4).toUpperCase()}`;
+
+          const { data: newPartner, error: partnerErr } = await supabase
+            .from('partners')
+            .insert([
+              {
+                user_id: partnerUserId,
+                application_id: applicationId,
+                slug,
+                full_name: application.full_name || `${application.first_name} ${application.last_name}`,
+                company_name: application.company_name,
+                website: application.website,
+                linkedin: application.linkedin,
+                referral_code: referralCode,
+                bio: application.pitch || null,
+                is_public: true,
+              },
+            ])
+            .select()
+            .single();
+
+          if (partnerErr) {
+            console.error('[PARTNERS] Failed to create partner:', partnerErr);
+          } else {
+            await supabase
+              .from('partner_applications')
+              .update({
+                status: 'certified',
+                certified_at: new Date().toISOString(),
+                user_id: partnerUserId,
+              })
+              .eq('id', applicationId);
+            console.log('[PARTNERS] Partner certified:', newPartner.id, newPartner.slug);
+          }
+        } catch (err) {
+          console.error('[PARTNERS] Certification handling failed:', err);
+        }
+        return res.status(200).json({ received: true });
+      }
+
       const clientSlug = session.metadata?.client;
       let funnelClient = null;
       let onboardedClientId = null;

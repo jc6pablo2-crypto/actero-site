@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { X, LogOut, ChevronDown, Bell, Users, Gift, User, CreditCard } from 'lucide-react'
+import { X, LogOut, ChevronDown, Bell, Users, Gift, User, CreditCard, Award } from 'lucide-react'
 import { Logo } from './Logo'
 
 export const Sidebar = ({
@@ -43,6 +43,7 @@ export const Sidebar = ({
     { id: 'billing', label: 'Facturation', icon: CreditCard },
     { id: 'team', label: 'Equipe', icon: Users },
     { id: 'referral', label: 'Parrainage', icon: Gift },
+    { id: 'partner', label: 'Actero Partners', icon: Award },
   ]
 
   return (

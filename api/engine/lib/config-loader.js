@@ -20,7 +20,7 @@ export async function loadClientConfig(supabase, clientId) {
 
     supabase
       .from('client_settings')
-      .select('brand_tone, brand_language, return_policy, excluded_products, custom_instructions, greeting_template, hourly_cost, avg_ticket_time_min, brand_identity, tone_style, example_responses, tone_formality, tone_warmth, tone_detail')
+      .select('brand_tone, brand_language, return_policy, excluded_products, custom_instructions, greeting_template, hourly_cost, avg_ticket_time_min, brand_identity, tone_style, example_responses, tone_formality, tone_warmth, tone_detail, product_recommendations_enabled')
       .eq('client_id', clientId)
       .maybeSingle(),
 

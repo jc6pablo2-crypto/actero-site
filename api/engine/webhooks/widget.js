@@ -273,6 +273,7 @@ export default async function handler(req, res) {
       response: cleanResponse,
       escalated: brainResult.needsReview,
       confidence: brainResult.confidence,
+      product_recommendations: brainResult.productRecommendations || [],
     })
   } catch (err) {
     console.error('[engine/webhooks/widget] Error:', err)

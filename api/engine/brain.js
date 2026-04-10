@@ -10,6 +10,80 @@
 import { callClaude } from './lib/claude-client.js'
 import { loadClientConfig } from './lib/config-loader.js'
 import { buildSystemPrompt } from './lib/prompt-builder.js'
+import { retrieveMemories, storeMemory, buildMemoryContext } from './lib/memory.js'
+import { searchShopifyProducts } from './lib/shopify-products.js'
+
+// Keywords hinting the customer is asking for a product recommendation.
+const PRODUCT_INTENT_PATTERNS = /\b(recommand|suggest|conseill|cherch|besoin|je veux|j'aimerais|j'?ai envie|produit|article|acheter|commander|comme|similaire|equivalent|alternative|quel|quelle|montre-?moi|montrez-?moi|proposer?|proposez|avez-?vous)\b/i
+
+/**
+ * Heuristically extract a short product query from a free-text message.
+ * Falls back to the raw message (capped) if no pattern matches.
+ */
+function extractProductQuery(message) {
+  if (!message) return ''
+  const cleaned = message
+    .replace(/[?!.,;:]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  // Try to capture what follows a trigger verb ("cherche", "veux", "besoin de", ...)
+  const patterns = [
+    /(?:je cherche|cherche|je veux|veux|je voudrais|voudrais|j'aimerais|aimerais|j'ai besoin(?: de| d')?|besoin(?: de| d')?|recommand(?:e|ez|er)(?: moi| nous)?(?: une?| des| du)?|suggest(?:e|ez|er)(?: moi| nous)?(?: une?| des| du)?|conseill(?:e|ez|er)(?: moi| nous)?(?: une?| des| du)?|montre(?:z|r)?(?: moi| nous)?(?: une?| des| du)?|propose(?:z|r)?(?: moi| nous)?(?: une?| des| du)?|avez-?vous(?: une?| des| du)?)\s+(.{3,60}?)(?:\s+(?:pour|qui|parce|car|avec|sans|comme)\b|$)/i,
+  ]
+
+  for (const pat of patterns) {
+    const m = cleaned.match(pat)
+    if (m && m[1]) {
+      return m[1].trim().split(/\s+/).slice(0, 5).join(' ')
+    }
+  }
+
+  // Fallback: strip stopwords and keep substantive words (max 5)
+  const stop = new Set(['je', 'tu', 'il', 'elle', 'on', 'nous', 'vous', 'ils', 'elles', 'un', 'une', 'des', 'le', 'la', 'les', 'de', 'du', 'au', 'aux', 'en', 'et', 'ou', 'pour', 'avec', 'sans', 'mon', 'ma', 'mes', 'ton', 'ta', 'tes', 'son', 'sa', 'ses', 'ce', 'ces', 'cette', 'bonjour', 'salut', 'merci', 'svp', 'stp', 'est', 'ai', 'avez', 'suis', 'etre', 'avoir', 'cherche', 'cherches', 'veux', 'voudrais', 'besoin', 'aimerais', 'recommande', 'recommander', 'suggere', 'conseille', 'conseiller', 'produit', 'produits', 'article', 'articles'])
+  const words = cleaned
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(w => w.length > 2 && !stop.has(w))
+  return words.slice(0, 5).join(' ')
+}
+
+/**
+ * Fetch product recommendations if the message shows product intent
+ * and the client has the feature enabled.
+ */
+async function maybeFetchProductRecommendations(supabase, { clientConfig, clientId, classification, message, sentimentScore }) {
+  if (!message) return []
+
+  // Setting opt-out (defaults to true at DB level)
+  const enabled = clientConfig?.settings?.product_recommendations_enabled
+  if (enabled === false) return []
+
+  // Only trigger on product questions or neutral/positive general messages
+  const eligibleClassification =
+    classification === 'question_produit' ||
+    classification === 'autre' ||
+    classification === 'general' ||
+    classification === 'general_info'
+  if (!eligibleClassification) return []
+
+  // Don't recommend if sentiment is negative
+  if (typeof sentimentScore === 'number' && sentimentScore <= 3) return []
+
+  // Keyword-based intent gate
+  if (!PRODUCT_INTENT_PATTERNS.test(message)) return []
+
+  const query = extractProductQuery(message)
+  if (!query || query.length < 2) return []
+
+  try {
+    const products = await searchShopifyProducts(supabase, { clientId, query, limit: 3 })
+    return products || []
+  } catch (err) {
+    console.error('[brain] Product recommendation error:', err.message)
+    return []
+  }
+}
 
 /**
  * Run the Brain on a normalized event.
@@ -18,6 +92,23 @@ import { buildSystemPrompt } from './lib/prompt-builder.js'
 export async function runBrain(supabase, { event, playbook, clientId, normalized, conversationHistory }) {
   // Load full client context
   const clientConfig = await loadClientConfig(supabase, clientId)
+
+  // --- Actero Memory: retrieve persistent memories for this end-customer ---
+  // These are injected into the system prompt so the agent can personalize
+  // its answer based on past interactions with the same email.
+  let memoryContext = ''
+  let retrievedMemories = []
+  try {
+    retrievedMemories = await retrieveMemories(supabase, {
+      clientId,
+      customerEmail: normalized?.customer_email,
+      query: normalized?.message || '',
+      limit: 5,
+    })
+    memoryContext = buildMemoryContext(retrievedMemories)
+  } catch (err) {
+    console.error('[brain] Memory retrieval error:', err.message)
+  }
 
   // --- Step 1: Classification ---
   let classificationPrompt = playbook.classification_prompt + `
@@ -56,7 +147,7 @@ ${clientConfig.guardrails.length > 0 ? `\nREGLES:\n${clientConfig.guardrails.map
     // Generate a proposed response anyway (for the reviewer)
     let proposedResponse = null
     try {
-      const responsePrompt = buildSystemPrompt(clientConfig)
+      const responsePrompt = buildSystemPrompt(clientConfig) + memoryContext
       // Build messages with conversation history
       let lowConfMessages = []
       if (conversationHistory && conversationHistory.length > 0) {
@@ -108,7 +199,7 @@ ${clientConfig.guardrails.length > 0 ? `\nREGLES:\n${clientConfig.guardrails.map
 
   if (actionPlan.includes('send_reply') || actionPlan.includes('send_email')) {
     try {
-      const basePrompt = buildSystemPrompt(clientConfig)
+      const basePrompt = buildSystemPrompt(clientConfig) + memoryContext
 
       // Build messages with conversation history for context/memory
       let claudeMessages = []
@@ -157,6 +248,25 @@ ${clientConfig.guardrails.length > 0 ? `\nREGLES:\n${clientConfig.guardrails.map
       if (aiResponse) {
         aiResponse = aiResponse.replace(/\*\*/g, '').replace(/\*/g, '').replace(/^#+\s/gm, '').replace(/`([^`]+)`/g, '$1').trim()
       }
+
+      // --- Actero Memory: persist this exchange as a new memory ---
+      // Fire-and-forget; storeMemory is a no-op for anonymous emails.
+      if (aiResponse && normalized?.customer_email) {
+        const memoryContent = `Client a demande: "${normalized.message}"\nReponse donnee: "${aiResponse}"`
+        storeMemory(supabase, {
+          clientId,
+          customerEmail: normalized.customer_email,
+          type: 'conversation',
+          content: memoryContent,
+          metadata: {
+            classification,
+            confidence,
+            session_id: normalized?.session_id || null,
+            source: event?.source || null,
+            sentiment_score: sentimentScore,
+          },
+        }).catch(err => console.error('[brain] Memory store error:', err.message))
+      }
     } catch (err) {
       console.error('[brain] Response generation error:', err.message)
       return {
@@ -201,6 +311,15 @@ ${clientConfig.guardrails.length > 0 ? `\nREGLES:\n${clientConfig.guardrails.map
     }
   }
 
+  // --- Step 5: Product recommendations (if eligible + Shopify connected) ---
+  const productRecommendations = await maybeFetchProductRecommendations(supabase, {
+    clientConfig,
+    clientId,
+    classification,
+    message: normalized?.message,
+    sentimentScore,
+  })
+
   return {
     classification,
     confidence,
@@ -208,6 +327,7 @@ ${clientConfig.guardrails.length > 0 ? `\nREGLES:\n${clientConfig.guardrails.map
     aiResponse,
     needsReview: false,
     reviewReason: null,
+    productRecommendations,
   }
 }
 

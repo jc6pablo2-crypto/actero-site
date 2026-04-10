@@ -127,12 +127,16 @@ const PLAYBOOK_META = {
     ],
   },
   agent_vocal: {
-    icon: Headphones, color: 'from-violet-500 to-violet-600',
-    simpleDesc: 'Un agent vocal IA qui repond aux questions de vos clients par la voix. Bientot disponible.',
+    icon: Phone, color: 'from-violet-500 to-violet-600',
+    simpleDesc: 'Un agent vocal IA qui repond aux questions de vos clients par la voix, 24h/24.',
     helpId: 'agent-vocal',
     requires: [],
-    comingSoon: true,
-    channels: [],
+    hasConfig: true,
+    configType: 'vocal',
+    channels: [
+      { id: 'widget_vocal', label: 'Widget vocal sur le site', desc: 'Bouton d\'appel vocal sur votre boutique Shopify', icon: Phone, needsIntegration: ['shopify'] },
+      { id: 'phone', label: 'Numero de telephone', desc: 'Un numero dedie que vos clients peuvent appeler', icon: Phone, needsIntegration: [] },
+    ],
   },
 }
 

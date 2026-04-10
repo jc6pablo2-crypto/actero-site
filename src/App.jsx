@@ -23,11 +23,20 @@ import { ShopifySuccessPage } from "./pages/ShopifySuccessPage";
 import { CancelPage } from "./pages/CancelPage";
 import { ReferralLanding } from "./pages/ReferralLanding";
 import { PartnerLandingPage } from "./pages/PartnerLandingPage";
+import { PartnersLandingPage } from "./pages/PartnersLandingPage";
+import { PartnerApplyPage } from "./pages/PartnerApplyPage";
+import { PartnersDirectoryPage } from "./pages/PartnersDirectoryPage";
+import { PartnerProfilePage } from "./pages/PartnerProfilePage";
 import { AmbassadorLandingPage } from "./pages/AmbassadorLandingPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import { SupportGuidePage } from "./pages/SupportGuidePage";
 import { LegalPage } from "./pages/LegalPage";
 import { TermsPage } from "./pages/TermsPage";
+import { MarketplacePage } from "./pages/MarketplacePage";
+import { MarketplaceTemplatePage } from "./pages/MarketplaceTemplatePage";
+import { AcademyPage } from "./pages/AcademyPage";
+import { AcademyCoursePage } from "./pages/AcademyCoursePage";
+import { AcademyModulePage } from "./pages/AcademyModulePage";
 import { AmbassadorLogin } from "./pages/AmbassadorLogin";
 import { AmbassadorDashboard } from "./pages/AmbassadorDashboard";
 import AmbassadorSetupPassword from "./pages/AmbassadorSetupPassword";
@@ -99,6 +108,20 @@ function MainRouter() {
   else if (currentRoute === "/demo") page = <DemoDashboardPage onNavigate={navigate} />;
   else if (currentRoute.startsWith("/demo-prospect")) page = <ProspectDemoPage onNavigate={navigate} />;
   else if (currentRoute === "/ressources") page = <PromptLibraryPage onNavigate={navigate} />;
+  else if (currentRoute === "/marketplace") page = <MarketplacePage onNavigate={navigate} />;
+  else if (currentRoute.startsWith("/marketplace/")) {
+    const slug = currentRoute.replace("/marketplace/", "").split("?")[0];
+    page = <MarketplaceTemplatePage slug={slug} onNavigate={navigate} />;
+  }
+  else if (currentRoute === "/academy") page = <AcademyPage onNavigate={navigate} />;
+  else if (currentRoute.startsWith("/academy/")) {
+    const parts = currentRoute.replace("/academy/", "").split("/").filter(Boolean);
+    if (parts.length === 1) {
+      page = <AcademyCoursePage slug={parts[0]} onNavigate={navigate} />;
+    } else if (parts.length >= 2) {
+      page = <AcademyModulePage courseSlug={parts[0]} moduleSlug={parts[1]} onNavigate={navigate} />;
+    }
+  }
   else if (currentRoute.startsWith("/r/")) {
     const referralCode = currentRoute.replace("/r/", "");
     page = <ReferralLanding code={referralCode} onNavigate={navigate} />;
@@ -111,6 +134,13 @@ function MainRouter() {
   else if (currentRoute === "/shopify-success") page = <ShopifySuccessPage onNavigate={navigate} />;
   else if (currentRoute === "/cancel") page = <CancelPage onNavigate={navigate} />;
   else if (currentRoute === "/partner") page = <PartnerLandingPage onNavigate={navigate} />;
+  else if (currentRoute === "/partners-program") page = <PartnersLandingPage onNavigate={navigate} />;
+  else if (currentRoute === "/partners/apply") page = <PartnerApplyPage onNavigate={navigate} />;
+  else if (currentRoute === "/partners") page = <PartnersDirectoryPage onNavigate={navigate} />;
+  else if (currentRoute.startsWith("/partners/")) {
+    const partnerSlug = currentRoute.replace("/partners/", "").split("?")[0];
+    page = <PartnerProfilePage slug={partnerSlug} onNavigate={navigate} />;
+  }
   else if (currentRoute === "/ambassadeurs") page = <AmbassadorLandingPage onNavigate={navigate} />;
   else if (currentRoute === "/ambassador/login") page = <AmbassadorLogin onNavigate={navigate} />;
   else if (currentRoute === "/ambassador/setup-password") page = <AmbassadorSetupPassword />;

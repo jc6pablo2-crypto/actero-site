@@ -164,6 +164,29 @@ export default async function handler(req, res) {
       response_time_ms: duration * 1000,
     })
 
+    // 6. Persist full call record in voice_calls (powers the dashboard)
+    const recordingUrl = data.recording_url || data.audio_url || data.metadata?.recording_url || null
+    const customerName = data.metadata?.caller_name || data.caller_name || null
+    await supabase.from('voice_calls').insert({
+      client_id: clientId,
+      conversation_id: conversationId,
+      customer_phone: customerNumber || null,
+      customer_name: customerName,
+      duration_seconds: duration,
+      transcript: transcriptText,
+      summary: summary || null,
+      sentiment: typeof satisfaction === 'string' ? satisfaction : (satisfaction != null ? String(satisfaction) : null),
+      status: escalated ? 'escalated' : (status || 'completed'),
+      recording_url: recordingUrl,
+      metadata: {
+        agent_id: agentId,
+        raw_status: status,
+        transferred: data.metadata?.transferred || false,
+        call_successful: data.analysis?.call_successful,
+        analysis: data.analysis || null,
+      },
+    })
+
     return res.status(200).json({
       received: true,
       conversation_id: conversationId,
