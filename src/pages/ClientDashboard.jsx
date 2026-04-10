@@ -327,6 +327,52 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   const showShopifyBanner = currentClient?.client_type === 'ecommerce' && shopifyConnected === false;
 
+  // 5b. Fetch client settings + raw events for live ROI computation (single source of truth)
+  const { data: liveRoi } = useQuery({
+    queryKey: ["client-live-roi", currentClient?.id, selectedPeriod],
+    queryFn: async () => {
+      const now = new Date();
+      let start;
+      if (selectedPeriod === "this_month") {
+        start = new Date(now.getFullYear(), now.getMonth(), 1);
+      } else if (selectedPeriod === "last_month") {
+        start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      } else {
+        start = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      }
+
+      const [{ data: settings }, { data: events }] = await Promise.all([
+        supabase
+          .from('client_settings')
+          .select('hourly_cost, actero_monthly_price')
+          .eq('client_id', currentClient.id)
+          .maybeSingle(),
+        supabase
+          .from('automation_events')
+          .select('time_saved_seconds')
+          .eq('client_id', currentClient.id)
+          .eq('event_category', 'ticket_resolved')
+          .gte('created_at', start.toISOString()),
+      ]);
+
+      const hourlyCost = parseFloat(settings?.hourly_cost) || 25;
+      const monthlyPrice = parseFloat(settings?.actero_monthly_price) || 0;
+      const totalTimeSavedSec = (events || []).reduce((s, e) => s + (e.time_saved_seconds || 0), 0);
+      const totalTimeSavedHours = totalTimeSavedSec / 3600;
+      const valueSaved = totalTimeSavedHours * hourlyCost;
+      const roiNet = valueSaved - monthlyPrice;
+
+      return {
+        hours_saved: totalTimeSavedHours,
+        value_saved: valueSaved,
+        roi_net: roiNet,
+        hourly_cost: hourlyCost,
+        monthly_price: monthlyPrice,
+      };
+    },
+    enabled: !!supabase && !!currentClient?.id,
+  });
+
   // 6. Fetch Event counts by category (for vertical-specific KPIs)
   const { data: eventCounts = {} } = useQuery({
     queryKey: ["client-event-counts", currentClient?.id, selectedPeriod],
@@ -661,8 +707,8 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 {[
                   { label: 'Tickets resolus', value: eventCounts.ticket_resolved || 0, var: periodStats?.tasks_executed_var, suffix: '', help: "Nombre de tickets client traités automatiquement par l'agent IA sur la période sélectionnée." },
                   { label: 'Escalades', value: eventCounts.ticket_escalated || 0, suffix: '', help: "Tickets transmis à votre équipe humaine — lorsque l'agent n'a pas pu répondre avec assez de confiance." },
-                  { label: 'Temps economise', value: periodStats?.time_saved || 0, var: periodStats?.time_saved_var, suffix: 'h', help: 'Heures de travail économisées par votre équipe grâce aux automatisations (calculé depuis vos paramètres ROI).' },
-                  { label: 'ROI genere', value: `${(periodStats?.roi || 0).toLocaleString('fr-FR')}`, suffix: '€', help: 'ROI calculé en temps réel : temps économisé × votre coût horaire − abonnement Actero.' },
+                  { label: 'Temps economise', value: Math.round((liveRoi?.hours_saved || 0) * 10) / 10, suffix: 'h', help: 'Heures de travail économisées par votre équipe grâce aux automatisations (calculé en temps réel depuis les tickets résolus).' },
+                  { label: 'ROI genere', value: `${Math.round(liveRoi?.value_saved || 0).toLocaleString('fr-FR')}`, suffix: '€', help: 'Valeur économisée en temps réel : temps économisé × votre coût horaire. Calculé depuis vos paramètres ROI.' },
                 ].map((kpi, i) => (
                   <div key={i} className={`px-5 py-5 ${i < 3 ? 'border-r border-[#f0f0f0]' : ''}`}>
                     <div className="flex items-center gap-1.5 mb-2">
