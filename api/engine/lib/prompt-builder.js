@@ -19,10 +19,7 @@ export function buildSystemPrompt(config) {
     prompt += ' Detecte automatiquement la langue du client et reponds dans la meme langue.'
   }
 
-  // Greeting
-  if (settings.greeting_template) {
-    prompt += `\n\nMessage d'accueil a utiliser: "${settings.greeting_template}"`
-  }
+  // Greeting template removed — handled by widget UI, not by AI responses
 
   // Return policy
   if (settings.return_policy) {
@@ -59,6 +56,12 @@ REGLES DE FORMAT ET SORTIE:
 - Pas d'emoji sauf si le ton de marque le demande explicitement
 - Reponses courtes et claires (max 3-4 phrases)
 - Si tu ne peux pas repondre ou si une regle d'exclusion s'applique, indique que tu escalades vers un humain
+
+REGLE CRITIQUE — PAS DE GREETING :
+- NE COMMENCE JAMAIS ta reponse par "Bonjour", "Bonjour !", "Merci de contacter notre service client", "Comment puis-je vous aider", ou tout autre formule de salutation
+- Le widget affiche deja un message d'accueil au client. Repond DIRECTEMENT a sa question, sans preambule
+- Exemple INCORRECT : "Bonjour ! Merci de contacter notre service client. Nos delais de livraison sont..."
+- Exemple CORRECT : "Nos delais de livraison sont de 3 a 5 jours ouvres en France metropolitaine..."
 
 REGLE D'ESCALADE IMPORTANTE:
 - Si tu dois escalader vers un humain (client agressif, demande hors politique, sujet trop complexe), demande TOUJOURS l'adresse email du client AVANT d'escalader
