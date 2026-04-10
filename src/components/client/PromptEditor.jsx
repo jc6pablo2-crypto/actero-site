@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   Wand2, Save, Loader2, CheckCircle2, AlertCircle,
   Globe, MessageCircle, ShieldAlert, Package, Sparkles,
-  ShoppingBag, Crown, Building2, Headphones, Zap, ChevronDown,
-  Upload, Link2, FileText, Plus, Trash2, Pencil, X,
+  ShoppingBag, Crown, Building2, Headphones, Zap, ChevronDown, ChevronUp,
+  Upload, Link2, FileText, Plus, Trash2, Pencil, X, Building, BookOpen, Eye,
 } from 'lucide-react'
 import { useToast } from '../ui/Toast'
 import { supabase } from '../../lib/supabase'
+import { HelpTooltip } from '../ui/HelpTooltip'
 
 const LANGUAGES = [
   { value: 'fr', label: 'Francais' },
@@ -251,7 +252,66 @@ export const PromptEditor = ({ clientId, theme }) => {
     excluded_products: '',
     custom_instructions: '',
     greeting_template: '',
+    brand_identity: '',
+    tone_style: '',
+    example_responses: [],
   })
+  // Section expansion state (Feature 18)
+  const [openSections, setOpenSections] = useState({
+    identity: true,
+    tone: true,
+    rules: false,
+    examples: false,
+    preview: false,
+  })
+  const toggleSection = (key) => setOpenSections(s => ({ ...s, [key]: !s[key] }))
+
+  // Guardrails (absolute rules) loaded via existing table for Feature 18 UI
+  const { data: guardrails = [] } = useQuery({
+    queryKey: ['pe-guardrails', clientId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('client_guardrails')
+        .select('*')
+        .eq('client_id', clientId)
+        .order('priority', { ascending: true })
+      if (error) throw error
+      return data || []
+    },
+    enabled: !!clientId,
+  })
+  const [newAbsoluteRule, setNewAbsoluteRule] = useState('')
+  const handleAddAbsoluteRule = async () => {
+    if (!newAbsoluteRule.trim()) return
+    const { error } = await supabase.from('client_guardrails').insert({
+      client_id: clientId,
+      rule_text: newAbsoluteRule.trim(),
+      is_enabled: true,
+      priority: guardrails.length,
+    })
+    if (!error) {
+      setNewAbsoluteRule('')
+      queryClient.invalidateQueries({ queryKey: ['pe-guardrails', clientId] })
+    }
+  }
+  const handleDeleteAbsoluteRule = async (id) => {
+    await supabase.from('client_guardrails').delete().eq('id', id)
+    queryClient.invalidateQueries({ queryKey: ['pe-guardrails', clientId] })
+  }
+
+  // Example responses (few-shot) helpers
+  const handleAddExample = () => {
+    setForm(f => ({ ...f, example_responses: [...(f.example_responses || []), { question: '', answer: '' }] }))
+  }
+  const handleUpdateExample = (i, key, value) => {
+    setForm(f => ({
+      ...f,
+      example_responses: (f.example_responses || []).map((ex, idx) => idx === i ? { ...ex, [key]: value } : ex),
+    }))
+  }
+  const handleRemoveExample = (i) => {
+    setForm(f => ({ ...f, example_responses: (f.example_responses || []).filter((_, idx) => idx !== i) }))
+  }
 
   useEffect(() => {
     if (settings) {
@@ -265,9 +325,74 @@ export const PromptEditor = ({ clientId, theme }) => {
         tone_formality: settings.tone_formality ?? 30,
         tone_warmth: settings.tone_warmth ?? 70,
         tone_detail: settings.tone_detail ?? 50,
+        brand_identity: settings.brand_identity || '',
+        tone_style: settings.tone_style || '',
+        example_responses: Array.isArray(settings.example_responses) ? settings.example_responses : [],
       })
     }
   }, [settings])
+
+  // Debounced auto-save for Feature 18 fields
+  const saveTimer = useRef(null)
+  const isHydratedRef = useRef(false)
+  useEffect(() => {
+    if (!settings) return
+    if (!isHydratedRef.current) {
+      isHydratedRef.current = true
+      return
+    }
+    if (saveTimer.current) clearTimeout(saveTimer.current)
+    saveTimer.current = setTimeout(async () => {
+      try {
+        await supabase.from('client_settings').upsert({
+          client_id: clientId,
+          brand_identity: form.brand_identity,
+          tone_style: form.tone_style,
+          example_responses: form.example_responses,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'client_id' })
+        queryClient.invalidateQueries({ queryKey: ['client-prompt-settings', clientId] })
+      } catch { /* ignore */ }
+    }, 900)
+    return () => { if (saveTimer.current) clearTimeout(saveTimer.current) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.brand_identity, form.tone_style, form.example_responses])
+
+  // Build a preview of the generated system prompt (client-side approximation)
+  const buildPreviewPrompt = () => {
+    const brandName = 'Votre marque'
+    let p = `Tu es un agent de support client IA professionnel pour "${brandName}".`
+    p += ` Tu reponds aux demandes des clients de maniere ${form.brand_tone || 'professionnelle et chaleureuse'}.`
+    if (form.brand_identity?.trim()) p += `\n\nIDENTITE DE MARQUE:\n${form.brand_identity.trim()}`
+    const toneLines = []
+    if (form.tone_formality != null) {
+      if (form.tone_formality <= 33) toneLines.push('- Registre formel, vouvoiement.')
+      else if (form.tone_formality >= 67) toneLines.push('- Registre casual, tutoiement possible.')
+      else toneLines.push('- Registre equilibre.')
+    }
+    if (form.tone_warmth != null) {
+      if (form.tone_warmth >= 67) toneLines.push('- Ton chaleureux et empathique.')
+      else if (form.tone_warmth <= 33) toneLines.push('- Ton neutre et factuel.')
+      else toneLines.push('- Ton cordial.')
+    }
+    if (form.tone_detail != null) {
+      if (form.tone_detail >= 67) toneLines.push('- Reponses detaillees.')
+      else if (form.tone_detail <= 33) toneLines.push('- Reponses concises.')
+      else toneLines.push('- Reponses de longueur moyenne.')
+    }
+    if (toneLines.length > 0) p += `\n\nTON DE COMMUNICATION:\n${toneLines.join('\n')}`
+    if (form.tone_style?.trim()) p += `\n\nSTYLE PARTICULIER:\n${form.tone_style.trim()}`
+    if (form.return_policy) p += `\n\nPOLITIQUE DE RETOUR:\n${form.return_policy}`
+    if (form.custom_instructions) p += `\n\nINSTRUCTIONS SPECIFIQUES:\n${form.custom_instructions}`
+    if (guardrails.length > 0) {
+      p += `\n\nREGLES D'EXCLUSION:\n${guardrails.filter(g => g.is_enabled).map((g, i) => `${i + 1}. ${g.rule_text}`).join('\n')}`
+    }
+    const exs = (form.example_responses || []).filter(e => e.question && e.answer)
+    if (exs.length > 0) {
+      p += `\n\nEXEMPLES DE BONNES REPONSES:\n${exs.slice(0, 8).map((ex, i) => `Exemple ${i + 1}:\nQuestion: ${ex.question}\nReponse: ${ex.answer}`).join('\n\n')}`
+    }
+    return p
+  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -326,6 +451,46 @@ export const PromptEditor = ({ clientId, theme }) => {
         </div>
       </div>
 
+      {/* --- Feature 18: Section — Identite de marque --- */}
+      <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] overflow-hidden">
+        <button
+          onClick={() => toggleSection('identity')}
+          className="w-full flex items-center justify-between px-6 py-4 hover:bg-[#fafafa] transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+              <Building className="w-4 h-4 text-[#0F5F35]" />
+            </div>
+            <div className="text-left">
+              <h3 className="text-[14px] font-semibold text-[#1a1a1a]">Identite de marque</h3>
+              <p className="text-[11px] text-[#9ca3af]">Nom, secteur, valeurs — le contexte ADN de votre entreprise</p>
+            </div>
+          </div>
+          {openSections.identity ? <ChevronUp className="w-4 h-4 text-[#9ca3af]" /> : <ChevronDown className="w-4 h-4 text-[#9ca3af]" />}
+        </button>
+        <AnimatePresence initial={false}>
+          {openSections.identity && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="px-6 pb-6 pt-1 border-t border-[#f5f5f5]">
+                <textarea
+                  value={form.brand_identity}
+                  onChange={(e) => setForm(f => ({ ...f, brand_identity: e.target.value }))}
+                  rows={4}
+                  placeholder={'ex: Marque de cosmetiques bio fondee en 2018, nos valeurs : transparence, naturel, fait en France. Clientele premium feminine 25-45 ans.'}
+                  className={inputClass + ' resize-y'}
+                />
+                <p className="text-[10px] text-[#9ca3af] mt-2">Sauvegarde automatique</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
       {/* Tone sliders (3 axes) */}
       <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] p-6">
         <div className="flex items-center gap-2 mb-5">
@@ -338,7 +503,7 @@ export const PromptEditor = ({ clientId, theme }) => {
           {/* Slider 1: Formel ↔ Casual */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-semibold text-[#9ca3af]">Formel</span>
+              <span className="text-[11px] font-semibold text-[#9ca3af] inline-flex items-center gap-1">Formel <HelpTooltip text="Niveau de formalité du langage. À gauche : vouvoiement et phrases soutenues. À droite : tutoiement et style décontracté." /></span>
               <span className="text-[11px] font-semibold text-[#9ca3af]">Casual</span>
             </div>
             <input
@@ -352,7 +517,7 @@ export const PromptEditor = ({ clientId, theme }) => {
           {/* Slider 2: Froid ↔ Chaleureux */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-semibold text-[#9ca3af]">Froid</span>
+              <span className="text-[11px] font-semibold text-[#9ca3af] inline-flex items-center gap-1">Froid <HelpTooltip text="Niveau d'empathie affichée. À droite : l'agent reconnaît explicitement les émotions du client et personnalise sa réponse." /></span>
               <span className="text-[11px] font-semibold text-[#9ca3af]">Chaleureux</span>
             </div>
             <input
@@ -366,7 +531,7 @@ export const PromptEditor = ({ clientId, theme }) => {
           {/* Slider 3: Court ↔ Détaillé */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] font-semibold text-[#9ca3af]">Court</span>
+              <span className="text-[11px] font-semibold text-[#9ca3af] inline-flex items-center gap-1">Court <HelpTooltip text="Longueur des réponses. À gauche : réponses concises (1-2 phrases). À droite : réponses détaillées avec contexte et étapes." /></span>
               <span className="text-[11px] font-semibold text-[#9ca3af]">Detaille</span>
             </div>
             <input
@@ -392,6 +557,143 @@ export const PromptEditor = ({ clientId, theme }) => {
             }"
           </p>
         </div>
+
+        {/* Feature 18: Style particulier freeform */}
+        <div className="mt-6">
+          <label className="block text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-2">Style particulier (optionnel)</label>
+          <textarea
+            value={form.tone_style}
+            onChange={(e) => setForm(f => ({ ...f, tone_style: e.target.value }))}
+            rows={3}
+            placeholder={'ex: utilise des expressions francaises decontractees, signe toujours par "L\'equipe"'}
+            className={inputClass + ' resize-y'}
+          />
+          <p className="text-[10px] text-[#9ca3af] mt-1.5">Sauvegarde automatique. Ajoute des indications de style libres.</p>
+        </div>
+      </div>
+
+      {/* --- Feature 18: Section — Regles absolues --- */}
+      <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] overflow-hidden">
+        <button
+          onClick={() => toggleSection('rules')}
+          className="w-full flex items-center justify-between px-6 py-4 hover:bg-[#fafafa] transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
+              <ShieldAlert className="w-4 h-4 text-red-500" />
+            </div>
+            <div className="text-left">
+              <h3 className="text-[14px] font-semibold text-[#1a1a1a]">Regles absolues</h3>
+              <p className="text-[11px] text-[#9ca3af]">Toujours faire X, ne jamais faire Y — {guardrails.length} regle{guardrails.length > 1 ? 's' : ''}</p>
+            </div>
+          </div>
+          {openSections.rules ? <ChevronUp className="w-4 h-4 text-[#9ca3af]" /> : <ChevronDown className="w-4 h-4 text-[#9ca3af]" />}
+        </button>
+        <AnimatePresence initial={false}>
+          {openSections.rules && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="px-6 pb-6 pt-1 border-t border-[#f5f5f5] space-y-3">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newAbsoluteRule}
+                    onChange={(e) => setNewAbsoluteRule(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleAddAbsoluteRule() }}
+                    placeholder='ex: Ne jamais proposer de remboursement sans escalade humaine'
+                    className={inputClass}
+                  />
+                  <button
+                    onClick={handleAddAbsoluteRule}
+                    disabled={!newAbsoluteRule.trim()}
+                    className="px-4 py-3 bg-[#0F5F35] text-white text-[12px] font-semibold rounded-lg hover:bg-[#003725] disabled:opacity-40 flex-shrink-0"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+                {guardrails.length > 0 && (
+                  <div className="space-y-1.5">
+                    {guardrails.map(g => (
+                      <div key={g.id} className="flex items-center gap-2 px-3 py-2 bg-[#fafafa] rounded-lg">
+                        <span className={`text-[12px] flex-1 ${g.is_enabled ? 'text-[#1a1a1a]' : 'text-[#9ca3af] line-through'}`}>{g.rule_text}</span>
+                        <button onClick={() => handleDeleteAbsoluteRule(g.id)} className="p-1 rounded text-[#9ca3af] hover:bg-red-50 hover:text-red-500">
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* --- Feature 18: Section — Exemples de bonnes reponses --- */}
+      <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] overflow-hidden">
+        <button
+          onClick={() => toggleSection('examples')}
+          className="w-full flex items-center justify-between px-6 py-4 hover:bg-[#fafafa] transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+              <BookOpen className="w-4 h-4 text-blue-600" />
+            </div>
+            <div className="text-left">
+              <h3 className="text-[14px] font-semibold text-[#1a1a1a]">Exemples de bonnes reponses</h3>
+              <p className="text-[11px] text-[#9ca3af]">Paires Question/Reponse que l'IA doit imiter — {(form.example_responses || []).length} exemple{(form.example_responses || []).length > 1 ? 's' : ''}</p>
+            </div>
+          </div>
+          {openSections.examples ? <ChevronUp className="w-4 h-4 text-[#9ca3af]" /> : <ChevronDown className="w-4 h-4 text-[#9ca3af]" />}
+        </button>
+        <AnimatePresence initial={false}>
+          {openSections.examples && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="px-6 pb-6 pt-1 border-t border-[#f5f5f5] space-y-3">
+                {(form.example_responses || []).map((ex, i) => (
+                  <div key={i} className="p-3 bg-[#fafafa] rounded-xl space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#9ca3af]">Exemple {i + 1}</span>
+                      <button onClick={() => handleRemoveExample(i)} className="p-1 rounded text-[#9ca3af] hover:bg-red-50 hover:text-red-500">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      value={ex.question || ''}
+                      onChange={(e) => handleUpdateExample(i, 'question', e.target.value)}
+                      placeholder="Question du client"
+                      className="w-full px-3 py-2 bg-white border border-[#ebebeb] rounded-lg text-[12px] outline-none focus:ring-1 focus:ring-[#0F5F35]/30"
+                    />
+                    <textarea
+                      value={ex.answer || ''}
+                      onChange={(e) => handleUpdateExample(i, 'answer', e.target.value)}
+                      placeholder="Reponse ideale que l'IA doit imiter"
+                      rows={2}
+                      className="w-full px-3 py-2 bg-white border border-[#ebebeb] rounded-lg text-[12px] outline-none focus:ring-1 focus:ring-[#0F5F35]/30 resize-y"
+                    />
+                  </div>
+                ))}
+                <button
+                  onClick={handleAddExample}
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2.5 border border-dashed border-[#ebebeb] rounded-xl text-[12px] font-medium text-[#9ca3af] hover:border-[#0F5F35]/30 hover:text-[#0F5F35] hover:bg-[#0F5F35]/5 transition-all"
+                >
+                  <Plus className="w-4 h-4" /> Ajouter un exemple
+                </button>
+                <p className="text-[10px] text-[#9ca3af]">Sauvegarde automatique. Les exemples sont injectes dans le prompt pour guider le ton et le format.</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Language */}
@@ -542,6 +844,40 @@ export const PromptEditor = ({ clientId, theme }) => {
             ))}
           </div>
         )}
+      </div>
+
+      {/* --- Feature 18: Section — Apercu du prompt genere --- */}
+      <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] overflow-hidden">
+        <button
+          onClick={() => toggleSection('preview')}
+          className="w-full flex items-center justify-between px-6 py-4 hover:bg-[#fafafa] transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center">
+              <Eye className="w-4 h-4 text-violet-600" />
+            </div>
+            <div className="text-left">
+              <h3 className="text-[14px] font-semibold text-[#1a1a1a]">Apercu du prompt genere</h3>
+              <p className="text-[11px] text-[#9ca3af]">Le prompt final envoye a Claude pour repondre a vos clients</p>
+            </div>
+          </div>
+          {openSections.preview ? <ChevronUp className="w-4 h-4 text-[#9ca3af]" /> : <ChevronDown className="w-4 h-4 text-[#9ca3af]" />}
+        </button>
+        <AnimatePresence initial={false}>
+          {openSections.preview && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="px-6 pb-6 pt-1 border-t border-[#f5f5f5]">
+                <pre className="p-4 bg-[#0b0b0b] text-[#e5e5e5] rounded-xl text-[11px] font-mono leading-relaxed whitespace-pre-wrap overflow-x-auto max-h-[420px]">{buildPreviewPrompt()}</pre>
+                <p className="text-[10px] text-[#9ca3af] mt-2">Lecture seule. Se met a jour en temps reel au fil de vos modifications.</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Save */}

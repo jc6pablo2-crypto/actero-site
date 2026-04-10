@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
+import { HelpTooltip } from '../ui/HelpTooltip'
 
 const CHANNEL_DEFS = [
   {
@@ -308,6 +309,7 @@ const ChannelCard = ({ channel, clientId, connected, messageCount, toast, queryC
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <p className="font-bold text-sm text-[#1a1a1a]">{channel.name}</p>
+            <HelpTooltip text={channel.desc} />
             {isActive && (
               <span className="flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[10px] font-bold rounded-full">
                 <CheckCircle2 className="w-3 h-3" /> Actif

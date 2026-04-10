@@ -41,6 +41,8 @@ import {
   Volume2,
   Handshake,
   ShieldCheck,
+  Tag,
+  GitBranch,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
@@ -66,9 +68,12 @@ import { OnboardingChecklist } from '../components/client/OnboardingChecklist'
 import { AutoDiagnostic } from '../components/client/AutoDiagnostic'
 import { GuardrailsEditor } from '../components/client/GuardrailsEditor'
 import { PromptEditor } from '../components/client/PromptEditor'
+import { CustomClassificationsView } from '../components/client/CustomClassificationsView'
+import { BusinessRulesView } from '../components/client/BusinessRulesView'
 import { ConversationSimulator } from '../components/client/ConversationSimulator'
 import { TeamManager, canAccessTab } from '../components/client/TeamManager'
 import { ClientEscalationsView } from '../components/client/ClientEscalationsView'
+import { ResponseTemplatesView } from '../components/client/ResponseTemplatesView'
 import { ClientSatisfactionScore, SatisfactionKPI } from '../components/client/ClientSatisfactionScore'
 import { VoiceAgentView } from '../components/client/VoiceAgentView'
 import { MultiAgentView } from '../components/client/MultiAgentView'
@@ -85,6 +90,11 @@ import { PlaybooksView } from '../components/client/PlaybooksView'
 import { ClientBillingView } from '../components/client/ClientBillingView'
 import { HelpCenterView } from '../components/client/HelpCenterView'
 import { ROISettingsView } from '../components/client/ROISettingsView'
+import { WeeklySummary } from '../components/client/WeeklySummary'
+import { PeakHoursChart } from '../components/client/PeakHoursChart'
+import { SetupChecklist } from '../components/client/SetupChecklist'
+import { QuickTestButton } from '../components/client/QuickTestButton'
+import { HelpTooltip } from '../components/ui/HelpTooltip'
 
 const FeedbackButtons = ({ eventId, currentFeedback, supabase }) => {
   const [feedback, setFeedback] = useState(currentFeedback || null);
@@ -194,6 +204,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/simulator") return "simulator";
     if (route === "/client/guardrails") return "guardrails";
     if (route === "/client/escalations") return "escalations";
+    if (route === "/client/response-templates") return "response-templates";
     if (route === "/client/voice-agent") return "voice-agent";
     if (route === "/client/multi-agent") return "multi-agent";
     if (route === "/client/prompt-injection") return "prompt-injection";
@@ -427,13 +438,13 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     return Math.round(((curAvg - prevAvg) / prevAvg) * 100);
   }, [dailyMetrics]);
 
-  // Count pending escalations for badge
+  // Count pending escalations for badge (total + urgent >2h)
   const { data: pendingEscalations = [] } = useQuery({
     queryKey: ['pending-escalation-count', currentClient?.id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('ai_conversations')
-        .select('id')
+        .select('id, created_at')
         .eq('client_id', currentClient.id)
         .eq('status', 'escalated')
         .is('human_response', null)
@@ -441,9 +452,17 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       return data || []
     },
     enabled: !!currentClient?.id,
+    refetchInterval: 60 * 1000, // refresh urgency every minute
   })
 
   const escalationCount = pendingEscalations.length;
+  const urgentEscalationCount = useMemo(() => {
+    const cutoff = Date.now() - 2 * 60 * 60 * 1000 // >2h
+    return pendingEscalations.filter(e => {
+      if (!e.created_at) return false
+      return new Date(e.created_at).getTime() < cutoff
+    }).length
+  }, [pendingEscalations]);
 
   const sidebarItems = [
     { id: 'overview', label: 'Accueil', icon: LayoutDashboard },
@@ -453,8 +472,11 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
     { type: 'section', label: 'Mon Agent' },
     { id: 'agent-config', label: 'Mon Agent', icon: MessageCircle },
+    { id: 'classifications', label: 'Categories', icon: Tag },
+    { id: 'business-rules', label: 'Regles metier', icon: GitBranch },
     { id: 'simulator', label: 'Tester', icon: Activity },
-    { id: 'escalations', label: 'A traiter', icon: AlertTriangle, badge: escalationCount > 0 ? escalationCount : null, badgeColor: 'bg-red-100 text-red-600' },
+    { id: 'escalations', label: 'A traiter', icon: AlertTriangle, badge: urgentEscalationCount > 0 ? urgentEscalationCount : null, badgeColor: 'bg-red-100 text-red-600' },
+    { id: 'response-templates', label: 'Templates', icon: FileText },
     { id: 'guardrails', label: 'Regles', icon: Shield },
 
     { type: 'section', label: 'Connexions' },
@@ -564,10 +586,13 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "referral" && "Parrainage"}
             {activeTab === "integrations" && "Integrations"}
             {activeTab === "agent-config" && "Mon Agent"}
+            {activeTab === "classifications" && "Categories"}
+            {activeTab === "business-rules" && "Regles metier"}
             {activeTab === "simulator" && "Tester"}
             {activeTab === "team" && "Equipe"}
             {activeTab === "guardrails" && "Regles"}
             {activeTab === "escalations" && "A traiter"}
+            {activeTab === "response-templates" && "Templates de reponses"}
             {activeTab === "voice-agent" && "Appels IA"}
             {activeTab === "multi-agent" && "Multi-Agents"}
             {activeTab === "prompt-injection" && "Securite IA"}
@@ -581,12 +606,12 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "playbooks" && "Automatisations"}
           </h1>
           <div className="flex items-center gap-3">
-            {escalationCount > 0 && (
+            {urgentEscalationCount > 0 && (
               <button
                 onClick={() => setActiveTab('escalations')}
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-[11px] font-semibold hover:bg-red-100 transition-colors"
               >
-                <AlertTriangle className="w-3 h-3" /> {escalationCount}
+                <AlertTriangle className="w-3 h-3" /> {urgentEscalationCount}
               </button>
             )}
           </div>
@@ -596,16 +621,54 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "overview" && (
             <div className="max-w-6xl mx-auto">
 
+              {/* ── Onboarding: setup checklist + quick test ── */}
+              {currentClient?.id && (
+                <div className="mb-6 flex flex-col md:flex-row md:items-start gap-4">
+                  <div className="flex-1 min-w-0">
+                    <SetupChecklist clientId={currentClient.id} setActiveTab={setActiveTab} />
+                  </div>
+                  <div className="md:pt-1 flex-shrink-0">
+                    <QuickTestButton clientId={currentClient.id} setActiveTab={setActiveTab} />
+                  </div>
+                </div>
+              )}
+
+              {/* ── Weekly summary (one-liner) ── */}
+              <WeeklySummary clientId={currentClient?.id} setActiveTab={setActiveTab} />
+
+              {/* ── Urgent escalation banner (>2h pending) ── */}
+              {urgentEscalationCount > 0 && (
+                <div className="mb-6 rounded-2xl border border-red-200 bg-red-50/70 px-4 py-3 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+                      <AlertTriangle className="w-4 h-4 text-red-600" />
+                    </div>
+                    <p className="text-[13px] text-red-700 font-medium truncate">
+                      {urgentEscalationCount} ticket{urgentEscalationCount > 1 ? 's' : ''} urgent{urgentEscalationCount > 1 ? 's' : ''} — repondez avant la fin de journee
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab('escalations')}
+                    className="flex-shrink-0 px-3 py-1.5 rounded-lg bg-red-600 text-white text-[12px] font-semibold hover:bg-red-700 transition-colors"
+                  >
+                    Voir
+                  </button>
+                </div>
+              )}
+
               {/* ── KPI Row (Instantly-style) ── */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-0 bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] overflow-hidden mb-8">
                 {[
-                  { label: 'Tickets resolus', value: eventCounts.ticket_resolved || 0, var: periodStats?.tasks_executed_var, suffix: '' },
-                  { label: 'Escalades', value: eventCounts.ticket_escalated || 0, suffix: '' },
-                  { label: 'Temps economise', value: periodStats?.time_saved || 0, var: periodStats?.time_saved_var, suffix: 'h' },
-                  { label: 'ROI genere', value: `${(periodStats?.roi || 0).toLocaleString('fr-FR')}`, suffix: '€' },
+                  { label: 'Tickets resolus', value: eventCounts.ticket_resolved || 0, var: periodStats?.tasks_executed_var, suffix: '', help: "Nombre de tickets client traités automatiquement par l'agent IA sur la période sélectionnée." },
+                  { label: 'Escalades', value: eventCounts.ticket_escalated || 0, suffix: '', help: "Tickets transmis à votre équipe humaine — lorsque l'agent n'a pas pu répondre avec assez de confiance." },
+                  { label: 'Temps economise', value: periodStats?.time_saved || 0, var: periodStats?.time_saved_var, suffix: 'h', help: 'Heures de travail économisées par votre équipe grâce aux automatisations (calculé depuis vos paramètres ROI).' },
+                  { label: 'ROI genere', value: `${(periodStats?.roi || 0).toLocaleString('fr-FR')}`, suffix: '€', help: 'ROI calculé en temps réel : temps économisé × votre coût horaire − abonnement Actero.' },
                 ].map((kpi, i) => (
                   <div key={i} className={`px-5 py-5 ${i < 3 ? 'border-r border-[#f0f0f0]' : ''}`}>
-                    <p className="text-[12px] text-[#9ca3af] font-medium mb-2">{kpi.label}</p>
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <p className="text-[12px] text-[#9ca3af] font-medium">{kpi.label}</p>
+                      {kpi.help && <HelpTooltip text={kpi.help} />}
+                    </div>
                     <div className="flex items-baseline gap-1.5">
                       <span className="text-[28px] font-bold text-[#1a1a1a] tracking-tight tabular-nums leading-none">
                         {typeof kpi.value === 'number' ? kpi.value.toLocaleString('fr-FR') : kpi.value}
@@ -699,6 +762,11 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 </div>
               </div>
 
+              {/* ── Peak hours ── */}
+              <div className="mb-8">
+                <PeakHoursChart clientId={currentClient?.id} />
+              </div>
+
               {/* ── Suggestions ── */}
               <AgentImprovementWidget clientId={currentClient?.id} theme={theme} />
             </div>
@@ -756,8 +824,29 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             />
           )}
 
+          {activeTab === "response-templates" && (
+            <ResponseTemplatesView
+              clientId={currentClient?.id}
+              theme={theme}
+            />
+          )}
+
           {activeTab === "agent-config" && (
             <PromptEditor
+              clientId={currentClient?.id}
+              theme={theme}
+            />
+          )}
+
+          {activeTab === "classifications" && (
+            <CustomClassificationsView
+              clientId={currentClient?.id}
+              theme={theme}
+            />
+          )}
+
+          {activeTab === "business-rules" && (
+            <BusinessRulesView
               clientId={currentClient?.id}
               theme={theme}
             />

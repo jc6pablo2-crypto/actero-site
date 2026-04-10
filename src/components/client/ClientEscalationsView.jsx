@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   AlertTriangle, Clock, User, Mail, ShoppingCart, Send,
   CheckCircle2, X, Loader2, BookOpen, ChevronDown, TrendingDown,
-  MessageCircle, FileText
+  MessageCircle, FileText, Check, Edit3, Pen, Save, Search, Sparkles
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 
@@ -74,10 +74,90 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
   const queryClient = useQueryClient()
   const [response, setResponse] = useState('')
   const [addToKb, setAddToKb] = useState(false)
+  const [autoSend, setAutoSend] = useState(false)
 
   const [emailSentStatus, setEmailSentStatus] = useState(null)
   const [emailErrorMsg, setEmailErrorMsg] = useState(null)
+  const [actionMode, setActionMode] = useState(null) // null | 'ai-send' | 'ai-edit' | 'custom'
+
+  // Templates state
+  const [templateSearch, setTemplateSearch] = useState('')
+  const [showTemplatePicker, setShowTemplatePicker] = useState(false)
+  const [showSaveTemplateModal, setShowSaveTemplateModal] = useState(false)
+  const [newTplName, setNewTplName] = useState('')
+  const [newTplCategory, setNewTplCategory] = useState('')
+  const [savingTpl, setSavingTpl] = useState(false)
+  const [localToast, setLocalToast] = useState(null)
+
   const isRealEmail = conversation.customer_email && !conversation.customer_email.includes('@anonymous.actero.fr')
+
+  // Templates query
+  const { data: templates = [] } = useQuery({
+    queryKey: ['response-templates', clientId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('client_response_templates')
+        .select('*')
+        .eq('client_id', clientId)
+        .order('usage_count', { ascending: false })
+      if (error) throw error
+      return data || []
+    },
+    enabled: !!clientId,
+  })
+
+  const filteredTemplates = useMemo(() => {
+    if (!templateSearch.trim()) return templates
+    const q = templateSearch.toLowerCase()
+    return templates.filter(t =>
+      (t.name || '').toLowerCase().includes(q) ||
+      (t.shortcut || '').toLowerCase().includes(q) ||
+      (t.category || '').toLowerCase().includes(q) ||
+      (t.body || '').toLowerCase().includes(q)
+    )
+  }, [templates, templateSearch])
+
+  const applyTemplate = async (tpl) => {
+    setResponse((prev) => prev ? `${prev}\n${tpl.body}` : tpl.body)
+    setShowTemplatePicker(false)
+    setTemplateSearch('')
+    // increment usage_count
+    try {
+      await supabase
+        .from('client_response_templates')
+        .update({ usage_count: (tpl.usage_count || 0) + 1, updated_at: new Date().toISOString() })
+        .eq('id', tpl.id)
+      queryClient.invalidateQueries({ queryKey: ['response-templates', clientId] })
+    } catch (e) {
+      // non-blocking
+    }
+  }
+
+  const saveCurrentAsTemplate = async () => {
+    if (!newTplName.trim() || !response.trim()) return
+    setSavingTpl(true)
+    try {
+      const { error } = await supabase
+        .from('client_response_templates')
+        .insert({
+          client_id: clientId,
+          name: newTplName.trim(),
+          category: newTplCategory.trim() || null,
+          body: response,
+        })
+      if (error) throw error
+      setLocalToast({ type: 'success', msg: 'Template sauvegarde' })
+      setShowSaveTemplateModal(false)
+      setNewTplName('')
+      setNewTplCategory('')
+      queryClient.invalidateQueries({ queryKey: ['response-templates', clientId] })
+      setTimeout(() => setLocalToast(null), 3000)
+    } catch (e) {
+      setLocalToast({ type: 'error', msg: 'Erreur sauvegarde template' })
+      setTimeout(() => setLocalToast(null), 3500)
+    }
+    setSavingTpl(false)
+  }
 
   const respondMutation = useMutation({
     mutationFn: async () => {
@@ -154,6 +234,33 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
       onClose()
     },
   })
+
+  // Auto-send flow when user picks "Envoyer la reponse IA telle quelle"
+  useEffect(() => {
+    if (autoSend && response.trim() && !respondMutation.isPending) {
+      setAutoSend(false)
+      respondMutation.mutate()
+    }
+  }, [autoSend, response]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleQuickActionSendAI = () => {
+    const ai = conversation.ai_response || ''
+    if (!ai.trim()) return
+    setResponse(ai)
+    setActionMode('ai-send')
+    setAutoSend(true)
+  }
+
+  const handleQuickActionEditAI = () => {
+    const ai = conversation.ai_response || ''
+    setResponse(ai)
+    setActionMode('ai-edit')
+  }
+
+  const handleQuickActionCustom = () => {
+    setResponse('')
+    setActionMode('custom')
+  }
 
   const reason = ESCALATION_REASONS[conversation.escalation_reason] || ESCALATION_REASONS.default
 
@@ -266,8 +373,114 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
               </div>
             )}
 
-            <div>
-              <label className="block text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-2">Votre reponse</label>
+            {/* Feature 14: Quick action buttons */}
+            {conversation.ai_response && (
+              <div>
+                <p className="text-[11px] text-[#9ca3af] mb-2">
+                  L&apos;IA propose une reponse — choisissez comment proceder :
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={handleQuickActionSendAI}
+                    disabled={respondMutation.isPending}
+                    className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-[12px] font-semibold transition-all disabled:opacity-50 ${
+                      actionMode === 'ai-send'
+                        ? 'bg-emerald-600 text-white border border-emerald-600'
+                        : 'bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100'
+                    }`}
+                  >
+                    <Check className="w-4 h-4" />
+                    Envoyer la reponse IA telle quelle
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleQuickActionEditAI}
+                    className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-[12px] font-semibold transition-all ${
+                      actionMode === 'ai-edit'
+                        ? 'bg-[#1a1a1a] text-white border border-[#1a1a1a]'
+                        : 'bg-[#f5f5f5] text-[#1a1a1a] border border-[#ebebeb] hover:bg-[#ececec]'
+                    }`}
+                  >
+                    <Edit3 className="w-4 h-4" />
+                    Modifier la reponse IA
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleQuickActionCustom}
+                    className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-[12px] font-semibold transition-all ${
+                      actionMode === 'custom'
+                        ? 'bg-white text-[#1a1a1a] border border-[#1a1a1a]'
+                        : 'bg-white text-[#6b7280] border border-[#ebebeb] hover:text-[#1a1a1a] hover:border-[#d1d5db]'
+                    }`}
+                  >
+                    <Pen className="w-4 h-4" />
+                    Ecrire ma propre reponse
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Feature 16: Template selector */}
+            <div className="relative">
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider">Votre reponse</label>
+                <button
+                  type="button"
+                  onClick={() => setShowTemplatePicker((v) => !v)}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-[#f5f5f5] text-[#1a1a1a] border border-[#ebebeb] hover:bg-[#ececec] transition-all"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  Inserer un template
+                  <ChevronDown className="w-3 h-3" />
+                </button>
+              </div>
+              {showTemplatePicker && (
+                <div className="mb-2 bg-white border border-[#ebebeb] rounded-lg shadow-lg overflow-hidden">
+                  <div className="p-2 border-b border-[#f0f0f0]">
+                    <div className="flex items-center gap-2 px-2 py-1.5 rounded-md bg-[#fafafa] border border-[#ebebeb]">
+                      <Search className="w-3.5 h-3.5 text-[#9ca3af]" />
+                      <input
+                        autoFocus
+                        type="text"
+                        value={templateSearch}
+                        onChange={(e) => setTemplateSearch(e.target.value)}
+                        placeholder="Rechercher un template..."
+                        className="flex-1 bg-transparent outline-none text-[12px] text-[#1a1a1a] placeholder-[#9ca3af]"
+                      />
+                    </div>
+                  </div>
+                  <div className="max-h-60 overflow-y-auto">
+                    {filteredTemplates.length === 0 ? (
+                      <div className="px-4 py-6 text-center text-[12px] text-[#9ca3af]">
+                        {templates.length === 0 ? 'Aucun template. Sauvegardez votre premiere reponse !' : 'Aucun resultat'}
+                      </div>
+                    ) : (
+                      filteredTemplates.map((tpl) => (
+                        <button
+                          key={tpl.id}
+                          type="button"
+                          onClick={() => applyTemplate(tpl)}
+                          className="w-full text-left px-3 py-2 hover:bg-[#fafafa] border-b border-[#f0f0f0] last:border-0 transition-colors"
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <span className="text-[12px] font-semibold text-[#1a1a1a] truncate">{tpl.name}</span>
+                              {tpl.category && (
+                                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#f0f0f0] text-[#6b7280] border border-[#ebebeb]">
+                                  {tpl.category}
+                                </span>
+                              )}
+                            </div>
+                            <span className="text-[10px] text-[#9ca3af] flex-shrink-0">{tpl.usage_count || 0} util.</span>
+                          </div>
+                          <p className="text-[11px] text-[#9ca3af] mt-0.5 line-clamp-1">{tpl.body}</p>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
               <textarea
                 value={response}
                 onChange={(e) => setResponse(e.target.value)}
@@ -294,7 +507,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
               </div>
             </label>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <button
                 onClick={() => respondMutation.mutate()}
                 disabled={!response.trim() || respondMutation.isPending}
@@ -302,6 +515,16 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
               >
                 {respondMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 {isRealEmail ? 'Envoyer par email' : 'Enregistrer la reponse'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowSaveTemplateModal(true)}
+                disabled={!response.trim()}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-[12px] font-semibold bg-white text-[#1a1a1a] border border-[#ebebeb] hover:bg-[#fafafa] transition-all disabled:opacity-50"
+                title="Sauvegarder cette reponse comme template reutilisable"
+              >
+                <Save className="w-4 h-4" />
+                Sauvegarder comme template
               </button>
               <button
                 onClick={() => ignoreMutation.mutate()}
@@ -326,6 +549,99 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
             </p>
           </div>
         )}
+
+        {/* Save template modal */}
+        <AnimatePresence>
+          {showSaveTemplateModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+              onClick={() => setShowSaveTemplateModal(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white border border-[#f0f0f0] rounded-2xl shadow-2xl w-full max-w-md"
+              >
+                <div className="flex items-center justify-between p-5 border-b border-[#f0f0f0]">
+                  <h3 className="text-[14px] font-bold text-[#1a1a1a]">Sauvegarder comme template</h3>
+                  <button onClick={() => setShowSaveTemplateModal(false)} className="text-[#9ca3af] hover:text-[#1a1a1a]">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="p-5 space-y-4">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-1.5">Nom du template *</label>
+                    <input
+                      type="text"
+                      value={newTplName}
+                      onChange={(e) => setNewTplName(e.target.value)}
+                      placeholder="Ex : Remboursement livraison retardee"
+                      className="w-full bg-[#fafafa] border border-[#ebebeb] rounded-lg px-3 py-2 text-[13px] text-[#1a1a1a] outline-none focus:border-[#0F5F35]/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-1.5">Categorie</label>
+                    <input
+                      type="text"
+                      value={newTplCategory}
+                      onChange={(e) => setNewTplCategory(e.target.value)}
+                      placeholder="Ex : Remboursement, Livraison, SAV..."
+                      className="w-full bg-[#fafafa] border border-[#ebebeb] rounded-lg px-3 py-2 text-[13px] text-[#1a1a1a] outline-none focus:border-[#0F5F35]/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-1.5">Apercu</label>
+                    <div className="bg-[#fafafa] border border-[#ebebeb] rounded-lg p-3 text-[12px] text-[#6b7280] max-h-32 overflow-y-auto whitespace-pre-wrap">
+                      {response}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-end gap-2 p-5 border-t border-[#f0f0f0]">
+                  <button
+                    type="button"
+                    onClick={() => setShowSaveTemplateModal(false)}
+                    className="px-4 py-2 rounded-lg text-[12px] font-semibold text-[#9ca3af] hover:text-[#1a1a1a]"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="button"
+                    onClick={saveCurrentAsTemplate}
+                    disabled={!newTplName.trim() || savingTpl}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg text-[12px] font-semibold bg-[#0F5F35] text-white hover:bg-[#003725] transition-all disabled:opacity-50"
+                  >
+                    {savingTpl ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    Sauvegarder
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Local toast */}
+        <AnimatePresence>
+          {localToast && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              className={`fixed bottom-6 right-6 z-[70] flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-2xl border ${
+                localToast.type === 'success'
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                  : 'bg-red-50 border-red-200 text-red-700'
+              }`}
+            >
+              {localToast.type === 'success' ? <CheckCircle2 className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
+              <span className="text-[12px] font-semibold">{localToast.msg}</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </motion.div>
   )

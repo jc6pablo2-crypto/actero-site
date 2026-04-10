@@ -5,6 +5,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
+import { HelpTooltip } from '../ui/HelpTooltip'
 
 export const ROISettingsView = ({ clientId, theme }) => {
   const toast = useToast()
@@ -125,7 +126,7 @@ export const ROISettingsView = ({ clientId, theme }) => {
         <h3 className="text-[15px] font-semibold text-[#1a1a1a]">Vos parametres</h3>
 
         <div>
-          <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider">Cout horaire de votre equipe support</label>
+          <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider inline-flex items-center gap-1.5">Cout horaire de votre equipe support <HelpTooltip text="Coût horaire chargé d'un agent support (salaire brut + charges). Sert à valoriser le temps économisé par l'agent IA." /></label>
           <p className="text-[11px] text-[#c4c4c4] mb-1.5">Combien coute 1 heure de travail d'un agent support dans votre entreprise ?</p>
           <div className="flex items-center gap-2">
             <input
@@ -140,7 +141,7 @@ export const ROISettingsView = ({ clientId, theme }) => {
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider">Temps moyen par ticket</label>
+          <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider inline-flex items-center gap-1.5">Temps moyen par ticket <HelpTooltip text="Durée moyenne de traitement d'un ticket par votre équipe avant l'automatisation. Utilisée pour estimer le temps économisé." /></label>
           <p className="text-[11px] text-[#c4c4c4] mb-1.5">Combien de temps prend le traitement d'un ticket en moyenne ?</p>
           <div className="flex items-center gap-2">
             <input
@@ -155,7 +156,7 @@ export const ROISettingsView = ({ clientId, theme }) => {
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider">Votre abonnement Actero</label>
+          <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider inline-flex items-center gap-1.5">Votre abonnement Actero <HelpTooltip text="Le montant mensuel HT de votre abonnement Actero. Déduit du temps valorisé pour obtenir le ROI net." /></label>
           <p className="text-[11px] text-[#c4c4c4] mb-1.5">Le montant mensuel de votre abonnement Actero.</p>
           <div className="flex items-center gap-2">
             <input

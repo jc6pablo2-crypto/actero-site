@@ -10,6 +10,40 @@ export function buildSystemPrompt(config) {
   let prompt = `Tu es un agent de support client IA professionnel pour "${client.brand_name}".`
   prompt += ` Tu reponds aux demandes des clients de maniere ${settings.brand_tone || 'professionnelle et chaleureuse'}.`
 
+  // Brand identity (Feature 18)
+  if (settings.brand_identity && settings.brand_identity.trim()) {
+    prompt += `\n\nIDENTITE DE MARQUE:\n${settings.brand_identity.trim()}`
+  }
+
+  // Tone sliders descriptive guidance
+  const formality = settings.tone_formality
+  const warmth = settings.tone_warmth
+  const detail = settings.tone_detail
+  if (formality != null || warmth != null || detail != null) {
+    const toneLines = []
+    if (formality != null) {
+      if (formality <= 33) toneLines.push('- Registre formel, vouvoiement, vocabulaire soigne.')
+      else if (formality >= 67) toneLines.push('- Registre casual et amical, tutoiement possible.')
+      else toneLines.push('- Registre equilibre, vouvoiement par defaut mais accessible.')
+    }
+    if (warmth != null) {
+      if (warmth >= 67) toneLines.push('- Ton chaleureux, empathique, rassurant.')
+      else if (warmth <= 33) toneLines.push('- Ton neutre et professionnel, factuel.')
+      else toneLines.push('- Ton cordial sans exces.')
+    }
+    if (detail != null) {
+      if (detail >= 67) toneLines.push('- Reponses detaillees avec contexte et explications.')
+      else if (detail <= 33) toneLines.push('- Reponses tres concises, droit au but.')
+      else toneLines.push('- Reponses de longueur moyenne.')
+    }
+    if (toneLines.length > 0) prompt += `\n\nTON DE COMMUNICATION:\n${toneLines.join('\n')}`
+  }
+
+  // Tone style freeform (Feature 18)
+  if (settings.tone_style && settings.tone_style.trim()) {
+    prompt += `\n\nSTYLE PARTICULIER:\n${settings.tone_style.trim()}`
+  }
+
   // Language
   const langMap = { en: 'anglais', es: 'espagnol', de: 'allemand', it: 'italien', pt: 'portugais', nl: 'neerlandais' }
   if (settings.brand_language && settings.brand_language !== 'fr' && settings.brand_language !== 'multi') {
@@ -46,6 +80,19 @@ export function buildSystemPrompt(config) {
   // Knowledge base
   if (knowledge) {
     prompt += `\n\nBASE DE CONNAISSANCES:\n${knowledge}`
+  }
+
+  // Example responses (Feature 18) — few-shot examples the AI should imitate
+  const examples = Array.isArray(settings.example_responses) ? settings.example_responses : []
+  if (examples.length > 0) {
+    const formatted = examples
+      .filter(ex => ex && ex.question && ex.answer)
+      .slice(0, 8)
+      .map((ex, i) => `Exemple ${i + 1}:\nQuestion: ${ex.question}\nReponse: ${ex.answer}`)
+      .join('\n\n')
+    if (formatted) {
+      prompt += `\n\nEXEMPLES DE BONNES REPONSES (imite ce style):\n${formatted}`
+    }
   }
 
   // Output format instructions
