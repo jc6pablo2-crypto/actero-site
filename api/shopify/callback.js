@@ -148,6 +148,32 @@ export default async function handler(req, res) {
     console.error('Supabase upsert error:', errText);
   }
 
+  // 6b. Register abandoned cart webhook (checkouts/create)
+  if (access_token) {
+    try {
+      const webhookRes = await fetch(`https://${shop}/admin/api/2024-01/webhooks.json`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Access-Token': access_token,
+        },
+        body: JSON.stringify({
+          webhook: {
+            topic: 'checkouts/create',
+            address: 'https://actero.fr/api/engine/webhooks/shopify-cart',
+            format: 'json',
+          },
+        }),
+      });
+      if (!webhookRes.ok) {
+        const whErr = await webhookRes.text();
+        console.error('Webhook registration failed:', whErr);
+      }
+    } catch (err) {
+      console.error('Failed to register abandoned cart webhook:', err.message);
+    }
+  }
+
   // 7. Clear cookies
   res.setHeader('Set-Cookie', [
     'shopify_nonce=; Path=/; HttpOnly; Secure; Max-Age=0',

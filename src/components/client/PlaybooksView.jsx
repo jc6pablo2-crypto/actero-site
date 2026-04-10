@@ -60,8 +60,7 @@ const PLAYBOOK_META = {
     helpId: 'relance-paniers',
     requires: [{ type: 'all', providers: ['shopify'], label: 'Shopify' }],
     channels: [
-      { id: 'email', label: 'Email', desc: 'Envoie un email de relance', icon: Mail, needsIntegration: ['gmail', 'smtp_imap'] },
-      { id: 'sms', label: 'SMS', desc: 'Envoie un SMS de relance', icon: MessageSquare, needsIntegration: ['klaviyo'] },
+      { id: 'email', label: 'Email', desc: 'Envoie un email de relance panier', icon: Mail, needsIntegration: ['smtp_imap'] },
     ],
   },
   shipping_tracker: {

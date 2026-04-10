@@ -9,6 +9,16 @@
             "destination": "/index.html"
         }
     ],
+    "crons": [
+        {
+            "path": "/api/cron/process-abandoned-carts",
+            "schedule": "*/5 * * * *"
+        },
+        {
+            "path": "/api/cron/process-comptabilite",
+            "schedule": "0 8 * * *"
+        }
+    ],
     "headers": [
         {
             "source": "/widget.js",

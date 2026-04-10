@@ -5,6 +5,9 @@
  * Chaque step est une action atomique. Si un step échoue, le run est en erreur.
  */
 
+import { lookupOrder } from './lib/shopify-client.js'
+import { fetchOverdueInvoices, fetchTreasuryBalance } from './connectors/accounting.js'
+
 const RESEND_API_KEY = process.env.RESEND_API_KEY
 const RESEND_FROM = process.env.RESEND_FROM_EMAIL || 'support@actero.fr'
 
@@ -52,8 +55,20 @@ export async function runExecutor(supabase, { event, playbook, clientId, normali
           break
 
         case 'escalate':
-          // Create escalation entry
-          try { await supabase.from('escalation_tickets').insert({ client_id: clientId, status: 'pending' }) } catch {}
+          // Create escalation entry with full context
+          try {
+            await supabase.from('escalation_tickets').insert({
+              client_id: clientId,
+              classification,
+              customer_email: normalized.customer_email || null,
+              customer_name: normalized.customer_name || null,
+              message_preview: normalized.message ? normalized.message.substring(0, 500) : null,
+              status: 'pending',
+              priority: 'high',
+            })
+          } catch (escErr) {
+            console.error('[executor] escalation_tickets insert error:', escErr.message)
+          }
           // Notify client
           if (RESEND_API_KEY && client?.contact_email) {
             await fetch('https://api.resend.com/emails', {
@@ -109,12 +124,47 @@ export async function runExecutor(supabase, { event, playbook, clientId, normali
           break
 
         case 'tag_contact':
-          // Store tag in automation_events metadata
+          // Persist tag to the most recent ai_conversations entry for this client
+          try {
+            const { data: convo } = await supabase
+              .from('ai_conversations')
+              .select('id, metadata')
+              .eq('client_id', clientId)
+              .order('created_at', { ascending: false })
+              .limit(1)
+              .maybeSingle()
+
+            if (convo) {
+              const existingMeta = convo.metadata || {}
+              const existingTags = existingMeta.tags || []
+              if (!existingTags.includes(classification)) {
+                existingTags.push(classification)
+              }
+              await supabase
+                .from('ai_conversations')
+                .update({ metadata: { ...existingMeta, tags: existingTags } })
+                .eq('id', convo.id)
+            }
+          } catch (tagErr) {
+            console.error('[executor] tag_contact error:', tagErr.message)
+          }
           stepResult.result = { tagged: true, tag: classification }
           break
 
         case 'create_ticket':
-          try { await supabase.from('escalation_tickets').insert({ client_id: clientId, status: 'pending' }) } catch {}
+          try {
+            await supabase.from('escalation_tickets').insert({
+              client_id: clientId,
+              classification,
+              customer_email: normalized.customer_email || null,
+              customer_name: normalized.customer_name || null,
+              message_preview: normalized.message ? normalized.message.substring(0, 500) : null,
+              status: 'pending',
+              priority: 'normal',
+            })
+          } catch (ticketErr) {
+            console.error('[executor] create_ticket insert error:', ticketErr.message)
+          }
           stepResult.result = { ticket_created: true }
           break
 
@@ -124,8 +174,151 @@ export async function runExecutor(supabase, { event, playbook, clientId, normali
           break
 
         case 'lookup_order':
-          // Shopify order lookup (already handled in brain context)
-          stepResult.result = { order_lookup: true }
+          // Shopify order lookup via shopify-client lib
+          try {
+            const orderResults = await lookupOrder(supabase, {
+              clientId,
+              orderId: normalized.order_id || null,
+              customerEmail: normalized.customer_email || null,
+            })
+            if (orderResults && orderResults.length > 0) {
+              const order = orderResults[0]
+              stepResult.result = {
+                order_lookup: true,
+                found: true,
+                orderName: order.orderName,
+                fulfillmentStatus: order.fulfillmentStatus,
+                financialStatus: order.financialStatus,
+                trackingInfo: order.trackingInfo,
+                totalPrice: order.totalPrice,
+              }
+            } else {
+              stepResult.result = { order_lookup: true, found: false }
+            }
+          } catch (orderErr) {
+            console.error('[executor] lookup_order error:', orderErr.message)
+            stepResult.result = { order_lookup: true, found: false, error: orderErr.message }
+          }
+          break
+
+        case 'send_invoice_reminder':
+          try {
+            const { invoices: overdueInvs, provider: invProvider, error: invError } = await fetchOverdueInvoices(clientId)
+            if (invError) {
+              stepResult.result = { reminder_sent: false, error: invError }
+              break
+            }
+
+            const { data: comptaSettings } = await supabase
+              .from('client_settings')
+              .select('compta_relance_delai')
+              .eq('client_id', clientId)
+              .maybeSingle()
+            const delayThreshold = comptaSettings?.compta_relance_delai || 7
+            const filteredInvs = overdueInvs.filter(inv => inv.days_overdue >= delayThreshold)
+
+            if (filteredInvs.length > 0) {
+              const { data: smtp } = await supabase
+                .from('client_integrations')
+                .select('extra_config, api_key')
+                .eq('client_id', clientId)
+                .eq('provider', 'smtp_imap')
+                .eq('status', 'active')
+                .maybeSingle()
+
+              let sentCount = 0
+              if (smtp?.extra_config?.smtp_host) {
+                const smtpConfig = { ...smtp.extra_config, password: smtp.api_key }
+                let nodemailer
+                try { nodemailer = (await import('nodemailer')).default } catch { nodemailer = require('nodemailer') }
+
+                const transporter = nodemailer.createTransport({
+                  host: smtpConfig.smtp_host,
+                  port: parseInt(smtpConfig.smtp_port) || 587,
+                  secure: parseInt(smtpConfig.smtp_port) === 465,
+                  auth: { user: smtpConfig.username, pass: smtpConfig.password },
+                  tls: { rejectUnauthorized: false },
+                })
+
+                for (const invoice of filteredInvs) {
+                  if (!invoice.client_email) continue
+                  try {
+                    await transporter.sendMail({
+                      from: `${brandName} <${smtpConfig.email || smtpConfig.username}>`,
+                      to: invoice.client_email,
+                      subject: `${brandName} \u2014 Rappel facture ${invoice.number} en retard`,
+                      html: `<div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:20px">
+                        <p>Bonjour ${invoice.client_name || ''},</p>
+                        <p>Nous vous rappelons que la facture <strong>${invoice.number}</strong> d'un montant de <strong>${invoice.amount}\u20AC</strong> est en retard de <strong>${invoice.days_overdue} jours</strong> (echeance: ${invoice.due_date}).</p>
+                        <p>Merci de proceder au reglement dans les meilleurs delais.</p>
+                        <hr style="border:none;border-top:1px solid #e5e5e5;margin:24px 0"/>
+                        <p style="color:#999;font-size:12px">${brandName} \u2014 Comptabilite</p>
+                      </div>`,
+                    })
+                    sentCount++
+                  } catch (mailErr) {
+                    console.error(`[executor] invoice reminder mail error:`, mailErr.message)
+                  }
+                }
+              }
+              stepResult.result = { reminder_sent: true, sent_count: sentCount, total_overdue: filteredInvs.length, provider: invProvider }
+            } else {
+              stepResult.result = { reminder_sent: false, reason: 'no_invoices_past_threshold', provider: invProvider }
+            }
+          } catch (reminderErr) {
+            console.error('[executor] send_invoice_reminder error:', reminderErr.message)
+            stepResult.result = { reminder_sent: false, error: reminderErr.message }
+          }
+          break
+
+        case 'check_treasury':
+          try {
+            const { total_overdue: tOverdue, overdue_count: oCount, provider: tProvider } = await fetchTreasuryBalance(clientId)
+
+            const { data: tSettings } = await supabase
+              .from('client_settings')
+              .select('compta_alerte_seuil')
+              .eq('client_id', clientId)
+              .maybeSingle()
+            const threshold = tSettings?.compta_alerte_seuil || 1000
+
+            if (tOverdue > threshold) {
+              // Send Slack alert if available
+              const { data: slackInt } = await supabase
+                .from('client_integrations')
+                .select('extra_config')
+                .eq('client_id', clientId)
+                .eq('provider', 'slack')
+                .eq('status', 'active')
+                .maybeSingle()
+
+              if (slackInt?.extra_config?.webhook_url) {
+                await fetch(slackInt.extra_config.webhook_url, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    text: `\u26A0\uFE0F Alerte tresorerie: ${oCount} facture(s) en retard pour un total de ${tOverdue.toFixed(2)}\u20AC (seuil: ${threshold}\u20AC)`,
+                  }),
+                }).catch(() => {})
+              }
+
+              await supabase.from('automation_events').insert({
+                client_id: clientId,
+                event_category: 'ticket_escalated',
+                event_type: 'compta_treasury_alert',
+                ticket_type: 'billing',
+                description: `[Compta] Alerte tresorerie: ${tOverdue.toFixed(2)}\u20AC en retard (seuil: ${threshold}\u20AC)`,
+                metadata: { total_overdue: tOverdue, overdue_count: oCount, threshold },
+              }).catch(() => {})
+
+              stepResult.result = { alert_sent: true, total_overdue: tOverdue, overdue_count: oCount, threshold, provider: tProvider }
+            } else {
+              stepResult.result = { alert_sent: false, total_overdue: tOverdue, threshold, reason: 'below_threshold', provider: tProvider }
+            }
+          } catch (treasuryErr) {
+            console.error('[executor] check_treasury error:', treasuryErr.message)
+            stepResult.result = { alert_sent: false, error: treasuryErr.message }
+          }
           break
 
         case 'wait_then':
