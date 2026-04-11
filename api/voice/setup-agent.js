@@ -48,9 +48,12 @@ export default async function handler(req, res) {
 
     const customLlmUrl = `${process.env.PUBLIC_API_URL.replace(/\/$/, '')}/api/voice/custom-llm?client_id=${clientId}`
 
-    // ElevenLabs Conv AI agent payload — `llm` and `custom_llm` MUST be
-    // nested inside `agent.prompt` (NOT at conversation_config root).
-    // Ref: https://elevenlabs.io/docs/conversational-ai/customization/llm/custom-llm
+    // ElevenLabs Conv AI agent payload.
+    // - `llm` + `custom_llm` MUST be nested inside `agent.prompt`.
+    // - `api_key` only accepts { secret_id } or { env_var_label } (NOT a plain
+    //   string), so we authenticate via `request_headers` instead, which our
+    //   custom-llm endpoint already accepts as `X-Voice-Auth-Token`.
+    // Ref: https://elevenlabs.io/docs/api-reference/agents/create
     const payload = {
       name: `${clientConfig.client.brand_name} - Agent Vocal`,
       conversation_config: {
@@ -63,7 +66,10 @@ export default async function handler(req, res) {
             custom_llm: {
               url: customLlmUrl,
               model_id: 'actero-brain',
-              api_key: process.env.VOICE_LLM_SECRET,
+              api_type: 'chat_completions',
+              request_headers: {
+                'X-Voice-Auth-Token': process.env.VOICE_LLM_SECRET,
+              },
             },
           },
         },
@@ -77,9 +83,11 @@ export default async function handler(req, res) {
     })
 
     if (!ok) {
+      console.error('[voice/setup-agent] ElevenLabs error', status, JSON.stringify(data))
       const upstreamMsg =
         data?.detail?.message ||
         (typeof data?.detail === 'string' ? data.detail : null) ||
+        (Array.isArray(data?.detail) ? data.detail.map(d => d?.msg || JSON.stringify(d)).join(' | ') : null) ||
         data?.error ||
         data?.message ||
         (data?.raw ? String(data.raw).slice(0, 200) : null) ||

@@ -53,6 +53,7 @@ export default async function handler(req, res) {
 
     // Re-send the full prompt structure (including custom_llm) so PATCH does
     // not accidentally wipe the LLM wiring that was set during creation.
+    // api_key needs to be a secret_id object — we use request_headers instead.
     const customLlmUrl = `${(process.env.PUBLIC_API_URL || '').replace(/\/$/, '')}/api/voice/custom-llm?client_id=${clientId}`
     const payload = {
       conversation_config: {
@@ -65,7 +66,10 @@ export default async function handler(req, res) {
             custom_llm: {
               url: customLlmUrl,
               model_id: 'actero-brain',
-              api_key: process.env.VOICE_LLM_SECRET,
+              api_type: 'chat_completions',
+              request_headers: {
+                'X-Voice-Auth-Token': process.env.VOICE_LLM_SECRET,
+              },
             },
           },
         },
@@ -79,9 +83,11 @@ export default async function handler(req, res) {
     })
 
     if (!ok) {
+      console.error('[voice/update-agent] ElevenLabs error', status, JSON.stringify(data))
       const upstreamMsg =
         data?.detail?.message ||
         (typeof data?.detail === 'string' ? data.detail : null) ||
+        (Array.isArray(data?.detail) ? data.detail.map(d => d?.msg || JSON.stringify(d)).join(' | ') : null) ||
         data?.error ||
         data?.message ||
         (data?.raw ? String(data.raw).slice(0, 200) : null) ||
