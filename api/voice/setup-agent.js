@@ -38,12 +38,32 @@ export default async function handler(req, res) {
     const greeting =
       clientConfig.settings?.voice_greeting ||
       `Bonjour, vous etes chez ${clientConfig.client.brand_name}, comment puis-je vous aider ?`
-    const voiceId =
+
+    // Resolve a usable voice: prefer client setting, then env default, then
+    // fall back to the FIRST voice in the workspace. ElevenLabs requires a
+    // voice that already exists in the workspace (not just the public library).
+    let voiceId =
       clientConfig.settings?.elevenlabs_voice_id ||
       process.env.ELEVENLABS_DEFAULT_VOICE_ID
 
-    if (!voiceId) {
-      return res.status(503).json({ error: 'ELEVENLABS_DEFAULT_VOICE_ID missing in env' })
+    // Verify the voice exists in the workspace; if not, fall back.
+    let voiceOk = false
+    if (voiceId) {
+      const check = await elevenLabsFetch(`/v1/voices/${voiceId}`, { method: 'GET' })
+      voiceOk = check.ok
+    }
+    if (!voiceOk) {
+      const list = await elevenLabsFetch('/v1/voices', { method: 'GET' })
+      const firstVoice = list?.data?.voices?.[0]?.voice_id
+      if (firstVoice) {
+        console.warn(`[voice/setup-agent] voice_id ${voiceId || '(none)'} not in workspace, falling back to ${firstVoice}`)
+        voiceId = firstVoice
+      } else {
+        return res.status(400).json({
+          error: 'Aucune voix disponible dans votre workspace ElevenLabs',
+          hint: 'Va sur https://elevenlabs.io/app/voice-library, choisis une voix (de preference francaise), clique "Add to My Voices", puis recommence.',
+        })
+      }
     }
 
     const customLlmUrl = `${process.env.PUBLIC_API_URL.replace(/\/$/, '')}/api/voice/custom-llm?client_id=${clientId}`
