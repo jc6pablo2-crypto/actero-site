@@ -18,6 +18,7 @@ import {
   Settings,
   CreditCard,
   User,
+  Bell,
   Inbox,
   Zap,
   ArrowRight,
@@ -613,7 +614,18 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   }, [pendingEscalations]);
 
   const sidebarItems = [
+    { type: 'section', label: 'Accueil' },
     { id: 'overview', label: 'Tableau de bord', icon: LayoutDashboard, dataTour: 'overview-tab' },
+
+    { type: 'section', label: 'Quotidien' },
+    {
+      id: 'escalations',
+      label: 'A traiter',
+      icon: Inbox,
+      badge: urgentEscalationCount > 0 ? urgentEscalationCount : null,
+      badgeColor: 'bg-red-100 text-red-600',
+    },
+    { id: 'response-templates', label: 'Modeles de reponse', icon: FileText },
 
     {
       type: 'expandable',
@@ -622,30 +634,22 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       dataTour: 'agent-section',
       defaultOpen: true,
       children: [
-        { id: 'agent-config', label: 'Mon Agent', icon: MessageCircle },
+        { id: 'agent-config', label: 'Configuration', icon: Bot },
         { id: 'playbooks', label: 'Scenarios', icon: Zap },
-        {
-          id: 'escalations',
-          label: 'A traiter',
-          icon: Inbox,
-          badge: urgentEscalationCount > 0 ? urgentEscalationCount : null,
-          badgeColor: 'bg-red-100 text-red-600',
-        },
-        { id: 'response-templates', label: 'Modeles de reponse', icon: FileText },
       ],
     },
 
     { type: 'section', label: 'Connexions' },
     { id: 'integrations', label: 'Integrations', icon: Plug },
     { id: 'voice-agent', label: 'Agent vocal', icon: Phone, badge: 'Bientot', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' },
-    { id: 'marketplace', label: 'Marketplace', icon: Store },
 
     {
       type: 'expandable',
       label: 'Insights',
       icon: TrendingUp,
+      defaultOpen: true,
       children: [
-        { id: 'weekly-summary', label: 'Resume hebdo', icon: BarChart3 },
+        { id: 'weekly-summary', label: 'Performance', icon: BarChart3 },
         { id: 'roi', label: 'ROI', icon: TrendingUp },
         { id: 'peak-hours', label: 'Heures de pic', icon: Clock },
         { id: 'voice-calls', label: 'Appels vocaux', icon: PhoneCall, badge: 'Bientot', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' },
@@ -653,17 +657,20 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       ],
     },
 
+    { type: 'section', label: 'Decouvrir' },
+    { id: 'marketplace', label: 'Marketplace', icon: Store },
+
     {
       type: 'expandable',
       label: 'Parametres',
       icon: Settings,
       children: [
         { id: 'profile', label: 'Compte', icon: User },
+        { id: 'notifications', label: 'Notifications', icon: Bell },
         { id: 'billing', label: 'Facturation', icon: CreditCard },
+        { id: 'support', label: 'Aide', icon: MessageSquare },
       ],
     },
-
-    { id: 'support', label: 'Aide', icon: MessageSquare },
   ];
 
   const userRole = currentClient?._userRole || 'owner';
@@ -788,7 +795,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "referral" && "Parrainage"}
             {activeTab === "partner" && "Actero Partners"}
             {activeTab === "integrations" && "Integrations"}
-            {activeTab === "agent-config" && "Mon Agent"}
+            {activeTab === "agent-config" && "Configuration"}
             {activeTab === "simulator" && "Tester"}
             {activeTab === "team" && "Equipe"}
             {activeTab === "guardrails" && "Garde-fous"}
@@ -799,7 +806,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "notifications" && "Notifications"}
             {activeTab === "playbooks" && "Scenarios"}
             {activeTab === "marketplace" && "Marketplace"}
-            {activeTab === "weekly-summary" && "Resume hebdo"}
+            {activeTab === "weekly-summary" && "Performance"}
             {activeTab === "peak-hours" && "Heures de pic"}
             {activeTab === "achievements" && "Recompenses"}
             {activeTab === "roi" && "ROI"}
