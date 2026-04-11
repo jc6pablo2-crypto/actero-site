@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Phone, PhoneOff, Mic, Copy, Check, ExternalLink, Loader2, X,
-  Sparkles, AlertTriangle, Power, PlayCircle,
+  Phone, Mic, Copy, Check, ExternalLink, Loader2,
+  Sparkles, Power, PlayCircle, Smartphone, Building2, Trash2,
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
@@ -33,13 +33,15 @@ export const VoiceAgentSetupView = ({ clientId }) => {
   const queryClient = useQueryClient()
 
   const [activating, setActivating] = useState(false)
-  const [showAttachModal, setShowAttachModal] = useState(false)
   const [showTestModal, setShowTestModal] = useState(false)
   const [copied, setCopied] = useState(false)
   const [voiceIdInput, setVoiceIdInput] = useState('')
   const [savingVoice, setSavingVoice] = useState(false)
   const [greeting, setGreeting] = useState('')
   const [greetingSaving, setGreetingSaving] = useState(false)
+  const [phoneType, setPhoneType] = useState('mobile')
+  const [provisioning, setProvisioning] = useState(false)
+  const [releasing, setReleasing] = useState(false)
   const greetingTimer = useRef(null)
   const didInitGreeting = useRef(false)
 
@@ -48,7 +50,7 @@ export const VoiceAgentSetupView = ({ clientId }) => {
     queryFn: async () => {
       const { data } = await supabase
         .from('client_settings')
-        .select('voice_agent_enabled, elevenlabs_agent_id, elevenlabs_voice_id, voice_phone_number, voice_greeting')
+        .select('voice_agent_enabled, elevenlabs_agent_id, elevenlabs_voice_id, voice_phone_number, voice_greeting, voice_phone_provider, voice_phone_country, voice_phone_type, voice_phone_provisioned_at')
         .eq('client_id', clientId)
         .maybeSingle()
       return data || {}
@@ -139,6 +141,37 @@ export const VoiceAgentSetupView = ({ clientId }) => {
     setTimeout(() => setCopied(false), 1500)
   }
 
+  const handleProvision = async () => {
+    setProvisioning(true)
+    try {
+      const r = await apiCall('/api/voice/provision-twilio-number', {
+        client_id: clientId,
+        country: 'FR',
+        type: phoneType,
+      })
+      toast.success(`Numero attribue : ${r.phone_number}`)
+      refresh()
+    } catch (e) {
+      toast.error(e.message || 'Impossible d\'obtenir un numero')
+    } finally {
+      setProvisioning(false)
+    }
+  }
+
+  const handleRelease = async () => {
+    if (!window.confirm('Liberer ce numero ? Vos clients ne pourront plus appeler.')) return
+    setReleasing(true)
+    try {
+      await apiCall('/api/voice/release-twilio-number', { client_id: clientId })
+      toast.success('Numero libere')
+      refresh()
+    } catch (e) {
+      toast.error(e.message || 'Echec de la liberation')
+    } finally {
+      setReleasing(false)
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="max-w-4xl mx-auto flex justify-center py-16">
@@ -194,38 +227,103 @@ export const VoiceAgentSetupView = ({ clientId }) => {
           {/* Card 1 - Phone number */}
           <Card title="Numero de telephone" icon={Phone}>
             {settings?.voice_phone_number ? (
-              <div className="flex items-center justify-between flex-wrap gap-3">
-                <div>
-                  <p className="text-[24px] font-semibold text-[#1a1a1a] tracking-tight font-mono">
-                    {settings.voice_phone_number}
-                  </p>
-                  <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-semibold border border-emerald-200">
-                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                    Actif
-                  </span>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div>
+                    <p className="text-[24px] font-semibold text-[#1a1a1a] tracking-tight font-mono">
+                      {settings.voice_phone_number}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-semibold border border-emerald-200">
+                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                        Actif via Twilio
+                      </span>
+                      {settings.voice_phone_type && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#fafafa] text-[#71717a] text-[10px] font-semibold border border-[#f0f0f0]">
+                          {settings.voice_phone_type === 'mobile' ? <Smartphone className="w-2.5 h-2.5" /> : <Building2 className="w-2.5 h-2.5" />}
+                          {settings.voice_phone_type === 'mobile' ? 'Mobile' : 'Fixe'}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleCopyNumber}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#f0f0f0] text-[12px] font-semibold text-[#1a1a1a] hover:bg-[#fafafa] transition-colors"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied ? 'Copie' : 'Copier'}
+                  </button>
                 </div>
+                {settings.voice_phone_provisioned_at && (
+                  <p className="text-[11px] text-[#9ca3af]">
+                    Provisionne le {new Date(settings.voice_phone_provisioned_at).toLocaleDateString('fr-FR')}
+                  </p>
+                )}
                 <button
-                  onClick={handleCopyNumber}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#f0f0f0] text-[12px] font-semibold text-[#1a1a1a] hover:bg-[#fafafa] transition-colors"
+                  onClick={handleRelease}
+                  disabled={releasing}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-red-200 text-red-600 hover:bg-red-50 disabled:opacity-60 text-[11px] font-semibold transition-colors"
                 >
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                  {copied ? 'Copie' : 'Copier'}
+                  {releasing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Trash2 className="w-3 h-3" />}
+                  Liberer ce numero
                 </button>
               </div>
             ) : (
-              <div className="flex items-center justify-between flex-wrap gap-3">
+              <div className="space-y-4">
                 <div>
-                  <p className="text-[14px] font-medium text-[#1a1a1a]">Aucun numero attache</p>
+                  <p className="text-[14px] font-medium text-[#1a1a1a]">Aucun numero attribue</p>
                   <p className="text-[12px] text-[#9ca3af] mt-1">
-                    Achetez un numero sur ElevenLabs puis attachez-le a votre agent.
+                    Obtenez votre numero francais en 30 secondes — inclus dans votre abonnement.
                   </p>
                 </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setPhoneType('mobile')}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-[12px] font-semibold transition-colors ${
+                      phoneType === 'mobile'
+                        ? 'border-[#0F5F35] bg-[#0F5F35]/5 text-[#0F5F35]'
+                        : 'border-[#f0f0f0] bg-[#fafafa] text-[#71717a] hover:bg-white'
+                    }`}
+                  >
+                    <Smartphone className="w-4 h-4" />
+                    Mobile (06 / 07)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPhoneType('local')}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-[12px] font-semibold transition-colors ${
+                      phoneType === 'local'
+                        ? 'border-[#0F5F35] bg-[#0F5F35]/5 text-[#0F5F35]'
+                        : 'border-[#f0f0f0] bg-[#fafafa] text-[#71717a] hover:bg-white'
+                    }`}
+                  >
+                    <Building2 className="w-4 h-4" />
+                    Fixe (01 a 05)
+                  </button>
+                </div>
+
                 <button
-                  onClick={() => setShowAttachModal(true)}
-                  className="px-4 py-2 rounded-full bg-[#0F5F35] hover:bg-[#0c4e2b] text-white text-[12px] font-semibold transition-colors"
+                  onClick={handleProvision}
+                  disabled={provisioning}
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#0F5F35] hover:bg-[#0c4e2b] disabled:opacity-60 text-white text-[13px] font-semibold transition-colors"
                 >
-                  Attacher un numero
+                  {provisioning ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Provisioning en cours, ~30s...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4" />
+                      Obtenir mon numero automatiquement
+                    </>
+                  )}
                 </button>
+                <p className="text-[11px] text-[#9ca3af] text-center">
+                  Numero francais Twilio attribue automatiquement, integre a ElevenLabs et lie a votre agent en 1 clic.
+                </p>
               </div>
             )}
           </Card>
@@ -323,21 +421,6 @@ export const VoiceAgentSetupView = ({ clientId }) => {
         </>
       )}
 
-      {/* Attach Number Modal */}
-      <AnimatePresence>
-        {showAttachModal && (
-          <AttachNumberModal
-            clientId={clientId}
-            onClose={() => setShowAttachModal(false)}
-            onAttached={() => {
-              setShowAttachModal(false)
-              refresh()
-              toast.success('Numero attache avec succes')
-            }}
-          />
-        )}
-      </AnimatePresence>
-
       {/* Test Modal */}
       <AnimatePresence>
         {showTestModal && (
@@ -364,114 +447,3 @@ const Card = ({ title, icon: Icon, children }) => (
   </div>
 )
 
-const AttachNumberModal = ({ clientId, onClose, onAttached }) => {
-  const toast = useToast()
-  const [phoneNumberId, setPhoneNumberId] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  const handleAttach = async () => {
-    if (!phoneNumberId.trim() || !phoneNumber.trim()) {
-      toast.error('Veuillez remplir les deux champs')
-      return
-    }
-    setLoading(true)
-    try {
-      await apiCall('/api/voice/attach-number', {
-        client_id: clientId,
-        phone_number_id: phoneNumberId.trim(),
-        phone_number: phoneNumber.trim(),
-      })
-      onAttached()
-    } catch (e) {
-      toast.error(e.message || 'Echec de l\'attachement')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
-        onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden"
-      >
-        <div className="px-6 py-4 border-b border-[#f0f0f0] flex items-center justify-between">
-          <h3 className="text-[14px] font-semibold text-[#1a1a1a]">Attacher un numero</h3>
-          <button onClick={onClose} className="p-1 hover:bg-[#fafafa] rounded-lg">
-            <X className="w-4 h-4 text-[#9ca3af]" />
-          </button>
-        </div>
-        <div className="px-6 py-5 space-y-4">
-          <div className="p-4 rounded-xl bg-[#fafafa] border border-[#f0f0f0] text-[12px] text-[#1a1a1a] leading-relaxed">
-            1. Achetez un numero sur{' '}
-            <a
-              href="https://elevenlabs.io/app/conversational-ai/phone-numbers"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#0F5F35] font-semibold hover:underline inline-flex items-center gap-1"
-            >
-              ElevenLabs Phone Numbers
-              <ExternalLink className="w-3 h-3" />
-            </a>
-            <br />
-            2. Copiez le Phone Number ID affiche apres l'achat.
-            <br />
-            3. Collez-le ci-dessous avec le format d'affichage souhaite.
-          </div>
-
-          <div>
-            <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider block mb-1.5">
-              Phone Number ID
-            </label>
-            <input
-              type="text"
-              value={phoneNumberId}
-              onChange={(e) => setPhoneNumberId(e.target.value)}
-              placeholder="ex: phnum_xxxxxxxxxxxx"
-              className="w-full px-3 py-2 rounded-xl border border-[#f0f0f0] bg-[#fafafa] text-[13px] text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]/30"
-            />
-          </div>
-
-          <div>
-            <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider block mb-1.5">
-              Numero affiche
-            </label>
-            <input
-              type="text"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="ex: +33 6 12 34 56 78"
-              className="w-full px-3 py-2 rounded-xl border border-[#f0f0f0] bg-[#fafafa] text-[13px] text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]/30"
-            />
-          </div>
-        </div>
-        <div className="px-6 py-4 border-t border-[#f0f0f0] flex items-center justify-end gap-2">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-full text-[12px] font-semibold text-[#1a1a1a] hover:bg-[#fafafa] transition-colors"
-          >
-            Annuler
-          </button>
-          <button
-            onClick={handleAttach}
-            disabled={loading}
-            className="px-4 py-2 rounded-full bg-[#0F5F35] hover:bg-[#0c4e2b] disabled:opacity-60 text-white text-[12px] font-semibold transition-colors inline-flex items-center gap-2"
-          >
-            {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-            Attacher
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
-  )
-}

@@ -17,6 +17,7 @@ export const supabaseAdmin = createClient(
 )
 
 export const ELEVENLABS_BASE = 'https://api.elevenlabs.io'
+export const TWILIO_BASE = 'https://api.twilio.com'
 
 export function hasElevenLabsKey() {
   return Boolean(process.env.ELEVENLABS_API_KEY)
@@ -31,6 +32,54 @@ export function requireElevenLabsKey(res) {
     return false
   }
   return true
+}
+
+export function hasTwilioCredentials() {
+  return Boolean(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN)
+}
+
+export function requireTwilioCredentials(res) {
+  if (!hasTwilioCredentials()) {
+    res.status(503).json({
+      error: 'TWILIO_ACCOUNT_SID or TWILIO_AUTH_TOKEN missing in env',
+      hint: 'Add TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN to enable automatic phone number provisioning.',
+    })
+    return false
+  }
+  return true
+}
+
+/**
+ * Wrap fetch() to Twilio API with Basic Auth + form-urlencoded helpers.
+ * Twilio expects application/x-www-form-urlencoded for POST bodies.
+ */
+export async function twilioFetch(path, { method = 'GET', form, query } = {}) {
+  const sid = process.env.TWILIO_ACCOUNT_SID
+  const token = process.env.TWILIO_AUTH_TOKEN
+  const base = `${TWILIO_BASE}/2010-04-01/Accounts/${sid}`
+  const url = new URL(base + path)
+  if (query && typeof query === 'object') {
+    for (const [k, v] of Object.entries(query)) {
+      if (v !== undefined && v !== null) url.searchParams.set(k, String(v))
+    }
+  }
+
+  const headers = {
+    Authorization: 'Basic ' + Buffer.from(`${sid}:${token}`).toString('base64'),
+  }
+  let body
+  if (form && typeof form === 'object') {
+    headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    body = new URLSearchParams(form).toString()
+  }
+
+  const resp = await fetch(url.toString(), { method, headers, body })
+  const text = await resp.text()
+  let data = null
+  if (text) {
+    try { data = JSON.parse(text) } catch { data = { raw: text } }
+  }
+  return { ok: resp.ok, status: resp.status, data }
 }
 
 /**

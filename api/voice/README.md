@@ -8,15 +8,17 @@ existing `runBrain()`.
 
 ## Endpoints
 
-| Method | Path                          | Auth                         | Purpose                                           |
-| ------ | ----------------------------- | ---------------------------- | ------------------------------------------------- |
-| POST   | `/api/voice/custom-llm`       | `X-Voice-Auth-Token` header  | OpenAI-compatible LLM called by ElevenLabs        |
-| POST   | `/api/voice/setup-agent`      | Supabase JWT (Bearer)        | Provision the ElevenLabs agent for a client      |
-| POST   | `/api/voice/update-agent`     | Supabase JWT (Bearer)        | Update prompt / voice / greeting                  |
-| POST   | `/api/voice/delete-agent`     | Supabase JWT (Bearer)        | Remove agent + disable voice feature              |
-| GET    | `/api/voice/list-numbers`     | Supabase JWT (Bearer)        | List ElevenLabs-managed phone numbers             |
-| POST   | `/api/voice/attach-number`    | Supabase JWT (Bearer)        | Attach a phone number to the client agent         |
-| POST   | `/api/voice/test-call`        | Supabase JWT (Bearer)        | WebRTC signed URL to test the agent in-browser    |
+| Method | Path                                | Auth                         | Purpose                                                            |
+| ------ | ----------------------------------- | ---------------------------- | ------------------------------------------------------------------ |
+| POST   | `/api/voice/custom-llm`             | `X-Voice-Auth-Token` header  | OpenAI-compatible LLM called by ElevenLabs                         |
+| POST   | `/api/voice/setup-agent`            | Supabase JWT (Bearer)        | Provision the ElevenLabs agent for a client                        |
+| POST   | `/api/voice/update-agent`           | Supabase JWT (Bearer)        | Update prompt / voice / greeting                                   |
+| POST   | `/api/voice/delete-agent`           | Supabase JWT (Bearer)        | Remove agent + release Twilio number + disable voice feature       |
+| GET    | `/api/voice/list-numbers`           | Supabase JWT (Bearer)        | List ElevenLabs-managed phone numbers                              |
+| POST   | `/api/voice/attach-number`          | Supabase JWT (Bearer)        | Attach an existing ElevenLabs phone number to the client agent     |
+| POST   | `/api/voice/provision-twilio-number`| Supabase JWT (Bearer)        | **1-click**: buy a Twilio FR number, import in ElevenLabs, assign  |
+| POST   | `/api/voice/release-twilio-number`  | Supabase JWT (Bearer)        | Detach from ElevenLabs + release the Twilio number                 |
+| POST   | `/api/voice/test-call`              | Supabase JWT (Bearer)        | WebRTC signed URL to test the agent in-browser                     |
 
 All JWT-protected endpoints verify that the authenticated user has access to
 the requested `client_id` via `client_users`.
@@ -30,7 +32,13 @@ the requested `client_id` via `client_users`.
 | `VOICE_LLM_SECRET`             | yes      | Shared secret sent by ElevenLabs as `X-Voice-Auth-Token` on every Custom LLM call. Generate a long random string |
 | `PUBLIC_API_URL`               | yes      | Public URL of the app (e.g. `https://actero.fr`) — used to build the Custom LLM URL passed to ElevenLabs         |
 | `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | yes | Used by the service-role Supabase client                                                                         |
+| `TWILIO_ACCOUNT_SID`           | yes*     | Master Twilio account SID — required for **1-click number provisioning** (`provision-twilio-number`)             |
+| `TWILIO_AUTH_TOKEN`            | yes*     | Master Twilio auth token — required for **1-click number provisioning**                                          |
 | `ELEVENLABS_WEBHOOK_SECRET`    | optional | Used by `/api/engine/webhooks/elevenlabs-postcall` to verify the post-call HMAC                                  |
+
+> **Twilio 1-click provisioning**: when `TWILIO_ACCOUNT_SID` + `TWILIO_AUTH_TOKEN` are set, the merchant can buy a French number in 1 click from the dashboard. The number is purchased on the master Actero Twilio account, imported into ElevenLabs Conv AI as a Twilio-backed number, and assigned to the client's agent. **Approximate cost: ~1€/month per FR number + ~0.008€/minute inbound**. Plan to absorb this cost in your monthly client price (e.g. include it in a "Voice Plan" upsell).
+>
+> Get your credentials at <https://console.twilio.com>. If a client deactivates the voice agent or releases their number, the corresponding Twilio number is automatically released so you stop being billed.
 
 ## Custom LLM contract
 
