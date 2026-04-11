@@ -75,7 +75,7 @@ export function AdminHallucinationView() {
       const { data, error } = await supabase
         .from('engine_runs_v2')
         .select(
-          'id, classification, created_at, rag_check_score, rag_check_flagged, rag_check_details, response_text, clients(brand_name)'
+          'id, classification, created_at, rag_check_score, rag_check_flagged, rag_check_details, clients(brand_name)'
         )
         .eq('rag_check_flagged', true)
         .order('created_at', { ascending: false })
@@ -259,17 +259,20 @@ function ExpandedRunDetails({ run }) {
   const sources = Array.isArray(details.sources) ? details.sources : []
   const missing = Array.isArray(details.missing_claims) ? details.missing_claims : []
   const reason = details.reason || details.explanation
+  const responseText = details.response || details.response_text || ''
 
   return (
     <div className="space-y-3">
-      <div>
-        <div className="text-[10px] uppercase tracking-wider text-[#9ca3af] font-semibold mb-1">
-          Réponse IA
+      {responseText && (
+        <div>
+          <div className="text-[10px] uppercase tracking-wider text-[#9ca3af] font-semibold mb-1">
+            Réponse IA
+          </div>
+          <div className="rounded-lg border border-[#f0f0f0] bg-white p-3 text-[12px] text-[#1a1a1a] whitespace-pre-wrap leading-relaxed">
+            {responseText}
+          </div>
         </div>
-        <div className="rounded-lg border border-[#f0f0f0] bg-white p-3 text-[12px] text-[#1a1a1a] whitespace-pre-wrap leading-relaxed">
-          {run.response_text || '—'}
-        </div>
-      </div>
+      )}
 
       {reason && (
         <div>
@@ -321,7 +324,7 @@ function ExpandedRunDetails({ run }) {
         </div>
       )}
 
-      {!reason && missing.length === 0 && sources.length === 0 && (
+      {!responseText && !reason && missing.length === 0 && sources.length === 0 && (
         <div className="text-[11px] text-[#9ca3af]">
           Aucun détail structuré disponible pour ce run.
         </div>

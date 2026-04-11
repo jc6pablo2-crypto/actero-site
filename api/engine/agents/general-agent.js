@@ -40,6 +40,8 @@ export const generalAgent = {
       escalationReason: respResult.escalation_reason || null,
       sentimentScore: respResult.sentiment_score || 5,
       toolsUsed: [],
+      usage: respResult.usage || null,
+      modelId: respResult.modelId || null,
     }
   },
 }

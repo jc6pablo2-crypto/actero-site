@@ -84,9 +84,11 @@ export default function AdminROILeaderboardView() {
 
     const rows = Array.from(byClient.values()).map((r) => {
       const client = clientMap.get(r.client_id)
-      const hours = r.total_time_saved / 3600
+      const hours = (Number(r.total_time_saved) || 0) / 3600
       const timeSavings = hours * HOURLY_RATE
-      const totalSavings = timeSavings + r.total_revenue
+      // Priorite: time-based (heures * taux). revenue_amount n'est pas encore
+      // peuple par le backend, donc c'est un fallback additif.
+      const totalSavings = timeSavings + (Number(r.total_revenue) || 0)
       return {
         ...r,
         brand_name: client?.brand_name || 'Client',
@@ -123,7 +125,7 @@ export default function AdminROILeaderboardView() {
           <KpiCard
             label="ROI total (30j)"
             value={formatEuro(kpis.totalROI)}
-            sublabel="Économies + revenus"
+            sublabel={`Base ${HOURLY_RATE} €/h + revenus`}
             icon={TrendingUp}
             color="brand"
             loading={isLoading}

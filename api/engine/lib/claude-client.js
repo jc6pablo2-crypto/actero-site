@@ -47,6 +47,13 @@ export async function callClaude({ systemPrompt, messages, maxTokens = MAX_TOKEN
       const rawText = data?.content?.[0]?.text || ''
       const processingTimeMs = Date.now() - startTime
 
+      // Capture usage + model so callers can track tokens/cost
+      const usage = {
+        tokensIn: data?.usage?.input_tokens || 0,
+        tokensOut: data?.usage?.output_tokens || 0,
+      }
+      const modelId = data?.model || MODEL
+
       // Parse JSON response — handle markdown code blocks and other wrapping
       let parsed
       try {
@@ -86,6 +93,8 @@ export async function callClaude({ systemPrompt, messages, maxTokens = MAX_TOKEN
         ...parsed,
         processingTimeMs,
         rawText,
+        usage,
+        modelId,
       }
 
     } catch (err) {

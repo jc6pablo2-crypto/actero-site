@@ -80,22 +80,39 @@ export async function logRun(supabase, {
   clientId, eventId, playbookId, status, classification,
   confidence, actionPlan, steps, durationMs, error,
   normalized, aiResponse, isFollowUp,
+  // Wave 2 — observability columns
+  agentUsed, tokensIn, tokensOut, costUsd, modelId, errorMessage,
+  ragCheckScore, ragCheckFlagged, ragCheckDetails,
 }) {
   // 1. Create run record
+  const runPayload = {
+    client_id: clientId,
+    event_id: eventId,
+    playbook_id: playbookId,
+    status,
+    classification,
+    confidence,
+    action_plan: actionPlan,
+    steps,
+    duration_ms: durationMs,
+    error,
+  }
+
+  // Wave 2 — only set columns when callers actually provide them
+  // (keeps backward compat with older callers that omit these fields).
+  if (agentUsed !== undefined) runPayload.agent_used = agentUsed
+  if (tokensIn !== undefined) runPayload.tokens_in = tokensIn
+  if (tokensOut !== undefined) runPayload.tokens_out = tokensOut
+  if (costUsd !== undefined) runPayload.cost_usd = costUsd
+  if (modelId !== undefined) runPayload.model_id = modelId
+  if (errorMessage !== undefined) runPayload.error_message = errorMessage
+  if (ragCheckScore !== undefined) runPayload.rag_check_score = ragCheckScore
+  if (ragCheckFlagged !== undefined) runPayload.rag_check_flagged = ragCheckFlagged
+  if (ragCheckDetails !== undefined) runPayload.rag_check_details = ragCheckDetails
+
   const { data: run, error: runError } = await supabase
     .from('engine_runs_v2')
-    .insert({
-      client_id: clientId,
-      event_id: eventId,
-      playbook_id: playbookId,
-      status,
-      classification,
-      confidence,
-      action_plan: actionPlan,
-      steps,
-      duration_ms: durationMs,
-      error,
-    })
+    .insert(runPayload)
     .select('id')
     .single()
 

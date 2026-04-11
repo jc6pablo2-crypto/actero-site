@@ -97,7 +97,7 @@ export const AdminConnectorHealthView = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('client_integrations')
-        .select('id, client_id, provider, status, last_error, updated_at, created_at')
+        .select('id, client_id, provider, status, status_message, updated_at, created_at')
         .order('updated_at', { ascending: false })
         .limit(2000)
       if (error) throw error
@@ -232,8 +232,8 @@ export const AdminConnectorHealthView = () => {
                   const variant = STATUS_VARIANT[i.status] || 'neutral'
                   const label = STATUS_LABEL[i.status] || 'Unknown'
                   const brand = clientMap.get(i.client_id) || `#${String(i.client_id || '').slice(0, 6)}`
-                  const subtitle = i.last_error
-                    ? `Derniere erreur : ${String(i.last_error).slice(0, 120)}`
+                  const subtitle = i.status_message
+                    ? `${String(i.status_message).slice(0, 120)}`
                     : `Mis a jour ${i.updated_at ? new Date(i.updated_at).toLocaleDateString('fr-FR') : '—'}`
                   return (
                     <ListItem

@@ -16,6 +16,7 @@ import { buildSystemPrompt } from './lib/prompt-builder.js'
 import { retrieveMemories, buildMemoryContext } from './lib/memory.js'
 import { searchShopifyProducts } from './lib/shopify-products.js'
 import { getAgentForClassification } from './agents/index.js'
+import { calculateCost } from './lib/claude-pricing.js'
 
 // Keywords hinting the customer is asking for a product recommendation.
 const PRODUCT_INTENT_PATTERNS = /\b(recommand|suggest|conseill(?:e|ez|er)|cherch(?:e|es|ez|er)|besoin d[eu'’]|je veux|j'aimerais|j'?ai envie|je voudrais|acheter|commander|similaire|equivalent|alternative|montre-?moi|montrez-?moi|propose[rz]?|avez-?vous.*(produit|article|modele|reference))\b/i
@@ -90,6 +91,26 @@ export async function runBrain(supabase, { event, playbook, clientId, normalized
   // Load full client context
   const clientConfig = await loadClientConfig(supabase, clientId)
 
+  // --- Token/cost accumulators (aggregated across every Claude call in this run) ---
+  let totalTokensIn = 0
+  let totalTokensOut = 0
+  let lastModelId = null
+  const accumulateUsage = (result) => {
+    if (!result) return
+    const u = result.usage || {}
+    totalTokensIn += Number(u.tokensIn || u.input_tokens || 0) || 0
+    totalTokensOut += Number(u.tokensOut || u.output_tokens || 0) || 0
+    if (result.modelId) lastModelId = result.modelId
+  }
+  const buildUsageSummary = () => ({
+    tokensIn: totalTokensIn,
+    tokensOut: totalTokensOut,
+    modelId: lastModelId,
+    costUsd: lastModelId
+      ? calculateCost(lastModelId, totalTokensIn, totalTokensOut)
+      : calculateCost('claude-3-5-sonnet-latest', totalTokensIn, totalTokensOut),
+  })
+
   // --- Actero Memory: retrieve persistent memories for this end-customer ---
   let memoryContext = ''
   let retrievedMemories = []
@@ -124,6 +145,7 @@ SORTIE OBLIGATOIRE — JSON strict uniquement, sans markdown, sans commentaire:
       messages: [{ role: 'user', content: `Source: ${event.source}\nEmail: ${normalized.customer_email}\nSujet: ${normalized.subject || 'N/A'}\n<message_client>\n${safeMessage}\n</message_client>` }],
       maxTokens: 200,
     })
+    accumulateUsage(classResult)
 
     classification = classResult.classification || 'autre'
     confidence = classResult.confidence || 0.5
@@ -138,6 +160,8 @@ SORTIE OBLIGATOIRE — JSON strict uniquement, sans markdown, sans commentaire:
       needsReview: true,
       reviewReason: 'error',
       agentUsed: null,
+      errorMessage: err?.message || 'classification_failed',
+      usage: buildUsageSummary(),
     }
   }
 
@@ -172,6 +196,7 @@ SORTIE OBLIGATOIRE — JSON strict uniquement, sans markdown, sans commentaire:
         messages: lowConfMessages,
         maxTokens: 300,
       })
+      accumulateUsage(respResult)
       proposedResponse = respResult.response || respResult.rawText
     } catch {}
 
@@ -183,6 +208,7 @@ SORTIE OBLIGATOIRE — JSON strict uniquement, sans markdown, sans commentaire:
       needsReview: true,
       reviewReason: 'low_confidence',
       agentUsed: null,
+      usage: buildUsageSummary(),
     }
   }
 
@@ -211,6 +237,7 @@ SORTIE OBLIGATOIRE — JSON strict uniquement, sans markdown, sans commentaire:
         memoryContext,
         classification,
       })
+      accumulateUsage(agentResult)
 
       aiResponse = agentResult?.aiResponse || null
       shouldEscalate = agentResult?.shouldEscalate === true
@@ -227,6 +254,8 @@ SORTIE OBLIGATOIRE — JSON strict uniquement, sans markdown, sans commentaire:
         needsReview: true,
         reviewReason: 'error',
         agentUsed,
+        errorMessage: err?.message || 'agent_failed',
+        usage: buildUsageSummary(),
       }
     }
   }
@@ -255,6 +284,7 @@ SORTIE OBLIGATOIRE — JSON strict uniquement, sans markdown, sans commentaire:
       reviewReason: sentimentScore <= 2 ? 'aggressive' : (escalationReason || 'out_of_policy'),
       agentUsed,
       toolsUsed,
+      usage: buildUsageSummary(),
     }
   }
 
@@ -279,6 +309,7 @@ SORTIE OBLIGATOIRE — JSON strict uniquement, sans markdown, sans commentaire:
     productRecommendations,
     agentUsed,
     toolsUsed,
+    usage: buildUsageSummary(),
   }
 }
 

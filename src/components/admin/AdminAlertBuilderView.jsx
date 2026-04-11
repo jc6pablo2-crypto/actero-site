@@ -73,22 +73,6 @@ export function AdminAlertBuilderView() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editingRule, setEditingRule] = useState(null)
 
-  const {
-    data: rules = [],
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ['admin-alert-rules'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('admin_alert_rules')
-        .select('*')
-        .order('created_at', { ascending: false })
-      if (error) throw error
-      return data || []
-    },
-  })
-
   const authFetch = useCallback(async (url, init = {}) => {
     const { data: { session } } = await supabase.auth.getSession()
     const headers = {
@@ -103,6 +87,19 @@ export function AdminAlertBuilderView() {
     }
     return resp.json()
   }, [])
+
+  const {
+    data: rules = [],
+    isLoading,
+    error: queryError,
+    refetch,
+  } = useQuery({
+    queryKey: ['admin-alert-rules'],
+    queryFn: async () => {
+      const json = await authFetch('/api/admin/alert-rules', { method: 'GET' })
+      return json?.rules || []
+    },
+  })
 
   const kpis = useMemo(() => {
     const active = rules.filter((r) => r.enabled).length
@@ -221,7 +218,16 @@ export function AdminAlertBuilderView() {
           <div className="text-[12px] text-[#9ca3af] text-center py-8">Chargement…</div>
         )}
 
-        {!isLoading && rules.length === 0 && (
+        {!isLoading && queryError && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-3 flex items-start gap-2">
+            <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+            <div className="text-[12px] text-red-800 leading-relaxed">
+              Impossible de charger les règles d'alerte : {queryError.message}
+            </div>
+          </div>
+        )}
+
+        {!isLoading && !queryError && rules.length === 0 && (
           <SectionCard title="Règles configurées" icon={Bell}>
             <EmptyState
               icon={Bell}

@@ -203,6 +203,16 @@ export default async function handler(req, res) {
         normalized,
         aiResponse: brainResult.aiResponse,
         isFollowUp,
+        agentUsed: brainResult.agentUsed || null,
+        tokensIn: brainResult.usage?.tokensIn,
+        tokensOut: brainResult.usage?.tokensOut,
+        costUsd: brainResult.usage?.costUsd,
+        modelId: brainResult.usage?.modelId,
+        errorMessage: executorResult.success
+          ? null
+          : (typeof executorResult.error === 'string'
+              ? executorResult.error
+              : executorResult.error?.message || null),
       })
 
       if (event) {
@@ -223,6 +233,12 @@ export default async function handler(req, res) {
         normalized,
         aiResponse: brainResult.aiResponse,
         isFollowUp,
+        agentUsed: brainResult.agentUsed || null,
+        tokensIn: brainResult.usage?.tokensIn,
+        tokensOut: brainResult.usage?.tokensOut,
+        costUsd: brainResult.usage?.costUsd,
+        modelId: brainResult.usage?.modelId,
+        errorMessage: brainResult.errorMessage || null,
       })
 
       // Create review entry for admin/client dashboard

@@ -169,7 +169,7 @@ export const AdminLiveRunsView = () => {
               const confidence = typeof run.confidence === 'number'
                 ? `${(run.confidence * 100).toFixed(0)}%`
                 : '—'
-              const latency = run.latency_ms || run.duration_ms
+              const latency = run.duration_ms
               const costPill = typeof run.cost_usd === 'number' && run.cost_usd > 0 ? (
                 <StatusPill variant="neutral" size="sm">
                   {`$${Number(run.cost_usd).toFixed(4)}`}

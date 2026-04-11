@@ -57,7 +57,7 @@ export const AdminAgentHeatmapView = () => {
       if (slot < 0 || slot > 23) continue
       const cell = map[agent][slot]
       cell.total += 1
-      if (run.status === 'failed' || run.status === 'error') {
+      if (run.status === 'failed') {
         cell.errors += 1
         cell.runs.push(run)
       }

@@ -119,13 +119,16 @@ export function AdminClientsListView() {
         })
       }
 
-      // 4) Escalades
+      // 4) Escalades (table reelle = escalation_tickets)
       let escalationMap = {}
       if (ids.length > 0) {
-        const { data: esc } = await supabase
-          .from('escalations')
+        const { data: esc, error: escErr } = await supabase
+          .from('escalation_tickets')
           .select('client_id')
           .in('client_id', ids)
+        if (escErr) {
+          console.warn('[AdminClientsListView] escalation_tickets load failed:', escErr)
+        }
         ;(esc || []).forEach((e) => {
           escalationMap[e.client_id] = (escalationMap[e.client_id] || 0) + 1
         })
@@ -214,7 +217,11 @@ export function AdminClientsListView() {
     let rows = [...clients]
 
     // Filter preset
-    if (filter !== 'all') {
+    // Note: 'at_risk' n'existe pas dans clients.status (enum DB).
+    // On le calcule cote client via health_score < 50.
+    if (filter === 'at_risk') {
+      rows = rows.filter((r) => typeof r.health_score === 'number' && r.health_score < 50)
+    } else if (filter !== 'all') {
       rows = rows.filter((r) => (r.status || 'active') === filter)
     }
 
@@ -530,7 +537,10 @@ function AddClientModal({ onClose, onCreated }) {
         email: email.trim(),
         status: 'onboarding',
       })
-      if (error) throw error
+      if (error) {
+        console.error('[AdminClientsListView] insert client failed (RLS?):', error)
+        throw error
+      }
       onCreated?.()
     } catch (err) {
       toast.error(`Création : ${err.message}`)

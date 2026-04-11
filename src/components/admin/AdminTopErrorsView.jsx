@@ -35,8 +35,8 @@ export const AdminTopErrorsView = () => {
       const start = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
       const { data, error } = await supabase
         .from('engine_runs_v2')
-        .select('id, error_message, client_id, created_at, classification, agent_used, status')
-        .in('status', ['failed', 'error'])
+        .select('id, error_message, error, client_id, created_at, classification, agent_used, status')
+        .eq('status', 'failed')
         .gte('created_at', start)
         .limit(1000)
       if (error) throw error
@@ -48,7 +48,7 @@ export const AdminTopErrorsView = () => {
   const topErrors = useMemo(() => {
     const groups = new Map()
     for (const r of runs) {
-      const key = truncateKey(r.error_message)
+      const key = truncateKey(r.error_message || r.error)
       if (!groups.has(key)) {
         groups.set(key, {
           key,
