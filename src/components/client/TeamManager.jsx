@@ -143,8 +143,8 @@ export const TeamManager = ({ clientId }) => {
             <Users className="w-5 h-5 text-[#003725]" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-[#262626]">Equipe</h2>
-            <p className="text-sm text-[#716D5C]">{members.length} membre{members.length > 1 ? 's' : ''}</p>
+            <h2 className="text-2xl font-bold text-[#1a1a1a]">Equipe</h2>
+            <p className="text-sm text-[#71717a]">{members.length} membre{members.length > 1 ? 's' : ''}</p>
           </div>
         </div>
         <button
@@ -163,8 +163,8 @@ export const TeamManager = ({ clientId }) => {
           return (
             <div key={role.id} className="p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
               <Icon className={`w-5 h-5 mb-2 ${role.color.split(' ')[0]}`} />
-              <p className="font-bold text-sm text-[#262626]">{role.label}</p>
-              <p className="text-[10px] text-[#716D5C] mt-0.5">{role.desc}</p>
+              <p className="font-bold text-sm text-[#1a1a1a]">{role.label}</p>
+              <p className="text-[10px] text-[#71717a] mt-0.5">{role.desc}</p>
             </div>
           )
         })}
@@ -180,24 +180,24 @@ export const TeamManager = ({ clientId }) => {
             className="overflow-hidden"
           >
             <div className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm space-y-4">
-              <h3 className="text-sm font-bold text-[#262626]">Inviter un membre</h3>
+              <h3 className="text-sm font-bold text-[#1a1a1a]">Inviter un membre</h3>
               <div className="flex gap-3 flex-wrap">
                 <div className="flex-1 min-w-[200px]">
-                  <label className="block text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-1">Email</label>
+                  <label className="block text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-1">Email</label>
                   <input
                     type="email"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     placeholder="collegue@entreprise.com"
-                    className="w-full px-4 py-2.5 bg-[#F5F5F0] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-1 focus:ring-gray-300"
+                    className="w-full px-4 py-2.5 bg-[#F5F5F0] border border-gray-200 rounded-xl text-sm text-[#1a1a1a] outline-none focus:ring-1 focus:ring-gray-300"
                   />
                 </div>
                 <div className="w-48">
-                  <label className="block text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-1">Role</label>
+                  <label className="block text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-1">Role</label>
                   <select
                     value={inviteRole}
                     onChange={(e) => setInviteRole(e.target.value)}
-                    className="w-full px-4 py-2.5 bg-[#F5F5F0] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-1 focus:ring-gray-300 appearance-none cursor-pointer"
+                    className="w-full px-4 py-2.5 bg-[#F5F5F0] border border-gray-200 rounded-xl text-sm text-[#1a1a1a] outline-none focus:ring-1 focus:ring-gray-300 appearance-none cursor-pointer"
                   >
                     {ROLES.map(r => (
                       <option key={r.id} value={r.id}>{r.label} — {r.desc}</option>
@@ -216,7 +216,7 @@ export const TeamManager = ({ clientId }) => {
                 </button>
                 <button
                   onClick={() => setShowInvite(false)}
-                  className="px-4 py-2.5 text-sm font-semibold text-[#716D5C] hover:text-[#262626]"
+                  className="px-4 py-2.5 text-sm font-semibold text-[#71717a] hover:text-[#1a1a1a]"
                 >
                   Annuler
                 </button>
@@ -229,7 +229,7 @@ export const TeamManager = ({ clientId }) => {
       {/* Members list */}
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-6 h-6 animate-spin text-[#716D5C]" />
+          <Loader2 className="w-6 h-6 animate-spin text-[#71717a]" />
         </div>
       ) : (
         <div className="space-y-2">
@@ -240,14 +240,14 @@ export const TeamManager = ({ clientId }) => {
             return (
               <div key={member.user_id} className="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
                 {/* Avatar */}
-                <div className="w-10 h-10 rounded-full bg-[#F5F5F0] flex items-center justify-center text-sm font-bold text-[#716D5C]">
+                <div className="w-10 h-10 rounded-full bg-[#F5F5F0] flex items-center justify-center text-sm font-bold text-[#71717a]">
                   {(member.email || '?')[0].toUpperCase()}
                 </div>
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[#262626] truncate">{member.email || 'Utilisateur'}</p>
-                  <p className="text-[10px] text-[#716D5C]">
+                  <p className="text-sm font-medium text-[#1a1a1a] truncate">{member.email || 'Utilisateur'}</p>
+                  <p className="text-[10px] text-[#71717a]">
                     Ajoute le {new Date(member.created_at).toLocaleDateString('fr-FR')}
                   </p>
                 </div>

@@ -236,8 +236,8 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
             <FlaskConical className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-[#262626]">Tester</h2>
-            <p className="text-sm text-[#716D5C]">Testez chaque playbook avec des scenarios reels avant de les mettre en production</p>
+            <h2 className="text-2xl font-bold text-[#1a1a1a]">Tester</h2>
+            <p className="text-sm text-[#71717a]">Testez chaque playbook avec des scenarios reels avant de les mettre en production</p>
           </div>
         </div>
         {activePlaybooks.length > 0 && (
@@ -255,7 +255,7 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
       {/* Active Playbooks to test */}
       {activePlaybooks.length > 0 && (
         <div>
-          <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-3">
+          <p className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-3">
             Playbooks actifs ({activePlaybooks.length})
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -280,10 +280,10 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Icon className="w-4 h-4 text-[#0F5F35]" />
-                    <span className="font-bold text-sm text-[#262626]">{playbook.display_name}</span>
+                    <span className="font-bold text-sm text-[#1a1a1a]">{playbook.display_name}</span>
                     {isTesting && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0F5F35] ml-auto" />}
                   </div>
-                  <p className="text-xs text-[#716D5C] mb-2">{scenarios.length} scenario{scenarios.length > 1 ? 's' : ''} de test</p>
+                  <p className="text-xs text-[#71717a] mb-2">{scenarios.length} scenario{scenarios.length > 1 ? 's' : ''} de test</p>
                   {results.length > 0 && (
                     <div className="flex gap-2">
                       {passed > 0 && <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">{passed} OK</span>}
@@ -300,10 +300,10 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
       {/* Inactive playbooks */}
       {inactivePlaybooks.length > 0 && (
         <div>
-          <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-2">Playbooks inactifs (activez-les dans Playbooks pour les tester)</p>
+          <p className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-2">Playbooks inactifs (activez-les dans Playbooks pour les tester)</p>
           <div className="flex flex-wrap gap-2">
             {inactivePlaybooks.map(p => (
-              <span key={p.id} className="px-3 py-1.5 bg-gray-100 rounded-lg text-xs text-[#716D5C]">{p.display_name}</span>
+              <span key={p.id} className="px-3 py-1.5 bg-gray-100 rounded-lg text-xs text-[#71717a]">{p.display_name}</span>
             ))}
           </div>
         </div>
@@ -315,7 +315,7 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
           <div className="p-4 border-b border-gray-100 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Eye className="w-4 h-4 text-[#0F5F35]" />
-              <p className="font-bold text-sm text-[#262626]">Resultats ({testResults.length} tests)</p>
+              <p className="font-bold text-sm text-[#1a1a1a]">Resultats ({testResults.length} tests)</p>
             </div>
             <div className="flex gap-2 text-xs">
               <span className="text-emerald-600 font-bold">{testResults.filter(r => r.status === 'completed').length} auto</span>
@@ -333,14 +333,14 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
 
       {/* Separator */}
       <div className="border-t border-gray-200 pt-6">
-        <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-3">Test libre — discutez avec votre agent</p>
+        <p className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-3">Test libre — discutez avec votre agent</p>
       </div>
 
       {/* Free Chat */}
       <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
         <div className="h-[300px] overflow-y-auto p-5 space-y-4">
           {chatMessages.length === 0 && (
-            <div className="flex items-center justify-center h-full text-[#716D5C] text-sm">
+            <div className="flex items-center justify-center h-full text-[#71717a] text-sm">
               Tapez un message pour tester votre agent en mode libre
             </div>
           )}
@@ -354,13 +354,13 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
               <div className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                 msg.role === 'user' ? 'bg-[#003725] text-white rounded-tr-md' :
                 msg.error ? 'bg-red-50 text-red-700 border border-red-200 rounded-tl-md' :
-                'bg-[#F5F5F0] text-[#262626] rounded-tl-md'
+                'bg-[#F5F5F0] text-[#1a1a1a] rounded-tl-md'
               }`}>
                 {msg.content}
               </div>
               {msg.role === 'user' && (
                 <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
-                  <User className="w-4 h-4 text-[#716D5C]" />
+                  <User className="w-4 h-4 text-[#71717a]" />
                 </div>
               )}
             </div>
@@ -371,7 +371,7 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
                 <Bot className="w-4 h-4 text-[#003725]" />
               </div>
               <div className="px-4 py-3 bg-[#F5F5F0] rounded-2xl rounded-tl-md">
-                <Loader2 className="w-4 h-4 animate-spin text-[#716D5C]" />
+                <Loader2 className="w-4 h-4 animate-spin text-[#71717a]" />
               </div>
             </div>
           )}
@@ -379,7 +379,7 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
         </div>
         <div className="border-t border-gray-100 p-4 flex gap-2">
           {chatMessages.length > 0 && (
-            <button onClick={() => setChatMessages([])} className="p-3 rounded-xl text-[#716D5C] hover:bg-gray-50 hover:text-red-500">
+            <button onClick={() => setChatMessages([])} className="p-3 rounded-xl text-[#71717a] hover:bg-gray-50 hover:text-red-500">
               <RotateCcw className="w-4 h-4" />
             </button>
           )}
@@ -390,7 +390,7 @@ export const ConversationSimulator = ({ clientId, clientType, theme }) => {
             onKeyDown={(e) => e.key === 'Enter' && sendChat(chatInput)}
             placeholder="Tapez un message client..."
             disabled={chatLoading}
-            className="flex-1 px-4 py-3 bg-[#F5F5F0] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-1 focus:ring-gray-300 disabled:opacity-50"
+            className="flex-1 px-4 py-3 bg-[#F5F5F0] border border-gray-200 rounded-xl text-sm text-[#1a1a1a] outline-none focus:ring-1 focus:ring-gray-300 disabled:opacity-50"
           />
           <button onClick={() => sendChat(chatInput)} disabled={!chatInput.trim() || chatLoading}
             className="px-4 py-3 bg-[#0F5F35] text-white rounded-xl hover:bg-[#003725] disabled:opacity-50">
@@ -420,18 +420,18 @@ const TestResultRow = ({ result }) => {
         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${statusColor[result.status] || statusColor.error}`}>
           {result.status === 'completed' ? 'OK' : result.status === 'needs_review' ? 'Review' : result.status === 'no_playbook' ? 'Pas actif' : 'Erreur'}
         </span>
-        <span className="text-xs font-bold text-[#262626]">{result.playbook}</span>
-        <span className="text-xs text-[#716D5C]">→ {result.scenario}</span>
+        <span className="text-xs font-bold text-[#1a1a1a]">{result.playbook}</span>
+        <span className="text-xs text-[#71717a]">→ {result.scenario}</span>
         {result.classification && <span className="text-[10px] text-violet-600 bg-violet-50 px-2 py-0.5 rounded-full ml-auto">{result.classification}</span>}
-        {result.confidence && <span className="text-[10px] text-[#716D5C]">{Math.round(result.confidence * 100)}%</span>}
-        <span className="text-[10px] text-[#716D5C]">{result.durationMs}ms</span>
+        {result.confidence && <span className="text-[10px] text-[#71717a]">{Math.round(result.confidence * 100)}%</span>}
+        <span className="text-[10px] text-[#71717a]">{result.durationMs}ms</span>
       </button>
       {expanded && (
         <div className="px-4 pb-3 space-y-2">
           {result.response && (
             <div className="p-3 bg-emerald-50 rounded-lg">
               <p className="text-[10px] text-emerald-600 font-bold uppercase mb-1">Reponse IA</p>
-              <p className="text-sm text-[#262626]">{result.response}</p>
+              <p className="text-sm text-[#1a1a1a]">{result.response}</p>
             </div>
           )}
           {result.error && (
@@ -441,7 +441,7 @@ const TestResultRow = ({ result }) => {
             </div>
           )}
           {result.stepsExecuted !== undefined && (
-            <p className="text-xs text-[#716D5C]">{result.stepsExecuted} step{result.stepsExecuted > 1 ? 's' : ''} executee{result.stepsExecuted > 1 ? 's' : ''}</p>
+            <p className="text-xs text-[#71717a]">{result.stepsExecuted} step{result.stepsExecuted > 1 ? 's' : ''} executee{result.stepsExecuted > 1 ? 's' : ''}</p>
           )}
         </div>
       )}

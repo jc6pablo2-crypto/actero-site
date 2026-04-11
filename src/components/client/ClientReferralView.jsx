@@ -8,7 +8,7 @@ import {
 import { supabase } from '../../lib/supabase'
 
 const STATUS_CONFIG = {
-  pending: { label: 'En attente', color: 'text-[#716D5C] bg-gray-400/10', icon: Clock },
+  pending: { label: 'En attente', color: 'text-[#71717a] bg-gray-400/10', icon: Clock },
   clicked: { label: 'Lien clique', color: 'text-blue-400 bg-blue-400/10', icon: Eye },
   signed_up: { label: 'Inscrit', color: 'text-amber-400 bg-amber-400/10', icon: Users },
   paid: { label: 'A paye', color: 'text-emerald-400 bg-emerald-400/10', icon: DollarSign },
@@ -113,8 +113,8 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
   const nextReward = 1600
 
   const cardBg = isLight ? 'bg-white border-gray-200' : 'bg-white border-gray-100 shadow-sm'
-  const textPrimary = isLight ? 'text-[#262626]' : 'text-[#262626]'
-  const textSecondary = isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'
+  const textPrimary = isLight ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]'
+  const textSecondary = isLight ? 'text-[#71717a]' : 'text-[#71717a]'
   const inputBg = isLight ? 'bg-white border-gray-100 shadow-sm' : 'bg-gray-50 border-gray-200'
 
   return (
@@ -144,7 +144,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
         </div>
 
         {codeLoading ? (
-          <div className="flex items-center gap-2 text-[#716D5C]">
+          <div className="flex items-center gap-2 text-[#71717a]">
             <Loader2 className="w-4 h-4 animate-spin" />
             <span className="text-sm">Generation du code...</span>
           </div>
@@ -162,8 +162,8 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
                   copied
                     ? 'bg-emerald-500/10 text-emerald-400'
                     : isLight
-                      ? 'bg-[#F9F7F1] text-[#262626] hover:bg-gray-50'
-                      : 'bg-white text-[#262626] hover:bg-gray-100'
+                      ? 'bg-[#F9F7F1] text-[#1a1a1a] hover:bg-gray-50'
+                      : 'bg-white text-[#1a1a1a] hover:bg-gray-100'
                 }`}
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -177,7 +177,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                   isLight
                     ? 'border-gray-200 text-slate-700 hover:bg-[#F9F7F1]'
-                    : 'border-gray-200 text-[#716D5C] hover:bg-gray-50'
+                    : 'border-gray-200 text-[#71717a] hover:bg-gray-50'
                 }`}
               >
                 <Mail className="w-4 h-4" /> Email
@@ -187,7 +187,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                   isLight
                     ? 'border-gray-200 text-slate-700 hover:bg-[#F9F7F1]'
-                    : 'border-gray-200 text-[#716D5C] hover:bg-gray-50'
+                    : 'border-gray-200 text-[#71717a] hover:bg-gray-50'
                 }`}
               >
                 <Share2 className="w-4 h-4" /> WhatsApp
@@ -197,7 +197,7 @@ export const ClientReferralView = ({ clientId, theme = 'dark' }) => {
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${
                   isLight
                     ? 'border-gray-200 text-slate-700 hover:bg-[#F9F7F1]'
-                    : 'border-gray-200 text-[#716D5C] hover:bg-gray-50'
+                    : 'border-gray-200 text-[#71717a] hover:bg-gray-50'
                 }`}
               >
                 <ExternalLink className="w-4 h-4" /> LinkedIn

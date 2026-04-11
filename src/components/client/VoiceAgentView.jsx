@@ -170,12 +170,12 @@ export const VoiceAgentView = ({ clientId, theme }) => {
             <Phone className="w-5 h-5 text-[#003725]" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-[#262626]">Agent Vocal IA</h2>
-            <p className="text-sm text-[#716D5C]">Powered by ElevenLabs</p>
+            <h2 className="text-xl font-semibold text-[#1a1a1a]">Agent Vocal IA</h2>
+            <p className="text-sm text-[#71717a]">Powered by ElevenLabs</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-sm font-medium text-[#716D5C]">
+          <span className="text-sm font-medium text-[#71717a]">
             {agentActive ? 'Actif' : 'Inactif'}
           </span>
           <motion.button
@@ -238,13 +238,13 @@ export const VoiceAgentView = ({ clientId, theme }) => {
               className="bg-white border border-gray-100 rounded-2xl shadow-sm p-4"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
                   {stat.label}
                 </span>
                 <Icon className={`w-4 h-4 ${stat.color}`} />
               </div>
               <div className="flex items-end gap-2">
-                <span className="text-2xl font-bold text-[#262626]">{stat.value}</span>
+                <span className="text-2xl font-bold text-[#1a1a1a]">{stat.value}</span>
                 <span className="text-xs font-medium text-emerald-600 mb-1">{stat.change}</span>
               </div>
             </motion.div>
@@ -255,26 +255,26 @@ export const VoiceAgentView = ({ clientId, theme }) => {
       {/* Configuration */}
       <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
         <div className="flex items-center gap-2 mb-5">
-          <Settings className="w-4 h-4 text-[#716D5C]" />
-          <h3 className="text-sm font-semibold text-[#262626]">Configuration</h3>
+          <Settings className="w-4 h-4 text-[#71717a]" />
+          <h3 className="text-sm font-semibold text-[#1a1a1a]">Configuration</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Voice Selection */}
           <div>
-            <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider block mb-2">
               Voix de l'agent
             </label>
             <div className="relative">
               <button
                 onClick={() => setShowVoiceDropdown(!showVoiceDropdown)}
-                className="w-full flex items-center justify-between px-4 py-2.5 bg-[#F5F5F0] border border-gray-200 rounded-xl text-sm text-[#262626] hover:border-[#0F5F35]/30 transition-colors"
+                className="w-full flex items-center justify-between px-4 py-2.5 bg-[#F5F5F0] border border-gray-200 rounded-xl text-sm text-[#1a1a1a] hover:border-[#0F5F35]/30 transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <Mic className="w-4 h-4 text-[#0F5F35]" />
                   <span>{currentVoice?.name} — {currentVoice?.style}</span>
                 </div>
-                <ChevronDown className={`w-4 h-4 text-[#716D5C] transition-transform ${showVoiceDropdown ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 text-[#71717a] transition-transform ${showVoiceDropdown ? 'rotate-180' : ''}`} />
               </button>
               <AnimatePresence>
                 {showVoiceDropdown && (
@@ -292,12 +292,12 @@ export const VoiceAgentView = ({ clientId, theme }) => {
                           setShowVoiceDropdown(false)
                         }}
                         className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-[#F5F5F0] transition-colors ${
-                          selectedVoice === voice.id ? 'bg-[#0F5F35]/5 text-[#0F5F35]' : 'text-[#262626]'
+                          selectedVoice === voice.id ? 'bg-[#0F5F35]/5 text-[#0F5F35]' : 'text-[#1a1a1a]'
                         }`}
                       >
                         <Volume2 className="w-4 h-4" />
                         <span className="font-medium">{voice.name}</span>
-                        <span className="text-[#716D5C]">— {voice.style}</span>
+                        <span className="text-[#71717a]">— {voice.style}</span>
                       </button>
                     ))}
                   </motion.div>
@@ -308,7 +308,7 @@ export const VoiceAgentView = ({ clientId, theme }) => {
 
           {/* Language Selector */}
           <div>
-            <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider block mb-2">
               Langue
             </label>
             <div className="flex gap-2">
@@ -319,7 +319,7 @@ export const VoiceAgentView = ({ clientId, theme }) => {
                   className={`flex-1 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     selectedLanguage === lang.code
                       ? 'bg-[#0F5F35] text-white shadow-sm'
-                      : 'bg-[#F5F5F0] text-[#262626] hover:bg-gray-200'
+                      : 'bg-[#F5F5F0] text-[#1a1a1a] hover:bg-gray-200'
                   }`}
                 >
                   {lang.label}
@@ -330,7 +330,7 @@ export const VoiceAgentView = ({ clientId, theme }) => {
 
           {/* Max Duration Slider */}
           <div>
-            <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider block mb-2">
               Duree max d'appel
             </label>
             <div className="space-y-2">
@@ -342,7 +342,7 @@ export const VoiceAgentView = ({ clientId, theme }) => {
                 onChange={(e) => setMaxDuration(Number(e.target.value))}
                 className="w-full h-1.5 bg-gray-200 rounded-full appearance-none cursor-pointer accent-[#0F5F35]"
               />
-              <div className="flex justify-between text-xs text-[#716D5C]">
+              <div className="flex justify-between text-xs text-[#71717a]">
                 <span>1 min</span>
                 <span className="font-semibold text-[#0F5F35]">{maxDuration} min</span>
                 <span>15 min</span>
@@ -352,14 +352,14 @@ export const VoiceAgentView = ({ clientId, theme }) => {
 
           {/* Greeting Message */}
           <div>
-            <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider block mb-2">
               Message d'accueil
             </label>
             <textarea
               value={greetingMessage}
               onChange={(e) => setGreetingMessage(e.target.value)}
               rows={3}
-              className="w-full px-4 py-2.5 bg-[#F5F5F0] border border-gray-200 rounded-xl text-sm text-[#262626] resize-none focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]/30 transition-all"
+              className="w-full px-4 py-2.5 bg-[#F5F5F0] border border-gray-200 rounded-xl text-sm text-[#1a1a1a] resize-none focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]/30 transition-all"
               placeholder="Entrez le message d'accueil..."
             />
           </div>
@@ -381,10 +381,10 @@ export const VoiceAgentView = ({ clientId, theme }) => {
       <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
-            <PhoneIncoming className="w-4 h-4 text-[#716D5C]" />
-            <h3 className="text-sm font-semibold text-[#262626]">Appels recents</h3>
+            <PhoneIncoming className="w-4 h-4 text-[#71717a]" />
+            <h3 className="text-sm font-semibold text-[#1a1a1a]">Appels recents</h3>
           </div>
-          <span className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+          <span className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
             Derniers 7 jours
           </span>
         </div>
@@ -405,12 +405,12 @@ export const VoiceAgentView = ({ clientId, theme }) => {
                     <Users className="w-4 h-4 text-[#003725]" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-[#262626] truncate">{call.caller}</p>
-                    <p className="text-xs text-[#716D5C] truncate">{call.reason}</p>
+                    <p className="text-sm font-medium text-[#1a1a1a] truncate">{call.caller}</p>
+                    <p className="text-xs text-[#71717a] truncate">{call.reason}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4 flex-shrink-0">
-                  <div className="flex items-center gap-1 text-xs text-[#716D5C]">
+                  <div className="flex items-center gap-1 text-xs text-[#71717a]">
                     <Clock className="w-3 h-3" />
                     <span>{call.duration}</span>
                   </div>
@@ -418,7 +418,7 @@ export const VoiceAgentView = ({ clientId, theme }) => {
                     <StatusIcon className="w-3 h-3" />
                     {statusCfg.label}
                   </span>
-                  <span className="text-xs text-[#716D5C] hidden sm:block w-24 text-right">
+                  <span className="text-xs text-[#71717a] hidden sm:block w-24 text-right">
                     {formatTimestamp(call.timestamp)}
                   </span>
                 </div>
@@ -432,8 +432,8 @@ export const VoiceAgentView = ({ clientId, theme }) => {
       <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <ArrowRightLeft className="w-4 h-4 text-[#716D5C]" />
-            <h3 className="text-sm font-semibold text-[#262626]">Escalade vocale</h3>
+            <ArrowRightLeft className="w-4 h-4 text-[#71717a]" />
+            <h3 className="text-sm font-semibold text-[#1a1a1a]">Escalade vocale</h3>
           </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
@@ -457,11 +457,11 @@ export const VoiceAgentView = ({ clientId, theme }) => {
         </div>
 
         <div className="bg-[#F5F5F0] rounded-xl p-4 space-y-3">
-          <p className="text-sm text-[#262626]">
+          <p className="text-sm text-[#1a1a1a]">
             Lorsque l'agent vocal ne peut pas resoudre une demande, il transfere automatiquement
             l'appel vers un operateur humain.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 text-xs text-[#716D5C]">
+          <div className="flex flex-col sm:flex-row gap-3 text-xs text-[#71717a]">
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 bg-[#0F5F35] rounded-full" />
               <span>Detection automatique des demandes complexes</span>

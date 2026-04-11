@@ -72,9 +72,9 @@ const StatCard = ({ label, value, icon: Icon, color, theme }) => {
     <div className={`rounded-2xl border p-5 ${isLight ? 'bg-white border-gray-100 shadow-sm' : 'bg-white border-gray-100 shadow-sm'}`}>
       <div className="flex items-center gap-2 mb-2">
         <Icon className={`w-4 h-4 ${color}`} />
-        <span className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">{label}</span>
+        <span className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">{label}</span>
       </div>
-      <p className="text-2xl font-bold text-[#262626]">{value}</p>
+      <p className="text-2xl font-bold text-[#1a1a1a]">{value}</p>
     </div>
   )
 }
@@ -85,28 +85,28 @@ const SentimentGauge = ({ score, theme }) => {
     <div className="flex flex-col items-center gap-4">
       <div className="relative w-full max-w-md">
         <div className="text-center mb-4">
-          <span className="text-5xl font-bold text-[#262626]">{score}</span>
-          <span className="text-xl font-normal text-[#716D5C]">/10</span>
+          <span className="text-5xl font-bold text-[#1a1a1a]">{score}</span>
+          <span className="text-xl font-normal text-[#71717a]">/10</span>
         </div>
         <div className="h-4 rounded-full overflow-hidden w-full"
           style={{ background: 'linear-gradient(to right, #ef4444, #f97316, #facc15, #6ee7b7, #10b981)' }}>
         </div>
         <motion.div
-          className="absolute bottom-0 w-1 h-6 bg-[#262626] rounded-full"
+          className="absolute bottom-0 w-1 h-6 bg-[#1a1a1a] rounded-full"
           style={{ left: `${percentage}%`, transform: 'translateX(-50%)' }}
           initial={{ left: '0%' }}
           animate={{ left: `${percentage}%` }}
           transition={{ duration: 1, ease: 'easeOut' }}
         />
       </div>
-      <p className="text-sm font-medium text-[#716D5C]">Sentiment moyen ce mois-ci</p>
+      <p className="text-sm font-medium text-[#71717a]">Sentiment moyen ce mois-ci</p>
     </div>
   )
 }
 
 const Toggle = ({ enabled, onToggle, label }) => (
   <div className="flex items-center justify-between py-3">
-    <span className="text-sm text-[#262626] font-medium">{label}</span>
+    <span className="text-sm text-[#1a1a1a] font-medium">{label}</span>
     <button
       onClick={onToggle}
       className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${enabled ? 'bg-[#0F5F35]' : 'bg-gray-300'}`}
@@ -241,8 +241,8 @@ export const SentimentAnalysisView = ({ clientId, theme = 'light' }) => {
           <Heart className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-[#262626]">Analyse de Sentiment</h1>
-          <p className="text-sm text-[#716D5C]">Suivi en temps reel du ressenti de vos clients</p>
+          <h1 className="text-2xl font-bold text-[#1a1a1a]">Analyse de Sentiment</h1>
+          <p className="text-sm text-[#71717a]">Suivi en temps reel du ressenti de vos clients</p>
         </div>
       </motion.div>
 
@@ -278,7 +278,7 @@ export const SentimentAnalysisView = ({ clientId, theme = 'light' }) => {
         >
           <div className="flex items-center gap-2 mb-5">
             <BarChart3 className="w-4 h-4 text-[#0F5F35]" />
-            <span className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+            <span className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
               Distribution des sentiments
             </span>
           </div>
@@ -286,8 +286,8 @@ export const SentimentAnalysisView = ({ clientId, theme = 'light' }) => {
             {SENTIMENT_DISTRIBUTION.map((item) => (
               <div key={item.label}>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-[#262626]">{item.label}</span>
-                  <span className="text-sm font-bold text-[#262626]">{item.percent}%</span>
+                  <span className="text-sm font-medium text-[#1a1a1a]">{item.label}</span>
+                  <span className="text-sm font-bold text-[#1a1a1a]">{item.percent}%</span>
                 </div>
                 <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
                   <motion.div
@@ -312,14 +312,14 @@ export const SentimentAnalysisView = ({ clientId, theme = 'light' }) => {
         >
           <div className="flex items-center gap-2 mb-5">
             <Bell className="w-4 h-4 text-[#0F5F35]" />
-            <span className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+            <span className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
               Configuration des alertes
             </span>
           </div>
 
           {/* Threshold slider */}
           <div className="mb-6">
-            <label className="text-sm font-medium text-[#262626] block mb-3">
+            <label className="text-sm font-medium text-[#1a1a1a] block mb-3">
               Alerter si sentiment &lt; <span className="font-bold text-[#0F5F35]">{threshold}</span>/5
             </label>
             <input
@@ -334,7 +334,7 @@ export const SentimentAnalysisView = ({ clientId, theme = 'light' }) => {
                 background: `linear-gradient(to right, #0F5F35 ${((threshold - 1) / 4) * 100}%, #e5e7eb ${((threshold - 1) / 4) * 100}%)`,
               }}
             />
-            <div className="flex justify-between text-[10px] text-[#716D5C] mt-1">
+            <div className="flex justify-between text-[10px] text-[#71717a] mt-1">
               <span>1</span>
               <span>2</span>
               <span>3</span>
@@ -368,7 +368,7 @@ export const SentimentAnalysisView = ({ clientId, theme = 'light' }) => {
       >
         <div className="flex items-center gap-2 mb-5">
           <ShieldAlert className="w-4 h-4 text-[#0F5F35]" />
-          <span className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+          <span className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
             Alertes recentes
           </span>
         </div>
@@ -383,13 +383,13 @@ export const SentimentAnalysisView = ({ clientId, theme = 'light' }) => {
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                    <User className="w-4 h-4 text-[#716D5C]" />
+                    <User className="w-4 h-4 text-[#71717a]" />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-[#262626]">{alert.customer}</p>
+                    <p className="text-sm font-bold text-[#1a1a1a]">{alert.customer}</p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <Clock className="w-3 h-3 text-[#716D5C]" />
-                      <span className="text-[10px] text-[#716D5C]">{alert.timestamp}</span>
+                      <Clock className="w-3 h-3 text-[#71717a]" />
+                      <span className="text-[10px] text-[#71717a]">{alert.timestamp}</span>
                     </div>
                   </div>
                 </div>
@@ -397,14 +397,14 @@ export const SentimentAnalysisView = ({ clientId, theme = 'light' }) => {
                   <span className={`text-lg font-bold ${scoreColor(alert.score)}`}>
                     {alert.score.toFixed(1)}
                   </span>
-                  <span className="text-[10px] text-[#716D5C]">/5</span>
+                  <span className="text-[10px] text-[#71717a]">/5</span>
                 </div>
               </div>
               <div className="ml-11">
                 <span className="inline-block text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full mb-2">
                   {alert.reason}
                 </span>
-                <p className="text-sm text-[#716D5C] italic leading-relaxed">{alert.excerpt}</p>
+                <p className="text-sm text-[#71717a] italic leading-relaxed">{alert.excerpt}</p>
               </div>
             </motion.div>
           ))}

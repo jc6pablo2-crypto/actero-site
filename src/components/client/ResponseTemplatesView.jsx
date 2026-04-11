@@ -245,7 +245,7 @@ export const ResponseTemplatesView = ({ clientId, theme = 'light' }) => {
                       </span>
                     )}
                     {tpl.category && (
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#f0f0f0] text-[#6b7280] border border-[#ebebeb]">
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#f0f0f0] text-[#71717a] border border-[#ebebeb]">
                         {tpl.category}
                       </span>
                     )}
@@ -256,7 +256,7 @@ export const ResponseTemplatesView = ({ clientId, theme = 'light' }) => {
                   </div>
                 </div>
               </div>
-              <p className="text-[12px] text-[#6b7280] line-clamp-3 whitespace-pre-wrap mb-4">{tpl.body}</p>
+              <p className="text-[12px] text-[#71717a] line-clamp-3 whitespace-pre-wrap mb-4">{tpl.body}</p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => openEdit(tpl)}

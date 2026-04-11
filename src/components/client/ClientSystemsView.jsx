@@ -15,7 +15,7 @@ const CATEGORY_CONFIG = {
   metrics: { label: 'Métriques', color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', icon: '📊' },
   prospection: { label: 'Prospection', color: 'bg-pink-500/10 text-pink-400 border-pink-500/20', icon: '📧' },
   immobilier: { label: 'Immobilier', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', icon: '🏠' },
-  autre: { label: 'Autre', color: 'bg-gray-500/10 text-[#716D5C] border-gray-500/20', icon: '⚡' },
+  autre: { label: 'Autre', color: 'bg-gray-500/10 text-[#71717a] border-gray-500/20', icon: '⚡' },
 }
 
 const toggleWorkflow = async ({ workflowId, active }) => {
@@ -53,13 +53,13 @@ const ConfirmDialog = ({ isOpen, onConfirm, onCancel, workflowName }) => (
             <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
               <AlertTriangle className="w-5 h-5 text-amber-400" />
             </div>
-            <h3 className="text-[#262626] font-bold text-sm">Mettre en pause ?</h3>
+            <h3 className="text-[#1a1a1a] font-bold text-sm">Mettre en pause ?</h3>
           </div>
-          <p className="text-xs text-[#716D5C] mb-5">
-            Vous allez mettre en pause <span className="text-[#262626] font-medium">{workflowName}</span>. L'automation ne traitera plus de données tant qu'elle sera en pause.
+          <p className="text-xs text-[#71717a] mb-5">
+            Vous allez mettre en pause <span className="text-[#1a1a1a] font-medium">{workflowName}</span>. L'automation ne traitera plus de données tant qu'elle sera en pause.
           </p>
           <div className="flex gap-2">
-            <button onClick={onCancel} className="flex-1 px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 text-[#716D5C] text-xs font-medium hover:bg-gray-50 transition-all">Annuler</button>
+            <button onClick={onCancel} className="flex-1 px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 text-[#71717a] text-xs font-medium hover:bg-gray-50 transition-all">Annuler</button>
             <button onClick={onConfirm} className="flex-1 px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium hover:bg-amber-500/20 transition-all">Mettre en pause</button>
           </div>
         </motion.div>
@@ -182,8 +182,8 @@ export const ClientSystemsView = ({ clientId, clientName, theme }) => {
     return (
       <div className="text-center py-20">
         <Zap className="w-12 h-12 text-gray-700 mx-auto mb-4" />
-        <h3 className="text-lg font-bold text-[#262626] mb-2">Aucune automation configurée</h3>
-        <p className="text-sm text-[#716D5C] max-w-md mx-auto">
+        <h3 className="text-lg font-bold text-[#1a1a1a] mb-2">Aucune automation configurée</h3>
+        <p className="text-sm text-[#71717a] max-w-md mx-auto">
           Vos automations apparaîtront ici une fois déployées par l'équipe Actero.
           Contactez-nous via l'onglet Support pour activer vos workflows.
         </p>
@@ -202,15 +202,15 @@ export const ClientSystemsView = ({ clientId, clientName, theme }) => {
         </div>
         {pausedCount > 0 && (
           <div className="flex items-center gap-2 px-4 py-2 bg-gray-500/10 border border-gray-500/20 rounded-xl">
-            <Pause className="w-4 h-4 text-[#716D5C]" />
-            <span className="text-sm font-bold text-[#716D5C]">{pausedCount}</span>
-            <span className="text-xs text-[#716D5C]/70">en pause</span>
+            <Pause className="w-4 h-4 text-[#71717a]" />
+            <span className="text-sm font-bold text-[#71717a]">{pausedCount}</span>
+            <span className="text-xs text-[#71717a]/70">en pause</span>
           </div>
         )}
         <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-100 rounded-xl">
-          <Activity className="w-4 h-4 text-[#716D5C]" />
-          <span className="text-sm font-bold text-[#262626]">{workflows.length}</span>
-          <span className="text-xs text-[#716D5C]">total</span>
+          <Activity className="w-4 h-4 text-[#71717a]" />
+          <span className="text-sm font-bold text-[#1a1a1a]">{workflows.length}</span>
+          <span className="text-xs text-[#71717a]">total</span>
         </div>
       </div>
 
@@ -240,7 +240,7 @@ export const ClientSystemsView = ({ clientId, clientName, theme }) => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="text-[#262626] font-semibold text-sm truncate">{wf.displayName}</h3>
+                      <h3 className="text-[#1a1a1a] font-semibold text-sm truncate">{wf.displayName}</h3>
                       <span className={`px-2 py-0.5 rounded-md border text-[9px] font-medium ${catConfig.color}`}>
                         {catConfig.label}
                       </span>
@@ -248,12 +248,12 @@ export const ClientSystemsView = ({ clientId, clientName, theme }) => {
                     <div className="flex items-center gap-3 mt-1.5">
                       <div className="flex items-center gap-1.5">
                         <div className={`w-2 h-2 rounded-full ${wf.active ? 'bg-emerald-400 animate-pulse' : 'bg-gray-600'}`} />
-                        <span className={`text-xs font-medium ${wf.active ? 'text-emerald-400' : 'text-[#716D5C]'}`}>
+                        <span className={`text-xs font-medium ${wf.active ? 'text-emerald-400' : 'text-[#71717a]'}`}>
                           {wf.active ? 'Active' : 'En pause'}
                         </span>
                       </div>
                       <span className="text-gray-700">·</span>
-                      <div className="flex items-center gap-1 text-[#716D5C]">
+                      <div className="flex items-center gap-1 text-[#71717a]">
                         <Clock className="w-3 h-3" />
                         <span className="text-[11px]">{formatLastExecution(wf.lastExecution?.startedAt || wf.updatedAt)}</span>
                       </div>
@@ -261,7 +261,7 @@ export const ClientSystemsView = ({ clientId, clientName, theme }) => {
                         <>
                           <span className="text-gray-700">·</span>
                           <div className="flex items-center gap-1">
-                            <ShieldCheck className="w-3 h-3 text-[#716D5C]" />
+                            <ShieldCheck className="w-3 h-3 text-[#71717a]" />
                             <span className={`text-[11px] font-mono font-medium ${
                               health >= 90 ? 'text-emerald-400' : health >= 70 ? 'text-amber-400' : 'text-red-400'
                             }`}>{health}%</span>
@@ -272,8 +272,8 @@ export const ClientSystemsView = ({ clientId, clientName, theme }) => {
                         <>
                           <span className="text-gray-700">·</span>
                           <div className="flex items-center gap-1">
-                            <BarChart3 className="w-3 h-3 text-[#716D5C]" />
-                            <span className="text-[11px] text-[#716D5C]">{wf.recentTotal} exéc.</span>
+                            <BarChart3 className="w-3 h-3 text-[#71717a]" />
+                            <span className="text-[11px] text-[#71717a]">{wf.recentTotal} exéc.</span>
                           </div>
                         </>
                       )}
@@ -295,11 +295,11 @@ export const ClientSystemsView = ({ clientId, clientName, theme }) => {
                     className="w-5 h-5 rounded-full bg-white shadow-md flex items-center justify-center"
                   >
                     {isToggling ? (
-                      <Loader2 className="w-3 h-3 text-[#716D5C] animate-spin" />
+                      <Loader2 className="w-3 h-3 text-[#71717a] animate-spin" />
                     ) : wf.active ? (
                       <Play className="w-2.5 h-2.5 text-emerald-600" />
                     ) : (
-                      <Pause className="w-2.5 h-2.5 text-[#716D5C]" />
+                      <Pause className="w-2.5 h-2.5 text-[#71717a]" />
                     )}
                   </motion.div>
                 </button>

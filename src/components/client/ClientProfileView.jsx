@@ -97,8 +97,8 @@ const NotificationPreferences = ({ clientId, isLight }) => {
             <Bell className="w-5 h-5" />
           </div>
           <div>
-            <h3 className={`text-lg font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>Notifications</h3>
-            <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>Configurez les emails que vous recevez</p>
+            <h3 className={`text-lg font-bold ${isLight ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]'}`}>Notifications</h3>
+            <p className={`text-xs ${isLight ? 'text-[#71717a]' : 'text-[#71717a]'}`}>Configurez les emails que vous recevez</p>
           </div>
         </div>
         {notifStatus === 'success' && (
@@ -110,21 +110,21 @@ const NotificationPreferences = ({ clientId, isLight }) => {
 
       {prefsLoading ? (
         <div className="flex justify-center py-4">
-          <Loader2 className="w-5 h-5 animate-spin text-[#716D5C]" />
+          <Loader2 className="w-5 h-5 animate-spin text-[#71717a]" />
         </div>
       ) : (
         <div className="space-y-6">
           {NOTIFICATION_TOGGLES.map((group) => (
             <div key={group.section}>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#716D5C] mb-3">{group.section}</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#71717a] mb-3">{group.section}</p>
               <div className="space-y-3">
                 {group.items.map((toggle) => {
                   const isOn = prefs ? (prefs[toggle.key] ?? toggle.defaultVal) : toggle.defaultVal
                   return (
                     <div key={toggle.key} className="flex items-center justify-between">
                       <div className="flex-1 mr-4">
-                        <p className="text-sm font-medium text-[#262626]">{toggle.label}</p>
-                        <p className="text-xs mt-0.5 text-[#716D5C]">{toggle.desc}</p>
+                        <p className="text-sm font-medium text-[#1a1a1a]">{toggle.label}</p>
+                        <p className="text-xs mt-0.5 text-[#71717a]">{toggle.desc}</p>
                       </div>
                       <button
                         onClick={() => updatePrefMutation.mutate({ key: toggle.key, value: !isOn })}
@@ -143,7 +143,7 @@ const NotificationPreferences = ({ clientId, isLight }) => {
           {/* Preferred hour */}
           <div className="flex items-center justify-between pt-2 border-t border-gray-100">
             <div className="flex-1 mr-4">
-              <p className={`text-sm font-medium ${isLight ? 'text-slate-700' : 'text-[#716D5C]'}`}>
+              <p className={`text-sm font-medium ${isLight ? 'text-slate-700' : 'text-[#71717a]'}`}>
                 <ClockIcon className="w-3 h-3 inline mr-1" /> Heure d&apos;envoi preferee
               </p>
             </div>
@@ -153,7 +153,7 @@ const NotificationPreferences = ({ clientId, isLight }) => {
               className={`px-3 py-1.5 rounded-lg text-sm font-medium outline-none ${
                 isLight
                   ? 'bg-[#F9F7F1] border border-gray-200 text-slate-700'
-                  : 'bg-gray-50 border border-gray-200 text-[#262626]'
+                  : 'bg-gray-50 border border-gray-200 text-[#1a1a1a]'
               }`}
             >
               {HOURS.map(h => (
@@ -309,17 +309,17 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
 
   const inputClass = `w-full px-4 py-3 rounded-xl text-sm font-medium outline-none transition-all ${
     isLight
-      ? 'bg-[#F9F7F1] border border-gray-200 text-[#262626] focus:border-blue-400 focus:ring-2 focus:ring-blue-100'
-      : 'bg-gray-50 border border-gray-200 text-[#262626] focus:border-gray-400 focus:ring-2 focus:ring-white/5'
+      ? 'bg-[#F9F7F1] border border-gray-200 text-[#1a1a1a] focus:border-blue-400 focus:ring-2 focus:ring-blue-100'
+      : 'bg-gray-50 border border-gray-200 text-[#1a1a1a] focus:border-gray-400 focus:ring-2 focus:ring-white/5'
   }`
 
-  const labelClass = `block text-xs font-bold uppercase tracking-wider mb-2 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`
+  const labelClass = `block text-xs font-bold uppercase tracking-wider mb-2 ${isLight ? 'text-[#71717a]' : 'text-[#71717a]'}`
 
   return (
     <div className="max-w-2xl mx-auto space-y-8 animate-fade-in-up">
       <div>
-        <h2 className={`text-2xl font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>Mon profil</h2>
-        <p className={`text-sm mt-1 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>Gérez les informations de votre compte</p>
+        <h2 className={`text-2xl font-bold ${isLight ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]'}`}>Mon profil</h2>
+        <p className={`text-sm mt-1 ${isLight ? 'text-[#71717a]' : 'text-[#71717a]'}`}>Gérez les informations de votre compte</p>
       </div>
 
       {/* Account info */}
@@ -329,10 +329,10 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
         className={`rounded-2xl border p-6 space-y-5 ${isLight ? 'bg-white border-gray-200' : 'bg-white border-gray-100 shadow-sm'}`}
       >
         <div className="flex items-center gap-3 mb-2">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isLight ? 'bg-[#003725]/10 text-[#003725]' : 'bg-gray-50 text-[#262626]'}`}>
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isLight ? 'bg-[#003725]/10 text-[#003725]' : 'bg-gray-50 text-[#1a1a1a]'}`}>
             <User className="w-5 h-5" />
           </div>
-          <h3 className={`text-lg font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>Informations générales</h3>
+          <h3 className={`text-lg font-bold ${isLight ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]'}`}>Informations générales</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -366,7 +366,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
             <label className={labelClass}>
               <Mail className="w-3 h-3 inline mr-1" /> Email du compte
             </label>
-            <div className={`px-4 py-3 rounded-xl text-sm ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-gray-50 text-[#716D5C]'}`}>
+            <div className={`px-4 py-3 rounded-xl text-sm ${isLight ? 'bg-gray-100 text-[#71717a]' : 'bg-gray-50 text-[#71717a]'}`}>
               {session?.user?.email || '—'}
             </div>
           </div>
@@ -376,7 +376,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
                 ? <><Building2 className="w-3 h-3 inline mr-1" /> Type</>
                 : <><ShoppingBag className="w-3 h-3 inline mr-1" /> Type</>}
             </label>
-            <div className={`px-4 py-3 rounded-xl text-sm capitalize ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-gray-50 text-[#716D5C]'}`}>
+            <div className={`px-4 py-3 rounded-xl text-sm capitalize ${isLight ? 'bg-gray-100 text-[#71717a]' : 'bg-gray-50 text-[#71717a]'}`}>
               {client?.client_type || 'ecommerce'}
             </div>
           </div>
@@ -386,7 +386,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
           <label className={labelClass}>
             <Calendar className="w-3 h-3 inline mr-1" /> Membre depuis
           </label>
-          <div className={`px-4 py-3 rounded-xl text-sm ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-gray-50 text-[#716D5C]'}`}>
+          <div className={`px-4 py-3 rounded-xl text-sm ${isLight ? 'bg-gray-100 text-[#71717a]' : 'bg-gray-50 text-[#71717a]'}`}>
             {client?.created_at ? new Date(client.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'}
           </div>
         </div>
@@ -410,7 +410,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
               isLight
                 ? 'bg-blue-600 text-white hover:bg-blue-700'
-                : 'bg-white text-[#262626] hover:bg-gray-100'
+                : 'bg-white text-[#1a1a1a] hover:bg-gray-100'
             } disabled:opacity-50`}
           >
             <Save className="w-4 h-4" /> Enregistrer
@@ -430,16 +430,16 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
             <CreditCard className="w-5 h-5" />
           </div>
           <div>
-            <h3 className={`text-lg font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>Abonnement</h3>
-            <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>Gérez votre abonnement, moyen de paiement et factures</p>
+            <h3 className={`text-lg font-bold ${isLight ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]'}`}>Abonnement</h3>
+            <p className={`text-xs ${isLight ? 'text-[#71717a]' : 'text-[#71717a]'}`}>Gérez votre abonnement, moyen de paiement et factures</p>
           </div>
         </div>
 
         <div className={`rounded-xl p-4 ${isLight ? 'bg-[#F9F7F1] border border-gray-200' : 'bg-gray-50 border border-gray-100'}`}>
           <div className="flex items-center justify-between">
             <div>
-              <p className={`text-sm font-medium ${isLight ? 'text-slate-700' : 'text-[#716D5C]'}`}>Portail client Stripe</p>
-              <p className={`text-xs mt-1 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
+              <p className={`text-sm font-medium ${isLight ? 'text-slate-700' : 'text-[#71717a]'}`}>Portail client Stripe</p>
+              <p className={`text-xs mt-1 ${isLight ? 'text-[#71717a]' : 'text-[#71717a]'}`}>
                 Consultez vos factures, mettez à jour votre carte bancaire ou modifiez votre abonnement.
               </p>
             </div>
@@ -460,10 +460,10 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
         className={`rounded-2xl border p-6 space-y-5 ${isLight ? 'bg-white border-gray-200' : 'bg-white border-gray-100 shadow-sm'}`}
       >
         <div className="flex items-center gap-3 mb-2">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isLight ? 'bg-amber-50 text-amber-600' : 'bg-gray-50 text-[#262626]'}`}>
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isLight ? 'bg-amber-50 text-amber-600' : 'bg-gray-50 text-[#1a1a1a]'}`}>
             <Shield className="w-5 h-5" />
           </div>
-          <h3 className={`text-lg font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>Sécurité</h3>
+          <h3 className={`text-lg font-bold ${isLight ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]'}`}>Sécurité</h3>
         </div>
 
         <div className="space-y-4">
@@ -521,8 +521,8 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
             disabled={!passwordForm.new || !passwordForm.confirm}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all ${
               isLight
-                ? 'bg-[#F9F7F1] text-[#262626] hover:bg-gray-50'
-                : 'bg-gray-50 text-[#262626] hover:bg-gray-100 border border-gray-200'
+                ? 'bg-[#F9F7F1] text-[#1a1a1a] hover:bg-gray-50'
+                : 'bg-gray-50 text-[#1a1a1a] hover:bg-gray-100 border border-gray-200'
             } disabled:opacity-30`}
           >
             <Lock className="w-4 h-4" /> Changer le mot de passe

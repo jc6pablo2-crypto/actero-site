@@ -3,89 +3,49 @@ import { useQuery } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
-  ClipboardList,
-  BrainCircuit,
-  Database,
-  Activity,
-  Lightbulb,
-  Download,
-  Plus,
   FileText,
   AlertCircle,
-  Clock,
-  DollarSign,
-  TerminalSquare,
-  ArrowUpRight,
-  ArrowRight,
   Sparkles,
   Menu,
-  UserCheck,
-  Users,
-  Phone,
-  CalendarCheck,
-  ShoppingCart,
-  Mail,
-  Ticket,
-  User,
   MessageSquare,
   MessageCircle,
-  Gift,
   Plug,
-  BookOpen,
   AlertTriangle,
-  Shield,
-  Mic,
-  Network,
-  Heart,
-  Volume2,
-  Handshake,
-  ShieldCheck,
   Store,
-  Package,
+  Bot,
+  TrendingUp,
+  BarChart3,
+  Clock,
+  Settings,
+  CreditCard,
+  User,
+  Inbox,
+  Zap,
+  ArrowRight,
+  CheckCircle2,
+  ShoppingBag,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
 import { Sidebar } from '../components/layout/Sidebar'
-import { MetricCard } from '../components/dashboard/MetricCard'
 import { ActivityChart } from '../components/dashboard/ActivityChart'
-import { ROIGlowChart } from '../components/dashboard/ROIGlowChart'
-import { HealthScoreIndicator, HealthScoreWidget } from '../components/dashboard/HealthScore'
-import { MilestoneBadge } from '../components/dashboard/MilestoneBadge'
-import { AnimatedCounter } from '../components/ui/animated-counter'
-import { SkeletonRow } from '../components/ui/skeleton-row'
-import { IntelligenceView } from '../components/dashboard/IntelligenceView'
 import { ActivityView, useLiveActivityFeed, formatEvent, formatRelativeTime } from '../components/dashboard/ActivityView'
-import { SupportTicketsView } from '../components/dashboard/SupportTicketsView'
 import { ClientProfileView } from '../components/client/ClientProfileView'
 import { ClientCopilotBubble } from '../components/client/ClientCopilotBubble'
 import { OnboardingConcierge } from '../components/client/OnboardingConcierge'
-import { ClientConversationsView } from '../components/client/ClientConversationsView'
-import { ClientSystemsView } from '../components/client/ClientSystemsView'
 import { ClientReferralView } from '../components/client/ClientReferralView'
 import { PartnerDashboardView } from '../components/client/PartnerDashboardView'
 import { ClientKnowledgeBaseView } from '../components/client/ClientKnowledgeBaseView'
 import { ClientIntegrationsView } from '../components/client/ClientIntegrationsView'
-import { OnboardingChecklist } from '../components/client/OnboardingChecklist'
-import { AutoDiagnostic } from '../components/client/AutoDiagnostic'
 import { GuardrailsEditor } from '../components/client/GuardrailsEditor'
 import { PromptEditor } from '../components/client/PromptEditor'
 import { ConversationSimulator } from '../components/client/ConversationSimulator'
 import { TeamManager, canAccessTab } from '../components/client/TeamManager'
 import { ClientEscalationsView } from '../components/client/ClientEscalationsView'
 import { ResponseTemplatesView } from '../components/client/ResponseTemplatesView'
-import { ClientSatisfactionScore, SatisfactionKPI } from '../components/client/ClientSatisfactionScore'
-import { VoiceAgentView } from '../components/client/VoiceAgentView'
 import { VoiceCallsView } from '../components/client/VoiceCallsView'
-import { MultiAgentView } from '../components/client/MultiAgentView'
-import { PromptInjectionView } from '../components/client/PromptInjectionView'
-import { ClientMemoryView } from '../components/client/ClientMemoryView'
-import { SentimentAnalysisView } from '../components/client/SentimentAnalysisView'
-import { VoiceStudioView } from '../components/client/VoiceStudioView'
-import { SupplierNegotiationView } from '../components/client/SupplierNegotiationView'
-import { VoiceReportView } from '../components/client/VoiceReportView'
 import { NotificationCenterView } from '../components/client/NotificationCenterView'
 import { AgentImprovementWidget } from '../components/client/AgentImprovementWidget'
-import { ChannelsView } from '../components/client/ChannelsView'
 import { PlaybooksView } from '../components/client/PlaybooksView'
 import { ClientBillingView } from '../components/client/ClientBillingView'
 import { HelpCenterView } from '../components/client/HelpCenterView'
@@ -93,7 +53,6 @@ import { ROISettingsView } from '../components/client/ROISettingsView'
 import { WeeklySummary } from '../components/client/WeeklySummary'
 import { PeakHoursChart } from '../components/client/PeakHoursChart'
 import { SetupChecklist } from '../components/client/SetupChecklist'
-import { QuickTestButton } from '../components/client/QuickTestButton'
 import { MyMarketplaceTemplatesView } from '../components/client/MyMarketplaceTemplatesView'
 import { HelpTooltip } from '../components/ui/HelpTooltip'
 
@@ -145,9 +104,9 @@ const LiveActivityWidget = ({ supabase, setActiveTab, isLight }) => {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
             <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-[#0F5F35] animate-pulse' : 'bg-red-500'}`} />
-            <h3 className="font-bold text-[#262626] text-sm">Activite recente</h3>
+            <h3 className="font-bold text-[#1a1a1a] text-sm">Activite recente</h3>
           </div>
-          <span className="text-[10px] font-bold text-[#716D5C] uppercase tracking-widest px-2 py-0.5 bg-[#F9F7F1] rounded-full">
+          <span className="text-[10px] font-bold text-[#71717a] uppercase tracking-widest px-2 py-0.5 bg-[#F9F7F1] rounded-full">
             LIVE
           </span>
         </div>
@@ -160,8 +119,12 @@ const LiveActivityWidget = ({ supabase, setActiveTab, isLight }) => {
       </div>
       <div className="divide-y divide-gray-100">
         {recent.length === 0 ? (
-          <div className="px-5 py-8 text-center text-sm text-[#716D5C]">
-            Aucune activite recente. Les evenements apparaitront ici en temps reel.
+          <div className="px-5 py-10 flex flex-col items-center justify-center text-center">
+            <div className="w-10 h-10 rounded-xl bg-[#fafafa] flex items-center justify-center mb-3">
+              <Inbox className="w-5 h-5 text-[#9ca3af]" />
+            </div>
+            <p className="text-[13px] font-medium text-[#1a1a1a]">Aucune activité aujourd'hui</p>
+            <p className="text-[11px] text-[#9ca3af] mt-0.5">C'est calme — votre agent veille en arrière-plan.</p>
           </div>
         ) : (
           recent.map((event, i) => {
@@ -193,10 +156,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   const getTabFromRoute = (route) => {
     if (route === "/client/activity") return "activity";
-    if (route === "/client/systems") return "systems";
     if (route === "/client/knowledge") return "knowledge";
-    if (route === "/client/intelligence") return "intelligence";
-    if (route === "/client/reports") return "reports";
     if (route === "/client/support") return "support";
     if (route === "/client/referral") return "referral";
     if (route === "/client/partner") return "partner";
@@ -207,33 +167,22 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/guardrails") return "guardrails";
     if (route === "/client/escalations") return "escalations";
     if (route === "/client/response-templates") return "response-templates";
-    if (route === "/client/voice-agent") return "voice-agent";
     if (route === "/client/voice-calls") return "voice-calls";
-    if (route === "/client/multi-agent") return "multi-agent";
-    if (route === "/client/prompt-injection") return "prompt-injection";
-    if (route === "/client/client-memory") return "client-memory";
-    if (route === "/client/sentiment") return "sentiment";
-    if (route === "/client/voice-studio") return "voice-studio";
-    if (route === "/client/supplier-negotiation") return "supplier-negotiation";
-    if (route === "/client/voice-report") return "voice-report";
     if (route === "/client/notifications") return "notifications";
-    if (route === "/client/channels") return "channels";
     if (route === "/client/billing") return "billing";
     if (route === "/client/roi") return "roi";
     if (route === "/client/playbooks") return "playbooks";
     if (route === "/client/profile") return "profile";
-    if (route === "/client/my-marketplace") return "my-marketplace";
+    if (route === "/client/marketplace") return "marketplace";
+    if (route === "/client/weekly-summary") return "weekly-summary";
+    if (route === "/client/peak-hours") return "peak-hours";
+    if (route === "/client/account") return "profile";
     return "overview";
   };
 
   const activeTab = getTabFromRoute(currentRoute);
-  
+
   const setActiveTab = (tab) => {
-    // Marketplace: open the public marketplace page in a new tab
-    if (tab === "marketplace") {
-      window.open("/marketplace", "_blank", "noopener,noreferrer");
-      return;
-    }
     const route = tab === "overview" ? "/client" : `/client/${tab}`;
     onNavigate(route);
   };
@@ -335,6 +284,80 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   });
 
   const showShopifyBanner = currentClient?.client_type === 'ecommerce' && shopifyConnected === false;
+
+  // 5c. Setup completion — shared cache with SetupChecklist (same queryKey)
+  const { data: setupCompletion } = useQuery({
+    queryKey: ['setup-checklist', currentClient?.id],
+    queryFn: async () => {
+      const clientId = currentClient.id;
+      const { data: shopify } = await supabase
+        .from('client_shopify_connections')
+        .select('id')
+        .eq('client_id', clientId)
+        .maybeSingle();
+      const { data: smtp } = await supabase
+        .from('client_integrations')
+        .select('id')
+        .eq('client_id', clientId)
+        .eq('provider', 'smtp_imap')
+        .eq('status', 'active')
+        .maybeSingle();
+      const { data: settings } = await supabase
+        .from('client_settings')
+        .select('brand_tone, hourly_cost')
+        .eq('client_id', clientId)
+        .maybeSingle();
+      const { count: runsCount } = await supabase
+        .from('engine_runs_v2')
+        .select('id', { count: 'exact', head: true })
+        .eq('client_id', clientId);
+      const { data: playbook } = await supabase
+        .from('engine_client_playbooks')
+        .select('id, is_active, engine_playbooks!inner(name)')
+        .eq('client_id', clientId)
+        .eq('is_active', true)
+        .eq('engine_playbooks.name', 'sav_ecommerce')
+        .maybeSingle();
+      const { count: conversationsCount } = await supabase
+        .from('ai_conversations')
+        .select('id', { count: 'exact', head: true })
+        .eq('client_id', clientId);
+      return {
+        shopify: !!shopify,
+        email: !!smtp,
+        tone: !!(settings?.brand_tone && settings.brand_tone.trim().length > 0),
+        roi: !!(settings?.hourly_cost && Number(settings.hourly_cost) > 0),
+        tested: (runsCount || 0) > 0,
+        playbook: !!playbook,
+        conversation: (conversationsCount || 0) > 0,
+      };
+    },
+    enabled: !!currentClient?.id,
+    refetchOnWindowFocus: false,
+  });
+
+  const completedSetupSteps = setupCompletion
+    ? Object.values(setupCompletion).filter(Boolean).length
+    : 0;
+  // Setup mode while fewer than 5 steps complete.
+  // During first load (setupCompletion undefined) we assume setup mode for brand-new clients (<3 days old).
+  const isSetupMode = setupCompletion
+    ? completedSetupSteps < 5
+    : !!(currentClient?.created_at && (Date.now() - new Date(currentClient.created_at).getTime()) < 3 * 24 * 60 * 60 * 1000);
+
+  // First name for welcome hero (from auth metadata, fallback to brand_name)
+  const { data: userFirstName } = useQuery({
+    queryKey: ['user-first-name'],
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const meta = session?.user?.user_metadata || {};
+      const full = meta.full_name || meta.name || '';
+      const first = meta.first_name || (full ? full.split(' ')[0] : '');
+      return first || '';
+    },
+    enabled: !!supabase,
+    staleTime: 5 * 60 * 1000,
+  });
 
   // 5b. Fetch client settings + raw events for live ROI computation (single source of truth)
   const { data: liveRoi } = useQuery({
@@ -520,26 +543,51 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   }, [pendingEscalations]);
 
   const sidebarItems = [
-    { id: 'overview', label: 'Accueil', icon: LayoutDashboard },
-    { id: 'activity', label: 'Activite', icon: Activity },
-    { id: 'playbooks', label: 'Automatisations', icon: Sparkles },
-    { id: 'roi', label: 'ROI', icon: Activity },
+    { id: 'overview', label: 'Tableau de bord', icon: LayoutDashboard },
 
-    { type: 'section', label: 'Mon Agent' },
-    { id: 'agent-config', label: 'Mon Agent', icon: MessageCircle },
-    { id: 'simulator', label: 'Tester', icon: Activity },
-    { id: 'escalations', label: 'A traiter', icon: AlertTriangle, badge: urgentEscalationCount > 0 ? urgentEscalationCount : null, badgeColor: 'bg-red-100 text-red-600' },
-    { id: 'voice-calls', label: 'Appels vocaux', icon: Phone },
-    { id: 'response-templates', label: 'Templates', icon: FileText },
-    { id: 'guardrails', label: 'Regles', icon: Shield },
+    {
+      type: 'expandable',
+      label: 'Mon Agent',
+      icon: Bot,
+      defaultOpen: true,
+      children: [
+        { id: 'agent-config', label: 'Mon Agent', icon: MessageCircle },
+        { id: 'playbooks', label: 'Scenarios', icon: Zap },
+        {
+          id: 'escalations',
+          label: 'A traiter',
+          icon: Inbox,
+          badge: urgentEscalationCount > 0 ? urgentEscalationCount : null,
+          badgeColor: 'bg-red-100 text-red-600',
+        },
+        { id: 'response-templates', label: 'Modeles de reponse', icon: FileText },
+      ],
+    },
 
     { type: 'section', label: 'Connexions' },
     { id: 'integrations', label: 'Integrations', icon: Plug },
-    { id: 'knowledge', label: 'Base de savoir', icon: BookOpen },
-
-    { type: 'section', label: 'Parametres' },
     { id: 'marketplace', label: 'Marketplace', icon: Store },
-    { id: 'my-marketplace', label: 'Mes templates', icon: Package },
+
+    {
+      type: 'expandable',
+      label: 'Insights',
+      icon: TrendingUp,
+      children: [
+        { id: 'weekly-summary', label: 'Resume hebdo', icon: BarChart3 },
+        { id: 'roi', label: 'ROI', icon: TrendingUp },
+        { id: 'peak-hours', label: 'Heures de pic', icon: Clock },
+      ],
+    },
+
+    {
+      type: 'expandable',
+      label: 'Parametres',
+      icon: Settings,
+      children: [
+        { id: 'profile', label: 'Compte', icon: User },
+        { id: 'billing', label: 'Facturation', icon: CreditCard },
+      ],
+    },
 
     { id: 'support', label: 'Aide', icon: MessageSquare },
   ];
@@ -575,8 +623,8 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       {/* Mobile Header */}
       <div className={`md:hidden h-16 flex items-center justify-between px-4 sticky top-0 z-50 ${isLight ? "bg-white border-b border-gray-200" : "bg-white border-b border-gray-100"}`}>
         <div className="flex items-center gap-2">
-          <Logo className={`w-6 h-6 ${isLight ? "text-[#003725]" : "text-[#262626]"}`} />
-          <span className={`font-bold text-lg ${isLight ? "text-[#262626]" : "text-[#262626]"}`}>Actero OS</span>
+          <Logo className={`w-6 h-6 ${isLight ? "text-[#003725]" : "text-[#1a1a1a]"}`} />
+          <span className={`font-bold text-lg ${isLight ? "text-[#1a1a1a]" : "text-[#1a1a1a]"}`}>Actero OS</span>
         </div>
         <button
           onClick={() => setIsMobileMenuOpen(true)}
@@ -584,7 +632,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           aria-expanded={isMobileMenuOpen}
           aria-controls="mobile-sidebar"
         >
-          <Menu className={`w-6 h-6 ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`} />
+          <Menu className={`w-6 h-6 ${isLight ? "text-[#71717a]" : "text-[#71717a]"}`} />
         </button>
       </div>
 
@@ -635,11 +683,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         {/* Header — clean, minimal like Instantly */}
         <header className="sticky top-0 z-40 bg-white px-5 md:px-8 h-[48px] flex items-center justify-between border-b border-[#f0f0f0]">
           <h1 className="text-[14px] font-semibold text-[#1a1a1a]">
-            {activeTab === "overview" && "Accueil"}
+            {activeTab === "overview" && "Tableau de bord"}
             {activeTab === "activity" && "Activite"}
-            {activeTab === "systems" && "Systemes"}
             {activeTab === "knowledge" && "Base de savoir"}
-            {activeTab === "intelligence" && "Intelligence"}
             {activeTab === "support" && "Aide"}
             {activeTab === "referral" && "Parrainage"}
             {activeTab === "partner" && "Actero Partners"}
@@ -647,22 +693,18 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "agent-config" && "Mon Agent"}
             {activeTab === "simulator" && "Tester"}
             {activeTab === "team" && "Equipe"}
-            {activeTab === "guardrails" && "Regles"}
+            {activeTab === "guardrails" && "Garde-fous"}
             {activeTab === "escalations" && "A traiter"}
-            {activeTab === "response-templates" && "Templates de reponses"}
-            {activeTab === "voice-agent" && "Appels IA"}
+            {activeTab === "response-templates" && "Modeles de reponse"}
             {activeTab === "voice-calls" && "Appels vocaux"}
-            {activeTab === "multi-agent" && "Multi-Agents"}
-            {activeTab === "prompt-injection" && "Securite IA"}
-            {activeTab === "client-memory" && "Memoire Client"}
-            {activeTab === "sentiment" && "Sentiment"}
-            {activeTab === "voice-studio" && "Voix"}
-            {activeTab === "supplier-negotiation" && "Negociation"}
-            {activeTab === "voice-report" && "Rapports audio"}
             {activeTab === "notifications" && "Notifications"}
-            {activeTab === "channels" && "Mes Canaux"}
-            {activeTab === "playbooks" && "Automatisations"}
-            {activeTab === "my-marketplace" && "Mes templates"}
+            {activeTab === "playbooks" && "Scenarios"}
+            {activeTab === "marketplace" && "Marketplace"}
+            {activeTab === "weekly-summary" && "Resume hebdo"}
+            {activeTab === "peak-hours" && "Heures de pic"}
+            {activeTab === "roi" && "ROI"}
+            {activeTab === "profile" && "Compte"}
+            {activeTab === "billing" && "Facturation"}
           </h1>
           <div className="flex items-center gap-3">
             {urgentEscalationCount > 0 && (
@@ -680,153 +722,305 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "overview" && (
             <div className="max-w-6xl mx-auto">
 
-              {/* ── Onboarding: setup checklist ── */}
-              {currentClient?.id && (
-                <div className="mb-6">
-                  <SetupChecklist clientId={currentClient.id} setActiveTab={setActiveTab} />
-                </div>
-              )}
-
-              {/* ── Weekly summary (one-liner) ── */}
-              <WeeklySummary clientId={currentClient?.id} setActiveTab={setActiveTab} />
-
-              {/* ── Urgent escalation banner (>2h pending) ── */}
-              {urgentEscalationCount > 0 && (
-                <div className="mb-6 rounded-2xl border border-red-200 bg-red-50/70 px-4 py-3 flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
-                      <AlertTriangle className="w-4 h-4 text-red-600" />
+              {isSetupMode ? (
+                // ═══════════════════════ SETUP MODE ═══════════════════════
+                <>
+                  {/* ── Welcome hero ── */}
+                  <div className="mb-6 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] overflow-hidden">
+                    <div className="relative bg-gradient-to-br from-[#0F5F35] via-[#0F5F35] to-[#14764a] px-8 py-10">
+                      <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(circle at 20% 30%, #fff 1px, transparent 1px), radial-gradient(circle at 80% 70%, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+                      <div className="relative">
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-sm mb-4">
+                          <Sparkles className="w-3 h-3 text-white" />
+                          <span className="text-[10px] font-semibold text-white uppercase tracking-wider">Démarrage</span>
+                        </div>
+                        <h2 className="text-[26px] md:text-[32px] font-bold text-white tracking-tight leading-tight">
+                          Bienvenue {userFirstName || currentClient?.brand_name || ''} 👋
+                        </h2>
+                        <p className="text-[14px] text-white/80 mt-2 max-w-xl">
+                          Votre agent IA est presque prêt. Encore quelques étapes pour qu'il commence à répondre à vos clients à votre place.
+                        </p>
+                        {setupCompletion && (
+                          <p className="text-[11px] text-white/70 mt-3 font-medium">
+                            {completedSetupSteps}/7 étapes complétées
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    <p className="text-[13px] text-red-700 font-medium truncate">
-                      {urgentEscalationCount} ticket{urgentEscalationCount > 1 ? 's' : ''} urgent{urgentEscalationCount > 1 ? 's' : ''} — repondez avant la fin de journee
-                    </p>
                   </div>
-                  <button
-                    onClick={() => setActiveTab('escalations')}
-                    className="flex-shrink-0 px-3 py-1.5 rounded-lg bg-red-600 text-white text-[12px] font-semibold hover:bg-red-700 transition-colors"
-                  >
-                    Voir
-                  </button>
-                </div>
-              )}
 
-              {/* ── KPI Row (Instantly-style) ── */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-0 bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] overflow-hidden mb-8">
-                {[
-                  { label: 'Tickets resolus', value: eventCounts.ticket_resolved || 0, var: periodStats?.tasks_executed_var, suffix: '', help: "Nombre de tickets client traités automatiquement par l'agent IA sur la période sélectionnée." },
-                  { label: 'Escalades', value: eventCounts.ticket_escalated || 0, suffix: '', help: "Tickets transmis à votre équipe humaine — lorsque l'agent n'a pas pu répondre avec assez de confiance." },
-                  { label: 'Temps economise', value: Math.round((liveRoi?.hours_saved || 0) * 10) / 10, suffix: 'h', help: 'Heures de travail économisées par votre équipe grâce aux automatisations (calculé en temps réel depuis les tickets résolus).' },
-                  { label: 'ROI genere', value: `${Math.round(liveRoi?.value_saved || 0).toLocaleString('fr-FR')}`, suffix: '€', help: 'Valeur économisée en temps réel : temps économisé × votre coût horaire. Calculé depuis vos paramètres ROI.' },
-                ].map((kpi, i) => (
-                  <div key={i} className={`px-5 py-5 ${i < 3 ? 'border-r border-[#f0f0f0]' : ''}`}>
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <p className="text-[12px] text-[#9ca3af] font-medium">{kpi.label}</p>
-                      {kpi.help && <HelpTooltip text={kpi.help} />}
-                    </div>
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-[28px] font-bold text-[#1a1a1a] tracking-tight tabular-nums leading-none">
-                        {typeof kpi.value === 'number' ? kpi.value.toLocaleString('fr-FR') : kpi.value}
-                      </span>
-                      {kpi.suffix && <span className="text-[16px] font-semibold text-[#1a1a1a]">{kpi.suffix}</span>}
-                    </div>
-                    {kpi.var !== undefined && kpi.var !== 0 && (
-                      <p className={`text-[11px] font-semibold mt-1.5 ${kpi.var > 0 ? 'text-emerald-500' : 'text-red-500'}`}>
-                        {kpi.var > 0 ? '▲' : '▼'} {kpi.var > 0 ? '+' : ''}{kpi.var}%
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* ── Period selector ── */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-[18px] font-semibold text-[#1a1a1a]">Apercu</h3>
-                  <span className="text-[11px] text-[#9ca3af] font-medium bg-[#f5f5f5] px-2 py-0.5 rounded">
-                    {selectedPeriod === 'this_month' ? 'Ce mois' : selectedPeriod === 'last_month' ? 'Mois dernier' : '30 jours'}
-                  </span>
-                </div>
-                <div
-                  role="tablist"
-                  aria-label="Période d'analyse"
-                  className="flex items-center gap-0.5 p-0.5 rounded-lg bg-[#f5f5f5]"
-                >
-                  {[
-                    { id: 'this_month', label: 'Ce mois' },
-                    { id: 'last_month', label: 'Mois dernier' },
-                    { id: 'last_30_days', label: '30 jours' }
-                  ].map((p) => {
-                    const isSelected = selectedPeriod === p.id;
-                    return (
-                      <button
-                        key={p.id}
-                        role="tab"
-                        id={`period-tab-${p.id}`}
-                        aria-selected={isSelected}
-                        aria-controls="period-panel"
-                        tabIndex={isSelected ? 0 : -1}
-                        onClick={() => setSelectedPeriod(p.id)}
-                        className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
-                          isSelected
-                            ? 'bg-white text-[#1a1a1a] shadow-sm'
-                            : 'text-[#9ca3af] hover:text-[#1a1a1a]'
-                        }`}
-                      >
-                        {p.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Escalation alert moved to header */}
-
-              {/* Onboarding removed from homepage */}
-
-              {/* ── Cards row (Instantly-style with shadows) ── */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-                {/* Activity card */}
-                <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <p className="text-[13px] font-semibold text-[#1a1a1a]">Activite recente</p>
+                  {/* ── Primary CTA: Connect Shopify ── */}
+                  {currentClient?.client_type === 'ecommerce' && !setupCompletion?.shopify && (
                     <button
-                      onClick={() => setActiveTab('activity')}
-                      className="text-[12px] font-medium text-[#0F5F35] hover:underline"
+                      onClick={() => setActiveTab('integrations')}
+                      className="w-full mb-6 rounded-2xl bg-[#0F5F35] hover:bg-[#0d5430] transition-colors shadow-[0_1px_3px_rgba(0,0,0,0.08)] px-6 py-5 flex items-center justify-between group"
                     >
-                      Tout voir →
+                      <div className="flex items-center gap-4 min-w-0">
+                        <div className="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
+                          <ShoppingBag className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="text-left min-w-0">
+                          <p className="text-[15px] font-semibold text-white leading-tight">Connecter ma boutique Shopify</p>
+                          <p className="text-[12px] text-white/75 leading-tight mt-1">Première étape pour activer votre agent — prend 2 minutes</p>
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0 w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center group-hover:translate-x-1 transition-transform">
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </div>
                     </button>
-                  </div>
-                  <div className="h-[140px]">
-                    <ActivityChart theme={theme} supabase={supabase} selectedPeriod={selectedPeriod} mini={true} />
-                  </div>
-                </div>
+                  )}
 
-                {/* Live feed card */}
-                <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] overflow-hidden">
-                  <div className="px-6 pt-5 pb-3 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-[#0F5F35] animate-pulse" />
-                      <p className="text-[13px] font-semibold text-[#1a1a1a]">Feed en direct</p>
+                  {/* ── Setup checklist (non dismissible) ── */}
+                  {currentClient?.id && (
+                    <div className="mb-8">
+                      <SetupChecklist clientId={currentClient.id} setActiveTab={setActiveTab} dismissible={false} />
                     </div>
-                    <span className="text-[10px] font-semibold text-[#9ca3af] uppercase tracking-wider bg-[#f5f5f5] px-2 py-0.5 rounded">
-                      Live
-                    </span>
+                  )}
+
+                  {/* ── "Voici ce qui vous attend" preview cards ── */}
+                  <div className="mb-4">
+                    <h3 className="text-[15px] font-semibold text-[#1a1a1a] mb-1">Voici ce qui vous attend</h3>
+                    <p className="text-[12px] text-[#9ca3af]">Une fois votre agent configuré, vous pourrez accéder à ces fonctionnalités.</p>
                   </div>
-                  <LiveActivityWidget supabase={supabase} setActiveTab={setActiveTab} isLight={true} compact={true} />
-                </div>
-              </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    {[
+                      {
+                        icon: Bot,
+                        title: 'Mon Agent',
+                        desc: 'Personnalisez la personnalité, le ton et les réponses de votre agent IA.',
+                        tab: 'agent-config',
+                        color: 'bg-emerald-50',
+                        iconColor: 'text-[#0F5F35]',
+                      },
+                      {
+                        icon: Store,
+                        title: 'Marketplace',
+                        desc: 'Installez des playbooks et templates prêts à l\'emploi pour votre e-commerce.',
+                        tab: 'marketplace',
+                        color: 'bg-purple-50',
+                        iconColor: 'text-purple-600',
+                      },
+                      {
+                        icon: TrendingUp,
+                        title: 'ROI & Analytics',
+                        desc: 'Suivez le temps gagné et les économies réalisées par votre agent en temps réel.',
+                        tab: 'roi',
+                        color: 'bg-blue-50',
+                        iconColor: 'text-blue-600',
+                      },
+                    ].map((f, i) => {
+                      const Icon = f.icon;
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => setActiveTab(f.tab)}
+                          className="text-left bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] p-5 hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:border-[#e5e5e5] transition-all group"
+                        >
+                          <div className={`w-10 h-10 rounded-xl ${f.color} flex items-center justify-center mb-3`}>
+                            <Icon className={`w-5 h-5 ${f.iconColor}`} />
+                          </div>
+                          <p className="text-[14px] font-semibold text-[#1a1a1a] mb-1">{f.title}</p>
+                          <p className="text-[12px] text-[#9ca3af] leading-relaxed">{f.desc}</p>
+                          <div className="mt-3 flex items-center gap-1 text-[11px] font-medium text-[#0F5F35] opacity-0 group-hover:opacity-100 transition-opacity">
+                            Découvrir <ArrowRight className="w-3 h-3" />
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                // ═══════════════════════ OPERATION MODE ═══════════════════════
+                <>
+                  {/* ── Shopify connection banner (if e-commerce + not connected) ── */}
+                  {showShopifyBanner && (
+                    <button
+                      onClick={() => setActiveTab('integrations')}
+                      className="w-full mb-5 rounded-2xl border border-amber-200 bg-amber-50/70 px-4 py-3 flex items-center justify-between gap-3 hover:bg-amber-50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+                          <AlertTriangle className="w-4 h-4 text-amber-700" />
+                        </div>
+                        <p className="text-[13px] text-amber-800 font-medium truncate text-left">
+                          Connectez Shopify pour activer toutes les fonctionnalités
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0 flex items-center gap-1 text-[12px] font-semibold text-amber-800">
+                        Connecter <ArrowRight className="w-3.5 h-3.5" />
+                      </div>
+                    </button>
+                  )}
 
-              {/* ── Peak hours ── */}
-              <div className="mb-8">
-                <PeakHoursChart clientId={currentClient?.id} />
-              </div>
+                  {/* ── Weekly summary (one-liner) ── */}
+                  <WeeklySummary clientId={currentClient?.id} setActiveTab={setActiveTab} />
 
-              {/* ── Suggestions ── */}
-              <AgentImprovementWidget clientId={currentClient?.id} theme={theme} />
+                  {/* ── Urgent escalation banner (>2h pending) ── */}
+                  {urgentEscalationCount > 0 && (
+                    <div className="mb-6 rounded-2xl border border-red-200 bg-red-50/70 px-4 py-3 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center flex-shrink-0">
+                          <AlertTriangle className="w-4 h-4 text-red-600" />
+                        </div>
+                        <p className="text-[13px] text-red-700 font-medium truncate">
+                          {urgentEscalationCount} ticket{urgentEscalationCount > 1 ? 's' : ''} urgent{urgentEscalationCount > 1 ? 's' : ''} — répondez avant la fin de journée
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setActiveTab('escalations')}
+                        className="flex-shrink-0 px-3 py-1.5 rounded-lg bg-red-600 text-white text-[12px] font-semibold hover:bg-red-700 transition-colors"
+                      >
+                        Voir
+                      </button>
+                    </div>
+                  )}
+
+                  {/* ── Setup checklist (dismissible, shows only if not fully done) ── */}
+                  {currentClient?.id && completedSetupSteps < 7 && (
+                    <div className="mb-6">
+                      <SetupChecklist clientId={currentClient.id} setActiveTab={setActiveTab} />
+                    </div>
+                  )}
+
+                  {/* ── KPI Row (Instantly-style) ── */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-0 bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] overflow-hidden mb-8">
+                    {[
+                      {
+                        label: 'Demandes traitées automatiquement',
+                        sublabel: 'vs période précédente',
+                        value: eventCounts.ticket_resolved || 0,
+                        var: periodStats?.tasks_executed_var,
+                        suffix: '',
+                      },
+                      {
+                        label: 'À traiter manuellement',
+                        sublabel: 'en attente de votre équipe',
+                        value: eventCounts.ticket_escalated || 0,
+                        suffix: '',
+                      },
+                      {
+                        label: 'Temps gagné',
+                        sublabel: 'heures économisées sur la période',
+                        value: Math.round((liveRoi?.hours_saved || 0) * 10) / 10,
+                        suffix: 'h',
+                      },
+                      {
+                        label: 'Économies réalisées',
+                        sublabel: 'sur la période sélectionnée',
+                        value: `${Math.round(liveRoi?.value_saved || 0).toLocaleString('fr-FR')}`,
+                        suffix: '€',
+                      },
+                    ].map((kpi, i) => (
+                      <div key={i} className={`px-5 py-5 ${i < 3 ? 'border-r border-[#f0f0f0]' : ''}`}>
+                        <p className="text-[12px] text-[#1a1a1a] font-medium leading-tight mb-2 line-clamp-1">{kpi.label}</p>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-[28px] font-bold text-[#1a1a1a] tracking-tight tabular-nums leading-none">
+                            {typeof kpi.value === 'number' ? kpi.value.toLocaleString('fr-FR') : kpi.value}
+                          </span>
+                          {kpi.suffix && <span className="text-[16px] font-semibold text-[#1a1a1a]">{kpi.suffix}</span>}
+                        </div>
+                        <p className="text-[11px] text-[#9ca3af] mt-1.5 leading-tight">{kpi.sublabel}</p>
+                        {kpi.var !== undefined && kpi.var !== 0 && (
+                          <p className={`text-[11px] font-semibold mt-0.5 ${kpi.var > 0 ? 'text-emerald-500' : 'text-red-500'}`}>
+                            {kpi.var > 0 ? '▲' : '▼'} {kpi.var > 0 ? '+' : ''}{kpi.var}%
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* ── Period selector ── */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-[18px] font-semibold text-[#1a1a1a]">Aperçu</h3>
+                      <span className="text-[11px] text-[#9ca3af] font-medium bg-[#f5f5f5] px-2 py-0.5 rounded">
+                        {selectedPeriod === 'this_month' ? 'Ce mois' : selectedPeriod === 'last_month' ? 'Mois dernier' : '30 jours'}
+                      </span>
+                    </div>
+                    <div
+                      role="tablist"
+                      aria-label="Période d'analyse"
+                      className="flex items-center gap-0.5 p-0.5 rounded-lg bg-[#f5f5f5]"
+                    >
+                      {[
+                        { id: 'this_month', label: 'Ce mois' },
+                        { id: 'last_month', label: 'Mois dernier' },
+                        { id: 'last_30_days', label: '30 jours' }
+                      ].map((p) => {
+                        const isSelected = selectedPeriod === p.id;
+                        return (
+                          <button
+                            key={p.id}
+                            role="tab"
+                            id={`period-tab-${p.id}`}
+                            aria-selected={isSelected}
+                            aria-controls="period-panel"
+                            tabIndex={isSelected ? 0 : -1}
+                            onClick={() => setSelectedPeriod(p.id)}
+                            className={`px-3 py-1.5 rounded-md text-[12px] font-medium transition-all ${
+                              isSelected
+                                ? 'bg-white text-[#1a1a1a] shadow-sm'
+                                : 'text-[#9ca3af] hover:text-[#1a1a1a]'
+                            }`}
+                          >
+                            {p.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* ── Cards row ── */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+                    {/* Live feed card */}
+                    <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] overflow-hidden">
+                      <div className="px-6 pt-5 pb-1">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-[#0F5F35] animate-pulse" />
+                            <p className="text-[13px] font-semibold text-[#1a1a1a]">Feed en direct</p>
+                          </div>
+                          <span className="text-[10px] font-semibold text-[#9ca3af] uppercase tracking-wider bg-[#f5f5f5] px-2 py-0.5 rounded">
+                            Live
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-[#9ca3af] mt-1">Les derniers événements de votre agent en temps réel.</p>
+                      </div>
+                      <LiveActivityWidget supabase={supabase} setActiveTab={setActiveTab} isLight={true} compact={true} />
+                    </div>
+
+                    {/* Activity chart card */}
+                    <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] p-6">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[13px] font-semibold text-[#1a1a1a]">Activité récente</p>
+                        <button
+                          onClick={() => setActiveTab('activity')}
+                          className="text-[12px] font-medium text-[#0F5F35] hover:underline"
+                        >
+                          Tout voir →
+                        </button>
+                      </div>
+                      <p className="text-[11px] text-[#9ca3af] mt-1 mb-3">Volume de demandes traitées sur la période.</p>
+                      <div className="h-[140px]">
+                        <ActivityChart theme={theme} supabase={supabase} selectedPeriod={selectedPeriod} mini={true} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ── Peak hours ── */}
+                  <div className="mb-8">
+                    <div className="mb-2">
+                      <p className="text-[11px] text-[#9ca3af]">Identifiez les moments de la journée où votre agent est le plus sollicité.</p>
+                    </div>
+                    <PeakHoursChart clientId={currentClient?.id} />
+                  </div>
+
+                  {/* ── Suggestions ── */}
+                  <AgentImprovementWidget clientId={currentClient?.id} theme={theme} />
+                </>
+              )}
             </div>
           )}
-
-          {activeTab === "intelligence" && <IntelligenceView supabase={supabase} setActiveTab={setActiveTab} theme={theme} />}
 
           {activeTab === "activity" && <ActivityView supabase={supabase} theme={theme} />}
 
@@ -849,14 +1043,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "partner" && (
             <PartnerDashboardView theme={theme} />
-          )}
-
-          {activeTab === "systems" && (
-            <ClientSystemsView
-              clientId={currentClient?.id}
-              clientName={currentClient?.brand_name}
-              theme={theme}
-            />
           )}
 
           {activeTab === "knowledge" && (
@@ -915,56 +1101,32 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             />
           )}
 
-          {activeTab === "voice-agent" && (
-            <VoiceAgentView clientId={currentClient?.id} theme={theme} />
-          )}
-
           {activeTab === "voice-calls" && (
             <VoiceCallsView clientId={currentClient?.id} theme={theme} />
-          )}
-
-          {activeTab === "multi-agent" && (
-            <MultiAgentView clientId={currentClient?.id} theme={theme} />
-          )}
-
-          {activeTab === "prompt-injection" && (
-            <PromptInjectionView clientId={currentClient?.id} theme={theme} />
-          )}
-
-          {activeTab === "client-memory" && (
-            <ClientMemoryView clientId={currentClient?.id} theme={theme} />
-          )}
-
-          {activeTab === "sentiment" && (
-            <SentimentAnalysisView clientId={currentClient?.id} theme={theme} />
-          )}
-
-          {activeTab === "voice-studio" && (
-            <VoiceStudioView clientId={currentClient?.id} theme={theme} />
-          )}
-
-          {activeTab === "supplier-negotiation" && (
-            <SupplierNegotiationView clientId={currentClient?.id} theme={theme} />
-          )}
-
-          {activeTab === "voice-report" && (
-            <VoiceReportView clientId={currentClient?.id} theme={theme} />
           )}
 
           {activeTab === "notifications" && (
             <NotificationCenterView clientId={currentClient?.id} theme={theme} />
           )}
 
-          {activeTab === "channels" && (
-            <ChannelsView clientId={currentClient?.id} setActiveTab={setActiveTab} theme={theme} />
-          )}
-
           {activeTab === "playbooks" && (
             <PlaybooksView clientId={currentClient?.id} setActiveTab={setActiveTab} theme={theme} />
           )}
 
-          {activeTab === "my-marketplace" && (
+          {activeTab === "marketplace" && (
             <MyMarketplaceTemplatesView clientId={currentClient?.id} />
+          )}
+
+          {activeTab === "weekly-summary" && (
+            <div className="max-w-5xl mx-auto">
+              <WeeklySummary clientId={currentClient?.id} setActiveTab={setActiveTab} />
+            </div>
+          )}
+
+          {activeTab === "peak-hours" && (
+            <div className="max-w-5xl mx-auto">
+              <PeakHoursChart clientId={currentClient?.id} />
+            </div>
           )}
 
         </main>

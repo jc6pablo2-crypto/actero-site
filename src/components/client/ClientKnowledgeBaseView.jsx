@@ -95,22 +95,22 @@ const ToneEditor = ({ entry, onSave, saving }) => {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-bold text-[#716D5C]">Tutoiement / Vouvoiement</label>
+        <label className="text-sm font-bold text-[#71717a]">Tutoiement / Vouvoiement</label>
         <button
           onClick={() => setForm(f => ({ ...f, tutoiement: !f.tutoiement }))}
           className={`relative w-12 h-6 rounded-full transition-colors ${form.tutoiement ? 'bg-blue-500' : 'bg-gray-200'}`}
         >
           <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${form.tutoiement ? 'translate-x-6' : 'translate-x-0.5'}`} />
         </button>
-        <span className="text-xs text-[#716D5C]">{form.tutoiement ? 'Tutoiement' : 'Vouvoiement'}</span>
+        <span className="text-xs text-[#71717a]">{form.tutoiement ? 'Tutoiement' : 'Vouvoiement'}</span>
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">Ton</label>
+        <label className="block text-xs font-bold text-[#71717a] uppercase tracking-wider mb-2">Ton</label>
         <select
           value={form.tone}
           onChange={(e) => setForm(f => ({ ...f, tone: e.target.value }))}
-          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1a1a1a] outline-none"
         >
           {['Formel', 'Professionnel', 'Decontracte', 'Amical'].map(t => (
             <option key={t} value={t} className="bg-white">{t}</option>
@@ -119,42 +119,42 @@ const ToneEditor = ({ entry, onSave, saving }) => {
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">Signature email</label>
+        <label className="block text-xs font-bold text-[#71717a] uppercase tracking-wider mb-2">Signature email</label>
         <input
           type="text"
           value={form.signature}
           onChange={(e) => setForm(f => ({ ...f, signature: e.target.value }))}
           placeholder="L'equipe Bonne Gueule"
-          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1a1a1a] outline-none"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">Phrases ou mots interdits (un par ligne)</label>
+        <label className="block text-xs font-bold text-[#71717a] uppercase tracking-wider mb-2">Phrases ou mots interdits (un par ligne)</label>
         <textarea
           value={form.forbidden}
           onChange={(e) => setForm(f => ({ ...f, forbidden: e.target.value }))}
           rows={4}
           placeholder="je ne sais pas&#10;ce n'est pas possible"
-          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none resize-none"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1a1a1a] outline-none resize-none"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">Instructions speciales</label>
+        <label className="block text-xs font-bold text-[#71717a] uppercase tracking-wider mb-2">Instructions speciales</label>
         <textarea
           value={form.instructions}
           onChange={(e) => setForm(f => ({ ...f, instructions: e.target.value }))}
           rows={4}
           placeholder="Instructions supplementaires pour l'IA..."
-          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none resize-none"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1a1a1a] outline-none resize-none"
         />
       </div>
 
       <button
         onClick={handleSave}
         disabled={saving}
-        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-[#262626] hover:bg-gray-100 transition-all disabled:opacity-50"
+        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-[#1a1a1a] hover:bg-gray-100 transition-all disabled:opacity-50"
       >
         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
         Enregistrer
@@ -177,7 +177,7 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
       className="bg-gray-50 border border-gray-200 rounded-2xl p-5 space-y-4"
     >
       <div>
-        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">
+        <label className="block text-xs font-bold text-[#71717a] uppercase tracking-wider mb-2">
           {isFaq ? 'Question' : 'Titre'}
         </label>
         <input
@@ -185,12 +185,12 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder={isFaq ? 'Comment suivre ma commande ?' : 'Titre...'}
-          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none focus:border-gray-400"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1a1a1a] outline-none focus:border-gray-400"
         />
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">
+        <label className="block text-xs font-bold text-[#71717a] uppercase tracking-wider mb-2">
           {isFaq ? 'Reponse' : 'Contenu'}
         </label>
         <textarea
@@ -198,18 +198,18 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
           onChange={(e) => setContent(e.target.value)}
           rows={6}
           placeholder={PLACEHOLDERS[category] || 'Contenu...'}
-          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none resize-none focus:border-gray-400"
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1a1a1a] outline-none resize-none focus:border-gray-400"
         />
       </div>
 
       {category === 'temporary' && (
         <div>
-          <label className="block text-xs font-bold text-[#716D5C] uppercase tracking-wider mb-2">Valide jusqu&apos;au</label>
+          <label className="block text-xs font-bold text-[#71717a] uppercase tracking-wider mb-2">Valide jusqu&apos;au</label>
           <input
             type="date"
             value={expiresAt}
             onChange={(e) => setExpiresAt(e.target.value)}
-            className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#262626] outline-none"
+            className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-[#1a1a1a] outline-none"
           />
         </div>
       )}
@@ -218,7 +218,7 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
         <button
           onClick={() => onSave({ ...entry, title, content, expires_at: expiresAt ? new Date(expiresAt).toISOString() : null })}
           disabled={saving || !title.trim() || !content.trim()}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-[#262626] hover:bg-gray-100 transition-all disabled:opacity-50"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-[#1a1a1a] hover:bg-gray-100 transition-all disabled:opacity-50"
         >
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
           Enregistrer
@@ -231,7 +231,7 @@ const EntryEditor = ({ entry, category, onSave, onDelete, onCancel, saving }) =>
             <Trash2 className="w-4 h-4" /> Supprimer
           </button>
         )}
-        <button onClick={onCancel} className="px-4 py-2.5 rounded-xl text-sm font-bold text-[#716D5C] hover:text-[#262626] transition-colors">
+        <button onClick={onCancel} className="px-4 py-2.5 rounded-xl text-sm font-bold text-[#71717a] hover:text-[#1a1a1a] transition-colors">
           Annuler
         </button>
       </div>
@@ -291,7 +291,7 @@ const KnowledgeGaps = ({ clientId, isLight, onAddEntry }) => {
               <span className="text-xs font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full shrink-0">
                 {gap.count}x
               </span>
-              <p className="text-sm text-[#262626] truncate">{gap.reason}</p>
+              <p className="text-sm text-[#1a1a1a] truncate">{gap.reason}</p>
             </div>
             <button
               onClick={() => onAddEntry(gap.reason)}
@@ -524,15 +524,15 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
     <div className="max-w-5xl mx-auto space-y-6 animate-fade-in-up">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className={`text-2xl font-bold tracking-tight ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>
+          <h2 className={`text-2xl font-bold tracking-tight ${isLight ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]'}`}>
             Base de connaissances
           </h2>
-          <p className={`text-sm mt-1 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
+          <p className={`text-sm mt-1 ${isLight ? 'text-[#71717a]' : 'text-[#71717a]'}`}>
             Configurez les informations que votre IA utilise pour repondre a vos clients.
           </p>
         </div>
         {lastSync && (
-          <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-gray-50 text-[#716D5C]'}`}>
+          <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs ${isLight ? 'bg-gray-100 text-[#71717a]' : 'bg-gray-50 text-[#71717a]'}`}>
             <Clock className="w-3 h-3" />
             Derniere synchro : {formatTimeAgo(lastSync)}
           </div>
@@ -545,9 +545,9 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4 text-[#0F5F35]" />
-              <span className="text-sm font-bold text-[#262626]">Couverture de votre base</span>
+              <span className="text-sm font-bold text-[#1a1a1a]">Couverture de votre base</span>
             </div>
-            <span className="text-xs text-[#716D5C]">{entries.length} entree{entries.length > 1 ? 's' : ''}</span>
+            <span className="text-xs text-[#71717a]">{entries.length} entree{entries.length > 1 ? 's' : ''}</span>
           </div>
           <div className="grid grid-cols-5 gap-2">
             {CATEGORIES.map(cat => {
@@ -583,8 +583,8 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
               <Globe className="w-4 h-4 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm font-bold text-[#262626]">Importer depuis une URL</p>
-              <p className="text-[11px] text-[#716D5C]">Collez un lien vers votre FAQ ou site</p>
+              <p className="text-sm font-bold text-[#1a1a1a]">Importer depuis une URL</p>
+              <p className="text-[11px] text-[#71717a]">Collez un lien vers votre FAQ ou site</p>
             </div>
           </button>
           {showImport && (
@@ -595,7 +595,7 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                   value={importUrl}
                   onChange={(e) => setImportUrl(e.target.value)}
                   placeholder="https://votre-site.com/faq"
-                  className="w-full px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-1 focus:ring-blue-300"
+                  className="w-full px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#1a1a1a] outline-none focus:ring-1 focus:ring-blue-300"
                 />
                 <button
                   onClick={handleImportUrl}
@@ -605,7 +605,7 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                   {importing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
                   {importing ? 'Import en cours...' : 'Generer les FAQ'}
                 </button>
-                <p className="text-[10px] text-[#716D5C]">L'IA va analyser la page et generer des paires Question/Reponse automatiquement</p>
+                <p className="text-[10px] text-[#71717a]">L'IA va analyser la page et generer des paires Question/Reponse automatiquement</p>
               </div>
             </motion.div>
           )}
@@ -621,31 +621,31 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
               <MessageCircle className="w-4 h-4 text-emerald-600" />
             </div>
             <div>
-              <p className="text-sm font-bold text-[#262626]">Ajouter une FAQ rapide</p>
-              <p className="text-[11px] text-[#716D5C]">Question → Reponse en 30 secondes</p>
+              <p className="text-sm font-bold text-[#1a1a1a]">Ajouter une FAQ rapide</p>
+              <p className="text-[11px] text-[#71717a]">Question → Reponse en 30 secondes</p>
             </div>
           </button>
           {showQA && (
             <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} className="overflow-hidden border-t border-gray-100">
               <div className="p-4 space-y-3">
                 <div>
-                  <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">Question du client</label>
+                  <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">Question du client</label>
                   <input
                     type="text"
                     value={qaQuestion}
                     onChange={(e) => setQaQuestion(e.target.value)}
                     placeholder="Ex: Quels sont vos delais de livraison ?"
-                    className="mt-1 w-full px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-1 focus:ring-emerald-300"
+                    className="mt-1 w-full px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#1a1a1a] outline-none focus:ring-1 focus:ring-emerald-300"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">Reponse attendue</label>
+                  <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">Reponse attendue</label>
                   <textarea
                     value={qaAnswer}
                     onChange={(e) => setQaAnswer(e.target.value)}
                     placeholder="La livraison est gratuite a partir de 50€. Delai: 2-5 jours ouvrés..."
                     rows={3}
-                    className="mt-1 w-full px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] outline-none focus:ring-1 focus:ring-emerald-300 resize-none"
+                    className="mt-1 w-full px-4 py-2.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#1a1a1a] outline-none focus:ring-1 focus:ring-emerald-300 resize-none"
                   />
                 </div>
                 <button
@@ -671,19 +671,19 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
               <Upload className="w-4 h-4 text-violet-600" />
             </div>
             <div>
-              <p className="text-sm font-bold text-[#262626]">Importer un fichier</p>
-              <p className="text-[11px] text-[#716D5C]">PDF, TXT, CSV, DOCX</p>
+              <p className="text-sm font-bold text-[#1a1a1a]">Importer un fichier</p>
+              <p className="text-[11px] text-[#71717a]">PDF, TXT, CSV, DOCX</p>
             </div>
           </button>
           {showFileUpload && (
             <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} className="overflow-hidden border-t border-gray-100">
               <div className="p-4 space-y-3">
                 <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-[#0F5F35]/30 transition-colors">
-                  <Upload className="w-6 h-6 text-[#716D5C] mx-auto mb-2" />
-                  <p className="text-sm text-[#262626] font-medium">
+                  <Upload className="w-6 h-6 text-[#71717a] mx-auto mb-2" />
+                  <p className="text-sm text-[#1a1a1a] font-medium">
                     {uploading ? 'Analyse en cours...' : 'Glissez un fichier ou cliquez'}
                   </p>
-                  <p className="text-[10px] text-[#716D5C] mt-1">PDF, TXT, CSV — max 4 Mo</p>
+                  <p className="text-[10px] text-[#71717a] mt-1">PDF, TXT, CSV — max 4 Mo</p>
                   <input
                     type="file"
                     accept=".pdf,.txt,.csv,.md,.doc,.docx"
@@ -696,7 +696,7 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                 {uploading && (
                   <div className="flex items-center justify-center gap-2 py-2">
                     <Loader2 className="w-4 h-4 animate-spin text-violet-600" />
-                    <span className="text-xs text-[#716D5C]">L'IA analyse le fichier et extrait les informations...</span>
+                    <span className="text-xs text-[#71717a]">L'IA analyse le fichier et extrait les informations...</span>
                   </div>
                 )}
               </div>
@@ -729,8 +729,8 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                   onClick={() => { setSelectedCategory(cat.id); setEditingEntry(null); setIsCreating(false) }}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold transition-all ${
                     isActive
-                      ? (isLight ? 'bg-[#003725]/10 text-[#003725]' : 'bg-gray-50 text-[#262626]')
-                      : (isLight ? 'text-[#716D5C] hover:bg-[#F9F7F1]' : 'text-[#716D5C] hover:bg-gray-50')
+                      ? (isLight ? 'bg-[#003725]/10 text-[#003725]' : 'bg-gray-50 text-[#1a1a1a]')
+                      : (isLight ? 'text-[#71717a] hover:bg-[#F9F7F1]' : 'text-[#71717a] hover:bg-gray-50')
                   }`}
                 >
                   <div className="flex items-center gap-2">
@@ -738,7 +738,7 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                     {cat.label}
                   </div>
                   {count > 0 && (
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isLight ? 'bg-gray-100 text-[#716D5C]' : 'bg-gray-50 text-[#716D5C]'}`}>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isLight ? 'bg-gray-100 text-[#71717a]' : 'bg-gray-50 text-[#71717a]'}`}>
                       {count}
                     </span>
                   )}
@@ -752,7 +752,7 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
         <div className="flex-1 space-y-4">
           {isLoading ? (
             <div className="flex justify-center py-16">
-              <Loader2 className="w-6 h-6 animate-spin text-[#716D5C]" />
+              <Loader2 className="w-6 h-6 animate-spin text-[#71717a]" />
             </div>
           ) : selectedCategory === 'tone' ? (
             <div className={`rounded-2xl border p-6 ${isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'}`}>
@@ -767,13 +767,13 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
               {/* Entry list */}
               {filteredEntries.length === 0 && !isCreating ? (
                 <div className={`text-center py-16 rounded-2xl border ${isLight ? 'bg-white border-gray-200' : 'bg-[#F9F7F1] border-gray-200'}`}>
-                  <categoryConfig.icon className={`w-10 h-10 mx-auto mb-3 ${isLight ? 'text-slate-300' : 'text-[#716D5C]'}`} />
-                  <p className={`text-sm ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
+                  <categoryConfig.icon className={`w-10 h-10 mx-auto mb-3 ${isLight ? 'text-slate-300' : 'text-[#71717a]'}`} />
+                  <p className={`text-sm ${isLight ? 'text-[#71717a]' : 'text-[#71717a]'}`}>
                     Ajoutez vos {categoryConfig.label.toLowerCase()} pour que l&apos;IA reponde precisement a vos clients.
                   </p>
                   <button
                     onClick={() => setIsCreating(true)}
-                    className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-[#262626] hover:bg-gray-100 transition-all"
+                    className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-[#1a1a1a] hover:bg-gray-100 transition-all"
                   >
                     <Plus className="w-4 h-4" /> Ajouter
                   </button>
@@ -812,8 +812,8 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1.5">
-                              <GripVertical className="w-4 h-4 text-[#716D5C] flex-shrink-0" />
-                              <h3 className={`text-sm font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>
+                              <GripVertical className="w-4 h-4 text-[#71717a] flex-shrink-0" />
+                              <h3 className={`text-sm font-bold ${isLight ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]'}`}>
                                 {entry.title}
                               </h3>
                               {isExpired && (
@@ -827,11 +827,11 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                                 </span>
                               )}
                             </div>
-                            <p className={`text-xs line-clamp-2 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
+                            <p className={`text-xs line-clamp-2 ${isLight ? 'text-[#71717a]' : 'text-[#71717a]'}`}>
                               {entry.content}
                             </p>
                           </div>
-                          <ChevronRight className={`w-4 h-4 flex-shrink-0 mt-1 ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`} />
+                          <ChevronRight className={`w-4 h-4 flex-shrink-0 mt-1 ${isLight ? 'text-[#71717a]' : 'text-[#71717a]'}`} />
                         </div>
                       </motion.div>
                     )
@@ -855,8 +855,8 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                   onClick={() => setIsCreating(true)}
                   className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-dashed text-sm font-bold transition-all ${
                     isLight
-                      ? 'border-slate-300 text-[#716D5C] hover:border-slate-400 hover:text-slate-700'
-                      : 'border-gray-200 text-[#716D5C] hover:border-gray-300 hover:text-[#262626]'
+                      ? 'border-slate-300 text-[#71717a] hover:border-slate-400 hover:text-slate-700'
+                      : 'border-gray-200 text-[#71717a] hover:border-gray-300 hover:text-[#1a1a1a]'
                   }`}
                 >
                   <Plus className="w-4 h-4" />
@@ -865,7 +865,7 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
               )}
 
               {selectedCategory === 'faq' && filteredEntries.length > 0 && (
-                <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>
+                <p className={`text-xs ${isLight ? 'text-[#71717a]' : 'text-[#71717a]'}`}>
                   {filteredEntries.length} question{filteredEntries.length > 1 ? 's' : ''} dans votre FAQ
                 </p>
               )}

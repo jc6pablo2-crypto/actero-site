@@ -218,10 +218,10 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
           <Brain className="w-5 h-5 text-[#0F5F35]" />
         </div>
         <div>
-          <h2 className={`text-lg font-semibold ${isLight ? 'text-[#262626]' : 'text-white'}`}>
+          <h2 className={`text-lg font-semibold ${isLight ? 'text-[#1a1a1a]' : 'text-white'}`}>
             Memoire Client Longue Duree
           </h2>
-          <p className={`text-sm ${isLight ? 'text-[#716D5C]' : 'text-gray-400'}`}>
+          <p className={`text-sm ${isLight ? 'text-[#71717a]' : 'text-gray-400'}`}>
             L'IA retient les preferences, l'historique et le contexte de chaque client
           </p>
         </div>
@@ -248,11 +248,11 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
               </div>
               <div>
                 <p className={`text-[10px] font-bold uppercase tracking-wider ${
-                  isLight ? 'text-[#716D5C]' : 'text-gray-500'
+                  isLight ? 'text-[#71717a]' : 'text-gray-500'
                 }`}>
                   {stat.label}
                 </p>
-                <p className={`text-xl font-bold ${isLight ? 'text-[#262626]' : 'text-white'}`}>
+                <p className={`text-xl font-bold ${isLight ? 'text-[#1a1a1a]' : 'text-white'}`}>
                   {stat.value}
                 </p>
               </div>
@@ -272,15 +272,15 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
             : 'bg-white/5 border-white/10'
         }`}
       >
-        <h3 className={`text-sm font-semibold mb-4 ${isLight ? 'text-[#262626]' : 'text-white'}`}>
+        <h3 className={`text-sm font-semibold mb-4 ${isLight ? 'text-[#1a1a1a]' : 'text-white'}`}>
           Configuration de la memoire
         </h3>
 
         {/* Toggle */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <Database className={`w-4 h-4 ${isLight ? 'text-[#716D5C]' : 'text-gray-400'}`} />
-            <span className={`text-sm ${isLight ? 'text-[#262626]' : 'text-white'}`}>
+            <Database className={`w-4 h-4 ${isLight ? 'text-[#71717a]' : 'text-gray-400'}`} />
+            <span className={`text-sm ${isLight ? 'text-[#1a1a1a]' : 'text-white'}`}>
               Activer la memoire longue duree
             </span>
           </div>
@@ -309,7 +309,7 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
             >
               <div>
                 <p className={`text-[10px] font-bold uppercase tracking-wider mb-3 ${
-                  isLight ? 'text-[#716D5C]' : 'text-gray-500'
+                  isLight ? 'text-[#71717a]' : 'text-gray-500'
                 }`}>
                   Periode de retention
                 </p>
@@ -322,7 +322,7 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
                         retentionPeriod === opt.value
                           ? 'bg-[#0F5F35] text-white shadow-sm'
                           : isLight
-                            ? 'bg-[#F5F5F0] text-[#262626] hover:bg-gray-200'
+                            ? 'bg-[#F5F5F0] text-[#1a1a1a] hover:bg-gray-200'
                             : 'bg-white/5 text-gray-300 hover:bg-white/10'
                       }`}
                     >
@@ -335,7 +335,7 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
               {/* Data Types */}
               <div>
                 <p className={`text-[10px] font-bold uppercase tracking-wider mb-3 ${
-                  isLight ? 'text-[#716D5C]' : 'text-gray-500'
+                  isLight ? 'text-[#71717a]' : 'text-gray-500'
                 }`}>
                   Types de donnees a memoriser
                 </p>
@@ -363,8 +363,8 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
                           <CheckCircle2 className="w-3 h-3 text-white" />
                         )}
                       </div>
-                      <dt.icon className={`w-4 h-4 ${isLight ? 'text-[#716D5C]' : 'text-gray-400'}`} />
-                      <span className={`text-sm ${isLight ? 'text-[#262626]' : 'text-white'}`}>
+                      <dt.icon className={`w-4 h-4 ${isLight ? 'text-[#71717a]' : 'text-gray-400'}`} />
+                      <span className={`text-sm ${isLight ? 'text-[#1a1a1a]' : 'text-white'}`}>
                         {dt.label}
                       </span>
                     </label>
@@ -387,7 +387,7 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
             : 'bg-white/5 border-white/10'
         }`}
       >
-        <h3 className={`text-sm font-semibold mb-4 ${isLight ? 'text-[#262626]' : 'text-white'}`}>
+        <h3 className={`text-sm font-semibold mb-4 ${isLight ? 'text-[#1a1a1a]' : 'text-white'}`}>
           Profils memorises (exemple)
         </h3>
 
@@ -415,10 +415,10 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
                     {profile.initial}
                   </div>
                   <div>
-                    <p className={`text-sm font-medium ${isLight ? 'text-[#262626]' : 'text-white'}`}>
+                    <p className={`text-sm font-medium ${isLight ? 'text-[#1a1a1a]' : 'text-white'}`}>
                       {profile.name}
                     </p>
-                    <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-gray-400'}`}>
+                    <p className={`text-xs ${isLight ? 'text-[#71717a]' : 'text-gray-400'}`}>
                       {profile.email}
                     </p>
                   </div>
@@ -426,15 +426,15 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
                 <div className="flex items-center gap-3">
                   <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                     isLight
-                      ? 'bg-[#F5F5F0] text-[#716D5C]'
+                      ? 'bg-[#F5F5F0] text-[#71717a]'
                       : 'bg-white/5 text-gray-400'
                   }`}>
                     {profile.interactions} interactions
                   </span>
                   {expandedProfile === profile.id ? (
-                    <ChevronUp className={`w-4 h-4 ${isLight ? 'text-[#716D5C]' : 'text-gray-400'}`} />
+                    <ChevronUp className={`w-4 h-4 ${isLight ? 'text-[#71717a]' : 'text-gray-400'}`} />
                   ) : (
-                    <ChevronDown className={`w-4 h-4 ${isLight ? 'text-[#716D5C]' : 'text-gray-400'}`} />
+                    <ChevronDown className={`w-4 h-4 ${isLight ? 'text-[#71717a]' : 'text-gray-400'}`} />
                   )}
                 </div>
               </div>
@@ -449,13 +449,13 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
                   >
                     <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
                       <div className="flex items-center gap-2">
-                        <Clock className={`w-3 h-3 ${isLight ? 'text-[#716D5C]' : 'text-gray-400'}`} />
-                        <span className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-gray-400'}`}>
+                        <Clock className={`w-3 h-3 ${isLight ? 'text-[#71717a]' : 'text-gray-400'}`} />
+                        <span className={`text-xs ${isLight ? 'text-[#71717a]' : 'text-gray-400'}`}>
                           Depuis : {profile.since}
                         </span>
                       </div>
                       <p className={`text-[10px] font-bold uppercase tracking-wider ${
-                        isLight ? 'text-[#716D5C]' : 'text-gray-500'
+                        isLight ? 'text-[#71717a]' : 'text-gray-500'
                       }`}>
                         Souvenirs cles
                       </p>
@@ -464,7 +464,7 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
                           <div
                             key={idx}
                             className={`flex items-start gap-2 text-sm ${
-                              isLight ? 'text-[#262626]' : 'text-gray-300'
+                              isLight ? 'text-[#1a1a1a]' : 'text-gray-300'
                             }`}
                           >
                             <Brain className="w-3.5 h-3.5 text-[#0F5F35] mt-0.5 flex-shrink-0" />
@@ -494,7 +494,7 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
       >
         <div className="flex items-center gap-2 mb-4">
           <Shield className={`w-4 h-4 ${isLight ? 'text-[#0F5F35]' : 'text-emerald-400'}`} />
-          <h3 className={`text-sm font-semibold ${isLight ? 'text-[#262626]' : 'text-white'}`}>
+          <h3 className={`text-sm font-semibold ${isLight ? 'text-[#1a1a1a]' : 'text-white'}`}>
             Confidentialite & RGPD
           </h3>
         </div>
@@ -503,12 +503,12 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
           {/* Droit a l'oubli */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Trash2 className={`w-4 h-4 ${isLight ? 'text-[#716D5C]' : 'text-gray-400'}`} />
+              <Trash2 className={`w-4 h-4 ${isLight ? 'text-[#71717a]' : 'text-gray-400'}`} />
               <div>
-                <p className={`text-sm ${isLight ? 'text-[#262626]' : 'text-white'}`}>
+                <p className={`text-sm ${isLight ? 'text-[#1a1a1a]' : 'text-white'}`}>
                   Droit a l'oubli automatique
                 </p>
-                <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-gray-500'}`}>
+                <p className={`text-xs ${isLight ? 'text-[#71717a]' : 'text-gray-500'}`}>
                   Suppression automatique sur demande client
                 </p>
               </div>
@@ -535,12 +535,12 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
           {/* Anonymisation */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <EyeOff className={`w-4 h-4 ${isLight ? 'text-[#716D5C]' : 'text-gray-400'}`} />
+              <EyeOff className={`w-4 h-4 ${isLight ? 'text-[#71717a]' : 'text-gray-400'}`} />
               <div>
-                <p className={`text-sm ${isLight ? 'text-[#262626]' : 'text-white'}`}>
+                <p className={`text-sm ${isLight ? 'text-[#1a1a1a]' : 'text-white'}`}>
                   Anonymisation apres periode
                 </p>
-                <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-gray-500'}`}>
+                <p className={`text-xs ${isLight ? 'text-[#71717a]' : 'text-gray-500'}`}>
                   Les donnees sont anonymisees a expiration
                 </p>
               </div>
@@ -567,12 +567,12 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
           {/* Export */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Download className={`w-4 h-4 ${isLight ? 'text-[#716D5C]' : 'text-gray-400'}`} />
+              <Download className={`w-4 h-4 ${isLight ? 'text-[#71717a]' : 'text-gray-400'}`} />
               <div>
-                <p className={`text-sm ${isLight ? 'text-[#262626]' : 'text-white'}`}>
+                <p className={`text-sm ${isLight ? 'text-[#1a1a1a]' : 'text-white'}`}>
                   Export donnees client
                 </p>
-                <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-gray-500'}`}>
+                <p className={`text-xs ${isLight ? 'text-[#71717a]' : 'text-gray-500'}`}>
                   Permettre l'export des donnees memorisees
                 </p>
               </div>
@@ -598,7 +598,7 @@ export const ClientMemoryView = ({ clientId, theme = 'light' }) => {
         </div>
 
         <div className={`mt-4 pt-4 border-t ${isLight ? 'border-gray-100' : 'border-white/10'}`}>
-          <p className={`text-xs ${isLight ? 'text-[#716D5C]' : 'text-gray-500'}`}>
+          <p className={`text-xs ${isLight ? 'text-[#71717a]' : 'text-gray-500'}`}>
             Conforme au Reglement General sur la Protection des Donnees (RGPD). Les donnees clients sont chiffrees et stockees de maniere securisee.
           </p>
         </div>

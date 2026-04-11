@@ -115,10 +115,10 @@ export function MultiAgentView({ clientId, theme }) {
           <Network className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-[#262626]">
+          <h2 className="text-xl font-bold text-[#1a1a1a]">
             Orchestration Multi-Agents
           </h2>
-          <p className="text-sm text-[#716D5C]">
+          <p className="text-sm text-[#71717a]">
             Routage intelligent vers des agents specialises
           </p>
         </div>
@@ -145,7 +145,7 @@ export function MultiAgentView({ clientId, theme }) {
 
       {/* Agent cards */}
       <div>
-        <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-3">
+        <p className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-3">
           Agents specialises
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -163,7 +163,7 @@ export function MultiAgentView({ clientId, theme }) {
 
       {/* Orchestrateur section */}
       <div>
-        <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-3">
+        <p className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-3">
           Orchestrateur
         </p>
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
@@ -172,31 +172,31 @@ export function MultiAgentView({ clientId, theme }) {
               <Zap className="w-4 h-4 text-[#003725]" />
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-[#262626]">
+              <h3 className="text-sm font-semibold text-[#1a1a1a]">
                 Routeur Intelligent
               </h3>
-              <p className="text-xs text-[#716D5C]">
+              <p className="text-xs text-[#71717a]">
                 Detection d'intention et dispatch automatique vers l'agent le
                 plus adapte
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[#716D5C]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[#71717a]">
             <div className="bg-[#F5F5F0] rounded-xl p-3">
-              <p className="font-semibold text-[#262626] mb-1">
+              <p className="font-semibold text-[#1a1a1a] mb-1">
                 Detection d'intention
               </p>
               <p>Analyse le message client pour identifier le besoin</p>
             </div>
             <div className="bg-[#F5F5F0] rounded-xl p-3">
-              <p className="font-semibold text-[#262626] mb-1">
+              <p className="font-semibold text-[#1a1a1a] mb-1">
                 Selection d'agent
               </p>
               <p>Choisit l'agent specialise selon l'intention detectee</p>
             </div>
             <div className="bg-[#F5F5F0] rounded-xl p-3">
-              <p className="font-semibold text-[#262626] mb-1">
+              <p className="font-semibold text-[#1a1a1a] mb-1">
                 Suivi & Escalade
               </p>
               <p>Monitore la conversation et escalade si necessaire</p>
@@ -207,7 +207,7 @@ export function MultiAgentView({ clientId, theme }) {
 
       {/* Flow diagram */}
       <div>
-        <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-3">
+        <p className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-3">
           Flux de routage
         </p>
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
@@ -218,8 +218,8 @@ export function MultiAgentView({ clientId, theme }) {
               animate={{ opacity: 1, y: 0 }}
               className="flex items-center gap-2 bg-[#F5F5F0] rounded-full px-5 py-2.5"
             >
-              <Users className="w-4 h-4 text-[#262626]" />
-              <span className="text-sm font-semibold text-[#262626]">
+              <Users className="w-4 h-4 text-[#1a1a1a]" />
+              <span className="text-sm font-semibold text-[#1a1a1a]">
                 Client
               </span>
             </motion.div>
@@ -290,10 +290,10 @@ function StatCard({ icon: Icon, label, value }) {
         <Icon className="w-4 h-4 text-[#003725]" />
       </div>
       <div>
-        <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+        <p className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
           {label}
         </p>
-        <p className="text-lg font-bold text-[#262626]">{value}</p>
+        <p className="text-lg font-bold text-[#1a1a1a]">{value}</p>
       </div>
     </div>
   )
@@ -318,10 +318,10 @@ function AgentCard({ agent, active, onToggle, index }) {
             <Icon className="w-5 h-5" style={{ color: agent.color }} />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-[#262626]">
+            <h3 className="text-sm font-semibold text-[#1a1a1a]">
               {agent.name}
             </h3>
-            <p className="text-xs text-[#716D5C]">{agent.description}</p>
+            <p className="text-xs text-[#71717a]">{agent.description}</p>
           </div>
         </div>
 
@@ -342,16 +342,16 @@ function AgentCard({ agent, active, onToggle, index }) {
 
       <div className="flex items-center gap-4 mt-4">
         <div>
-          <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+          <p className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
             Conversations
           </p>
-          <p className="text-base font-bold text-[#262626]">
+          <p className="text-base font-bold text-[#1a1a1a]">
             {agent.conversations.toLocaleString('fr-FR')}
           </p>
         </div>
         <div className="w-px h-8 bg-gray-100" />
         <div>
-          <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+          <p className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
             Taux de succes
           </p>
           <div className="flex items-center gap-1.5">
@@ -359,7 +359,7 @@ function AgentCard({ agent, active, onToggle, index }) {
               className="w-3.5 h-3.5"
               style={{ color: agent.color }}
             />
-            <p className="text-base font-bold text-[#262626]">
+            <p className="text-base font-bold text-[#1a1a1a]">
               {agent.successRate}%
             </p>
           </div>

@@ -153,8 +153,8 @@ export const AgentImprovementWidget = ({ clientId, theme }) => {
               <Sparkles className="w-4 h-4 text-violet-600" />
             </div>
             <div>
-              <p className="text-sm font-bold text-[#262626]">Suggestions d'amelioration</p>
-              <p className="text-[10px] text-[#716D5C]">Basees sur les feedbacks et escalades des 30 derniers jours</p>
+              <p className="text-sm font-bold text-[#1a1a1a]">Suggestions d'amelioration</p>
+              <p className="text-[10px] text-[#71717a]">Basees sur les feedbacks et escalades des 30 derniers jours</p>
             </div>
           </div>
         </div>
@@ -171,8 +171,8 @@ export const AgentImprovementWidget = ({ clientId, theme }) => {
               >
                 <Lightbulb className="w-4 h-4 text-amber-500 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[#262626]">{suggestion.title}</p>
-                  <p className="text-xs text-[#716D5C] mt-0.5">{suggestion.description}</p>
+                  <p className="text-sm font-medium text-[#1a1a1a]">{suggestion.title}</p>
+                  <p className="text-xs text-[#71717a] mt-0.5">{suggestion.description}</p>
                   <p className="text-[10px] text-violet-600 font-medium mt-1 flex items-center gap-1">
                     <TrendingUp className="w-3 h-3" />
                     {suggestion.impact}
@@ -181,7 +181,7 @@ export const AgentImprovementWidget = ({ clientId, theme }) => {
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   <button
                     onClick={() => setDismissed(prev => [...prev, suggestion.id])}
-                    className="p-1.5 rounded-lg text-gray-300 hover:text-[#716D5C] hover:bg-gray-50 transition-colors"
+                    className="p-1.5 rounded-lg text-gray-300 hover:text-[#71717a] hover:bg-gray-50 transition-colors"
                     title="Ignorer"
                   >
                     <X className="w-3.5 h-3.5" />

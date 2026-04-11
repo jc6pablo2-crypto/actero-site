@@ -232,8 +232,8 @@ export function VoiceReportView({ clientId, theme }) {
           <Volume2 className="w-5 h-5 text-[#003725]" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-[#262626]">Rapport Vocal Hebdomadaire</h2>
-          <p className="text-sm text-[#716D5C]">Resume audio automatique de vos metriques et insights</p>
+          <h2 className="text-xl font-bold text-[#1a1a1a]">Rapport Vocal Hebdomadaire</h2>
+          <p className="text-sm text-[#71717a]">Resume audio automatique de vos metriques et insights</p>
         </div>
       </motion.div>
 
@@ -289,7 +289,7 @@ export function VoiceReportView({ clientId, theme }) {
                     }
                   />
                 </div>
-                <div className="flex justify-between text-[11px] text-[#716D5C]">
+                <div className="flex justify-between text-[11px] text-[#71717a]">
                   <span>{formatProgress(latestReport.durationSeconds, playingId === latestReport.id && isPlaying ? 0 : progress)}</span>
                   <span>
                     {(() => {
@@ -304,7 +304,7 @@ export function VoiceReportView({ clientId, theme }) {
 
           {/* Key Highlights */}
           <div>
-            <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-3">
+            <p className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-3">
               Points cles
             </p>
             <ul className="space-y-2">
@@ -314,7 +314,7 @@ export function VoiceReportView({ clientId, theme }) {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 + idx * 0.1 }}
-                  className="flex items-start gap-2.5 text-sm text-[#262626]"
+                  className="flex items-start gap-2.5 text-sm text-[#1a1a1a]"
                 >
                   <Sparkles className="w-4 h-4 text-[#0F5F35] mt-0.5 flex-shrink-0" />
                   <span>{highlight}</span>
@@ -323,7 +323,7 @@ export function VoiceReportView({ clientId, theme }) {
             </ul>
           </div>
 
-          <p className="text-xs text-[#716D5C] flex items-center gap-1.5">
+          <p className="text-xs text-[#71717a] flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5" />
             {latestReport.generatedAt}
           </p>
@@ -337,7 +337,7 @@ export function VoiceReportView({ clientId, theme }) {
         transition={{ delay: 0.2 }}
         className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6"
       >
-        <p className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-4">
+        <p className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-4">
           Rapports precedents
         </p>
         <div className="space-y-3">
@@ -361,8 +361,8 @@ export function VoiceReportView({ clientId, theme }) {
                   )}
                 </button>
                 <div>
-                  <p className="text-sm font-medium text-[#262626]">{report.title}</p>
-                  <p className="text-xs text-[#716D5C]">{report.duration}</p>
+                  <p className="text-sm font-medium text-[#1a1a1a]">{report.title}</p>
+                  <p className="text-xs text-[#71717a]">{report.duration}</p>
                 </div>
               </div>
               {playingId === report.id && isPlaying && (
@@ -393,50 +393,50 @@ export function VoiceReportView({ clientId, theme }) {
           <div className="w-8 h-8 rounded-lg bg-[#003725]/10 flex items-center justify-center">
             <Calendar className="w-4 h-4 text-[#003725]" />
           </div>
-          <h3 className="text-base font-semibold text-[#262626]">Configuration</h3>
+          <h3 className="text-base font-semibold text-[#1a1a1a]">Configuration</h3>
         </div>
 
         {/* Day & Time */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider block mb-2">
               Quel jour ?
             </label>
             <div className="relative">
               <select
                 value={selectedDay}
                 onChange={(e) => setSelectedDay(e.target.value)}
-                className="w-full appearance-none bg-[#F5F5F0] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] pr-10 focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]"
+                className="w-full appearance-none bg-[#F5F5F0] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#1a1a1a] pr-10 focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]"
               >
                 {DAY_OPTIONS.map(day => (
                   <option key={day} value={day}>{day}</option>
                 ))}
               </select>
-              <ChevronDown className="w-4 h-4 text-[#716D5C] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-4 h-4 text-[#71717a] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider block mb-2">
+            <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider block mb-2">
               Quelle heure ?
             </label>
             <div className="relative">
               <select
                 value={selectedHour}
                 onChange={(e) => setSelectedHour(e.target.value)}
-                className="w-full appearance-none bg-[#F5F5F0] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#262626] pr-10 focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]"
+                className="w-full appearance-none bg-[#F5F5F0] border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-[#1a1a1a] pr-10 focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]"
               >
                 {HOUR_OPTIONS.map(hour => (
                   <option key={hour} value={hour}>{hour}</option>
                 ))}
               </select>
-              <ChevronDown className="w-4 h-4 text-[#716D5C] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <ChevronDown className="w-4 h-4 text-[#71717a] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
         </div>
 
         {/* Voice Selector */}
         <div>
-          <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider block mb-2">
+          <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider block mb-2">
             Voix
           </label>
           <div className="grid grid-cols-3 gap-3">
@@ -451,11 +451,11 @@ export function VoiceReportView({ clientId, theme }) {
                 }`}
               >
                 <p className={`text-sm font-medium ${
-                  selectedVoice === voice.id ? 'text-[#0F5F35]' : 'text-[#262626]'
+                  selectedVoice === voice.id ? 'text-[#0F5F35]' : 'text-[#1a1a1a]'
                 }`}>
                   {voice.name}
                 </p>
-                <p className="text-[11px] text-[#716D5C]">{voice.style}</p>
+                <p className="text-[11px] text-[#71717a]">{voice.style}</p>
               </button>
             ))}
           </div>
@@ -463,7 +463,7 @@ export function VoiceReportView({ clientId, theme }) {
 
         {/* Content Checkboxes */}
         <div>
-          <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider block mb-3">
+          <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider block mb-3">
             Contenu a inclure
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -489,10 +489,10 @@ export function VoiceReportView({ clientId, theme }) {
                     )}
                   </div>
                   <Icon className={`w-4 h-4 flex-shrink-0 ${
-                    contentChecks[option.id] ? 'text-[#0F5F35]' : 'text-[#716D5C]'
+                    contentChecks[option.id] ? 'text-[#0F5F35]' : 'text-[#71717a]'
                   }`} />
                   <span className={`text-sm ${
-                    contentChecks[option.id] ? 'text-[#262626] font-medium' : 'text-[#716D5C]'
+                    contentChecks[option.id] ? 'text-[#1a1a1a] font-medium' : 'text-[#71717a]'
                   }`}>
                     {option.label}
                   </span>
@@ -506,8 +506,8 @@ export function VoiceReportView({ clientId, theme }) {
         <div className="space-y-3">
           <div className="flex items-center justify-between p-3 rounded-xl bg-[#F5F5F0]">
             <div className="flex items-center gap-3">
-              <Mail className="w-4 h-4 text-[#716D5C]" />
-              <span className="text-sm text-[#262626]">Envoyer par email</span>
+              <Mail className="w-4 h-4 text-[#71717a]" />
+              <span className="text-sm text-[#1a1a1a]">Envoyer par email</span>
             </div>
             <button
               onClick={() => setSendEmail(!sendEmail)}
@@ -525,8 +525,8 @@ export function VoiceReportView({ clientId, theme }) {
 
           <div className="flex items-center justify-between p-3 rounded-xl bg-[#F5F5F0]">
             <div className="flex items-center gap-3">
-              <Bell className="w-4 h-4 text-[#716D5C]" />
-              <span className="text-sm text-[#262626]">Notification push</span>
+              <Bell className="w-4 h-4 text-[#71717a]" />
+              <span className="text-sm text-[#1a1a1a]">Notification push</span>
             </div>
             <button
               onClick={() => setPushNotification(!pushNotification)}

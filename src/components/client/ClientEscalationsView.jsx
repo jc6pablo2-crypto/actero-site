@@ -411,7 +411,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
                     className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-[12px] font-semibold transition-all ${
                       actionMode === 'custom'
                         ? 'bg-white text-[#1a1a1a] border border-[#1a1a1a]'
-                        : 'bg-white text-[#6b7280] border border-[#ebebeb] hover:text-[#1a1a1a] hover:border-[#d1d5db]'
+                        : 'bg-white text-[#71717a] border border-[#ebebeb] hover:text-[#1a1a1a] hover:border-[#d1d5db]'
                     }`}
                   >
                     <Pen className="w-4 h-4" />
@@ -467,7 +467,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
                             <div className="flex items-center gap-2 min-w-0">
                               <span className="text-[12px] font-semibold text-[#1a1a1a] truncate">{tpl.name}</span>
                               {tpl.category && (
-                                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#f0f0f0] text-[#6b7280] border border-[#ebebeb]">
+                                <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#f0f0f0] text-[#71717a] border border-[#ebebeb]">
                                   {tpl.category}
                                 </span>
                               )}
@@ -596,7 +596,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
                   </div>
                   <div>
                     <label className="block text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-1.5">Apercu</label>
-                    <div className="bg-[#fafafa] border border-[#ebebeb] rounded-lg p-3 text-[12px] text-[#6b7280] max-h-32 overflow-y-auto whitespace-pre-wrap">
+                    <div className="bg-[#fafafa] border border-[#ebebeb] rounded-lg p-3 text-[12px] text-[#71717a] max-h-32 overflow-y-auto whitespace-pre-wrap">
                       {response}
                     </div>
                   </div>

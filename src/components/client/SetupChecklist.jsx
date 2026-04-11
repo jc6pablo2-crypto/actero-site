@@ -21,9 +21,9 @@ import { supabase } from '../../lib/supabase'
  * Displayed at the top of the client overview page. Auto-hidden when
  * all 7 steps are complete. Can be manually dismissed (localStorage).
  */
-export const SetupChecklist = ({ clientId, setActiveTab }) => {
+export const SetupChecklist = ({ clientId, setActiveTab, dismissible = true }) => {
   const [dismissed, setDismissed] = useState(
-    () => localStorage.getItem(`setup-checklist-dismissed-${clientId}`) === 'true'
+    () => dismissible && localStorage.getItem(`setup-checklist-dismissed-${clientId}`) === 'true'
   )
 
   const { data: completion } = useQuery({
@@ -88,7 +88,7 @@ export const SetupChecklist = ({ clientId, setActiveTab }) => {
   })
 
   if (!clientId) return null
-  if (dismissed) return null
+  if (dismissible && dismissed) return null
   if (!completion) return null
 
   const steps = [
@@ -173,13 +173,15 @@ export const SetupChecklist = ({ clientId, setActiveTab }) => {
             </p>
           </div>
         </div>
-        <button
-          onClick={handleDismiss}
-          className="p-1.5 rounded-lg hover:bg-[#fafafa] text-[#9ca3af] hover:text-[#1a1a1a] transition-colors"
-          title="Masquer"
-        >
-          <X className="w-4 h-4" />
-        </button>
+        {dismissible && (
+          <button
+            onClick={handleDismiss}
+            className="p-1.5 rounded-lg hover:bg-[#fafafa] text-[#9ca3af] hover:text-[#1a1a1a] transition-colors"
+            title="Masquer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </motion.div>
     )
   }
@@ -205,13 +207,15 @@ export const SetupChecklist = ({ clientId, setActiveTab }) => {
             </p>
           </div>
         </div>
-        <button
-          onClick={handleDismiss}
-          className="p-1.5 rounded-lg hover:bg-[#fafafa] text-[#9ca3af] hover:text-[#1a1a1a] transition-colors flex-shrink-0"
-          title="Masquer la checklist"
-        >
-          <X className="w-4 h-4" />
-        </button>
+        {dismissible && (
+          <button
+            onClick={handleDismiss}
+            className="p-1.5 rounded-lg hover:bg-[#fafafa] text-[#9ca3af] hover:text-[#1a1a1a] transition-colors flex-shrink-0"
+            title="Masquer la checklist"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       {/* Progress bar */}

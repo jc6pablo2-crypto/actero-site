@@ -109,7 +109,7 @@ export const PartnerDashboardView = ({ theme = 'light' }) => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-6 h-6 animate-spin text-[#716D5C]" />
+        <Loader2 className="w-6 h-6 animate-spin text-[#71717a]" />
       </div>
     )
   }
@@ -118,7 +118,7 @@ export const PartnerDashboardView = ({ theme = 'light' }) => {
     return (
       <div className="p-8 text-center">
         <p className="text-red-500 mb-2">{error?.message}</p>
-        <p className="text-sm text-[#716D5C]">
+        <p className="text-sm text-[#71717a]">
           Vous n avez pas encore de profil Actero Partner.
         </p>
       </div>
@@ -144,7 +144,7 @@ export const PartnerDashboardView = ({ theme = 'light' }) => {
           </div>
           <h2 className="text-2xl font-bold">{partner.full_name}</h2>
           {partner.company_name && (
-            <p className="text-sm text-[#716D5C]">{partner.company_name}</p>
+            <p className="text-sm text-[#71717a]">{partner.company_name}</p>
           )}
         </div>
         <a
@@ -206,14 +206,14 @@ export const PartnerDashboardView = ({ theme = 'light' }) => {
           <h3 className="font-bold">Historique des commissions</h3>
         </div>
         {(!commissions || commissions.length === 0) ? (
-          <div className="p-8 text-center text-sm text-[#716D5C]">
+          <div className="p-8 text-center text-sm text-[#71717a]">
             Aucune commission pour le moment. Elles apparaîtront ici dès qu un
             client s inscrit via votre lien.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-[#716D5C] text-xs uppercase">
+              <thead className="bg-gray-50 text-[#71717a] text-xs uppercase">
                 <tr>
                   <th className="text-left px-5 py-3 font-semibold">Date</th>
                   <th className="text-left px-5 py-3 font-semibold">Montant</th>
@@ -356,7 +356,7 @@ export const PartnerDashboardView = ({ theme = 'light' }) => {
               <button
                 type="button"
                 onClick={() => setEditing(false)}
-                className="px-4 py-2 bg-white border border-gray-200 text-[#716D5C] font-semibold rounded-lg text-sm"
+                className="px-4 py-2 bg-white border border-gray-200 text-[#71717a] font-semibold rounded-lg text-sm"
               >
                 Annuler
               </button>
@@ -368,19 +368,19 @@ export const PartnerDashboardView = ({ theme = 'light' }) => {
             </div>
           </form>
         ) : (
-          <div className="text-sm text-[#716D5C] space-y-2">
+          <div className="text-sm text-[#71717a] space-y-2">
             <p>
-              <strong className="text-[#262626]">Bio:</strong>{' '}
+              <strong className="text-[#1a1a1a]">Bio:</strong>{' '}
               {partner.bio || <em className="text-gray-400">Non renseignée</em>}
             </p>
             <p>
-              <strong className="text-[#262626]">Spécialités:</strong>{' '}
+              <strong className="text-[#1a1a1a]">Spécialités:</strong>{' '}
               {(partner.specialties || []).join(', ') || (
                 <em className="text-gray-400">Aucune</em>
               )}
             </p>
             <p>
-              <strong className="text-[#262626]">Industries:</strong>{' '}
+              <strong className="text-[#1a1a1a]">Industries:</strong>{' '}
               {(partner.industries || []).join(', ') || (
                 <em className="text-gray-400">Aucune</em>
               )}
@@ -398,7 +398,7 @@ const StatCard = ({ icon: Icon, label, value, hint, color }) => (
       <Icon className="w-5 h-5" />
     </div>
     <div className="text-2xl font-bold">{value}</div>
-    <div className="text-xs text-[#716D5C]">{label}</div>
+    <div className="text-xs text-[#71717a]">{label}</div>
     {hint && <div className="text-[11px] text-amber-600 mt-1">{hint}</div>}
   </div>
 )
@@ -418,7 +418,7 @@ const StatusBadge = ({ status }) => {
 
 const Field = ({ label, children }) => (
   <div>
-    <label className="block text-xs font-semibold text-[#716D5C] mb-1">{label}</label>
+    <label className="block text-xs font-semibold text-[#71717a] mb-1">{label}</label>
     {children}
   </div>
 )

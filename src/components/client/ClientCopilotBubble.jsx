@@ -148,14 +148,14 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                   <Sparkles className="w-4 h-4 text-violet-400" />
                 </div>
                 <div>
-                  <h3 className={`text-sm font-bold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>Actero Copilot</h3>
-                  <p className={`text-[10px] ${isLight ? 'text-[#716D5C]' : 'text-[#716D5C]'}`}>Posez-moi vos questions</p>
+                  <h3 className={`text-sm font-bold ${isLight ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]'}`}>Actero Copilot</h3>
+                  <p className={`text-[10px] ${isLight ? 'text-[#71717a]' : 'text-[#71717a]'}`}>Posez-moi vos questions</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
                 className={`p-1.5 rounded-lg transition-colors ${
-                  isLight ? 'hover:bg-gray-100 text-[#716D5C]' : 'hover:bg-gray-50 text-[#716D5C]'
+                  isLight ? 'hover:bg-gray-100 text-[#71717a]' : 'hover:bg-gray-50 text-[#71717a]'
                 }`}
               >
                 <X className="w-4 h-4" />
@@ -172,7 +172,7 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                       <Sparkles className="w-3.5 h-3.5 text-violet-400" />
                     </div>
                     <div className={`px-3 py-2.5 rounded-2xl rounded-bl-md text-xs leading-relaxed ${
-                      isLight ? 'bg-gray-100 text-slate-700' : 'bg-gray-50 text-[#716D5C]'
+                      isLight ? 'bg-gray-100 text-slate-700' : 'bg-gray-50 text-[#71717a]'
                     }`}>
                       {clientType === 'immobilier'
                         ? "Bonjour ! Je suis votre assistant Actero. Je peux vous aider à comprendre vos leads, visites, métriques et répondre à vos questions sur vos automatisations immobilières."
@@ -188,8 +188,8 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                         onClick={() => handleSend(q)}
                         className={`block w-full text-left px-3 py-2 rounded-lg text-[11px] transition-all border ${
                           isLight
-                            ? 'bg-white border-gray-200 text-[#716D5C] hover:bg-[#F9F7F1] hover:border-slate-300'
-                            : 'bg-gray-50 border-gray-100 text-[#716D5C] hover:bg-[#F9F7F1] hover:border-gray-200'
+                            ? 'bg-white border-gray-200 text-[#71717a] hover:bg-[#F9F7F1] hover:border-slate-300'
+                            : 'bg-gray-50 border-gray-100 text-[#71717a] hover:bg-[#F9F7F1] hover:border-gray-200'
                         }`}
                       >
                         {q}
@@ -218,13 +218,13 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                         ? 'bg-violet-600 text-white rounded-br-md'
                         : isLight
                           ? 'bg-gray-100 text-slate-700 rounded-bl-md'
-                          : 'bg-gray-50 text-[#716D5C] rounded-bl-md'
+                          : 'bg-gray-50 text-[#71717a] rounded-bl-md'
                     }`}>
                       {msg.content.split('\n').map((line, j) => (
                         <p key={j} className={j > 0 ? 'mt-1.5' : ''}>
                           {line.split('**').map((part, k) =>
                             k % 2 === 1
-                              ? <strong key={k} className={msg.role === 'user' ? 'font-semibold' : `font-semibold ${isLight ? 'text-[#262626]' : 'text-[#262626]'}`}>{part}</strong>
+                              ? <strong key={k} className={msg.role === 'user' ? 'font-semibold' : `font-semibold ${isLight ? 'text-[#1a1a1a]' : 'text-[#1a1a1a]'}`}>{part}</strong>
                               : part
                           )}
                         </p>
@@ -241,8 +241,8 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                             : loadingAudio === i
                               ? 'bg-violet-500/10 border-violet-500/20 text-violet-400'
                               : isLight
-                                ? 'bg-white border-gray-200 text-[#716D5C] hover:bg-violet-50 hover:border-violet-300 hover:text-violet-600 shadow-sm'
-                                : 'bg-gray-50 border-gray-200 text-[#716D5C] hover:bg-violet-500/10 hover:border-violet-500/20 hover:text-violet-400'
+                                ? 'bg-white border-gray-200 text-[#71717a] hover:bg-violet-50 hover:border-violet-300 hover:text-violet-600 shadow-sm'
+                                : 'bg-gray-50 border-gray-200 text-[#71717a] hover:bg-violet-500/10 hover:border-violet-500/20 hover:text-violet-400'
                         }`}
                       >
                         {loadingAudio === i ? (
@@ -302,7 +302,7 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                   disabled={loading}
                   rows={1}
                   className={`flex-1 bg-transparent px-3 py-2.5 text-xs outline-none resize-none max-h-[80px] disabled:opacity-30 ${
-                    isLight ? 'text-[#262626] placeholder-slate-400' : 'text-[#262626] placeholder-gray-500'
+                    isLight ? 'text-[#1a1a1a] placeholder-slate-400' : 'text-[#1a1a1a] placeholder-gray-500'
                   }`}
                 />
                 <button

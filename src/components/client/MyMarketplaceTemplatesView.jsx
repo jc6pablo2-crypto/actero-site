@@ -144,7 +144,7 @@ export const MyMarketplaceTemplatesView = ({ clientId }) => {
             <Store className="w-5 h-5 text-[#003725]" />
             <h2 className="text-[20px] font-bold text-[#1a1a1a]">Mes templates publies</h2>
           </div>
-          <p className="text-[13px] text-[#716D5C]">
+          <p className="text-[13px] text-[#71717a]">
             Publiez vos meilleurs templates et gagnez {Math.round(REVENUE_SHARE * 100)}% de commission sur chaque vente.
           </p>
         </div>
@@ -165,7 +165,7 @@ export const MyMarketplaceTemplatesView = ({ clientId }) => {
         <div className="bg-white border border-[#f0f0f0] rounded-2xl p-12 text-center">
           <Store className="w-10 h-10 text-[#cfcbbc] mx-auto mb-3" />
           <p className="text-[15px] font-semibold text-[#1a1a1a] mb-1">Vous n'avez pas encore publie de template</p>
-          <p className="text-[13px] text-[#716D5C] mb-5">
+          <p className="text-[13px] text-[#71717a] mb-5">
             Partagez votre configuration avec la communaute Actero et generez des revenus passifs.
           </p>
           <button
@@ -202,19 +202,19 @@ export const MyMarketplaceTemplatesView = ({ clientId }) => {
                   <div className="flex items-start gap-2 mb-1">
                     <h3 className="text-[15px] font-bold text-[#1a1a1a] truncate">{template.name}</h3>
                     {!isPublished && (
-                      <span className="px-2 py-0.5 rounded-full bg-gray-100 text-[#716D5C] text-[10px] font-bold uppercase tracking-wider">
+                      <span className="px-2 py-0.5 rounded-full bg-gray-100 text-[#71717a] text-[10px] font-bold uppercase tracking-wider">
                         Depublie
                       </span>
                     )}
                   </div>
-                  <p className="text-[12px] text-[#716D5C] mb-3 line-clamp-1">
+                  <p className="text-[12px] text-[#71717a] mb-3 line-clamp-1">
                     {template.short_description || 'Template'}
                   </p>
                   <div className="grid grid-cols-3 gap-3">
                     <div>
                       <p className="text-[10px] text-[#9ca3af] font-semibold uppercase tracking-wider">Installs</p>
                       <p className="text-[15px] font-bold text-[#1a1a1a] flex items-center gap-1">
-                        <Download className="w-3.5 h-3.5 text-[#716D5C]" />
+                        <Download className="w-3.5 h-3.5 text-[#71717a]" />
                         {installs}
                       </p>
                     </div>
@@ -238,7 +238,7 @@ export const MyMarketplaceTemplatesView = ({ clientId }) => {
                 <div className="flex flex-col gap-2 flex-shrink-0">
                   <button
                     onClick={() => openEdit(template)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F9F7F1] text-[#262626] text-[12px] font-semibold hover:bg-[#eceae2] transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F9F7F1] text-[#1a1a1a] text-[12px] font-semibold hover:bg-[#eceae2] transition-colors"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
                     Modifier
@@ -361,7 +361,7 @@ const PublishModal = ({ template, configPreview, clientId, onClose, onSaved }) =
             <h3 className="text-[18px] font-bold text-[#1a1a1a]">
               {isEditing ? 'Modifier le template' : 'Publier sur le marketplace'}
             </h3>
-            <p className="text-[12px] text-[#716D5C]">
+            <p className="text-[12px] text-[#71717a]">
               Partagez votre configuration avec la communaute Actero
             </p>
           </div>
@@ -369,13 +369,13 @@ const PublishModal = ({ template, configPreview, clientId, onClose, onSaved }) =
             onClick={onClose}
             className="w-8 h-8 rounded-lg hover:bg-[#F9F7F1] flex items-center justify-center"
           >
-            <X className="w-4 h-4 text-[#716D5C]" />
+            <X className="w-4 h-4 text-[#71717a]" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
           <div>
-            <label className="block text-[11px] font-bold text-[#716D5C] uppercase tracking-widest mb-1.5">
+            <label className="block text-[11px] font-bold text-[#71717a] uppercase tracking-widest mb-1.5">
               Nom du template
             </label>
             <input
@@ -388,7 +388,7 @@ const PublishModal = ({ template, configPreview, clientId, onClose, onSaved }) =
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold text-[#716D5C] uppercase tracking-widest mb-1.5">
+            <label className="block text-[11px] font-bold text-[#71717a] uppercase tracking-widest mb-1.5">
               Description courte
             </label>
             <input
@@ -403,7 +403,7 @@ const PublishModal = ({ template, configPreview, clientId, onClose, onSaved }) =
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold text-[#716D5C] uppercase tracking-widest mb-1.5">
+            <label className="block text-[11px] font-bold text-[#71717a] uppercase tracking-widest mb-1.5">
               Description longue
             </label>
             <textarea
@@ -417,7 +417,7 @@ const PublishModal = ({ template, configPreview, clientId, onClose, onSaved }) =
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-[11px] font-bold text-[#716D5C] uppercase tracking-widest mb-1.5">
+              <label className="block text-[11px] font-bold text-[#71717a] uppercase tracking-widest mb-1.5">
                 Categorie
               </label>
               <select
@@ -433,7 +433,7 @@ const PublishModal = ({ template, configPreview, clientId, onClose, onSaved }) =
               </select>
             </div>
             <div>
-              <label className="block text-[11px] font-bold text-[#716D5C] uppercase tracking-widest mb-1.5">
+              <label className="block text-[11px] font-bold text-[#71717a] uppercase tracking-widest mb-1.5">
                 Industrie
               </label>
               <select
@@ -451,7 +451,7 @@ const PublishModal = ({ template, configPreview, clientId, onClose, onSaved }) =
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold text-[#716D5C] uppercase tracking-widest mb-1.5">
+            <label className="block text-[11px] font-bold text-[#71717a] uppercase tracking-widest mb-1.5">
               Prix (€) — mettre 0 pour gratuit
             </label>
             <input
@@ -463,7 +463,7 @@ const PublishModal = ({ template, configPreview, clientId, onClose, onSaved }) =
               className="w-full px-4 py-2.5 rounded-xl border border-[#f0f0f0] bg-white text-[14px] focus:outline-none focus:ring-2 focus:ring-[#003725]/20 focus:border-[#003725]"
             />
             {parseFloat(form.price_eur) > 0 && (
-              <p className="text-[11px] text-[#716D5C] mt-1.5">
+              <p className="text-[11px] text-[#71717a] mt-1.5">
                 Vous touchez {Math.round(REVENUE_SHARE * 100)}% — soit{' '}
                 <span className="font-bold text-[#003725]">
                   {(parseFloat(form.price_eur) * REVENUE_SHARE).toFixed(2)}€
@@ -474,7 +474,7 @@ const PublishModal = ({ template, configPreview, clientId, onClose, onSaved }) =
           </div>
 
           <div className="bg-[#F9F7F1] border border-[#f0f0f0] rounded-2xl p-4">
-            <p className="text-[11px] font-bold text-[#716D5C] uppercase tracking-widest mb-3">
+            <p className="text-[11px] font-bold text-[#71717a] uppercase tracking-widest mb-3">
               Contenu qui sera copie
             </p>
             <div className="grid grid-cols-2 gap-2.5">

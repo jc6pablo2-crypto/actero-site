@@ -103,7 +103,7 @@ const ProgressSteps = ({ currentStep }) => (
           >
             {i < currentStep ? '✓' : i + 1}
           </div>
-          <span className="text-[9px] text-[#716D5C] mt-1 whitespace-nowrap">{step}</span>
+          <span className="text-[9px] text-[#71717a] mt-1 whitespace-nowrap">{step}</span>
         </div>
         {i < STEPS.length - 1 && (
           <div
@@ -171,10 +171,10 @@ export function SupplierNegotiationView({ clientId, theme }) {
           <Handshake className="w-5 h-5 text-[#0F5F35]" />
         </div>
         <div>
-          <h2 className="text-lg font-semibold text-[#262626]">
+          <h2 className="text-lg font-semibold text-[#1a1a1a]">
             Agent de Negociation Fournisseur
           </h2>
-          <p className="text-sm text-[#716D5C]">
+          <p className="text-sm text-[#71717a]">
             Gestion automatisee des litiges et reclamations
           </p>
         </div>
@@ -192,18 +192,18 @@ export function SupplierNegotiationView({ clientId, theme }) {
           >
             <div className="flex items-center gap-2 mb-2">
               <stat.icon className={`w-4 h-4 ${stat.color}`} />
-              <span className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+              <span className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
                 {stat.label}
               </span>
             </div>
-            <p className="text-2xl font-bold text-[#262626]">{stat.value}</p>
+            <p className="text-2xl font-bold text-[#1a1a1a]">{stat.value}</p>
           </motion.div>
         ))}
       </div>
 
       {/* Active Disputes */}
       <div>
-        <h3 className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-3">
+        <h3 className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-3">
           Litiges actifs
         </h3>
         <div className="space-y-3">
@@ -222,11 +222,11 @@ export function SupplierNegotiationView({ clientId, theme }) {
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3 flex-1">
                     <div className="w-9 h-9 rounded-xl bg-[#F5F5F0] flex items-center justify-center mt-0.5">
-                      <dispute.issueIcon className="w-4 h-4 text-[#716D5C]" />
+                      <dispute.issueIcon className="w-4 h-4 text-[#71717a]" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-semibold text-[#262626] text-sm">
+                        <span className="font-semibold text-[#1a1a1a] text-sm">
                           {dispute.supplier}
                         </span>
                         <span
@@ -235,19 +235,19 @@ export function SupplierNegotiationView({ clientId, theme }) {
                           {dispute.status}
                         </span>
                       </div>
-                      <p className="text-xs text-[#716D5C] mt-0.5">{dispute.issue}</p>
+                      <p className="text-xs text-[#71717a] mt-0.5">{dispute.issue}</p>
                       <div className="flex items-center gap-3 mt-1.5">
-                        <span className="text-xs font-semibold text-[#262626]">
+                        <span className="text-xs font-semibold text-[#1a1a1a]">
                           {dispute.amount.toLocaleString('fr-FR')} €
                         </span>
-                        <span className="text-[10px] text-[#716D5C]">
+                        <span className="text-[10px] text-[#71717a]">
                           en litige
                         </span>
                       </div>
                     </div>
                   </div>
                   <ChevronRight
-                    className={`w-4 h-4 text-[#716D5C] transition-transform ${
+                    className={`w-4 h-4 text-[#71717a] transition-transform ${
                       expandedDispute === dispute.id ? 'rotate-90' : ''
                     }`}
                   />
@@ -265,7 +265,7 @@ export function SupplierNegotiationView({ clientId, theme }) {
                       <div className="mt-3 pt-3 border-t border-gray-100">
                         <div className="flex items-start gap-2 mb-3">
                           <Mail className="w-3.5 h-3.5 text-[#0F5F35] mt-0.5" />
-                          <p className="text-xs text-[#262626]">{dispute.action}</p>
+                          <p className="text-xs text-[#1a1a1a]">{dispute.action}</p>
                         </div>
                         <ProgressSteps currentStep={dispute.step} />
                       </div>
@@ -280,17 +280,17 @@ export function SupplierNegotiationView({ clientId, theme }) {
 
       {/* Configuration */}
       <div>
-        <h3 className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-3">
+        <h3 className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-3">
           Configuration
         </h3>
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-4 space-y-4">
           {/* Auto detect toggle */}
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-[#262626]">
+              <p className="text-sm font-medium text-[#1a1a1a]">
                 Detection automatique des anomalies
               </p>
-              <p className="text-xs text-[#716D5C] mt-0.5">
+              <p className="text-xs text-[#71717a] mt-0.5">
                 L'IA detecte les ecarts de facturation et retards
               </p>
             </div>
@@ -309,7 +309,7 @@ export function SupplierNegotiationView({ clientId, theme }) {
           {/* Auto send toggle */}
           <div className="flex items-center justify-between border-t border-gray-100 pt-4">
             <div>
-              <p className="text-sm font-medium text-[#262626]">
+              <p className="text-sm font-medium text-[#1a1a1a]">
                 Envoi automatique des reclamations
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
@@ -333,7 +333,7 @@ export function SupplierNegotiationView({ clientId, theme }) {
 
           {/* Tone selector */}
           <div className="border-t border-gray-100 pt-4">
-            <p className="text-sm font-medium text-[#262626] mb-2">
+            <p className="text-sm font-medium text-[#1a1a1a] mb-2">
               Ton des emails
             </p>
             <div className="flex gap-2">
@@ -344,7 +344,7 @@ export function SupplierNegotiationView({ clientId, theme }) {
                   className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
                     tone === t
                       ? 'bg-[#0F5F35] text-white shadow-sm'
-                      : 'bg-[#F5F5F0] text-[#716D5C] hover:bg-gray-200'
+                      : 'bg-[#F5F5F0] text-[#71717a] hover:bg-gray-200'
                   }`}
                 >
                   {t}
@@ -357,7 +357,7 @@ export function SupplierNegotiationView({ clientId, theme }) {
 
       {/* Email Templates */}
       <div>
-        <h3 className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider mb-3">
+        <h3 className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider mb-3">
           Modeles d'emails
         </h3>
         <div className="space-y-2">
@@ -371,11 +371,11 @@ export function SupplierNegotiationView({ clientId, theme }) {
             >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-[#F5F5F0] flex items-center justify-center">
-                  <FileText className="w-4 h-4 text-[#716D5C]" />
+                  <FileText className="w-4 h-4 text-[#71717a]" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-[#262626]">{template.title}</p>
-                  <p className="text-xs text-[#716D5C]">{template.description}</p>
+                  <p className="text-sm font-medium text-[#1a1a1a]">{template.title}</p>
+                  <p className="text-xs text-[#71717a]">{template.description}</p>
                 </div>
               </div>
               <button
@@ -384,7 +384,7 @@ export function SupplierNegotiationView({ clientId, theme }) {
                   toast.info(`Edition du modele : ${template.title}`)
                 }
               >
-                <Edit3 className="w-3.5 h-3.5 text-[#716D5C]" />
+                <Edit3 className="w-3.5 h-3.5 text-[#71717a]" />
               </button>
             </motion.div>
           ))}

@@ -126,8 +126,8 @@ export function VoiceStudioView({ clientId, theme }) {
           <Mic className="w-5 h-5 text-[#0F5F35]" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-[#262626]">Studio de Voix</h2>
-          <p className="text-sm text-[#716D5C]">
+          <h2 className="text-xl font-bold text-[#1a1a1a]">Studio de Voix</h2>
+          <p className="text-sm text-[#71717a]">
             Créez et personnalisez les voix de votre assistant IA
           </p>
         </div>
@@ -135,13 +135,13 @@ export function VoiceStudioView({ clientId, theme }) {
 
       {/* Voice Library */}
       <section>
-        <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+        <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
           Bibliothèque de voix
         </label>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
           {voicesLoading ? (
             <div className="col-span-full flex justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin text-[#716D5C]" />
+              <Loader2 className="w-6 h-6 animate-spin text-[#71717a]" />
             </div>
           ) : voices.slice(0, 6).map((voice, i) => (
             <motion.div
@@ -160,13 +160,13 @@ export function VoiceStudioView({ clientId, theme }) {
                   {voice.name[0]}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-[#262626] text-sm">{voice.name}</p>
-                  <p className="text-xs text-[#716D5C]">{voice.description || voice.category}</p>
+                  <p className="font-semibold text-[#1a1a1a] text-sm">{voice.name}</p>
+                  <p className="text-xs text-[#71717a]">{voice.description || voice.category}</p>
                 </div>
                 {voice.gender && (
                   <div className="flex items-center gap-1">
-                    <User className="w-3 h-3 text-[#716D5C]" />
-                    <span className="text-[10px] text-[#716D5C] capitalize">{voice.gender === 'female' ? 'Femme' : 'Homme'}</span>
+                    <User className="w-3 h-3 text-[#71717a]" />
+                    <span className="text-[10px] text-[#71717a] capitalize">{voice.gender === 'female' ? 'Femme' : 'Homme'}</span>
                   </div>
                 )}
               </div>
@@ -175,7 +175,7 @@ export function VoiceStudioView({ clientId, theme }) {
                 {voice.preview_url && (
                   <button
                     onClick={() => handlePlayPreviewUrl(voice.preview_url, voice.voice_id)}
-                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-[#262626] bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-[#1a1a1a] bg-gray-50 hover:bg-gray-100 rounded-xl transition-colors"
                   >
                     {playingPreview === voice.voice_id ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
                     {playingPreview === voice.voice_id ? 'Pause' : 'Ecouter'}
@@ -211,9 +211,9 @@ export function VoiceStudioView({ clientId, theme }) {
               className="bg-white border border-dashed border-gray-200 rounded-2xl shadow-sm p-5 flex flex-col items-center justify-center gap-3 min-h-[140px] hover:border-[#0F5F35]/40 hover:bg-[#0F5F35]/5 transition-all cursor-pointer group"
             >
               <div className="w-10 h-10 rounded-full bg-gray-100 group-hover:bg-[#0F5F35]/10 flex items-center justify-center transition-colors">
-                <Plus className="w-5 h-5 text-[#716D5C] group-hover:text-[#0F5F35] transition-colors" />
+                <Plus className="w-5 h-5 text-[#71717a] group-hover:text-[#0F5F35] transition-colors" />
               </div>
-              <p className="text-sm font-medium text-[#716D5C] group-hover:text-[#0F5F35] transition-colors">
+              <p className="text-sm font-medium text-[#71717a] group-hover:text-[#0F5F35] transition-colors">
                 Créer une voix
               </p>
             </motion.button>
@@ -225,7 +225,7 @@ export function VoiceStudioView({ clientId, theme }) {
       <section className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 space-y-5">
         <div className="flex items-center gap-3">
           <Sparkles className="w-5 h-5 text-[#0F5F35]" />
-          <h3 className="font-semibold text-[#262626]">Clonage de voix</h3>
+          <h3 className="font-semibold text-[#1a1a1a]">Clonage de voix</h3>
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 rounded-full">
             <Crown className="w-3 h-3" />
             Enterprise
@@ -234,14 +234,14 @@ export function VoiceStudioView({ clientId, theme }) {
 
         {/* Upload area */}
         <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center hover:border-[#0F5F35]/30 transition-colors">
-          <Upload className="w-8 h-8 text-[#716D5C] mx-auto mb-3" />
-          <p className="text-sm font-medium text-[#262626]">
+          <Upload className="w-8 h-8 text-[#71717a] mx-auto mb-3" />
+          <p className="text-sm font-medium text-[#1a1a1a]">
             Enregistrez 5 minutes de voix pour créer un clone
           </p>
-          <p className="text-xs text-[#716D5C] mt-1">
+          <p className="text-xs text-[#71717a] mt-1">
             Formats acceptés : WAV, MP3, M4A (max 50 Mo)
           </p>
-          <button className="mt-4 px-5 py-2 bg-gray-100 text-[#262626] text-sm font-medium rounded-full hover:bg-gray-200 transition-colors">
+          <button className="mt-4 px-5 py-2 bg-gray-100 text-[#1a1a1a] text-sm font-medium rounded-full hover:bg-gray-200 transition-colors">
             Importer un fichier audio
           </button>
         </div>
@@ -255,12 +255,12 @@ export function VoiceStudioView({ clientId, theme }) {
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
                     step.id <= cloningProgress
                       ? 'bg-[#0F5F35] text-white'
-                      : 'bg-gray-100 text-[#716D5C]'
+                      : 'bg-gray-100 text-[#71717a]'
                   }`}
                 >
                   {step.id}
                 </div>
-                <span className="text-[10px] font-medium text-[#716D5C]">{step.label}</span>
+                <span className="text-[10px] font-medium text-[#71717a]">{step.label}</span>
               </div>
               {index < CLONING_STEPS.length - 1 && (
                 <ChevronRight className="w-4 h-4 text-gray-300 mt-[-12px]" />
@@ -272,8 +272,8 @@ export function VoiceStudioView({ clientId, theme }) {
         {/* Fake progress bar */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-[#716D5C]">Progression</span>
-            <span className="text-[#262626] font-medium">Étape 1 sur 4</span>
+            <span className="text-[#71717a]">Progression</span>
+            <span className="text-[#1a1a1a] font-medium">Étape 1 sur 4</span>
           </div>
           <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
             <motion.div
@@ -285,7 +285,7 @@ export function VoiceStudioView({ clientId, theme }) {
           </div>
         </div>
 
-        <p className="text-xs text-[#716D5C] italic text-center">
+        <p className="text-xs text-[#71717a] italic text-center">
           Disponible avec le plan Enterprise
         </p>
       </section>
@@ -294,16 +294,16 @@ export function VoiceStudioView({ clientId, theme }) {
       <section className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 space-y-5">
         <div className="flex items-center gap-3">
           <Sliders className="w-5 h-5 text-[#0F5F35]" />
-          <h3 className="font-semibold text-[#262626]">Paramètres de voix</h3>
+          <h3 className="font-semibold text-[#1a1a1a]">Paramètres de voix</h3>
         </div>
 
         {/* Speed slider */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+            <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
               Vitesse
             </label>
-            <span className="text-sm font-medium text-[#262626]">{speed}x</span>
+            <span className="text-sm font-medium text-[#1a1a1a]">{speed}x</span>
           </div>
           <input
             type="range"
@@ -314,7 +314,7 @@ export function VoiceStudioView({ clientId, theme }) {
             onChange={(e) => setSpeed(parseFloat(e.target.value))}
             className="w-full h-2 bg-gray-100 rounded-full appearance-none cursor-pointer accent-[#0F5F35]"
           />
-          <div className="flex justify-between text-[10px] text-[#716D5C]">
+          <div className="flex justify-between text-[10px] text-[#71717a]">
             <span>0.5x</span>
             <span>2x</span>
           </div>
@@ -323,10 +323,10 @@ export function VoiceStudioView({ clientId, theme }) {
         {/* Pitch slider */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+            <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
               Tonalité
             </label>
-            <span className="text-sm font-medium text-[#262626]">{pitch}%</span>
+            <span className="text-sm font-medium text-[#1a1a1a]">{pitch}%</span>
           </div>
           <input
             type="range"
@@ -337,7 +337,7 @@ export function VoiceStudioView({ clientId, theme }) {
             onChange={(e) => setPitch(parseInt(e.target.value))}
             className="w-full h-2 bg-gray-100 rounded-full appearance-none cursor-pointer accent-[#0F5F35]"
           />
-          <div className="flex justify-between text-[10px] text-[#716D5C]">
+          <div className="flex justify-between text-[10px] text-[#71717a]">
             <span>Grave</span>
             <span>Aigu</span>
           </div>
@@ -345,7 +345,7 @@ export function VoiceStudioView({ clientId, theme }) {
 
         {/* Emotion presets */}
         <div className="space-y-2">
-          <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+          <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
             Émotion
           </label>
           <div className="flex flex-wrap gap-2">
@@ -356,7 +356,7 @@ export function VoiceStudioView({ clientId, theme }) {
                 className={`px-4 py-2 text-xs font-medium rounded-full transition-all ${
                   emotion === preset
                     ? 'bg-[#0F5F35] text-white shadow-sm'
-                    : 'bg-gray-50 text-[#262626] hover:bg-gray-100'
+                    : 'bg-gray-50 text-[#1a1a1a] hover:bg-gray-100'
                 }`}
               >
                 {preset}
@@ -370,11 +370,11 @@ export function VoiceStudioView({ clientId, theme }) {
       <section className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 space-y-4">
         <div className="flex items-center gap-3">
           <Volume2 className="w-5 h-5 text-[#0F5F35]" />
-          <h3 className="font-semibold text-[#262626]">Aperçu</h3>
+          <h3 className="font-semibold text-[#1a1a1a]">Aperçu</h3>
         </div>
 
         <div>
-          <label className="text-[10px] font-bold text-[#716D5C] uppercase tracking-wider">
+          <label className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">
             Texte de test
           </label>
           <textarea
@@ -382,7 +382,7 @@ export function VoiceStudioView({ clientId, theme }) {
             onChange={(e) => setPreviewText(e.target.value)}
             placeholder="Saisissez un texte pour tester la voix sélectionnée..."
             rows={3}
-            className="mt-1.5 w-full px-4 py-3 text-sm text-[#262626] bg-[#F5F5F0] border border-gray-100 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]/40 placeholder:text-[#716D5C]/60"
+            className="mt-1.5 w-full px-4 py-3 text-sm text-[#1a1a1a] bg-[#F5F5F0] border border-gray-100 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]/40 placeholder:text-[#71717a]/60"
           />
         </div>
 
@@ -411,12 +411,12 @@ export function VoiceStudioView({ clientId, theme }) {
           </button>
 
           {selectedVoice && (
-            <span className="text-xs text-[#716D5C]">
+            <span className="text-xs text-[#71717a]">
               Voix : {voices.find((v) => v.voice_id === selectedVoice)?.name || 'Personnalisee'}
             </span>
           )}
           {!selectedVoice && (
-            <span className="text-xs text-[#716D5C] italic">
+            <span className="text-xs text-[#71717a] italic">
               Sélectionnez une voix pour générer un aperçu
             </span>
           )}
