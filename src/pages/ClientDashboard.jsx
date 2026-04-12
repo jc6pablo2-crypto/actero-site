@@ -178,6 +178,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/referral") return "referral";
     if (route === "/client/partner") return "partner";
     if (route === "/client/integrations") return "integrations";
+    if (route === "/client/api-docs") return "api-docs";
     if (route === "/client/team") return "team";
     if (route === "/client/agent-config") return "agent-config";
     if (route === "/client/simulator") return "simulator";
