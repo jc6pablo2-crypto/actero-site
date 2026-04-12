@@ -26,7 +26,7 @@ const plans = [
     annualPrice: 0,
     trial: false,
     cta: "Commencer gratuitement",
-    ctaLink: "/signup?plan=free",
+    ctaLink: "/signup",
     highlighted: false,
     cardClass: "border-[#f0f0f0] bg-white",
     features: [
@@ -46,7 +46,7 @@ const plans = [
     annualPrice: 79,
     trial: true,
     cta: "Essai gratuit 7 jours",
-    ctaLink: "/signup?plan=starter",
+    ctaLink: "/signup",
     highlighted: false,
     cardClass: "border-[#f0f0f0] bg-white",
     features: [
@@ -56,6 +56,8 @@ const plans = [
       "Editeur ton de marque",
       "Garde-fous & regles metier",
       "Agents IA specialises",
+      "WhatsApp Agent",
+      "API + webhooks",
       "Dashboard ROI complet",
       "Historique 3 mois",
       "2 membres d'equipe",
@@ -71,7 +73,7 @@ const plans = [
     annualPrice: 319,
     trial: true,
     cta: "Essai gratuit 7 jours",
-    ctaLink: "/signup?plan=pro",
+    ctaLink: "/signup",
     highlighted: true,
     cardClass: "border-[#0F5F35] bg-white ring-2 ring-[#0F5F35]/20 shadow-lg",
     features: [
@@ -133,7 +135,7 @@ const comparisonCategories = [
       { label: "Shopify", values: [true, true, true, true] },
       { label: "Gorgias / Zendesk", values: [false, true, true, true] },
       { label: "Klaviyo / HubSpot", values: [false, true, true, true] },
-      { label: "API + Webhooks", values: [false, false, true, true] },
+      { label: "API + Webhooks", values: [false, true, true, true] },
       { label: "Integrations custom", values: [false, false, false, true] },
     ],
   },
@@ -143,7 +145,7 @@ const comparisonCategories = [
       { label: "Agent email / chat", values: [true, true, true, true] },
       { label: "Agents specialises", values: [false, true, true, true] },
       { label: "Agent vocal", values: [false, false, "200 min", "Custom"] },
-      { label: "WhatsApp Agent", values: [false, false, true, true] },
+      { label: "WhatsApp Agent", values: [false, true, true, true] },
       { label: "Simulateur conversation", values: [false, false, true, true] },
     ],
   },
@@ -340,7 +342,7 @@ export const PricingPage = ({ onNavigate }) => {
       />
 
       <div className="min-h-screen bg-white text-[#262626] font-sans selection:bg-[#003725]/10">
-        <Navbar onNavigate={onNavigate} onAuditOpen={() => onNavigate("/signup?plan=pro")} trackEvent={trackEvent} />
+        <Navbar onNavigate={onNavigate} onAuditOpen={() => onNavigate("/signup")} trackEvent={trackEvent} />
 
         <main className="pt-32 pb-24 px-6">
           <div className="max-w-7xl mx-auto">
@@ -550,7 +552,7 @@ export const PricingPage = ({ onNavigate }) => {
                   <button
                     onClick={() => {
                       trackEvent("Pricing_Bottom_CTA_Clicked");
-                      onNavigate("/signup?plan=pro");
+                      onNavigate("/signup");
                     }}
                     className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-white text-[#003725] font-bold text-[15px] hover:bg-[#F9F7F1] transition-colors gap-2"
                   >

@@ -37,6 +37,7 @@ import { MarketplaceTemplatePage } from "./pages/MarketplaceTemplatePage";
 import { AcademyPage } from "./pages/AcademyPage";
 import { AcademyCoursePage } from "./pages/AcademyCoursePage";
 import { AcademyModulePage } from "./pages/AcademyModulePage";
+import { ActeroForStartupsPage } from "./pages/ActeroForStartupsPage";
 import { CursorGlow } from "./components/ui/cursor-glow";
 import { CommandPalette } from "./components/ui/command-palette";
 import { ToastProvider } from "./components/ui/Toast";
@@ -130,6 +131,7 @@ function MainRouter() {
   else if (currentRoute === "/success") page = <SuccessPage onNavigate={navigate} />;
   else if (currentRoute === "/shopify-success") page = <ShopifySuccessPage onNavigate={navigate} />;
   else if (currentRoute === "/cancel") page = <CancelPage onNavigate={navigate} />;
+  else if (currentRoute === "/startups") page = <ActeroForStartupsPage onNavigate={navigate} />;
   else if (currentRoute === "/partner") page = <PartnerLandingPage onNavigate={navigate} />;
   else if (currentRoute === "/partners-program") page = <PartnersLandingPage onNavigate={navigate} />;
   else if (currentRoute === "/partners/apply") page = <PartnerApplyPage onNavigate={navigate} />;

@@ -1,101 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Check, ArrowRight, ArrowLeft, Loader2, ShieldCheck, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
 import { SEO } from "../components/SEO";
 
-const PLANS = [
-  {
-    id: "free",
-    name: "Free",
-    monthlyPrice: 0,
-    annualPrice: 0,
-    description: "Decouvrir Actero sans engagement.",
-    features: [
-      "50 tickets / mois",
-      "1 workflow actif",
-      "Integration Shopify",
-      "Dashboard ROI basique",
-      "Historique 7 jours · 1 user",
-      "Support documentation",
-    ],
-    cta: "Creer mon compte gratuit",
-    highlighted: false,
-    trial: false,
-  },
-  {
-    id: "starter",
-    name: "Starter",
-    monthlyPrice: 99,
-    annualPrice: 79,
-    description: "Automatiser les premieres taches.",
-    features: [
-      "1 000 tickets / mois",
-      "3 workflows actifs",
-      "Shopify + 2 integrations",
-      "5 agents IA specialises",
-      "Editeur ton de marque",
-      "Garde-fous & regles metier",
-      "Dashboard ROI complet · 3 mois",
-      "KB 100 entrees · 2 membres",
-      "Support email 48h",
-    ],
-    cta: "Essai gratuit 7 jours",
-    highlighted: false,
-    trial: true,
-    overage: "0,15 EUR/ticket suppl.",
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    monthlyPrice: 399,
-    annualPrice: 319,
-    description: "Automatisation complete + agent vocal.",
-    features: [
-      "5 000 tickets / mois",
-      "Workflows illimites",
-      "Toutes les integrations",
-      "Agent vocal (200 min incluses)",
-      "Agent WhatsApp Business",
-      "Simulateur de conversation",
-      "Regles avancees + escalade auto",
-      "Historique illimite · KB illimitee",
-      "5 membres · API + webhooks",
-      "Support prioritaire 24h",
-    ],
-    cta: "Essai gratuit 7 jours",
-    highlighted: true,
-    badge: "Recommande",
-    trial: true,
-    overage: "0,10 EUR/ticket suppl.",
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    monthlyPrice: null,
-    annualPrice: null,
-    description: "Sur mesure pour les grands comptes.",
-    features: [
-      "Tickets illimites",
-      "Multi-boutiques (10 stores)",
-      "Agent vocal avance (voix custom)",
-      "White-label disponible",
-      "API avancee + integrations custom",
-      "SLA 99,9% · Membres illimites",
-      "Account manager dedie",
-      "Onboarding + formation incluse",
-    ],
-    cta: "Contacter l'equipe",
-    highlighted: false,
-    trial: false,
-  },
-];
-
 export const SignupPage = ({ onNavigate }) => {
-  const [step, setStep] = useState(1); // 1 = choose plan, 2 = signup form
-  const [selectedPlan, setSelectedPlan] = useState("starter");
-  const [isAnnual, setIsAnnual] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [brandName, setBrandName] = useState("");
@@ -106,22 +16,12 @@ export const SignupPage = ({ onNavigate }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const params = new URLSearchParams(window.location.search);
-    const planParam = params.get("plan");
-    if (planParam && ["free", "starter", "pro", "enterprise"].includes(planParam)) {
-      setSelectedPlan(planParam);
-    }
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
-
-    if (selectedPlan === "enterprise") {
-      window.open("https://calendly.com/actero-fr/30min", "_blank");
-      return;
-    }
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError("Veuillez entrer un email valide.");
@@ -147,8 +47,7 @@ export const SignupPage = ({ onNavigate }) => {
           password,
           brand_name: brandName.trim(),
           shopify_url: shopifyUrl.trim() || undefined,
-          plan: selectedPlan,
-          billing: isAnnual ? "annual" : "monthly",
+          plan: "free",
         }),
       });
 
@@ -157,11 +56,6 @@ export const SignupPage = ({ onNavigate }) => {
       if (!res.ok) {
         setError(data.error || "Une erreur est survenue.");
         setLoading(false);
-        return;
-      }
-
-      if (data.checkout_url) {
-        window.location.href = data.checkout_url;
         return;
       }
 
@@ -179,14 +73,6 @@ export const SignupPage = ({ onNavigate }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const activePlan = PLANS.find((p) => p.id === selectedPlan);
-
-  const getCta = () => {
-    if (selectedPlan === "free") return "Créer mon compte gratuit";
-    if (selectedPlan === "enterprise") return "Demander une démo";
-    return "Commencer mon essai gratuit de 7 jours";
   };
 
   return (
@@ -210,167 +96,9 @@ export const SignupPage = ({ onNavigate }) => {
                 Créez votre compte Actero
               </h1>
               <p className="text-[#71717a] text-lg max-w-xl mx-auto">
-                Automatisez votre e-commerce avec l'IA. Commencez gratuitement ou essayez un plan payant pendant 7 jours.
+                Gratuit, sans carte bancaire.
               </p>
             </motion.div>
-
-            {/* Billing toggle */}
-            <div className="flex items-center justify-center gap-3 mb-10">
-              <span className={`text-sm font-medium ${!isAnnual ? "text-[#1a1a1a]" : "text-[#71717a]"}`}>
-                Mensuel
-              </span>
-              <button
-                onClick={() => setIsAnnual(!isAnnual)}
-                className={`relative w-12 h-6 rounded-full transition-colors ${
-                  isAnnual ? "bg-[#0F5F35]" : "bg-[#d4d4d8]"
-                }`}
-              >
-                <span
-                  className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
-                    isAnnual ? "translate-x-6" : ""
-                  }`}
-                />
-              </button>
-              <span className={`text-sm font-medium ${isAnnual ? "text-[#1a1a1a]" : "text-[#71717a]"}`}>
-                Annuel
-              </span>
-              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full transition-opacity ${
-                isAnnual ? "text-[#0F5F35] bg-[#0F5F35]/10 opacity-100" : "opacity-0"
-              }`}>
-                -20%
-              </span>
-            </div>
-
-          <AnimatePresence mode="wait">
-            {step === 1 && (
-            <motion.div key="step-plans" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.25 }}>
-
-            {/* Plan cards — each with CTA button */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
-              {PLANS.map((plan, idx) => {
-                const isSelected = selectedPlan === plan.id;
-                const price = isAnnual ? plan.annualPrice : plan.monthlyPrice;
-
-                const handleCardCta = (e) => {
-                  e.stopPropagation();
-                  setSelectedPlan(plan.id);
-                  if (plan.id === "enterprise") {
-                    window.open("https://calendly.com/actero-fr/30min", "_blank");
-                  } else {
-                    window.scrollTo(0, 0);
-                    setStep(2);
-                  }
-                };
-
-                return (
-                  <motion.div
-                    key={plan.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    onClick={() => setSelectedPlan(plan.id)}
-                    className={`relative text-left rounded-2xl border-2 transition-all flex flex-col cursor-pointer ${
-                      isSelected
-                        ? "border-[#0F5F35] shadow-lg bg-white"
-                        : plan.highlighted
-                        ? "border-[#0F5F35]/30 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]"
-                        : "border-[#f0f0f0] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]"
-                    } hover:shadow-md`}
-                  >
-                    {plan.badge && (
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0F5F35] text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 z-10">
-                        <Sparkles className="w-3 h-3" />
-                        {plan.badge}
-                      </span>
-                    )}
-
-                    <div className="p-5 flex-1 flex flex-col">
-                      <h3 className="text-lg font-bold text-[#1a1a1a] mb-0.5">{plan.name}</h3>
-                      <p className="text-[#71717a] text-[12px] mb-3">{plan.description}</p>
-
-                      <div className="mb-4">
-                        {price !== null ? (
-                          <>
-                            <div className="flex items-baseline gap-1">
-                              <span className="text-3xl font-bold text-[#1a1a1a]">{price}€</span>
-                              <span className="text-[#71717a] text-sm">/mois</span>
-                            </div>
-                            {isAnnual && plan.monthlyPrice > 0 && (
-                              <p className="text-[11px] text-[#9ca3af] mt-0.5">
-                                soit {price * 12}€/an au lieu de {plan.monthlyPrice * 12}€
-                              </p>
-                            )}
-                          </>
-                        ) : (
-                          <span className="text-3xl font-bold text-[#1a1a1a]">Sur devis</span>
-                        )}
-                        {plan.trial && (
-                          <p className="text-[12px] text-[#0F5F35] font-semibold mt-1.5">7 jours d'essai gratuit</p>
-                        )}
-                      </div>
-
-                      {/* Divider */}
-                      <div className="border-t border-[#f0f0f0] mb-4" />
-
-                      <p className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-2">Ce qui est inclus :</p>
-
-                      <ul className="space-y-1.5 flex-1">
-                        {plan.features.map((f, i) => (
-                          <li key={i} className="flex items-start gap-1.5 text-[12px] text-[#1a1a1a] leading-snug">
-                            <Check className="w-3.5 h-3.5 text-[#0F5F35] mt-0.5 shrink-0" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-
-                      {plan.overage && (
-                        <p className="text-[10px] text-[#9ca3af] mt-2 pt-2 border-t border-[#f0f0f0]">
-                          Depassement : {plan.overage}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* CTA button at bottom of card */}
-                    <div className="px-5 pb-5">
-                      <button
-                        onClick={handleCardCta}
-                        className={`w-full py-3 rounded-full text-[13px] font-semibold transition-colors flex items-center justify-center gap-2 ${
-                          plan.highlighted || isSelected
-                            ? "bg-[#0F5F35] text-white hover:bg-[#003725]"
-                            : plan.id === "enterprise"
-                            ? "bg-white text-[#1a1a1a] border border-[#f0f0f0] hover:bg-[#fafafa]"
-                            : "bg-[#0F5F35]/10 text-[#0F5F35] hover:bg-[#0F5F35]/20"
-                        }`}
-                      >
-                        {plan.cta}
-                        <ArrowRight className="w-4 h-4" />
-                      </button>
-                    </div>
-
-                    {isSelected && (
-                      <div className="absolute top-4 right-4 w-5 h-5 bg-[#0F5F35] rounded-full flex items-center justify-center">
-                        <Check className="w-3 h-3 text-white" />
-                      </div>
-                    )}
-                  </motion.div>
-                );
-              })}
-            </div>
-
-            </motion.div>
-            )}
-
-            {step === 2 && (
-            <motion.div key="step-form" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.25 }}>
-
-            {/* Back button */}
-            <button
-              onClick={() => { setStep(1); window.scrollTo(0, 0); }}
-              className="flex items-center gap-2 text-[13px] font-semibold text-[#71717a] hover:text-[#1a1a1a] mb-6 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Changer de plan
-            </button>
 
             {/* Signup form */}
             <motion.div
@@ -382,24 +110,9 @@ export const SignupPage = ({ onNavigate }) => {
             >
               <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] p-8">
                 <h2 className="text-xl font-bold text-[#1a1a1a] mb-1">
-                  {selectedPlan === "enterprise"
-                    ? "Demander une démo"
-                    : `Inscription — ${activePlan?.name}`}
+                  Créer mon compte
                 </h2>
-                {activePlan?.trial && (
-                  <p className="text-sm text-[#71717a] mb-6">
-                    <ShieldCheck className="w-4 h-4 inline mr-1 text-[#0F5F35]" />
-                    7 jours gratuits, sans engagement. Carte bancaire requise.
-                  </p>
-                )}
-                {!activePlan?.trial && selectedPlan !== "enterprise" && (
-                  <p className="text-sm text-[#71717a] mb-6">Aucune carte bancaire requise.</p>
-                )}
-                {selectedPlan === "enterprise" && (
-                  <p className="text-sm text-[#71717a] mb-6">
-                    Notre équipe vous recontacte sous 24h.
-                  </p>
-                )}
+                <p className="text-sm text-[#71717a] mb-6">Aucune carte bancaire requise.</p>
 
                 {error && (
                   <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 mb-5">
@@ -478,12 +191,16 @@ export const SignupPage = ({ onNavigate }) => {
                       <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
                       <>
-                        {getCta()}
+                        Créer mon compte gratuit
                         <ArrowRight className="w-4 h-4" />
                       </>
                     )}
                   </button>
                 </form>
+
+                <p className="text-[13px] text-[#71717a] text-center mt-4">
+                  Vous pourrez choisir un plan payant après.
+                </p>
 
                 <p className="text-xs text-[#71717a] text-center mt-5">
                   En créant un compte, vous acceptez nos{" "}
@@ -516,9 +233,6 @@ export const SignupPage = ({ onNavigate }) => {
                 </div>
               </div>
             </motion.div>
-            </motion.div>
-            )}
-          </AnimatePresence>
           </div>
         </main>
 

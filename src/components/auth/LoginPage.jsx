@@ -98,10 +98,10 @@ export const LoginPage = ({ onNavigate }) => {
                 <>
                   Pas encore de compte ?{" "}
                   <button
-                    onClick={() => onNavigate("/audit")}
+                    onClick={() => onNavigate("/signup")}
                     className="text-[#003725] font-semibold hover:text-[#0F5F35] transition-colors"
                   >
-                    Contactez-nous
+                    Créer un compte gratuitement
                   </button>
                 </>
               )}
@@ -234,6 +234,13 @@ export const LoginPage = ({ onNavigate }) => {
               </div>
             </>
           )}
+
+          <p className="text-center text-[13px] text-[#71717a] mt-6">
+            Pas encore de compte ?{' '}
+            <a href="/signup" onClick={(e) => { e.preventDefault(); onNavigate('/signup'); }} className="text-[#0F5F35] font-semibold hover:underline">
+              Créer un compte gratuitement
+            </a>
+          </p>
         </div>
       </motion.div>
     </div>

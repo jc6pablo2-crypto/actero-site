@@ -3,9 +3,9 @@ import { motion } from 'framer-motion'
 import { Calculator, TrendingUp, Clock, Euro, ArrowRight, Sparkles, Check } from 'lucide-react'
 
 const PLAN_RECO = [
-  { max: 50, plan: 'Free', price: '0', color: '#71717a', cta: 'Commencer gratuitement', href: '/signup?plan=free' },
-  { max: 1000, plan: 'Starter', price: '99', color: '#3b82f6', cta: 'Essai gratuit 7 jours', href: '/signup?plan=starter' },
-  { max: 5000, plan: 'Pro', price: '399', color: '#0F5F35', cta: 'Essai gratuit 7 jours', href: '/signup?plan=pro' },
+  { max: 50, plan: 'Free', price: '0', color: '#71717a', cta: 'Commencer gratuitement', href: '/signup' },
+  { max: 1000, plan: 'Starter', price: '99', color: '#3b82f6', cta: 'Essai gratuit 7 jours', href: '/signup' },
+  { max: 5000, plan: 'Pro', price: '399', color: '#0F5F35', cta: 'Essai gratuit 7 jours', href: '/signup' },
   { max: Infinity, plan: 'Enterprise', price: 'Sur devis', color: '#f59e0b', cta: 'Contacter l\'equipe', href: 'mailto:contact@actero.fr' },
 ]
 

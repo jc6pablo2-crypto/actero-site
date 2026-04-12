@@ -30,6 +30,7 @@ import {
   BookOpen,
   Shield,
   Users,
+  Code,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
@@ -52,6 +53,7 @@ import { ResponseTemplatesView } from '../components/client/ResponseTemplatesVie
 import { VoiceCallsView } from '../components/client/VoiceCallsView'
 import { VoiceAgentSetupView } from '../components/client/VoiceAgentSetupView'
 import { WhatsAppAgentSetupView } from '../components/client/WhatsAppAgentSetupView'
+import { ApiDocsView } from '../components/client/ApiDocsView'
 import { NotificationCenterView } from '../components/client/NotificationCenterView'
 import { AgentImprovementWidget } from '../components/client/AgentImprovementWidget'
 import { PlaybooksView } from '../components/client/PlaybooksView'
@@ -651,12 +653,13 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         { id: 'knowledge', label: 'Base de connaissances', icon: BookOpen },
         { id: 'guardrails', label: 'Garde-fous', icon: Shield, ...(can('guardrails') ? {} : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-700 border border-blue-200' }) },
         { id: 'simulator', label: 'Simulateur', icon: MessageSquare, ...(can('simulator') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' }) },
-        { id: 'whatsapp-agent', label: 'WhatsApp', icon: MessageCircle, ...(can('whatsapp_agent') ? { badge: 'Nouveau', badgeColor: 'bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/30' } : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' }) },
+        { id: 'whatsapp-agent', label: 'WhatsApp', icon: MessageCircle, ...(can('whatsapp_agent') ? { badge: 'Nouveau', badgeColor: 'bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/30' } : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-700 border border-blue-200' }) },
       ],
     },
 
     { type: 'section', label: 'Connexions' },
     { id: 'integrations', label: 'Integrations', icon: Plug },
+    { id: 'api-docs', label: 'API', icon: Code, ...(can('api_webhooks') ? {} : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-700 border border-blue-200' }) },
     { id: 'voice-agent', label: 'Agent vocal', icon: Phone, ...(can('voice_agent') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' }) },
 
     {
@@ -842,6 +845,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "achievements" && "Recompenses"}
             {activeTab === "roi" && "ROI"}
             {activeTab === "profile" && "Compte"}
+            {activeTab === "api-docs" && "API Actero"}
             {activeTab === "billing" && "Facturation"}
             {planName && (
               <span className={`ml-2 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
@@ -1348,6 +1352,12 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "whatsapp-agent" && (
             <PlanGate feature="whatsapp_agent" planId={planId} inTrial={inTrial} onUpgrade={() => setActiveTab('billing')}>
               <WhatsAppAgentSetupView clientId={currentClient?.id} />
+            </PlanGate>
+          )}
+
+          {activeTab === "api-docs" && (
+            <PlanGate feature="api_webhooks" planId={planId} inTrial={inTrial} onUpgrade={() => setActiveTab('billing')}>
+              <ApiDocsView clientId={currentClient?.id} />
             </PlanGate>
           )}
 

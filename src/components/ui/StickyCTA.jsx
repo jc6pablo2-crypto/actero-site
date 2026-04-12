@@ -23,7 +23,7 @@ export const StickyCTA = ({ onNavigate, vertical }) => {
           className="fixed bottom-5 left-4 right-4 z-50 md:hidden"
         >
           <button
-            onClick={() => onNavigate('/signup?plan=pro')}
+            onClick={() => onNavigate('/signup')}
             className="w-full py-4 px-6 rounded-full font-bold text-base flex items-center justify-center gap-2 shadow-xl transition-all active:scale-[0.98] bg-[#0F5F35] text-white"
           >
             Essai gratuit 7 jours

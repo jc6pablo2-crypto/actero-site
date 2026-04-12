@@ -7,7 +7,7 @@ import {
 import { Logo } from './Logo'
 import { ButtonColorful } from '../ui/button-colorful'
 
-export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
+export const Navbar = ({ onNavigate, trackEvent }) => {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -79,7 +79,7 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
               <ButtonColorful
                 onClick={() => {
                   trackEvent?.("Header_CTA_Clicked", { location: "navbar" });
-                  onNavigate('/signup?plan=pro');
+                  onNavigate('/signup');
                 }}
               >
                 Demarrer gratuitement

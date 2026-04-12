@@ -10,7 +10,7 @@ export const GlassHero = ({ onNavigate }) => {
         headlineMain: "60% de vos tickets Shopify",
         headlineSub: "résolus automatiquement",
         subtitle: "Actero automatise le support client et relance vos paniers abandonnés pour les marques Shopify qui veulent scaler sans multiplier les coûts.",
-        subtitleBold: "Résultats mesurables dès le premier mois.",
+        subtitleBold: "Commencez gratuitement, sans carte bancaire.",
         cards: [
             { title: "Support IA 24/7", desc: "80% des tickets résolus sans humain", bg: "bg-[#003725]", text: "text-white", descText: "text-white/60", icon: <Headphones className="w-7 h-7" />, iconBg: "bg-white/15", gradient: "bg-gradient-to-br from-[#003725] to-[#0F5F35]" },
             { title: "Relance paniers", desc: "+15% de taux de récupération", bg: "bg-[#F9F7F1]", text: "text-[#003725]", descText: "text-[#716D5C]", icon: <RefreshCw className="w-7 h-7" />, iconBg: "bg-[#003725]/10", gradient: "bg-gradient-to-br from-[#F9F7F1] to-[#EDE9E0]" },
@@ -57,7 +57,7 @@ export const GlassHero = ({ onNavigate }) => {
                     {/* CTAs */}
                     <FadeInUp delay={0.15} className="flex flex-col items-center gap-3">
                         <div className="flex flex-wrap items-center justify-center gap-4">
-                            <ButtonColorful onClick={() => onNavigate('/signup?plan=pro')}>
+                            <ButtonColorful onClick={() => onNavigate('/signup')}>
                                 Essai gratuit 7 jours <ArrowRight className="w-4 h-4" />
                             </ButtonColorful>
                             <button
@@ -68,7 +68,7 @@ export const GlassHero = ({ onNavigate }) => {
                             </button>
                         </div>
                         <p className="text-xs text-[#716D5C] font-medium">
-                            Ou inscrivez-vous avec votre email professionnel
+                            Créez votre compte en 30 secondes
                         </p>
                     </FadeInUp>
 

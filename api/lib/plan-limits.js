@@ -5,14 +5,14 @@
 
 export const PLAN_LIMITS = {
   free: { tickets: 50, workflows: 1, integrations: 1, voice_minutes: 0, whatsapp: false, overage: null },
-  starter: { tickets: 1000, workflows: 3, integrations: 3, voice_minutes: 0, whatsapp: false, overage: 0.15 },
+  starter: { tickets: 1000, workflows: 3, integrations: 3, voice_minutes: 0, whatsapp: true, overage: 0.15 },
   pro: { tickets: 5000, workflows: Infinity, integrations: Infinity, voice_minutes: 200, whatsapp: true, overage: 0.10 },
   enterprise: { tickets: Infinity, workflows: Infinity, integrations: Infinity, voice_minutes: Infinity, whatsapp: true, overage: null },
 }
 
 export const PLAN_FEATURES = {
   free: { brand_editor: false, guardrails: false, simulator: false, voice_agent: false, whatsapp_agent: false, specialized_agents: false, api_webhooks: false },
-  starter: { brand_editor: true, guardrails: true, simulator: false, voice_agent: false, whatsapp_agent: false, specialized_agents: true, api_webhooks: false },
+  starter: { brand_editor: true, guardrails: true, simulator: false, voice_agent: false, whatsapp_agent: true, specialized_agents: true, api_webhooks: true },
   pro: { brand_editor: true, guardrails: true, simulator: true, voice_agent: true, whatsapp_agent: true, specialized_agents: true, api_webhooks: true },
   enterprise: { brand_editor: true, guardrails: true, simulator: true, voice_agent: true, whatsapp_agent: true, specialized_agents: true, api_webhooks: true },
 }

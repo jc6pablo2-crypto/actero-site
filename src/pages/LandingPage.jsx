@@ -71,7 +71,7 @@ export const LandingPage = ({ onNavigate }) => {
       "name": "Actero",
       "url": "https://actero.fr",
       "logo": "https://actero.fr/favicon-192.png",
-      "description": "Agence IA specialisee dans l'automatisation pour e-commerce Shopify",
+      "description": "Plateforme SaaS d'automatisation IA pour e-commerce Shopify",
       "foundingDate": "2026",
       "founders": [
         { "@type": "Person", "name": "Pablo Priefert-Vallette" },
@@ -104,7 +104,7 @@ export const LandingPage = ({ onNavigate }) => {
       <SEO
         title="Actero — Automatisation IA pour E-commerce Shopify"
         description="Actero deploie des agents IA autonomes pour automatiser le SAV e-commerce Shopify. ROI mesurable des le premier mois."
-        keywords="agent IA e-commerce, automatisation Shopify, agent SAV IA, agence IA France"
+        keywords="agent IA e-commerce, automatisation Shopify, agent SAV IA, SaaS IA France"
         canonical="/"
         ogImage="https://actero.fr/og-image.png"
         schemaData={landingSchema}
@@ -117,7 +117,6 @@ export const LandingPage = ({ onNavigate }) => {
         {/* NAVBAR */}
         <Navbar
           onNavigate={onNavigate}
-          onAuditOpen={() => onNavigate("/audit")}
           scrollToId={scrollToId}
         />
 
@@ -279,7 +278,7 @@ export const LandingPage = ({ onNavigate }) => {
                         pour reprendre le contrôle.
                       </h2>
                       <p className="text-lg text-[#716D5C] font-medium max-w-2xl mx-auto">
-                        Pas des outils à configurer. Des résultats business déployés et mesurés pour vous.
+                        Des résultats business concrets, mesurés en temps réel depuis votre dashboard.
                       </p>
                     </>
                   ) : (
@@ -448,13 +447,13 @@ export const LandingPage = ({ onNavigate }) => {
                     Déploiement
                   </p>
                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-[#262626] mb-6">
-                    Opérationnel en 7 jours.<br className="hidden md:block" />
-                    Vous ne touchez à rien.
+                    Configurez vous-même en 5 min.<br className="hidden md:block" />
+                    Résultats immédiats.
                   </h2>
                   <p className="text-lg text-[#716D5C] font-medium max-w-2xl mx-auto">
                     {vertical === 'ecommerce'
-                      ? "Pas de setup technique de votre côté. On audite, on déploie, on optimise. Vous validez les résultats."
-                      : "On analyse votre agence, on déploie vos 3 agents IA, et on optimise en continu. Zéro compétence technique requise."
+                      ? "Connectez votre Shopify, configurez vos agents IA, et laissez la plateforme optimiser votre support et vos ventes."
+                      : "Connectez vos outils, configurez vos agents IA en quelques clics, et laissez la plateforme travailler pour vous."
                     }
                   </p>
                 </FadeInUp>
@@ -468,13 +467,13 @@ export const LandingPage = ({ onNavigate }) => {
                         <p className="text-xs font-bold uppercase tracking-widest text-[#716D5C] mb-2">Résultat</p>
                         <p className="text-xl md:text-2xl font-bold text-[#262626] leading-snug">
                           {vertical === 'ecommerce'
-                            ? <>Un système qui tourne <span className="text-[#716D5C]">24h/24</span>, optimise vos marges en continu, <br className="hidden md:block" />piloté par un account manager dédié.</>
-                            : <>3 agents IA qui travaillent <span className="text-[#716D5C]">24h/24</span> pour votre agence, <br className="hidden md:block" />pilotés par un account manager dédié.</>
+                            ? <>Un système qui tourne <span className="text-[#716D5C]">24h/24</span>, optimise vos marges en continu, <br className="hidden md:block" />piloté depuis votre dashboard en temps réel.</>
+                            : <>3 agents IA qui travaillent <span className="text-[#716D5C]">24h/24</span> pour vous, <br className="hidden md:block" />pilotés depuis votre dashboard en temps réel.</>
                           }
                         </p>
                       </div>
                       <ButtonColorful
-                        onClick={() => onNavigate("/signup?plan=pro")}
+                        onClick={() => onNavigate("/signup")}
                         className="flex-shrink-0 flex items-center gap-2"
                       >
                         Essai gratuit 7 jours <ArrowRight className="w-4 h-4" />
@@ -573,7 +572,7 @@ export const LandingPage = ({ onNavigate }) => {
                               <p className="text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-3">Impact net en 30 jours</p>
                               <p className="text-5xl font-bold text-[#003725] tracking-tighter mb-2">+ 12 400 €</p>
                               <p className="text-sm text-[#716D5C] font-medium mb-6">de revenus supplémentaires récupérés</p>
-                              <button onClick={() => onNavigate("/signup?plan=pro")} className="text-sm font-bold text-[#262626] border-b-2 border-gray-300 hover:border-gray-900 transition-colors pb-0.5 inline-flex items-center gap-1">
+                              <button onClick={() => onNavigate("/signup")} className="text-sm font-bold text-[#262626] border-b-2 border-gray-300 hover:border-gray-900 transition-colors pb-0.5 inline-flex items-center gap-1">
                                 Obtenir le même résultat <ArrowRight className="w-3 h-3" />
                               </button>
                             </div>
@@ -610,7 +609,7 @@ export const LandingPage = ({ onNavigate }) => {
                               <p className="text-xs font-bold text-[#716D5C] uppercase tracking-widest mb-3">Impact en 30 jours</p>
                               <p className="text-5xl font-bold text-[#003725] tracking-tighter mb-2">+58%</p>
                               <p className="text-sm text-[#716D5C] font-medium mb-6">de rendez-vous qualifiés supplémentaires</p>
-                              <button onClick={() => onNavigate("/signup?plan=pro")} className="text-sm font-bold text-[#262626] border-b-2 border-gray-300 hover:border-gray-900 transition-colors pb-0.5 inline-flex items-center gap-1">
+                              <button onClick={() => onNavigate("/signup")} className="text-sm font-bold text-[#262626] border-b-2 border-gray-300 hover:border-gray-900 transition-colors pb-0.5 inline-flex items-center gap-1">
                                 Obtenir le même résultat <ArrowRight className="w-3 h-3" />
                               </button>
                             </div>
@@ -641,8 +640,8 @@ export const LandingPage = ({ onNavigate }) => {
                   </h2>
                   <p className="text-lg text-[#716D5C] font-medium max-w-2xl mx-auto">
                     {vertical === 'ecommerce'
-                      ? "Make et Zapier vous laissent tout construire seul. Actero audite, déploie, maintient et optimise — vous ne gérez rien."
-                      : "Les CRM classiques vous laissent tout configurer seul. Actero déploie vos agents IA et les optimise — vous vous concentrez sur la vente."
+                      ? "Make et Zapier vous laissent tout construire seul. Actero est une plateforme clé en main : connectez, configurez, c'est en production."
+                      : "Les CRM classiques vous laissent tout configurer seul. Actero est une plateforme clé en main avec des agents IA prêts à l'emploi."
                     }
                   </p>
                 </FadeInUp>
@@ -663,11 +662,11 @@ export const LandingPage = ({ onNavigate }) => {
 
                   <div className="divide-y divide-gray-200">
                     {(vertical === 'ecommerce' ? [
-                      { old: "Vous construisez vos flux vous-même", new: "On déploie et on gère pour vous" },
-                      { old: "Pas de stratégie, juste des connecteurs", new: "Audit + recommandation + exécution" },
+                      { old: "Vous construisez vos flux vous-même", new: "Agents IA préconfigurés, prêts en 5 min" },
+                      { old: "Pas de stratégie, juste des connecteurs", new: "Recommandations IA + exécution automatique" },
                       { old: "Maintenance et debug à votre charge", new: "Monitoring et auto-réparation 24/7" },
                       { old: "Aucun suivi du retour sur investissement", new: "Dashboard ROI en temps réel" },
-                      { old: "Support communautaire / docs", new: "Account manager dédié" },
+                      { old: "Support communautaire / docs", new: "Support prioritaire intégré" },
                     ] : [
                       { old: "Relances manuelles par téléphone", new: "Relances automatiques multi-canal (email + SMS)" },
                       { old: "Collecte de documents par email/courrier", new: "Agent IA qui collecte et relance automatiquement" },
@@ -713,36 +712,36 @@ export const LandingPage = ({ onNavigate }) => {
                       {/* Left — Offer details */}
                       <div className="p-8 md:p-12 border-b md:border-b-0 md:border-r border-gray-200">
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold mb-6 uppercase tracking-widest bg-[#F9F7F1] border border-gray-200 text-[#716D5C]">
-                          <Zap className="w-3.5 h-3.5" /> Done-for-you
+                          <Zap className="w-3.5 h-3.5" /> Self-service
                         </div>
                         <h3 className="text-3xl font-bold text-[#262626] mb-3 tracking-tight">
-                          {vertical === 'ecommerce' ? 'Programme Actero' : 'Programme Actero Immobilier'}
+                          {vertical === 'ecommerce' ? 'Plateforme Actero' : 'Plateforme Actero'}
                         </h3>
                         <p className="text-[#716D5C] font-medium leading-relaxed mb-8">
                           {vertical === 'ecommerce'
-                            ? "Un déploiement sur mesure, adapté à votre boutique, vos outils et vos objectifs de croissance. Pas de template. Pas de self-service."
-                            : "Un déploiement sur mesure avec 3 agents IA configurés pour votre agence. Zéro setup technique. Résultats dès le premier mois."
+                            ? "Créez votre compte en 30 secondes. Connectez Shopify, configurez vos agents IA et voyez les résultats dès le premier jour."
+                            : "Créez votre compte en 30 secondes. Connectez vos outils, activez vos agents IA et voyez les résultats dès le premier jour."
                           }
                         </p>
 
                         <div className="space-y-4 mb-8">
                           {(vertical === 'ecommerce' ? [
-                            "Audit complet de votre e-commerce",
+                            "Configuration en 5 minutes, sans code",
                             "Agent IA support client niveau 1",
                             "Relances paniers abandonnés automatisées",
                             "Intégrations Shopify + CRM + support",
                             "Dashboard de performance en temps réel",
-                            "Account manager dédié",
+                            "Support prioritaire intégré",
                             "Optimisation et reporting continus",
                             "Alertes WhatsApp & Slack en temps réel",
                           ] : [
-                            "Audit complet de votre agence",
+                            "Configuration en 5 minutes, sans code",
                             "Agent IA prise de rendez-vous",
                             "Agent IA collecte de documents",
                             "Agent IA relance de prospects",
                             "Intégrations CRM + Agenda + Email + SMS",
                             "Dashboard de performance en temps réel",
-                            "Account manager dédié",
+                            "Support prioritaire intégré",
                             "Alertes WhatsApp & Slack en temps réel",
                           ]).map((feature, i) => (
                             <div key={i} className="flex items-center gap-3">
@@ -817,7 +816,7 @@ export const LandingPage = ({ onNavigate }) => {
 
                         <div>
                           <ButtonColorful
-                            onClick={() => onNavigate("/signup?plan=pro")}
+                            onClick={() => onNavigate("/signup")}
                             className="w-full flex items-center justify-center gap-2 mb-4"
                           >
                             Essai gratuit 7 jours <ArrowRight className="w-4 h-4" />
@@ -892,7 +891,7 @@ export const LandingPage = ({ onNavigate }) => {
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Integration Shopify</li>
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Dashboard ROI basique</li>
                     </ul>
-                    <a href="/signup?plan=free" className="block text-center py-2.5 rounded-full text-[13px] font-semibold bg-[#0F5F35]/10 text-[#0F5F35] hover:bg-[#0F5F35]/20 transition">
+                    <a href="/signup" className="block text-center py-2.5 rounded-full text-[13px] font-semibold bg-[#0F5F35]/10 text-[#0F5F35] hover:bg-[#0F5F35]/20 transition">
                       Commencer gratuitement
                     </a>
                   </div>
@@ -909,7 +908,7 @@ export const LandingPage = ({ onNavigate }) => {
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Editeur ton de marque</li>
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Support email 48h</li>
                     </ul>
-                    <a href="/signup?plan=starter" className="block text-center py-2.5 rounded-full text-[13px] font-semibold bg-[#0F5F35]/10 text-[#0F5F35] hover:bg-[#0F5F35]/20 transition">
+                    <a href="/signup" className="block text-center py-2.5 rounded-full text-[13px] font-semibold bg-[#0F5F35]/10 text-[#0F5F35] hover:bg-[#0F5F35]/20 transition">
                       Essai gratuit 7 jours
                     </a>
                   </div>
@@ -928,7 +927,7 @@ export const LandingPage = ({ onNavigate }) => {
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Simulateur + API</li>
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Support prioritaire 24h</li>
                     </ul>
-                    <a href="/signup?plan=pro" className="block text-center py-2.5 rounded-full text-[13px] font-semibold bg-[#0F5F35] text-white hover:bg-[#003725] transition">
+                    <a href="/signup" className="block text-center py-2.5 rounded-full text-[13px] font-semibold bg-[#0F5F35] text-white hover:bg-[#003725] transition">
                       Essai gratuit 7 jours
                     </a>
                   </div>
@@ -969,7 +968,7 @@ export const LandingPage = ({ onNavigate }) => {
                   {(vertical === 'ecommerce' ? [
                     {
                       q: "Est-ce que je dois savoir coder ?",
-                      a: "Non. Actero est 100% done-for-you. On configure, déploie et maintient tout. Vous n'avez aucune action technique à faire."
+                      a: "Non. Actero est 100% self-service. Connectez vos outils en quelques clics, configurez vos agents IA depuis le dashboard, et tout fonctionne automatiquement."
                     },
                     {
                       q: "Combien de temps pour voir les premiers résultats ?",
@@ -981,7 +980,7 @@ export const LandingPage = ({ onNavigate }) => {
                     },
                     {
                       q: "Quel retour sur investissement attendre ?",
-                      a: "Chaque déploiement est conçu pour être rentabilisé dès le premier mois. Le ROI exact dépend de votre volume de tickets et de votre taux d'abandon panier. L'audit gratuit vous donne une estimation précise avant de démarrer."
+                      a: "Chaque déploiement est conçu pour être rentabilisé dès le premier mois. Le ROI exact dépend de votre volume de tickets et de votre taux d'abandon panier. Le simulateur ROI sur la page vous donne une estimation précise."
                     },
                     {
                       q: "Quels outils supportez-vous ?",
@@ -989,7 +988,7 @@ export const LandingPage = ({ onNavigate }) => {
                     },
                     {
                       q: "Quelle est la différence avec Make ou Zapier ?",
-                      a: "Make et Zapier sont du self-service : vous construisez et maintenez tout vous-même. Actero est un service géré : audit, déploiement, maintenance et optimisation continue, avec un account manager dédié. Vous ne touchez à rien."
+                      a: "Make et Zapier sont des outils de workflow génériques : vous construisez et maintenez tout vous-même. Actero est une plateforme spécialisée e-commerce avec des agents IA préconfigurés, un dashboard ROI et une optimisation continue automatique."
                     },
                     {
                       q: "Combien ça coûte ?",
@@ -1084,7 +1083,7 @@ export const LandingPage = ({ onNavigate }) => {
                       >
                         Voir les tarifs
                       </button>
-                      <ButtonColorful onClick={() => onNavigate('/signup?plan=pro')}>
+                      <ButtonColorful onClick={() => onNavigate('/signup')}>
                         Essai gratuit 7 jours
                       </ButtonColorful>
                     </div>
@@ -1108,14 +1107,14 @@ export const LandingPage = ({ onNavigate }) => {
 
                   <p className="text-lg text-white/70 font-medium max-w-2xl mx-auto mb-10 leading-relaxed">
                     {vertical === 'ecommerce'
-                      ? "En 15 minutes, on analyse votre boutique et on vous montre exactement combien vous perdez — et ce qu'on peut récupérer pour vous."
-                      : "En 15 minutes, on analyse votre agence et on vous montre exactement combien de prospects vous perdez — et ce que nos agents IA peuvent récupérer."
+                      ? "Créez votre compte gratuitement, connectez Shopify en 2 clics, et voyez combien vous pouvez récupérer dès le premier jour."
+                      : "Créez votre compte gratuitement, connectez vos outils, et voyez les résultats dès le premier jour."
                     }
                   </p>
 
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
                     <button
-                      onClick={() => onNavigate('/signup?plan=pro')}
+                      onClick={() => onNavigate('/signup')}
                       className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-white text-[#003725] font-semibold text-[15px] hover:bg-[#F9F7F1] transition-colors gap-2"
                     >
                       Essai gratuit 7 jours
