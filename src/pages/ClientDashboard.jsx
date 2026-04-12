@@ -21,6 +21,7 @@ import {
   Bell,
   Inbox,
   Zap,
+  ArrowUpRight,
   ArrowRight,
   ShoppingBag,
   Trophy,
@@ -724,6 +725,17 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     isSetupMode &&
     completedSetupSteps < 3;
 
+  // Upgrade CTA for sidebar — only shown for Free and Starter plans
+  const sidebarUpgradeCta = (planId === 'free' || planId === 'starter') ? (
+    <button
+      onClick={() => setActiveTab('billing')}
+      className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] font-bold transition-all bg-[#0F5F35] text-white hover:bg-[#003725] shadow-sm"
+    >
+      <ArrowUpRight className="w-3.5 h-3.5" />
+      {planId === 'free' ? 'Passer au Starter — 99€/mois' : 'Passer au Pro — 399€/mois'}
+    </button>
+  ) : null
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row font-sans bg-[#fafafa] text-[#1a1a1a]">
       {shouldShowIndustryPicker && (
@@ -768,6 +780,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           theme={theme}
           userName={currentClient?.brand_name}
           userEmail={currentClient?.contact_email}
+          upgradeCta={sidebarUpgradeCta}
         />
       </div>
 
@@ -794,6 +807,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                 theme={theme}
                 userName={currentClient?.brand_name}
                 userEmail={currentClient?.contact_email}
+                upgradeCta={sidebarUpgradeCta}
               />
             </motion.div>
           </div>

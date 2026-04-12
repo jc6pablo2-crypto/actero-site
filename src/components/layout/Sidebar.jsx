@@ -13,6 +13,7 @@ export const Sidebar = ({
   theme = "light",
   userName,
   userEmail,
+  upgradeCta,
 }) => {
   const [expandedSections, setExpandedSections] = useState({})
   const [showAccountMenu, setShowAccountMenu] = useState(false)
@@ -206,6 +207,13 @@ export const Sidebar = ({
           );
         })}
       </nav>
+
+      {/* Upgrade CTA */}
+      {upgradeCta && (
+        <div className="px-3 pb-2">
+          {upgradeCta}
+        </div>
+      )}
 
       {/* Footer — User profile with dropdown */}
       <div className="relative border-t border-[#f0f0f0]" ref={accountRef}>
