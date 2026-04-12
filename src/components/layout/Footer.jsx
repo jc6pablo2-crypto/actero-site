@@ -79,6 +79,11 @@ export const Footer = ({ onNavigate }) => {
           </p>
         </div>
       </div>
+      <div className="max-w-6xl mx-auto mt-8 pt-6 border-t border-gray-200 text-center">
+        <p className="text-[11px] text-[#9ca3af] font-medium">
+          Conforme RGPD · Données hébergées en Europe · Chiffrement AES-256
+        </p>
+      </div>
     </footer>
   );
 };

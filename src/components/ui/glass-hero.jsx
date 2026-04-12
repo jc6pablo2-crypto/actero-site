@@ -7,8 +7,8 @@ export const GlassHero = ({ onNavigate }) => {
 
     const content = {
         badge: { icon: '/elevenlabs-grants.webp', label: 'Powered by ElevenLabs Grants' },
-        headlineMain: "L'automatisation IA",
-        headlineSub: "qui fait croître votre e-commerce",
+        headlineMain: "60% de vos tickets Shopify",
+        headlineSub: "résolus automatiquement",
         subtitle: "Actero automatise le support client et relance vos paniers abandonnés pour les marques Shopify qui veulent scaler sans multiplier les coûts.",
         subtitleBold: "Résultats mesurables dès le premier mois.",
         cards: [
@@ -55,16 +55,21 @@ export const GlassHero = ({ onNavigate }) => {
                     </FadeInUp>
 
                     {/* CTAs */}
-                    <FadeInUp delay={0.15} className="flex flex-wrap items-center justify-center gap-4">
-                        <ButtonColorful onClick={() => onNavigate('/signup?plan=pro')}>
-                            Essai gratuit 7 jours <ArrowRight className="w-4 h-4" />
-                        </ButtonColorful>
-                        <button
-                            onClick={() => onNavigate('/tarifs')}
-                            className="text-sm font-semibold text-[#003725] underline underline-offset-4 decoration-[#003725]/40 hover:decoration-[#003725] transition-colors"
-                        >
-                            Voir les tarifs
-                        </button>
+                    <FadeInUp delay={0.15} className="flex flex-col items-center gap-3">
+                        <div className="flex flex-wrap items-center justify-center gap-4">
+                            <ButtonColorful onClick={() => onNavigate('/signup?plan=pro')}>
+                                Essai gratuit 7 jours <ArrowRight className="w-4 h-4" />
+                            </ButtonColorful>
+                            <button
+                                onClick={() => onNavigate('/tarifs')}
+                                className="text-sm font-semibold text-[#003725] underline underline-offset-4 decoration-[#003725]/40 hover:decoration-[#003725] transition-colors"
+                            >
+                                Voir les tarifs
+                            </button>
+                        </div>
+                        <p className="text-xs text-[#716D5C] font-medium">
+                            Ou inscrivez-vous avec votre email professionnel
+                        </p>
                     </FadeInUp>
 
                 </div>

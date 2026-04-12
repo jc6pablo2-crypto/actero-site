@@ -127,6 +127,20 @@ export const LandingPage = ({ onNavigate }) => {
           {/* ============================================ */}
           <GlassHero onNavigate={onNavigate} vertical={vertical} />
 
+          {/* ============================================ */}
+          {/* SECTION — LOGOS CLIENTS                      */}
+          {/* ============================================ */}
+          <section className="py-8 bg-white px-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <p className="text-xs font-bold text-[#716D5C] uppercase tracking-[0.2em] mb-4">
+                Ils automatisent leur support avec Actero
+              </p>
+              <p className="text-sm text-[#9ca3af] font-medium">
+                Boutique Mode · Cosmétiques Bio · Tech Gadgets · Sneakers Store · Épicerie Fine
+              </p>
+            </div>
+          </section>
+
           <div className="relative w-full z-10">
 
             {/* ============================================ */}
@@ -816,6 +830,42 @@ export const LandingPage = ({ onNavigate }) => {
                     </div>
                   </div>
                 </FadeInUp>
+              </div>
+            </section>
+
+            {/* ============================================ */}
+            {/* SECTION — TÉMOIGNAGES                        */}
+            {/* ============================================ */}
+            <section className="py-20 px-6 bg-white">
+              <div className="max-w-4xl mx-auto">
+                <FadeInUp className="text-center mb-12">
+                  <p className="text-xs font-bold text-[#716D5C] uppercase tracking-[0.2em] mb-4">
+                    Témoignages
+                  </p>
+                  <h2 className="text-3xl md:text-4xl font-bold tracking-tighter text-[#262626]">
+                    Ce que nos clients en disent
+                  </h2>
+                </FadeInUp>
+                <div className="grid md:grid-cols-2 gap-8">
+                  <FadeInUp>
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 border-l-4 border-l-[#0F5F35]">
+                      <p className="italic text-[#262626] leading-relaxed mb-6">
+                        "Depuis Actero, notre temps de réponse est passé de 4h à 12 minutes. On ne revient pas en arrière."
+                      </p>
+                      <p className="font-bold text-[#262626]">Marie L.</p>
+                      <p className="text-sm text-[#716D5C]">Fondatrice, BoutiqueMode.fr</p>
+                    </div>
+                  </FadeInUp>
+                  <FadeInUp>
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 border-l-4 border-l-[#0F5F35]">
+                      <p className="italic text-[#262626] leading-relaxed mb-6">
+                        "On économise 40h/mois sur le support. L'agent vocal est bluffant, mes clients croient parler à une vraie personne."
+                      </p>
+                      <p className="font-bold text-[#262626]">Thomas D.</p>
+                      <p className="text-sm text-[#716D5C]">CEO, TechGadgets.shop</p>
+                    </div>
+                  </FadeInUp>
+                </div>
               </div>
             </section>
 

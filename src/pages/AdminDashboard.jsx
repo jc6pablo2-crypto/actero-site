@@ -89,6 +89,8 @@ import { AdminTokensView } from '../components/admin/AdminTokensView'
 import { AdminHallucinationView } from '../components/admin/AdminHallucinationView'
 import { AdminAlertBuilderView } from '../components/admin/AdminAlertBuilderView'
 import { AdminAddEnterpriseView } from '../components/admin/AdminAddEnterpriseView'
+import { AdminStripeSetupView } from '../components/admin/AdminStripeSetupView'
+import { AdminConversionPipelineView } from '../components/admin/AdminConversionPipelineView'
 import { KpiCard, KpiRow } from '../components/ui/KpiCard'
 import { SectionCard } from '../components/ui/SectionCard'
 import { StatusPill } from '../components/ui/StatusPill'
@@ -309,6 +311,8 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/admin/team") return "team";
     if (route === "/admin/settings") return "settings";
     if (route === "/admin/add-enterprise") return "add-enterprise";
+    if (route === "/admin/stripe-setup") return "stripe-setup";
+    if (route === "/admin/conversion-pipeline") return "conversion-pipeline";
     return "overview";
   };
 
@@ -469,7 +473,8 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { type: 'section', label: 'ANALYTICS' },
     { id: 'mrr', label: 'Revenus', icon: DollarSign },
     { id: 'roi-leaderboard', label: 'ROI', icon: Trophy },
-    { id: 'cost-tracker', label: 'Couts IA', icon: CreditCard },
+    { id: 'cost-tracker', label: 'Couts IA', icon: Coins },
+    { id: 'conversion-pipeline', label: 'Conversion Free', icon: TrendingUp },
 
     {
       type: 'expandable',
@@ -481,6 +486,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         { id: 'alert-builder', label: 'Alertes Slack', icon: BellRing },
         { id: 'billing', label: 'Facturation', icon: Receipt },
         { id: 'shopify', label: 'App Shopify', icon: ShoppingBag },
+        { id: 'stripe-setup', label: 'Config Stripe', icon: CreditCard },
         { id: 'team', label: 'Equipe', icon: UserCog },
       ],
     },
@@ -997,6 +1003,8 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "alert-builder" && <div className="max-w-7xl mx-auto animate-fade-in-up"><AdminAlertBuilderView /></div>}
           {activeTab === "manual-review" && <div className="max-w-7xl mx-auto animate-fade-in-up"><AdminManualReviewView /></div>}
           {activeTab === "playbooks" && <div className="max-w-7xl mx-auto animate-fade-in-up"><AdminPlaybooksView /></div>}
+          {activeTab === "stripe-setup" && <div className="max-w-7xl mx-auto animate-fade-in-up"><AdminStripeSetupView /></div>}
+          {activeTab === "conversion-pipeline" && <div className="max-w-7xl mx-auto animate-fade-in-up"><AdminConversionPipelineView /></div>}
 
           {/* Placeholder routes for items announced in sidebar but not yet wired */}
           {(activeTab === "conversations" || activeTab === "escalations-inbox" || activeTab === "action-logs" || activeTab === "team" || activeTab === "settings") && (

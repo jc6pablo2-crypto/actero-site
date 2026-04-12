@@ -79,7 +79,7 @@ export const Navbar = ({ onNavigate, onAuditOpen, trackEvent }) => {
               <ButtonColorful
                 onClick={() => {
                   trackEvent?.("Header_CTA_Clicked", { location: "navbar" });
-                  onNavigate('/tarifs');
+                  onNavigate('/signup?plan=pro');
                 }}
               >
                 Demarrer gratuitement
