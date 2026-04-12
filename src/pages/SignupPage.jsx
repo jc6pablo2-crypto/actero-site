@@ -119,7 +119,7 @@ export const SignupPage = ({ onNavigate }) => {
     setSuccessMessage("");
 
     if (selectedPlan === "enterprise") {
-      window.open("https://calendly.com/actero/demo", "_blank");
+      window.open("https://calendly.com/actero-fr/30min", "_blank");
       return;
     }
 
@@ -255,7 +255,7 @@ export const SignupPage = ({ onNavigate }) => {
                   e.stopPropagation();
                   setSelectedPlan(plan.id);
                   if (plan.id === "enterprise") {
-                    window.open("https://calendly.com/actero/demo", "_blank");
+                    window.open("https://calendly.com/actero-fr/30min", "_blank");
                   } else {
                     window.scrollTo(0, 0);
                     setStep(2);

@@ -160,7 +160,7 @@ export const ClientBillingView = ({ theme }) => {
   // ── Upgrade handler ───────────────────────────────────────────
   const handleUpgrade = async (targetPlan) => {
     if (targetPlan === 'enterprise') {
-      window.open('https://calendly.com/actero/enterprise', '_blank')
+      window.open('https://calendly.com/actero-fr/30min', '_blank')
       return
     }
 
@@ -191,7 +191,7 @@ export const ClientBillingView = ({ theme }) => {
       } else if (data.error === 'Stripe not configured') {
         toast.error('Paiement indisponible. Contactez le support.')
       } else if (data.error === 'enterprise_contact') {
-        window.open(data.calendly_url || 'https://calendly.com/actero/enterprise', '_blank')
+        window.open(data.calendly_url || 'https://calendly.com/actero-fr/30min', '_blank')
       } else {
         toast.error(data.message || data.error || 'Erreur lors de la mise a niveau')
       }

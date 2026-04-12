@@ -68,7 +68,7 @@ export default async function handler(req, res) {
       return res.status(400).json({
         error: 'enterprise_contact',
         message: 'Le plan Enterprise necessite un contact commercial.',
-        calendly_url: 'https://calendly.com/actero/enterprise',
+        calendly_url: 'https://calendly.com/actero-fr/30min',
       });
     }
 
