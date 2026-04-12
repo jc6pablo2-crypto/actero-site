@@ -547,6 +547,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
     const url = oauthPromptProvider.oauthUrl({
       [oauthPromptProvider.oauthPrompt]: oauthPromptValue.trim(),
       token: session.access_token,
+      client_id: clientId,
     });
     setOauthPromptProvider(null);
     window.location.href = url;
