@@ -136,7 +136,50 @@ export default async function handler(req, res) {
     const hadTrial = !!client.trial_ends_at;
     const trialDays = hadTrial ? undefined : 7;
 
-    // --- Create Checkout Session ---
+    // --- Check if client already has an active subscription (instant upgrade) ---
+    const existingSubId = client.stripe_subscription_id;
+
+    if (existingSubId) {
+      // Client already paying — instant subscription update (no checkout needed)
+      try {
+        const subscription = await stripe.subscriptions.retrieve(existingSubId);
+        if (subscription && subscription.status !== 'canceled') {
+          // Switch the price item on the existing subscription
+          const currentItem = subscription.items.data[0];
+          if (currentItem) {
+            await stripe.subscriptions.update(existingSubId, {
+              items: [{
+                id: currentItem.id,
+                price: priceId,
+              }],
+              proration_behavior: 'create_prorations',
+              metadata: {
+                actero_client_id: client_id,
+                upgrade_from: currentPlan,
+                upgrade_to: target_plan,
+              },
+            });
+
+            // Update plan in DB immediately
+            await supabaseAdmin.from('clients').update({
+              plan: target_plan,
+              plan_updated_at: new Date().toISOString(),
+            }).eq('id', client_id);
+
+            return res.status(200).json({
+              success: true,
+              instant: true,
+              message: `Plan mis a jour vers ${target_plan}. La proration sera appliquee sur votre prochaine facture.`,
+            });
+          }
+        }
+      } catch (subErr) {
+        // Subscription retrieval failed — fall through to checkout
+        console.warn('[billing/upgrade] Subscription update failed, falling back to checkout:', subErr.message);
+      }
+    }
+
+    // --- No existing subscription or update failed — Create Checkout Session ---
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       customer: stripeCustomerId,

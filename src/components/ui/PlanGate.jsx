@@ -1,7 +1,7 @@
 import { canAccess, PLAN_ORDER } from '../../lib/plans'
 import { UpgradeBanner } from './UpgradeBanner'
 
-export const PlanGate = ({ feature, planId, inTrial, children, fallback, minPlan }) => {
+export const PlanGate = ({ feature, planId, inTrial, children, fallback, minPlan, onUpgrade }) => {
   let hasAccess = false
 
   if (inTrial) hasAccess = true
@@ -26,5 +26,5 @@ export const PlanGate = ({ feature, planId, inTrial, children, fallback, minPlan
 
   if (fallback) return fallback
 
-  return <UpgradeBanner feature={feature} requiredPlan={requiredPlan} />
+  return <UpgradeBanner feature={feature} requiredPlan={requiredPlan} onUpgrade={onUpgrade} />
 }

@@ -857,9 +857,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             <span>
               Essai gratuit — <b>{trialDaysLeft} jour{trialDaysLeft > 1 ? 's' : ''} restant{trialDaysLeft > 1 ? 's' : ''}</b>
             </span>
-            <a href="/pricing" className="bg-white text-[#0F5F35] px-3 py-1 rounded-full text-[11px] font-bold hover:bg-white/90 transition">
+            <button onClick={() => setActiveTab('billing')} className="bg-white text-[#0F5F35] px-3 py-1 rounded-full text-[11px] font-bold hover:bg-white/90 transition">
               Choisir un plan
-            </a>
+            </button>
           </div>
         )}
 
@@ -1114,9 +1114,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                           Passez au Starter pour 1 000 tickets/mois et debloquer les agents IA specialises.
                         </p>
                       </div>
-                      <a href="/signup?plan=starter" className="px-4 py-2 bg-[#0F5F35] text-white text-[12px] font-semibold rounded-full hover:bg-[#003725] transition flex-shrink-0">
+                      <button onClick={() => setActiveTab('billing')} className="px-4 py-2 bg-[#0F5F35] text-white text-[12px] font-semibold rounded-full hover:bg-[#003725] transition flex-shrink-0">
                         Passer au Starter — 99 EUR/mois
-                      </a>
+                      </button>
                     </div>
                   )}
 
@@ -1228,9 +1228,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                           Le plan Pro inclut l'agent vocal telephone, WhatsApp, le simulateur et 5 000 tickets/mois.
                         </p>
                       </div>
-                      <a href="/signup?plan=pro" className="px-4 py-2 bg-[#0F5F35] text-white text-[12px] font-semibold rounded-full hover:bg-[#003725] transition flex-shrink-0">
+                      <button onClick={() => setActiveTab('billing')} className="px-4 py-2 bg-[#0F5F35] text-white text-[12px] font-semibold rounded-full hover:bg-[#003725] transition flex-shrink-0">
                         Essai Pro gratuit 7 jours
-                      </a>
+                      </button>
                     </div>
                   )}
                 </>
@@ -1299,7 +1299,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
 
           {activeTab === "simulator" && (
-            <PlanGate feature="simulator" planId={planId} inTrial={inTrial}>
+            <PlanGate feature="simulator" planId={planId} inTrial={inTrial} onUpgrade={() => setActiveTab('billing')}>
               <ConversationSimulator
                 clientId={currentClient?.id}
                 clientType={currentClient?.client_type}
@@ -1313,7 +1313,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
 
           {activeTab === "guardrails" && (
-            <PlanGate feature="guardrails" planId={planId} inTrial={inTrial}>
+            <PlanGate feature="guardrails" planId={planId} inTrial={inTrial} onUpgrade={() => setActiveTab('billing')}>
               <GuardrailsEditor
                 clientId={currentClient?.id}
                 theme={theme}
@@ -1326,13 +1326,13 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
 
           {activeTab === "voice-agent" && (
-            <PlanGate feature="voice_agent" planId={planId} inTrial={inTrial}>
+            <PlanGate feature="voice_agent" planId={planId} inTrial={inTrial} onUpgrade={() => setActiveTab('billing')}>
               <VoiceAgentSetupView clientId={currentClient?.id} />
             </PlanGate>
           )}
 
           {activeTab === "whatsapp-agent" && (
-            <PlanGate feature="whatsapp_agent" planId={planId} inTrial={inTrial}>
+            <PlanGate feature="whatsapp_agent" planId={planId} inTrial={inTrial} onUpgrade={() => setActiveTab('billing')}>
               <WhatsAppAgentSetupView clientId={currentClient?.id} />
             </PlanGate>
           )}

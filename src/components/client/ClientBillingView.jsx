@@ -180,10 +180,18 @@ export const ClientBillingView = ({ theme }) => {
         }),
       })
       const data = await res.json()
-      if (data.checkout_url) {
+      if (data.instant && data.success) {
+        // Instant upgrade — no redirect needed, plan switched server-side
+        toast.success(data.message || `Plan mis a jour vers ${targetPlan} !`)
+        // Refresh plan data
+        window.location.reload()
+      } else if (data.checkout_url) {
+        // New subscription — redirect to Stripe Checkout
         window.location.href = data.checkout_url
       } else if (data.error === 'Stripe not configured') {
         toast.error('Paiement indisponible. Contactez le support.')
+      } else if (data.error === 'enterprise_contact') {
+        window.open(data.calendly_url || 'https://calendly.com/actero/enterprise', '_blank')
       } else {
         toast.error(data.message || data.error || 'Erreur lors de la mise a niveau')
       }

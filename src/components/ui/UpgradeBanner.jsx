@@ -12,12 +12,14 @@ const FEATURE_LABELS = {
   pdf_report: 'Rapport PDF mensuel',
 }
 
-export const UpgradeBanner = ({ feature, requiredPlan, compact = false, onNavigate }) => {
+export const UpgradeBanner = ({ feature, requiredPlan, compact = false, onNavigate, onUpgrade }) => {
   const planConfig = getPlanConfig(requiredPlan)
   const featureLabel = FEATURE_LABELS[feature] || feature
   const handleClick = () => {
-    if (onNavigate) onNavigate('/pricing')
-    else window.location.href = '/pricing'
+    // Priority: onUpgrade callback (stays in dashboard) > onNavigate > fallback
+    if (onUpgrade) onUpgrade()
+    else if (onNavigate) onNavigate('/client/billing')
+    else window.location.href = '/client/billing'
   }
 
   if (compact) {
