@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     // --- Load current client ---
     const { data: client, error: clientErr } = await supabaseAdmin
       .from('clients')
-      .select('id, plan, stripe_customer_id, contact_email, brand_name, trial_ends_at')
+      .select('id, plan, stripe_customer_id, stripe_subscription_id, contact_email, brand_name, trial_ends_at')
       .eq('id', client_id)
       .single();
 
