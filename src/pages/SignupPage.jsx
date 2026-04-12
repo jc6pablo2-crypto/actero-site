@@ -234,11 +234,11 @@ export const SignupPage = ({ onNavigate }) => {
               <span className={`text-sm font-medium ${isAnnual ? "text-[#1a1a1a]" : "text-[#71717a]"}`}>
                 Annuel
               </span>
-              {isAnnual && (
-                <span className="text-xs font-semibold text-[#0F5F35] bg-[#0F5F35]/10 px-2 py-0.5 rounded-full">
-                  -20%
-                </span>
-              )}
+              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full transition-opacity ${
+                isAnnual ? "text-[#0F5F35] bg-[#0F5F35]/10 opacity-100" : "opacity-0"
+              }`}>
+                -20%
+              </span>
             </div>
 
           <AnimatePresence mode="wait">
