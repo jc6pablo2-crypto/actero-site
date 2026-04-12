@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     // --- Load current client ---
     const { data: client, error: clientErr } = await supabaseAdmin
       .from('clients')
-      .select('id, plan, stripe_customer_id, contact_email, company_name, trial_ends_at')
+      .select('id, plan, stripe_customer_id, contact_email, brand_name, trial_ends_at')
       .eq('id', client_id)
       .single();
 
@@ -120,7 +120,7 @@ export default async function handler(req, res) {
     if (!stripeCustomerId) {
       const customer = await stripe.customers.create({
         email: client.contact_email || user.email,
-        name: client.company_name || undefined,
+        name: client.brand_name || undefined,
         metadata: { actero_client_id: client_id },
       });
       stripeCustomerId = customer.id;

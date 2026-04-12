@@ -75,7 +75,7 @@ export function AdminClientsListView() {
       // 1) Base clients
       const { data: rows, error: cErr } = await supabase
         .from('clients')
-        .select('id, brand_name, contact_email, created_at, status, client_type')
+        .select('id, brand_name, contact_email, created_at, status, client_type, plan')
         .order('created_at', { ascending: false })
       if (cErr) throw cErr
       const baseClients = rows || []
@@ -370,7 +370,8 @@ export function AdminClientsListView() {
                     <Th label="Logo" col={null} />
                     <Th label="Brand" col="brand_name" sort={sort} onSort={handleSort} />
                     <Th label="Email" col="contact_email" sort={sort} onSort={handleSort} />
-                    <Th label="MRR" col="mrr" sort={sort} onSort={handleSort} align="right" />
+                    <Th label="Plan" col="plan" sort={sort} onSort={handleSort} />
+                    <Th label="MRR" col="plan" sort={sort} onSort={handleSort} align="right" />
                     <Th label="Health" col="health_score" sort={sort} onSort={handleSort} align="right" />
                     <Th label="Dernière activité" col="last_activity_at" sort={sort} onSort={handleSort} />
                     <Th label="Owner" col="owner_user_id" sort={sort} onSort={handleSort} />
@@ -399,7 +400,12 @@ export function AdminClientsListView() {
                         )}
                       </td>
                       <td className="px-4 py-2.5 text-[#71717a] truncate max-w-[180px]">{c.contact_email || '—'}</td>
-                      <td className="px-4 py-2.5 text-right tabular-nums text-[#1a1a1a]">—</td>
+                      <td className="px-4 py-2.5">
+                        <PlanPill plan={c.plan} />
+                      </td>
+                      <td className="px-4 py-2.5 text-right tabular-nums text-[#1a1a1a]">
+                        {c.plan === 'starter' ? '99€' : c.plan === 'pro' ? '399€' : c.plan === 'enterprise' ? '999€+' : '0€'}
+                      </td>
                       <td className="px-4 py-2.5 text-right">
                         <HealthDot score={c.health_score} />
                       </td>
@@ -452,6 +458,23 @@ export function AdminClientsListView() {
 }
 
 /* -------------------- sub components -------------------- */
+
+const PLAN_PILL_STYLES = {
+  free: 'bg-gray-100 text-gray-600 border-gray-200',
+  starter: 'bg-blue-50 text-blue-700 border-blue-200',
+  pro: 'bg-emerald-50 text-[#0F5F35] border-emerald-200',
+  enterprise: 'bg-amber-50 text-amber-700 border-amber-200',
+}
+
+function PlanPill({ plan }) {
+  const p = plan || 'free'
+  const style = PLAN_PILL_STYLES[p] || PLAN_PILL_STYLES.free
+  return (
+    <span className={`inline-flex items-center h-5 px-2 rounded-full border text-[10px] font-bold uppercase ${style}`}>
+      {p}
+    </span>
+  )
+}
 
 function Th({ label, col, sort, onSort, align = 'left' }) {
   const sortable = !!col && !!onSort

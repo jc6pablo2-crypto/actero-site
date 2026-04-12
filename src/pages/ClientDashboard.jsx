@@ -27,6 +27,9 @@ import {
   Phone,
   PhoneCall,
   Lock,
+  BookOpen,
+  Shield,
+  Users,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
@@ -645,6 +648,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       children: [
         { id: 'agent-config', label: 'Configuration', icon: Bot },
         { id: 'playbooks', label: 'Scenarios', icon: Zap },
+        { id: 'knowledge', label: 'Base de connaissances', icon: BookOpen },
+        { id: 'guardrails', label: 'Garde-fous', icon: Shield, ...(can('guardrails') ? {} : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-700 border border-blue-200' }) },
+        { id: 'simulator', label: 'Simulateur', icon: MessageSquare, ...(can('simulator') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' }) },
         { id: 'whatsapp-agent', label: 'WhatsApp', icon: MessageCircle, ...(can('whatsapp_agent') ? { badge: 'Nouveau', badgeColor: 'bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/30' } : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' }) },
       ],
     },
@@ -676,6 +682,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       icon: Settings,
       children: [
         { id: 'profile', label: 'Compte', icon: User },
+        { id: 'team', label: 'Equipe', icon: Users },
         { id: 'notifications', label: 'Notifications', icon: Bell },
         { id: 'billing', label: 'Facturation', icon: CreditCard },
         { id: 'support', label: 'Aide', icon: MessageSquare },

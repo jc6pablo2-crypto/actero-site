@@ -77,7 +77,7 @@ export const PLANS = {
     },
     support: 'email_48h',
     onboarding: 'guided',
-    overage_per_ticket: 0.10,
+    overage_per_ticket: 0.15,
     stripe: {
       price_id_monthly: null, // À remplir après création dans Stripe Dashboard
       price_id_annual: null,

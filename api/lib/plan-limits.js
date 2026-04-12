@@ -5,7 +5,7 @@
 
 export const PLAN_LIMITS = {
   free: { tickets: 50, workflows: 1, integrations: 1, voice_minutes: 0, whatsapp: false, overage: null },
-  starter: { tickets: 1000, workflows: 3, integrations: 3, voice_minutes: 0, whatsapp: false, overage: 0.10 },
+  starter: { tickets: 1000, workflows: 3, integrations: 3, voice_minutes: 0, whatsapp: false, overage: 0.15 },
   pro: { tickets: 5000, workflows: Infinity, integrations: Infinity, voice_minutes: 200, whatsapp: true, overage: 0.10 },
   enterprise: { tickets: Infinity, workflows: Infinity, integrations: Infinity, voice_minutes: Infinity, whatsapp: true, overage: null },
 }

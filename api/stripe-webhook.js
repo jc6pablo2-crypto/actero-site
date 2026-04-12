@@ -643,6 +643,22 @@ export default async function handler(req, res) {
         .eq('stripe_subscription_id', subscription.id);
 
       if (error) console.error('Supabase cancel update error:', error);
+
+      // Also handle SaaS clients
+      const { data: saasClient } = await supabase
+        .from('clients')
+        .select('id')
+        .eq('stripe_subscription_id', subscription.id)
+        .maybeSingle()
+
+      if (saasClient) {
+        await supabase.from('clients').update({
+          plan: 'free',
+          status: 'canceled',
+          stripe_subscription_id: null,
+        }).eq('id', saasClient.id)
+        console.log(`[stripe-webhook] SaaS client ${saasClient.id} subscription canceled, downgraded to free`)
+      }
       break;
     }
 

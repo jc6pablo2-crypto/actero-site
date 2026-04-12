@@ -61,7 +61,7 @@ const plans = [
       "2 membres d'equipe",
       "Support email 48h",
     ],
-    overage: "0,10\u20AC / ticket",
+    overage: "0,15\u20AC / ticket",
   },
   {
     id: "pro",
@@ -422,7 +422,12 @@ export const PricingPage = ({ onNavigate }) => {
                   </div>
 
                   <div className="mb-6">
-                    <div className="flex items-baseline gap-1">
+                    <div className="flex items-baseline gap-2">
+                      {isAnnual && plan.monthlyPrice > 0 && (
+                        <span className="line-through text-[#9ca3af] text-2xl font-bold">
+                          {plan.monthlyPrice}€
+                        </span>
+                      )}
                       <AnimatePresence mode="wait">
                         <motion.span
                           key={`${plan.id}-${isAnnual}`}

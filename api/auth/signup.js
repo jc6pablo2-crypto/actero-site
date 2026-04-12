@@ -69,7 +69,7 @@ export default async function handler(req, res) {
 
     // 2. Create client row
     const trialEndsAt = isPaid
-      ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
+      ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
       : null;
 
     const { data: client, error: clientError } = await supabase
