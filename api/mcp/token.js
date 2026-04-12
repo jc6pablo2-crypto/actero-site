@@ -2,9 +2,12 @@
  * MCP OAuth — Token endpoint
  *
  * POST /api/mcp/token
- * Body: { grant_type: 'authorization_code', code, code_verifier?, client_id?, redirect_uri? }
+ * Body (JSON or form-urlencoded):
+ *   grant_type=authorization_code&code=xxx&code_verifier=xxx
  *
- * Exchanges an authorization code for an access token.
+ * Exchanges an authorization code for a LONG-LIVED access token.
+ * Instead of returning the short-lived Supabase JWT, we auto-create
+ * a client API key that never expires.
  */
 import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
@@ -15,26 +18,36 @@ const supabase = createClient(
 )
 
 export default async function handler(req, res) {
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 
   if (req.method === 'OPTIONS') return res.status(200).end()
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
+  if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' })
 
-  // Parse body — supports both JSON and form-urlencoded
-  let body = req.body
-  if (typeof body === 'string') {
-    try { body = JSON.parse(body) } catch {
-      // Try as form-urlencoded
-      body = Object.fromEntries(new URLSearchParams(body))
+  // Parse body — supports JSON, form-urlencoded, and raw string
+  let params = {}
+  try {
+    if (req.body && typeof req.body === 'object') {
+      params = req.body
+    } else if (typeof req.body === 'string') {
+      try { params = JSON.parse(req.body) } catch {
+        params = Object.fromEntries(new URLSearchParams(req.body))
+      }
     }
+  } catch {
+    console.error('[mcp/token] Body parse error')
   }
-  // If content-type is form-urlencoded, body may already be parsed by Vercel
-  const { grant_type, code, code_verifier } = body || {}
+
+  const grant_type = params.grant_type
+  const code = params.code
+  const code_verifier = params.code_verifier
+
+  console.log('[mcp/token] Request:', { grant_type, code: code?.slice(0, 8) + '...', has_verifier: !!code_verifier })
 
   if (grant_type !== 'authorization_code') {
-    return res.status(400).json({ error: 'unsupported_grant_type' })
+    return res.status(400).json({ error: 'unsupported_grant_type', error_description: `Expected authorization_code, got ${grant_type}` })
   }
 
   if (!code) {
@@ -42,32 +55,41 @@ export default async function handler(req, res) {
   }
 
   // Look up the code
-  const { data: authCode } = await supabase
+  const { data: authCode, error: lookupErr } = await supabase
     .from('mcp_auth_codes')
     .select('*')
     .eq('code', code)
     .eq('used', false)
     .maybeSingle()
 
+  if (lookupErr) {
+    console.error('[mcp/token] DB lookup error:', lookupErr.message)
+    return res.status(500).json({ error: 'server_error', error_description: 'Database error' })
+  }
+
   if (!authCode) {
-    return res.status(400).json({ error: 'invalid_grant', error_description: 'Code invalid or expired' })
+    console.error('[mcp/token] Code not found or already used:', code.slice(0, 8))
+    return res.status(400).json({ error: 'invalid_grant', error_description: 'Code invalid or already used' })
   }
 
   // Check expiry
   if (new Date(authCode.expires_at) < new Date()) {
+    console.error('[mcp/token] Code expired:', authCode.expires_at)
     return res.status(400).json({ error: 'invalid_grant', error_description: 'Code expired' })
   }
 
-  // Verify PKCE code_challenge if present
+  // Verify PKCE if code_challenge was set
   if (authCode.code_challenge && authCode.code_challenge_method === 'S256') {
     if (!code_verifier) {
-      return res.status(400).json({ error: 'invalid_request', error_description: 'code_verifier required' })
+      console.error('[mcp/token] PKCE required but no code_verifier')
+      return res.status(400).json({ error: 'invalid_request', error_description: 'code_verifier required for PKCE' })
     }
     const expectedChallenge = crypto
       .createHash('sha256')
       .update(code_verifier)
       .digest('base64url')
     if (expectedChallenge !== authCode.code_challenge) {
+      console.error('[mcp/token] PKCE mismatch:', { expected: authCode.code_challenge, got: expectedChallenge })
       return res.status(400).json({ error: 'invalid_grant', error_description: 'PKCE verification failed' })
     }
   }
@@ -75,10 +97,44 @@ export default async function handler(req, res) {
   // Mark code as used
   await supabase.from('mcp_auth_codes').update({ used: true }).eq('code', code)
 
-  // Return the access token
+  // Find the client for this user
+  const { data: link } = await supabase
+    .from('client_users')
+    .select('client_id')
+    .eq('user_id', authCode.user_id)
+    .limit(1)
+    .maybeSingle()
+
+  if (!link) {
+    console.error('[mcp/token] No client found for user:', authCode.user_id)
+    return res.status(400).json({ error: 'invalid_grant', error_description: 'No client associated with this account' })
+  }
+
+  // Create a LONG-LIVED API key for MCP (instead of returning the short-lived JWT)
+  const apiKeyValue = 'mcp_' + crypto.randomBytes(24).toString('hex')
+
+  const { error: insertErr } = await supabase.from('client_api_keys').insert({
+    client_id: link.client_id,
+    key_value: apiKeyValue,
+    label: 'Claude Desktop (MCP)',
+    is_active: true,
+  })
+
+  if (insertErr) {
+    console.error('[mcp/token] Failed to create API key:', insertErr.message)
+    // Fallback: return the Supabase JWT (short-lived but works)
+    return res.status(200).json({
+      access_token: authCode.access_token,
+      token_type: 'Bearer',
+      expires_in: 3600,
+    })
+  }
+
+  console.log('[mcp/token] Success: API key created for client', link.client_id)
+
+  // Return the long-lived API key
   return res.status(200).json({
-    access_token: authCode.access_token,
+    access_token: apiKeyValue,
     token_type: 'Bearer',
-    expires_in: 3600,
   })
 }
