@@ -442,18 +442,15 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   const isLoading = clientsLoading || requestsLoading || leadsLoading;
 
+  // Sidebar compacte (~14 items visibles, pas besoin de scroller)
+  // Les pages retirées de la sidebar restent accessibles via URL directe
   const sidebarItems = [
-    { type: 'section', label: 'WORKSPACE' },
-    { id: 'overview', label: 'Accueil equipe', icon: LayoutDashboard },
+    { type: 'section', label: 'ACCUEIL' },
+    { id: 'overview', label: 'Vue d\'ensemble', icon: LayoutDashboard },
+    { id: 'clients', label: 'Clients', icon: Users },
+    { id: 'pipeline', label: 'Pipeline', icon: GitBranch },
 
-    { type: 'section', label: 'Clients' },
-    { id: 'clients', label: 'Tous les clients', icon: Users },
-    { id: 'conversations', label: 'Conversations live', icon: MessageSquare },
-    { id: 'escalations-inbox', label: 'Inbox escalades', icon: Inbox },
-    { id: 'health', label: 'Sante clients', icon: Heart },
-    { id: 'funnel', label: 'Nouveau client', icon: UserPlus },
-
-    { type: 'section', label: 'AI Engine' },
+    { type: 'section', label: 'ENGINE IA' },
     {
       type: 'expandable',
       label: 'Monitoring',
@@ -461,47 +458,31 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       defaultOpen: true,
       children: [
         { id: 'live-runs', label: 'Live runs', icon: Zap, badge: 'LIVE', badgeColor: 'bg-emerald-50 text-emerald-700 border border-emerald-200' },
-        { id: 'agent-heatmap', label: 'Heatmap agents', icon: Grid3x3 },
-        { id: 'top-errors', label: 'Top erreurs', icon: AlertTriangle },
-        { id: 'connector-health', label: 'Sante connecteurs', icon: Plug },
-        { id: 'engine-runs', label: 'Historique runs', icon: ScrollText },
+        { id: 'top-errors', label: 'Erreurs', icon: AlertTriangle },
+        { id: 'engine-runs', label: 'Historique', icon: ScrollText },
+        { id: 'manual-review', label: 'Review', icon: Eye, badge: requests.length > 0 ? requests.length : null },
       ],
     },
+
+    { type: 'section', label: 'ANALYTICS' },
+    { id: 'mrr', label: 'Revenus', icon: DollarSign },
+    { id: 'roi-leaderboard', label: 'ROI', icon: Trophy },
+    { id: 'cost-tracker', label: 'Couts IA', icon: CreditCard },
+
     {
       type: 'expandable',
-      label: 'Qualite IA',
-      icon: Shield,
+      label: 'Plus',
+      icon: Settings,
       children: [
-        { id: 'hallucination', label: 'Hallucinations', icon: AlertCircle },
-        { id: 'manual-review', label: 'Review manuelle', icon: Eye, badge: requests.length > 0 ? requests.length : null },
-        { id: 'playbooks', label: 'Playbooks', icon: BookOpen },
-        { id: 'ratings', label: 'Notations', icon: FileText },
-        { id: 'engine', label: 'Webhook test', icon: TerminalSquare },
+        { id: 'referrals', label: 'Parrainages', icon: Gift },
+        { id: 'ambassadors', label: 'Ambassadeurs', icon: Heart },
+        { id: 'partners', label: 'Partenaires', icon: Handshake },
+        { id: 'alert-builder', label: 'Alertes Slack', icon: BellRing },
+        { id: 'billing', label: 'Facturation', icon: Receipt },
+        { id: 'shopify', label: 'App Shopify', icon: ShoppingBag },
+        { id: 'team', label: 'Equipe', icon: UserCog },
       ],
     },
-
-    { type: 'section', label: 'Analytics' },
-    { id: 'mrr', label: 'MRR & Revenus', icon: DollarSign },
-    { id: 'churn-cohort', label: 'Cohortes de retention', icon: TrendingDown },
-    { id: 'roi-leaderboard', label: 'ROI classement', icon: Trophy },
-    { id: 'cost-tracker', label: 'Couts Claude', icon: CreditCard },
-    { id: 'tokens', label: 'Consommation tokens', icon: Coins },
-    { id: 'pipeline', label: 'Pipeline commercial', icon: GitBranch },
-    { id: 'billing', label: 'Facturation', icon: Receipt },
-
-    { type: 'section', label: 'Operations' },
-    { id: 'alert-builder', label: 'Alertes Slack', icon: BellRing },
-    { id: 'action-logs', label: 'Journal audit', icon: ScrollText },
-    { id: 'shopify', label: 'App Shopify', icon: ShoppingBag },
-
-    { type: 'section', label: 'Reseau' },
-    { id: 'referrals', label: 'Parrainages', icon: Gift },
-    { id: 'ambassadors', label: 'Ambassadeurs', icon: Heart },
-    { id: 'partners', label: 'Partenaires', icon: Handshake },
-
-    { type: 'section', label: 'Systeme' },
-    { id: 'team', label: 'Equipe Actero', icon: UserCog },
-    { id: 'settings', label: 'Parametres', icon: Settings },
   ];
 
   const handleAddClient = () => setIsAddClientOpen(true);
