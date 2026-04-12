@@ -13,13 +13,11 @@ const PLANS = [
     annualPrice: 0,
     description: "Decouvrir Actero sans engagement.",
     features: [
-      "50 tickets traites / mois",
-      "1 workflow actif (SAV ou panier)",
-      "Integration Shopify native",
+      "50 tickets / mois",
+      "1 workflow actif",
+      "Integration Shopify",
       "Dashboard ROI basique",
-      "Historique 7 jours",
-      "1 utilisateur",
-      "Base de connaissances (10 entrees)",
+      "Historique 7 jours · 1 user",
       "Support documentation",
     ],
     cta: "Creer mon compte gratuit",
@@ -33,22 +31,20 @@ const PLANS = [
     annualPrice: 79,
     description: "Automatiser les premieres taches.",
     features: [
-      "1 000 tickets traites / mois",
+      "1 000 tickets / mois",
       "3 workflows actifs",
       "Shopify + 2 integrations",
-      "5 agents IA specialises (Order, Return, Product...)",
-      "Editeur ton de marque (sliders)",
+      "5 agents IA specialises",
+      "Editeur ton de marque",
       "Garde-fous & regles metier",
-      "Dashboard ROI complet",
-      "Historique 3 mois",
-      "Base de connaissances (100 entrees)",
-      "2 membres d'equipe",
+      "Dashboard ROI complet · 3 mois",
+      "KB 100 entrees · 2 membres",
       "Support email 48h",
     ],
     cta: "Essai gratuit 7 jours",
     highlighted: false,
     trial: true,
-    overage: "0,10 EUR/ticket supplementaire",
+    overage: "0,15 EUR/ticket suppl.",
   },
   {
     id: "pro",
@@ -57,25 +53,22 @@ const PLANS = [
     annualPrice: 319,
     description: "Automatisation complete + agent vocal.",
     features: [
-      "5 000 tickets traites / mois",
+      "5 000 tickets / mois",
       "Workflows illimites",
-      "Toutes les integrations disponibles",
-      "Agent vocal telephone (200 min incluses)",
+      "Toutes les integrations",
+      "Agent vocal (200 min incluses)",
       "Agent WhatsApp Business",
       "Simulateur de conversation",
-      "Regles metier avancees (conditionnel)",
-      "Seuils d'escalade configurables",
-      "Historique illimite",
-      "Base de connaissances illimitee",
-      "5 membres d'equipe",
-      "API + webhooks configurables",
+      "Regles avancees + escalade auto",
+      "Historique illimite · KB illimitee",
+      "5 membres · API + webhooks",
       "Support prioritaire 24h",
     ],
     cta: "Essai gratuit 7 jours",
     highlighted: true,
     badge: "Recommande",
     trial: true,
-    overage: "0,10 EUR/ticket supplementaire",
+    overage: "0,10 EUR/ticket suppl.",
   },
   {
     id: "enterprise",
@@ -85,17 +78,13 @@ const PLANS = [
     description: "Sur mesure pour les grands comptes.",
     features: [
       "Tickets illimites",
-      "Workflows illimites",
-      "Multi-boutiques (jusqu'a 10 stores)",
+      "Multi-boutiques (10 stores)",
       "Agent vocal avance (voix custom)",
       "White-label disponible",
       "API avancee + integrations custom",
-      "SLA 99,9% garanti",
-      "Membres illimites",
+      "SLA 99,9% · Membres illimites",
       "Account manager dedie",
-      "Onboarding white-glove",
-      "Rapport sur mesure",
-      "Formation equipe incluse",
+      "Onboarding + formation incluse",
     ],
     cta: "Contacter l'equipe",
     highlighted: false,
@@ -295,15 +284,15 @@ export const SignupPage = ({ onNavigate }) => {
                       </span>
                     )}
 
-                    <div className="p-6 flex-1 flex flex-col">
-                      <h3 className="text-xl font-bold text-[#1a1a1a] mb-1">{plan.name}</h3>
-                      <p className="text-[#71717a] text-[13px] mb-4">{plan.description}</p>
+                    <div className="p-5 flex-1 flex flex-col">
+                      <h3 className="text-lg font-bold text-[#1a1a1a] mb-0.5">{plan.name}</h3>
+                      <p className="text-[#71717a] text-[12px] mb-3">{plan.description}</p>
 
-                      <div className="mb-5">
+                      <div className="mb-4">
                         {price !== null ? (
                           <>
                             <div className="flex items-baseline gap-1">
-                              <span className="text-4xl font-bold text-[#1a1a1a]">{price}€</span>
+                              <span className="text-3xl font-bold text-[#1a1a1a]">{price}€</span>
                               <span className="text-[#71717a] text-sm">/mois</span>
                             </div>
                             {isAnnual && plan.monthlyPrice > 0 && (
@@ -323,26 +312,26 @@ export const SignupPage = ({ onNavigate }) => {
                       {/* Divider */}
                       <div className="border-t border-[#f0f0f0] mb-4" />
 
-                      <p className="text-[11px] font-bold text-[#9ca3af] uppercase tracking-wider mb-3">Ce qui est inclus :</p>
+                      <p className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-2">Ce qui est inclus :</p>
 
-                      <ul className="space-y-2.5 flex-1">
+                      <ul className="space-y-1.5 flex-1">
                         {plan.features.map((f, i) => (
-                          <li key={i} className="flex items-start gap-2 text-[13px] text-[#1a1a1a] leading-snug">
-                            <Check className="w-4 h-4 text-[#0F5F35] mt-0.5 shrink-0" />
+                          <li key={i} className="flex items-start gap-1.5 text-[12px] text-[#1a1a1a] leading-snug">
+                            <Check className="w-3.5 h-3.5 text-[#0F5F35] mt-0.5 shrink-0" />
                             {f}
                           </li>
                         ))}
                       </ul>
 
                       {plan.overage && (
-                        <p className="text-[11px] text-[#9ca3af] mt-3 pt-3 border-t border-[#f0f0f0]">
+                        <p className="text-[10px] text-[#9ca3af] mt-2 pt-2 border-t border-[#f0f0f0]">
                           Depassement : {plan.overage}
                         </p>
                       )}
                     </div>
 
                     {/* CTA button at bottom of card */}
-                    <div className="px-6 pb-6">
+                    <div className="px-5 pb-5">
                       <button
                         onClick={handleCardCta}
                         className={`w-full py-3 rounded-full text-[13px] font-semibold transition-colors flex items-center justify-center gap-2 ${
