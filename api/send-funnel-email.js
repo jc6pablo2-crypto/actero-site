@@ -10,27 +10,15 @@ function buildEmailHtml({ company_name, slug, setup_price, monthly_price, messag
   const safeName = escapeHtml(company_name);
   const safeMessage = escapeHtml(message);
   const link = `${process.env.SITE_URL || 'https://actero.fr'}/start/${encodeURIComponent(slug)}`;
-  const isImmo = client_type === 'immobilier';
+  const benefits = [
+    'Automatisation du support client',
+    'Récupération des ventes perdues',
+    'Workflows IA personnalisés',
+    'Dashboard de suivi en temps réel',
+    'Onboarding dédié sous 24h',
+  ];
 
-  const benefits = isImmo
-    ? [
-        'Qualification automatique des leads entrants',
-        'Réponses instantanées aux demandes de visite',
-        'Suivi intelligent des prospects',
-        'Dashboard ROI en temps réel',
-        'Onboarding dédié sous 24h',
-      ]
-    : [
-        'Automatisation du support client',
-        'Récupération des ventes perdues',
-        'Workflows IA personnalisés',
-        'Dashboard de suivi en temps réel',
-        'Onboarding dédié sous 24h',
-      ];
-
-  const subtitle = isImmo
-    ? 'Nous avons préparé une configuration adaptée à votre agence immobilière.'
-    : 'Nous avons préparé une configuration adaptée à votre e-commerce.';
+  const subtitle = 'Nous avons préparé une configuration adaptée à votre e-commerce.';
 
   return `
 <!DOCTYPE html>

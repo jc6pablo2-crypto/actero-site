@@ -78,8 +78,8 @@ export function AdminFunnelView() {
           client_type: formData.client_type,
           setup_price: formData.setup_price,
           monthly_price: formData.monthly_price,
-          hourly_cost: formData.hourly_cost ? parseFloat(formData.hourly_cost) : (formData.client_type === 'immobilier' ? 30 : 25),
-          avg_ticket_time_min: formData.avg_ticket_time ? parseInt(formData.avg_ticket_time) : (formData.client_type === 'immobilier' ? 8 : 5),
+          hourly_cost: formData.hourly_cost ? parseFloat(formData.hourly_cost) : 25,
+          avg_ticket_time_min: formData.avg_ticket_time ? parseInt(formData.avg_ticket_time) : 5,
           actero_monthly_price: formData.actero_monthly_price ? parseFloat(formData.actero_monthly_price) : formData.monthly_price,
           message: formData.message || null,
           status: 'draft',
@@ -261,28 +261,6 @@ export function AdminFunnelView() {
                 />
               </div>
 
-              <div>
-                <label className="block text-[12px] font-bold text-[#71717a] uppercase tracking-widest mb-2">
-                  Type de client *
-                </label>
-                <select
-                  required
-                  value={formData.client_type}
-                  onChange={(e) => {
-                    const newType = e.target.value;
-                    setFormData(prev => ({
-                      ...prev,
-                      client_type: newType,
-                      hourly_cost: '',
-                      avg_ticket_time: '',
-                    }));
-                  }}
-                  className="w-full px-4 py-3 bg-white border border-[#f0f0f0] rounded-xl text-[13px] outline-none focus:border-gray-300 transition-all appearance-none cursor-pointer"
-                >
-                  <option value="ecommerce">🛒 E-commerce (Shopify)</option>
-                  <option value="immobilier">🏠 Agence Immobilière</option>
-                </select>
-              </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -314,77 +292,36 @@ export function AdminFunnelView() {
               </div>
 
               <div className="border-t border-[#f0f0f0] pt-5 mt-1">
-                <div className="flex items-center gap-3 mb-4">
-                  <p className="text-[12px] font-bold text-[#71717a] uppercase tracking-widest">Configuration ROI (optionnel)</p>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                    formData.client_type === 'immobilier'
-                      ? 'bg-violet-500/10 text-violet-400 border border-violet-500/20'
-                      : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
-                  }`}>
-                    {formData.client_type === 'immobilier' ? '🏠 Immo' : '🛒 E-com'}
-                  </span>
+                <p className="text-[12px] font-bold text-[#71717a] uppercase tracking-widest mb-4">Configuration ROI (optionnel)</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[12px] font-bold text-[#71717a] uppercase tracking-widest mb-2">
+                      Coût horaire support (€/h)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={formData.hourly_cost}
+                      onChange={(e) => setFormData(prev => ({ ...prev, hourly_cost: e.target.value }))}
+                      placeholder="25"
+                      className="w-full px-4 py-3 bg-white border border-[#f0f0f0] rounded-xl text-[13px] outline-none focus:border-gray-300 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[12px] font-bold text-[#71717a] uppercase tracking-widest mb-2">
+                      Temps moyen / ticket (min)
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={formData.avg_ticket_time}
+                      onChange={(e) => setFormData(prev => ({ ...prev, avg_ticket_time: e.target.value }))}
+                      placeholder="5"
+                      className="w-full px-4 py-3 bg-white border border-[#f0f0f0] rounded-xl text-[13px] outline-none focus:border-gray-300 transition-all"
+                    />
+                  </div>
                 </div>
-                {formData.client_type === 'immobilier' ? (
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[12px] font-bold text-[#71717a] uppercase tracking-widest mb-2">
-                        Coût horaire agent (€/h)
-                      </label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        value={formData.hourly_cost}
-                        onChange={(e) => setFormData(prev => ({ ...prev, hourly_cost: e.target.value }))}
-                        placeholder="30"
-                        className="w-full px-4 py-3 bg-white border border-[#f0f0f0] rounded-xl text-[13px] outline-none focus:border-gray-300 transition-all"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[12px] font-bold text-[#71717a] uppercase tracking-widest mb-2">
-                        Temps moyen / lead (min)
-                      </label>
-                      <input
-                        type="number"
-                        min="1"
-                        value={formData.avg_ticket_time}
-                        onChange={(e) => setFormData(prev => ({ ...prev, avg_ticket_time: e.target.value }))}
-                        placeholder="8"
-                        className="w-full px-4 py-3 bg-white border border-[#f0f0f0] rounded-xl text-[13px] outline-none focus:border-gray-300 transition-all"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[12px] font-bold text-[#71717a] uppercase tracking-widest mb-2">
-                        Coût horaire support (€/h)
-                      </label>
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="0"
-                        value={formData.hourly_cost}
-                        onChange={(e) => setFormData(prev => ({ ...prev, hourly_cost: e.target.value }))}
-                        placeholder="25"
-                        className="w-full px-4 py-3 bg-white border border-[#f0f0f0] rounded-xl text-[13px] outline-none focus:border-gray-300 transition-all"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[12px] font-bold text-[#71717a] uppercase tracking-widest mb-2">
-                        Temps moyen / ticket (min)
-                      </label>
-                      <input
-                        type="number"
-                        min="1"
-                        value={formData.avg_ticket_time}
-                        onChange={(e) => setFormData(prev => ({ ...prev, avg_ticket_time: e.target.value }))}
-                        placeholder="5"
-                        className="w-full px-4 py-3 bg-white border border-[#f0f0f0] rounded-xl text-[13px] outline-none focus:border-gray-300 transition-all"
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
 
               {formError && (
@@ -454,12 +391,8 @@ export function AdminFunnelView() {
                       <div className="text-[12px] text-[#71717a] mt-0.5">/start/{client.slug}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase border ${
-                        client.client_type === 'immobilier'
-                          ? 'bg-violet-500/10 text-violet-400 border-violet-500/20'
-                          : 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
-                      }`}>
-                        {client.client_type === 'immobilier' ? '🏠 Immo' : '🛒 E-com'}
+                      <span className="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase border bg-cyan-500/10 text-cyan-400 border-cyan-500/20">
+                        E-com
                       </span>
                     </td>
                     <td className="px-6 py-4 text-[#71717a]">{client.email}</td>

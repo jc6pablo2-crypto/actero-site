@@ -60,7 +60,7 @@ Le Client peut inviter des membres de son equipe avec des roles differencies (Ad
 
               <Section title="5. Description du Service" content={`Actero fournit un service d'automatisation base sur l'intelligence artificielle, comprenant :
 
-- Le deploiement d'agents IA pour le support client e-commerce (Shopify) et la gestion de leads immobiliers
+- Le deploiement d'agents IA pour le support client e-commerce (Shopify)
 - La configuration personnalisee du ton de marque, des regles metier et des garde-fous
 - Un dashboard de suivi des performances en temps reel
 - La connexion aux outils tiers via OAuth (Shopify, Slack, Gorgias, Zendesk, Gmail, Google Sheets)

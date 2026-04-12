@@ -59,8 +59,8 @@ export const CompanyPage = ({ onNavigate }) => {
   return (
     <>
       <SEO
-        title="A propos d'Actero — Agence IA specialisee e-commerce et immobilier"
-        description="Actero est une agence IA francaise specialisee dans l'automatisation pour e-commerce Shopify et agences immobilieres. Fondee en 2026."
+        title="A propos d'Actero — Agence IA specialisee e-commerce"
+        description="Actero est une agence IA francaise specialisee dans l'automatisation pour e-commerce Shopify. Fondee en 2026."
         canonical="/entreprise"
       />
     <div className="min-h-screen bg-white text-[#262626] font-sans selection:bg-[#003725]/10">
@@ -75,7 +75,7 @@ export const CompanyPage = ({ onNavigate }) => {
               votre <span className="text-[#716D5C]">croissance.</span>
             </h1>
             <p className="text-xl text-[#716D5C] max-w-3xl mx-auto leading-relaxed">
-              Actero redéfinit l'excellence opérationnelle pour le e-commerce et l'immobilier. Nous construisons les systèmes IA qui permettent aux entreprises ambitieuses de scaler sans augmenter leur complexité humaine.
+              Actero redéfinit l'excellence opérationnelle pour le e-commerce. Nous construisons les systèmes IA qui permettent aux entreprises ambitieuses de scaler sans augmenter leur complexité humaine.
             </p>
           </div>
 

@@ -16,20 +16,6 @@ const INTEGRATIONS = {
     { name: "Intercom", icon: "intercom", color: "0058DD", desc: "Chat en direct augmenté IA" },
     { name: "WhatsApp", icon: "whatsapp", color: "25D366", desc: "Alertes et relances WhatsApp" },
   ],
-  immobilier: [
-    { name: "n8n", icon: "n8n", color: "FF6D5A", desc: "Orchestration des workflows IA" },
-    { name: "OpenAI", src: "/openai.svg", desc: "Qualification intelligente des leads" },
-    { name: "HubSpot", icon: "hubspot", color: "FF7A59", desc: "CRM et suivi prospects" },
-    { name: "Google Calendar", icon: "googlecalendar", color: "4285F4", desc: "Prise de RDV automatique" },
-    { name: "Twilio", icon: "twilio", color: "F22F46", desc: "SMS de relance et confirmation" },
-    { name: "WhatsApp", icon: "whatsapp", color: "25D366", desc: "Alertes leads chauds en direct" },
-    { name: "Gmail", icon: "gmail", color: "EA4335", desc: "Emails de relance personnalisés" },
-    { name: "Slack", src: "/slack.svg", desc: "Alertes temps réel sur les leads" },
-    { name: "Stripe", icon: "stripe", color: "635BFF", desc: "Facturation honoraires automatisée" },
-    { name: "Make", icon: "make", color: "5F4CFF", desc: "Connecteur universel pour vos outils" },
-    { name: "Notion", icon: "notion", color: "ffffff", desc: "Base de connaissances clients" },
-    { name: "Zapier", icon: "zapier", color: "FF4A00", desc: "Automatisations supplémentaires" },
-  ],
 }
 
 export const IntegrationGrid = ({ vertical }) => {

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 export const AnnouncementBar = ({ onNavigate, vertical }) => {
   const [dismissed, setDismissed] = useState(false)
-  const isImmo = vertical === 'immobilier'
+  const isImmo = false
 
   return (
     <AnimatePresence>

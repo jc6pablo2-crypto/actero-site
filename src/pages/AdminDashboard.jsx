@@ -863,16 +863,11 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                         className="flex items-center gap-3 p-3 rounded-xl bg-[#fafafa] hover:bg-[#ffffff] transition-colors cursor-pointer"
                         onClick={() => setSelectedClient(client)}
                       >
-                        <div className={`w-9 h-9 rounded-lg flex items-center justify-center text-[13px] font-bold ${
-                          client.client_type === 'immobilier'
-                            ? 'bg-violet-500/10 text-violet-400 border border-violet-500/20'
-                            : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
-                        }`}>
-                          {client.client_type === 'immobilier' ? <Building2 className="w-4 h-4" /> : <ShoppingBag className="w-4 h-4" />}
+                        <div className="w-9 h-9 rounded-lg flex items-center justify-center text-[13px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                          <ShoppingBag className="w-4 h-4" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-[13px] font-medium text-[#1a1a1a] truncate">{client.brand_name}</p>
-                          <p className="text-[10px] text-[#71717a] capitalize">{client.client_type || 'ecommerce'}</p>
                         </div>
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
                           client.status === 'active'

@@ -128,7 +128,7 @@ export const PricingPage = ({ onNavigate }) => {
     <>
       <SEO
         title="Tarifs Actero — Automatisation IA sur devis"
-        description="Decouvrez les offres Actero : agents IA SAV pour e-commerce Shopify et automatisation pour agences immobilieres. Tarif sur devis."
+        description="Decouvrez les offres Actero : agents IA SAV pour e-commerce Shopify. Tarif sur devis."
         canonical="/tarifs"
       />
     <div className="min-h-screen bg-white text-[#262626] font-sans selection:bg-[#003725]/10">

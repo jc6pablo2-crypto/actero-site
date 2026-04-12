@@ -5,7 +5,6 @@ import { fetchUserRole } from '../../lib/auth-utils'
 import { TenantContext } from '../../context/TenantContext'
 import { AdminDashboard } from '../../pages/AdminDashboard'
 import { ClientDashboard } from '../../pages/ClientDashboard'
-import { RealEstateDashboard } from '../../pages/RealEstateDashboard'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_URL !== "REPLACE_ME");
@@ -219,8 +218,6 @@ export const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
     >
       {role === "admin" ? (
         <AdminDashboard onNavigate={onNavigate} onLogout={onLogout} currentRoute={currentRoute} />
-      ) : clientType === "immobilier" ? (
-        <RealEstateDashboard onNavigate={onNavigate} onLogout={onLogout} currentRoute={currentRoute} />
       ) : (
         <ClientDashboard onNavigate={onNavigate} onLogout={onLogout} currentRoute={currentRoute} />
       )}

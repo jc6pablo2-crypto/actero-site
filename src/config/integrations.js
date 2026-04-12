@@ -74,36 +74,6 @@ export const INTEGRATIONS = {
       popular: true,
     },
   ],
-  immobilier: [
-    {
-      id: 'apimo',
-      name: 'Apimo',
-      description: 'CRM immobilier — biens, mandats, contacts, matching',
-      icon: '/integrations/apimo.svg',
-      authType: 'coming_soon',
-      category: 'immobilier',
-      docsUrl: 'https://api.apimo.pro/doc',
-      color: '#E94E1B',
-    },
-    {
-      id: 'hektor',
-      name: 'Hektor',
-      description: 'CRM immobilier — gestion des biens et contacts',
-      icon: '/integrations/hektor.svg',
-      authType: 'coming_soon',
-      category: 'immobilier',
-      color: '#2C3E50',
-    },
-    {
-      id: 'netty',
-      name: 'Netty',
-      description: 'Logiciel immobilier — diffusion, CRM, site web',
-      icon: '/integrations/netty.svg',
-      authType: 'coming_soon',
-      category: 'immobilier',
-      color: '#FF6B00',
-    },
-  ],
   general: [
     {
       id: 'slack',
@@ -206,7 +176,6 @@ export const INTEGRATIONS = {
 
 export const ALL_INTEGRATIONS = [
   ...INTEGRATIONS.ecommerce,
-  ...INTEGRATIONS.immobilier,
   ...INTEGRATIONS.general,
 ];
 

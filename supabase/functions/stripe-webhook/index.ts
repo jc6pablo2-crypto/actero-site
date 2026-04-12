@@ -18,10 +18,7 @@ const RESEND_FROM = Deno.env.get("RESEND_FROM_EMAIL") || "Actero <onboarding@res
 const SITE_URL = Deno.env.get("SITE_URL") || "https://actero.fr";
 
 async function sendDashboardAccessEmail(email: string, password: string, companyName: string, clientType: string) {
-  const isImmo = clientType === "immobilier";
-  const dashboardDesc = isImmo
-    ? "votre dashboard de suivi immobilier"
-    : "votre dashboard e-commerce";
+  const dashboardDesc = "votre dashboard e-commerce";
 
   const html = `
 <!DOCTYPE html>
@@ -185,8 +182,8 @@ Deno.serve(async (req: Request) => {
           // Create client_settings with ROI config from funnel
           await supabaseAdmin.from("client_settings").insert({
             client_id: newClient.id,
-            hourly_cost: funnelClient.hourly_cost || (clientType === "immobilier" ? 30 : 25),
-            avg_ticket_time_min: funnelClient.avg_ticket_time_min || (clientType === "immobilier" ? 8 : 5),
+            hourly_cost: funnelClient.hourly_cost || 25,
+            avg_ticket_time_min: funnelClient.avg_ticket_time_min || 5,
             actero_monthly_price: funnelClient.actero_monthly_price || funnelClient.monthly_price || 800,
             currency: "EUR",
           });

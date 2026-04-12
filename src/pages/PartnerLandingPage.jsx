@@ -85,7 +85,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
     { icon: Megaphone, title: 'Agences marketing / ads', desc: 'Vous pilotez des campagnes et souhaitez proposer des solutions IA complémentaires.' },
     { icon: Laptop, title: 'Freelances', desc: 'Vous accompagnez des entreprises et voulez élargir votre offre sans complexité.' },
     { icon: Briefcase, title: 'Consultants business', desc: 'Vous conseillez des dirigeants et identifiez des besoins en automatisation.' },
-    { icon: Building2, title: 'Acteurs de l\'immobilier', desc: 'Vous êtes dans l\'immobilier et connaissez des entreprises qui gagneraient à automatiser.' },
+    { icon: Building2, title: 'Entrepreneurs', desc: 'Vous connaissez des entreprises e-commerce qui gagneraient à automatiser.' },
   ]
 
   const steps = [
@@ -121,7 +121,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
   const faqItems = [
     {
       q: 'Qui peut devenir partenaire ?',
-      a: 'Toute personne ou entreprise qui dispose d\'un réseau professionnel : agences, freelances, consultants, acteurs de l\'immobilier, etc. Aucune compétence technique n\'est requise.',
+      a: 'Toute personne ou entreprise qui dispose d\'un réseau professionnel : agences, freelances, consultants, etc. Aucune compétence technique n\'est requise.',
     },
     {
       q: 'Comment fonctionne la collaboration ?',
@@ -150,7 +150,6 @@ export const PartnerLandingPage = ({ onNavigate }) => {
     'Agence marketing',
     'Freelance',
     'Consultant',
-    'Immobilier',
     'Autre',
   ]
 
@@ -160,7 +159,7 @@ export const PartnerLandingPage = ({ onNavigate }) => {
     <>
       <SEO
         title="Partenariat B2B Actero | Agences & Freelances"
-        description="Devenez partenaire Actero et proposez l'automatisation IA à vos clients e-commerce et immobilier. Commission attractive, support dédié."
+        description="Devenez partenaire Actero et proposez l'automatisation IA a vos clients e-commerce. Commission attractive, support dedie."
         canonical="/partner"
       />
     <div className="relative min-h-screen bg-white font-sans text-[#262626] selection:bg-indigo-500/20 selection:text-[#262626]">

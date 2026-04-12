@@ -56,7 +56,7 @@ export const LandingPage = ({ onNavigate }) => {
   };
 
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
-  const [vertical, setVertical] = useState('ecommerce');
+  const vertical = 'ecommerce';
 
   useEffect(() => {
     initAmplitude();
@@ -70,7 +70,7 @@ export const LandingPage = ({ onNavigate }) => {
       "name": "Actero",
       "url": "https://actero.fr",
       "logo": "https://actero.fr/favicon-192.png",
-      "description": "Agence IA specialisee dans l'automatisation pour e-commerce Shopify et agences immobilieres",
+      "description": "Agence IA specialisee dans l'automatisation pour e-commerce Shopify",
       "foundingDate": "2026",
       "founders": [
         { "@type": "Person", "name": "Pablo Priefert-Vallette" },
@@ -101,9 +101,9 @@ export const LandingPage = ({ onNavigate }) => {
   return (
     <>
       <SEO
-        title="Actero — Automatisation IA pour E-commerce Shopify & Agences Immobilieres"
-        description="Actero deploie des agents IA autonomes pour automatiser le SAV e-commerce Shopify et qualifier les leads immobiliers. ROI mesurable des le premier mois."
-        keywords="agent IA e-commerce, automatisation Shopify, agent SAV IA, chatbot IA immobilier, agence IA France"
+        title="Actero — Automatisation IA pour E-commerce Shopify"
+        description="Actero deploie des agents IA autonomes pour automatiser le SAV e-commerce Shopify. ROI mesurable des le premier mois."
+        keywords="agent IA e-commerce, automatisation Shopify, agent SAV IA, agence IA France"
         canonical="/"
         ogImage="https://actero.fr/og-image.png"
         schemaData={landingSchema}
@@ -124,7 +124,7 @@ export const LandingPage = ({ onNavigate }) => {
           {/* ============================================ */}
           {/* SECTION 1 — HERO                            */}
           {/* ============================================ */}
-          <GlassHero onNavigate={onNavigate} vertical={vertical} onVerticalChange={setVertical} />
+          <GlassHero onNavigate={onNavigate} vertical={vertical} />
 
           <div className="relative w-full z-10">
 

@@ -87,7 +87,7 @@ export default async function handler(req, res) {
       : (current.estimated_roi > 0 ? 100 : 0);
 
     const systemPrompt = `Tu es un analyste de performance IA senior chez Actero.
-Tu dois générer un rapport de performance mensuel pour le client "${client.brand_name}" (verticale: ${vertical === 'immobilier' ? 'immobilier' : 'e-commerce'}).
+Tu dois générer un rapport de performance mensuel pour le client "${client.brand_name}" (verticale: e-commerce).
 
 DONNÉES DU MOIS EN COURS (${monthName}) :
 - Actions IA exécutées : ${current.tasks_executed}

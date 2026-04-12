@@ -6,8 +6,6 @@ import { supabase } from '../../lib/supabase'
 const WORKFLOW_TEMPLATES = [
   { id: 'tpl_sav_ecommerce', label: 'SAV E-commerce' },
   { id: 'tpl_paniers_abandonnes', label: 'Paniers abandonnés' },
-  { id: 'tpl_prise_rdv_immobilier', label: 'Prise RDV Immobilier' },
-  { id: 'tpl_collecte_documents', label: 'Collecte Documents' },
   { id: 'tpl_relance_prospects', label: 'Relance Prospects' },
 ];
 

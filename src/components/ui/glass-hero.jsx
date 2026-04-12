@@ -1,73 +1,27 @@
 import React from 'react';
-import { ArrowRight, Shield, Clock, TrendingUp, ShoppingBag, Building2, Headphones, RefreshCw, BarChart3, Zap, FileText, UserCheck } from 'lucide-react';
+import { ArrowRight, Headphones, RefreshCw, BarChart3, Zap } from 'lucide-react';
 import { FadeInUp } from './scroll-animations';
 import { ButtonColorful } from './button-colorful';
 
-export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange }) => {
+export const GlassHero = ({ onNavigate }) => {
 
-    const heroContent = {
-        ecommerce: {
-            badge: { icon: '/elevenlabs-grants.webp', label: 'Powered by ElevenLabs Grants' },
-            headlineMain: "L'automatisation IA",
-            headlineSub: "qui fait croître votre e-commerce",
-            subtitle: "Actero automatise le support client et relance vos paniers abandonnés pour les marques Shopify qui veulent scaler sans multiplier les coûts.",
-            subtitleBold: "Résultats mesurables dès le premier mois.",
-            cards: [
-                { title: "Support IA 24/7", desc: "80% des tickets résolus sans humain", bg: "bg-[#003725]", text: "text-white", descText: "text-white/60", icon: <Headphones className="w-7 h-7" />, iconBg: "bg-white/15", gradient: "bg-gradient-to-br from-[#003725] to-[#0F5F35]" },
-                { title: "Relance paniers", desc: "+15% de taux de récupération", bg: "bg-[#F9F7F1]", text: "text-[#003725]", descText: "text-[#716D5C]", icon: <RefreshCw className="w-7 h-7" />, iconBg: "bg-[#003725]/10", gradient: "bg-gradient-to-br from-[#F9F7F1] to-[#EDE9E0]" },
-                { title: "Monitoring IA", desc: "Alertes en temps réel sur vos KPIs", bg: "bg-[#F9F7F1]", text: "text-[#003725]", descText: "text-[#716D5C]", icon: <BarChart3 className="w-7 h-7" />, iconBg: "bg-[#003725]/10", gradient: "bg-gradient-to-br from-[#F0EDE6] to-[#F9F7F1]" },
-                { title: "Automatisations", desc: "Shopify, CRM, support connectés", bg: "bg-[#003725]", text: "text-white", descText: "text-white/60", icon: <Zap className="w-7 h-7" />, iconBg: "bg-white/15", gradient: "bg-gradient-to-br from-[#0F5F35] to-[#003725]" },
-            ],
-        },
-        immobilier: {
-            badge: { icon: '/elevenlabs-grants.webp', label: 'Powered by ElevenLabs Grants' },
-            headlineMain: "3 agents IA pour",
-            headlineSub: "transformer votre agence",
-            subtitle: "Prise de rendez-vous, collecte de documents, relance des prospects inactifs — nos agents IA gèrent vos tâches chronophages 24h/24.",
-            subtitleBold: "Vous vous concentrez sur la vente.",
-            cards: [
-                { title: "Agent RDV", desc: "+30% de rendez-vous confirmés", bg: "bg-[#003725]", text: "text-white", descText: "text-white/60", icon: <Clock className="w-7 h-7" />, iconBg: "bg-white/15", gradient: "bg-gradient-to-br from-[#003725] to-[#0F5F35]" },
-                { title: "Agent Documents", desc: "-50% de temps administratif", bg: "bg-[#F9F7F1]", text: "text-[#003725]", descText: "text-[#716D5C]", icon: <FileText className="w-7 h-7" />, iconBg: "bg-[#003725]/10", gradient: "bg-gradient-to-br from-[#F9F7F1] to-[#EDE9E0]" },
-                { title: "Agent Relance", desc: "+10% de prospects réactivés", bg: "bg-[#F9F7F1]", text: "text-[#003725]", descText: "text-[#716D5C]", icon: <UserCheck className="w-7 h-7" />, iconBg: "bg-[#003725]/10", gradient: "bg-gradient-to-br from-[#F0EDE6] to-[#F9F7F1]" },
-                { title: "Dashboard live", desc: "Suivi de performance temps réel", bg: "bg-[#003725]", text: "text-white", descText: "text-white/60", icon: <BarChart3 className="w-7 h-7" />, iconBg: "bg-white/15", gradient: "bg-gradient-to-br from-[#0F5F35] to-[#003725]" },
-            ],
-        },
+    const content = {
+        badge: { icon: '/elevenlabs-grants.webp', label: 'Powered by ElevenLabs Grants' },
+        headlineMain: "L'automatisation IA",
+        headlineSub: "qui fait croître votre e-commerce",
+        subtitle: "Actero automatise le support client et relance vos paniers abandonnés pour les marques Shopify qui veulent scaler sans multiplier les coûts.",
+        subtitleBold: "Résultats mesurables dès le premier mois.",
+        cards: [
+            { title: "Support IA 24/7", desc: "80% des tickets résolus sans humain", bg: "bg-[#003725]", text: "text-white", descText: "text-white/60", icon: <Headphones className="w-7 h-7" />, iconBg: "bg-white/15", gradient: "bg-gradient-to-br from-[#003725] to-[#0F5F35]" },
+            { title: "Relance paniers", desc: "+15% de taux de récupération", bg: "bg-[#F9F7F1]", text: "text-[#003725]", descText: "text-[#716D5C]", icon: <RefreshCw className="w-7 h-7" />, iconBg: "bg-[#003725]/10", gradient: "bg-gradient-to-br from-[#F9F7F1] to-[#EDE9E0]" },
+            { title: "Monitoring IA", desc: "Alertes en temps réel sur vos KPIs", bg: "bg-[#F9F7F1]", text: "text-[#003725]", descText: "text-[#716D5C]", icon: <BarChart3 className="w-7 h-7" />, iconBg: "bg-[#003725]/10", gradient: "bg-gradient-to-br from-[#F0EDE6] to-[#F9F7F1]" },
+            { title: "Automatisations", desc: "Shopify, CRM, support connectés", bg: "bg-[#003725]", text: "text-white", descText: "text-white/60", icon: <Zap className="w-7 h-7" />, iconBg: "bg-white/15", gradient: "bg-gradient-to-br from-[#0F5F35] to-[#003725]" },
+        ],
     };
-
-    const content = heroContent[vertical];
-    const isEcommerce = vertical === 'ecommerce';
 
     return (
         <div className="relative bg-white pt-28 md:pt-36 pb-0 px-6">
             <div className="max-w-6xl mx-auto">
-
-                {/* Vertical Toggle */}
-                <FadeInUp className="flex justify-center mb-12">
-                    <div className="relative inline-flex items-center bg-[#F9F7F1] rounded-full p-1 gap-1">
-                        <div
-                            className={`absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out bg-white shadow-sm ${
-                                isEcommerce
-                                    ? 'left-1 right-[calc(50%+0.25rem)]'
-                                    : 'left-[calc(50%+0.25rem)] right-1'
-                            }`}
-                        />
-                        {[
-                            { key: 'ecommerce', label: 'E-commerce', icon: <ShoppingBag className="w-4 h-4" /> },
-                            { key: 'immobilier', label: 'Immobilier', icon: <Building2 className="w-4 h-4" /> },
-                        ].map((v) => (
-                            <button
-                                key={v.key}
-                                onClick={() => onVerticalChange?.(v.key)}
-                                className={`relative z-10 flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${
-                                    vertical === v.key ? 'text-[#262626]' : 'text-[#716D5C] hover:text-[#262626]'
-                                }`}
-                            >
-                                {v.icon}
-                                {v.label}
-                            </button>
-                        ))}
-                    </div>
-                </FadeInUp>
 
                 {/* Hero text — centered like Shine hero */}
                 <div className="max-w-3xl mx-auto text-center mb-12">
@@ -103,7 +57,7 @@ export const GlassHero = ({ onNavigate, vertical = 'ecommerce', onVerticalChange
                     {/* CTAs */}
                     <FadeInUp delay={0.15} className="flex flex-wrap items-center justify-center gap-4">
                         <ButtonColorful onClick={() => onNavigate('/audit')}>
-                            {vertical === 'immobilier' ? 'Demander une démo' : 'Réserver un audit gratuit'} <ArrowRight className="w-4 h-4" />
+                            Réserver un audit gratuit <ArrowRight className="w-4 h-4" />
                         </ButtonColorful>
                         <button
                             onClick={() => {
