@@ -448,7 +448,6 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { type: 'section', label: 'ACCUEIL' },
     { id: 'overview', label: 'Vue d\'ensemble', icon: LayoutDashboard },
     { id: 'clients', label: 'Clients', icon: Users },
-    { id: 'pipeline', label: 'Pipeline', icon: GitBranch },
 
     { type: 'section', label: 'ENGINE IA' },
     {
