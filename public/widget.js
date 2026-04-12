@@ -16,15 +16,16 @@
   let messages = []
   let customerEmail = null
   let customerName = null
-  let step = 'email' // 'email' | 'chat'
+  let messageCount = 0 // track exchanges to ask for email after 2nd reply
+  let emailAsked = false
 
-  // Try to restore from localStorage so returning visitors skip the email step
+  // Try to restore from localStorage so returning visitors are recognized
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}')
     if (saved.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(saved.email)) {
       customerEmail = saved.email
       customerName = saved.name || null
-      step = 'chat'
+      emailAsked = true
     }
   } catch {}
 
@@ -128,13 +129,7 @@
     isOpen = !isOpen
     panel.classList.toggle('open', isOpen)
     if (isOpen && messages.length === 0) {
-      if (step === 'email') {
-        addBotMessage('Bonjour ! 👋 Pour mieux vous aider et pouvoir vous recontacter, pouvez-vous me laisser votre email ?')
-        inputEl.placeholder = 'votre@email.com'
-        inputEl.type = 'email'
-      } else {
-        addBotMessage('Bonjour ! Comment puis-je vous aider ?')
-      }
+      addBotMessage('Bonjour ! Comment puis-je vous aider ?')
     }
   }
   document.body.appendChild(btn)
@@ -245,32 +240,7 @@
     inputEl.value = ''
     addUserMessage(text)
 
-    // Step 1 — collect email before starting the real chat
-    if (step === 'email') {
-      const email = extractEmail(text) || (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text) ? text : null)
-      if (!email) {
-        addBotMessage("Cet email ne semble pas valide. Pouvez-vous le verifier et reessayer ? Exemple : prenom@domaine.com")
-        inputEl.focus()
-        return
-      }
-      customerEmail = email
-      const foundName = extractName(text)
-      if (foundName) customerName = foundName
-
-      // Persist for returning visitors
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify({ email: customerEmail, name: customerName }))
-      } catch {}
-
-      step = 'chat'
-      inputEl.placeholder = 'Votre message...'
-      inputEl.type = 'text'
-      addBotMessage('Merci ! Comment puis-je vous aider aujourd\'hui ?')
-      inputEl.focus()
-      return
-    }
-
-    // Step 2 — normal chat: also extract any email/name if present in the text
+    // Extract email/name from any message (non-blocking)
     const foundEmail = extractEmail(text)
     if (foundEmail && !customerEmail) {
       customerEmail = foundEmail
@@ -313,6 +283,15 @@
       addBotMessage(data.response || 'Merci, un agent va vous repondre.')
       if (data.product_recommendations && data.product_recommendations.length > 0) {
         addProductCards(data.product_recommendations)
+      }
+      messageCount++
+
+      // After 2nd AI response, politely ask for email (non-blocking)
+      if (messageCount === 2 && !customerEmail && !emailAsked) {
+        emailAsked = true
+        setTimeout(function() {
+          addBotMessage('Au fait, si vous souhaitez qu\'on puisse vous recontacter, n\'hesitez pas a me laisser votre email dans la conversation.')
+        }, 1500)
       }
     } catch {
       loader.remove()
