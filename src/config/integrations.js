@@ -65,7 +65,7 @@ export const INTEGRATIONS = {
       id: 'webflow',
       name: 'Webflow',
       description: 'Connectez votre boutique Webflow en 1 clic — commandes, clients, produits',
-      icon: '/integrations/webflow.png',
+      icon: 'https://ejgdwjjcpjtwaqcxptke.supabase.co/storage/v1/object/public/logo/WebFlow.png',
       authType: 'oauth',
       oauthUrl: (params) => `/api/integrations/webflow/authorize?client_id=${encodeURIComponent(params.client_id || '')}&token=${encodeURIComponent(params.token || '')}`,
       category: 'ecommerce',
