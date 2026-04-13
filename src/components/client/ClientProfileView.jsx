@@ -240,12 +240,12 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
           .from('clients')
           .select('*')
           .eq('owner_user_id', session.user.id)
-          .single()
-        return data
+          .maybeSingle()
+        return data || null
       }
 
-      const { data } = await supabase.from('clients').select('*').eq('id', clientId).single()
-      return data
+      const { data } = await supabase.from('clients').select('*').eq('id', clientId).maybeSingle()
+      return data || null
     },
     enabled: !!session,
   })
@@ -261,6 +261,7 @@ export const ClientProfileView = ({ theme = 'dark' }) => {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
+      if (!client?.id) throw new Error('Client non chargé')
       const { error } = await supabase
         .from('clients')
         .update({

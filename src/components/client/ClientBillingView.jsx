@@ -124,8 +124,8 @@ export const ClientBillingView = ({ theme }) => {
       } else {
         query = query.eq('owner_user_id', session.user.id)
       }
-      const { data } = await query.single()
-      return data
+      const { data } = await query.maybeSingle()
+      return data || null
     },
   })
 
@@ -161,6 +161,11 @@ export const ClientBillingView = ({ theme }) => {
   const handleUpgrade = async (targetPlan) => {
     if (targetPlan === 'enterprise') {
       window.open('https://calendly.com/actero-fr/30min', '_blank')
+      return
+    }
+
+    if (!client?.id) {
+      toast.error('Chargement en cours, réessayez dans un instant.')
       return
     }
 
