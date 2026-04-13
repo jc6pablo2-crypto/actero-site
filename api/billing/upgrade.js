@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     // --- Load current client ---
     const { data: client, error: clientErr } = await supabaseAdmin
       .from('clients')
-      .select('id, plan, stripe_customer_id, stripe_subscription_id, contact_email, brand_name, trial_ends_at')
+      .select('id, plan, stripe_customer_id, stripe_subscription_id, contact_email, brand_name, trial_ends_at, referral_first_month_free, referred_by_client_id')
       .eq('id', client_id)
       .single();
 
@@ -132,9 +132,10 @@ export default async function handler(req, res) {
         .eq('id', client_id);
     }
 
-    // --- Determine trial eligibility (never had a trial before) ---
+    // --- Determine trial eligibility ---
+    // Referral first month free takes priority (30 days), otherwise 7-day trial if never had one
     const hadTrial = !!client.trial_ends_at;
-    const trialDays = hadTrial ? undefined : 7;
+    const trialDays = client.referral_first_month_free ? 30 : (hadTrial ? undefined : 7);
 
     // --- Check if client already has an active subscription (instant upgrade) ---
     const existingSubId = client.stripe_subscription_id;
@@ -181,11 +182,24 @@ export default async function handler(req, res) {
 
     // --- No existing subscription or update failed — Create Checkout Session ---
     const siteUrl = process.env.SITE_URL || 'https://actero.fr';
+
+    // Build subscription_data with trial and referral metadata
+    const subscriptionData = {};
+    if (trialDays) {
+      subscriptionData.trial_period_days = trialDays;
+    }
+    if (client.referral_first_month_free && client.referred_by_client_id) {
+      subscriptionData.metadata = {
+        referral_first_month_free: 'true',
+        referred_by_client_id: client.referred_by_client_id,
+      };
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       customer: stripeCustomerId,
       line_items: [{ price: priceId, quantity: 1 }],
-      ...(trialDays ? { subscription_data: { trial_period_days: trialDays } } : {}),
+      ...(Object.keys(subscriptionData).length > 0 ? { subscription_data: subscriptionData } : {}),
       metadata: {
         actero_client_id: client_id,
         upgrade_from: currentPlan,
@@ -215,6 +229,14 @@ export default async function handler(req, res) {
       success_url: `${siteUrl}/client?tab=billing&upgrade=success`,
       cancel_url: `${siteUrl}/client?tab=billing&upgrade=cancel`,
     });
+
+    // Mark referral first month as consumed so it can't be reused
+    if (client.referral_first_month_free) {
+      await supabaseAdmin
+        .from('clients')
+        .update({ referral_first_month_free: false })
+        .eq('id', client_id);
+    }
 
     return res.status(200).json({ checkout_url: session.url });
   } catch (error) {

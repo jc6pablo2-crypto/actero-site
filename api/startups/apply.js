@@ -1,6 +1,14 @@
 import { Resend } from 'resend';
+import { createClient } from '@supabase/supabase-js';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+
+function getSupabase() {
+  const url = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
+}
 
 function escapeHtml(str) {
   return String(str || '')
@@ -24,6 +32,28 @@ export default async function handler(req, res) {
         success: false,
         message: 'Tous les champs sont requis.'
       });
+    }
+
+    // Store application in Supabase
+    const supabase = getSupabase();
+    if (supabase) {
+      const { error: dbError } = await supabase
+        .from('startup_applications')
+        .insert({
+          boutique_name,
+          url,
+          email,
+          revenue,
+          platform,
+          motivation,
+          status: 'pending',
+        });
+      if (dbError) {
+        console.error('[startups/apply] DB insert error:', dbError);
+        // Continue anyway — email notification is the fallback
+      }
+    } else {
+      console.warn('[startups/apply] Supabase not configured, skipping DB storage');
     }
 
     // Send notification email to startups@actero.fr

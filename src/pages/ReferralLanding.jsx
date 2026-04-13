@@ -38,7 +38,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
   }, [code])
 
   const handleCTA = () => {
-    onNavigate(`/audit?referral_code=${code}`)
+    onNavigate(`/signup?referral_code=${code}`)
   }
 
   if (loading) {
@@ -119,11 +119,11 @@ export const ReferralLanding = ({ code, onNavigate }) => {
           >
             <div className="inline-block bg-gradient-to-r from-amber-500/10 to-emerald-500/10 border border-amber-500/20 rounded-2xl px-8 py-5">
               <p className="text-lg md:text-xl font-medium">
-                <span className="text-emerald-400 font-bold">Frais de setup offerts</span>{' '}
-                grace a votre parrain
+                <span className="text-emerald-400 font-bold">Votre premier mois offert</span>
+                {referrerName ? ` grace a ${referrerName}` : ' grace a votre parrain'}
               </p>
               <p className="text-sm text-[#716D5C] mt-1">
-                Economie immediate sur votre demarrage
+                Inscrivez-vous et profitez d'un mois gratuit sur n'importe quel plan
               </p>
             </div>
           </motion.div>
@@ -137,10 +137,10 @@ export const ReferralLanding = ({ code, onNavigate }) => {
               onClick={handleCTA}
               className="group bg-[#0F5F35] hover:bg-[#003725] text-white px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3 shadow-lg shadow-[#003725]/15"
             >
-              Reserver mon audit gratuit
+              Creer mon compte gratuitement
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
-            <p className="text-sm text-[#716D5C] mt-4">15 min — 100% gratuit — Sans engagement</p>
+            <p className="text-sm text-[#716D5C] mt-4">Sans carte bancaire — Premier mois offert</p>
           </motion.div>
         </div>
       </div>
@@ -222,20 +222,22 @@ export const ReferralLanding = ({ code, onNavigate }) => {
             className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-emerald-500/20 rounded-3xl p-10"
           >
             <Gift className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold mb-3">Profitez de votre offre exclusive</h3>
+            <h3 className="text-2xl font-bold mb-3">Votre premier mois est offert</h3>
             <p className="text-[#716D5C] mb-6">
-              Setup offert grace au parrainage de {referrerName}. Reservez votre audit gratuit maintenant.
+              {referrerName
+                ? `Offert par ${referrerName}. Creez votre compte et profitez d'un mois gratuit.`
+                : `Creez votre compte et profitez d'un mois gratuit grace a votre parrain.`}
             </p>
             <button
               onClick={handleCTA}
               className="bg-[#0F5F35] hover:bg-[#003725] text-white px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3"
             >
-              Reserver mon audit gratuit
+              Creer mon compte gratuitement
               <ArrowRight className="w-5 h-5" />
             </button>
             <div className="flex items-center justify-center gap-6 mt-6 text-sm text-[#716D5C]">
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Gratuit</span>
-              <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> 15 minutes</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Premier mois offert</span>
+              <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Sans carte bancaire</span>
               <span className="flex items-center gap-1"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Sans engagement</span>
             </div>
           </motion.div>

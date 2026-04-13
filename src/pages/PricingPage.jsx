@@ -12,163 +12,310 @@ import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
 import { SEO } from "../components/SEO";
 import { trackEvent } from "../lib/analytics";
+import { PLANS, PLAN_ORDER } from "../lib/plans";
 
 /* ──────────────────────────────────────────────
-   DATA
+   HELPERS — derive display data from PLANS
    ────────────────────────────────────────────── */
 
-const plans = [
-  {
-    id: "free",
-    name: "Free",
-    tagline: "Decouvrez Actero sans risque",
-    monthlyPrice: 0,
-    annualPrice: 0,
-    trial: false,
-    cta: "Commencer gratuitement",
-    ctaLink: "/signup",
-    highlighted: false,
-    cardClass: "border-[#f0f0f0] bg-white",
-    features: [
+const fmt = (v) => (v === Infinity ? "Illimite" : v.toLocaleString("fr-FR"));
+
+const SUPPORT_LABELS = {
+  docs: "\u2014",
+  email_48h: "Support email 48h",
+  priority_24h: "Support prioritaire 24h",
+  account_manager: "Account manager dedie",
+};
+
+const ROI_LABELS = {
+  basic: "Dashboard ROI basique",
+  full: "Dashboard ROI complet",
+  custom: "Rapport sur mesure",
+};
+
+const HISTORY_LABELS = {
+  7: "\u2014",
+  90: "Historique 3 mois",
+  Infinity: "Historique illimite",
+};
+
+const CTA_LINKS = {
+  free: "/signup",
+  starter: "/signup",
+  pro: "/signup",
+  enterprise: "mailto:contact@actero.fr",
+};
+
+const CARD_CLASSES = {
+  free: "border-[#f0f0f0] bg-white",
+  starter: "border-[#f0f0f0] bg-white",
+  pro: "border-[#0F5F35] bg-white ring-2 ring-[#0F5F35]/20 shadow-lg",
+  enterprise: "border-[#f0f0f0] bg-[#fafafa]",
+};
+
+function buildFeatures(plan) {
+  const { limits, features, support } = plan;
+
+  if (plan.id === "free") {
+    return [
       "50 tickets / mois",
       "1 workflow actif",
       "Integration Shopify",
       "Dashboard ROI basique",
       "Pas de carte bancaire",
-    ],
-    overage: null,
-  },
-  {
-    id: "starter",
-    name: "Starter",
-    tagline: "Pour les boutiques en croissance",
-    monthlyPrice: 99,
-    annualPrice: 79,
-    trial: true,
-    cta: "Essai gratuit 7 jours",
-    ctaLink: "/signup",
-    highlighted: false,
-    cardClass: "border-[#f0f0f0] bg-white",
-    features: [
-      "1 000 tickets / mois",
-      "3 workflows actifs",
-      "Shopify + 2 integrations",
-      "Editeur ton de marque",
-      "Garde-fous & regles metier",
-      "Agents IA specialises",
-      "WhatsApp Agent",
-      "API + webhooks",
-      "Dashboard ROI complet",
-      "Historique 3 mois",
-      "2 membres d'equipe",
-      "Support email 48h",
-    ],
-    overage: "0,15\u20AC / ticket",
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    tagline: "Le choix des marques ambitieuses",
-    monthlyPrice: 399,
-    annualPrice: 319,
-    trial: true,
-    cta: "Essai gratuit 7 jours",
-    ctaLink: "/signup",
-    highlighted: true,
-    cardClass: "border-[#0F5F35] bg-white ring-2 ring-[#0F5F35]/20 shadow-lg",
-    features: [
-      "5 000 tickets / mois",
-      "Workflows illimites",
-      "Toutes les integrations",
-      "Agent vocal (200 min incluses)",
-      "WhatsApp Agent",
-      "Simulateur de conversation",
-      "Regles metier avancees",
-      "5 membres d'equipe",
-      "API + webhooks",
-      "Historique illimite",
-      "Support prioritaire 24h",
-    ],
-    overage: "0,10\u20AC / ticket",
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    tagline: "Infrastructure sur mesure",
-    monthlyPrice: null,
-    annualPrice: null,
-    trial: false,
-    cta: "Contacter l'equipe",
-    ctaLink: "mailto:contact@actero.fr",
-    highlighted: false,
-    cardClass: "border-[#f0f0f0] bg-[#fafafa]",
-    features: [
+    ];
+  }
+
+  if (plan.id === "enterprise") {
+    return [
       "Tickets illimites",
       "Workflows illimites",
-      "Multi-boutiques (10 stores)",
-      "Agent vocal avance (voix custom)",
-      "White-label disponible",
+      `Multi-boutiques (${limits.team_members === Infinity ? "illimite" : limits.team_members} stores)`,
+      ...(features.voice_agent ? ["Agent vocal avance (voix custom)"] : []),
+      ...(features.white_label ? ["White-label disponible"] : []),
       "API avancee + integrations custom",
       "SLA 99,9% garanti",
       "Membres illimites",
-      "Rapport sur mesure",
-      "Account manager dedie",
+      ROI_LABELS[features.roi_dashboard] || "Rapport sur mesure",
+      SUPPORT_LABELS[support] || support,
       "Formation equipe incluse",
-    ],
-    overage: null,
-  },
-];
+    ];
+  }
+
+  // Starter & Pro — build dynamically
+  const lines = [];
+
+  lines.push(`${fmt(limits.tickets_per_month)} tickets / mois`);
+  lines.push(
+    limits.workflows_active === Infinity
+      ? "Workflows illimites"
+      : `${limits.workflows_active} workflows actifs`
+  );
+
+  if (limits.integrations === Infinity) {
+    lines.push("Toutes les integrations");
+  } else if (limits.integrations > 1) {
+    lines.push(`Shopify + ${limits.integrations - 1} integrations`);
+  } else {
+    lines.push("Integration Shopify");
+  }
+
+  if (features.brand_editor) lines.push("Editeur ton de marque");
+  if (features.guardrails) lines.push("Garde-fous & regles metier");
+  if (features.specialized_agents) lines.push("Agents IA specialises");
+  if (features.voice_agent && limits.voice_minutes > 0) {
+    lines.push(`Agent vocal (${limits.voice_minutes} min incluses)`);
+  }
+  if (features.whatsapp_agent) lines.push("WhatsApp Agent");
+  if (features.simulator) lines.push("Simulateur de conversation");
+  if (features.api_webhooks) lines.push("API + webhooks");
+
+  if (features.roi_dashboard) {
+    lines.push(ROI_LABELS[features.roi_dashboard] || "Dashboard ROI");
+  }
+
+  const histLabel = HISTORY_LABELS[limits.history_days];
+  if (histLabel && histLabel !== "\u2014") lines.push(histLabel);
+
+  lines.push(
+    limits.team_members === Infinity
+      ? "Membres illimites"
+      : `${limits.team_members} membres d'equipe`
+  );
+
+  lines.push(SUPPORT_LABELS[support] || support);
+
+  return lines;
+}
+
+function buildOverage(plan) {
+  if (plan.overage_per_ticket == null) return null;
+  return `${plan.overage_per_ticket.toFixed(2).replace(".", ",")}\u20AC / ticket`;
+}
+
+/* Build the plans array from PLANS + PLAN_ORDER */
+const plans = PLAN_ORDER.map((id) => {
+  const p = PLANS[id];
+  return {
+    id: p.id,
+    name: p.name,
+    tagline: p.tagline,
+    monthlyPrice: p.price.monthly,
+    annualPrice: p.price.annual,
+    trial: !!p.trial,
+    cta: p.cta,
+    ctaLink: CTA_LINKS[p.id],
+    highlighted: p.popular,
+    cardClass: CARD_CLASSES[p.id],
+    features: buildFeatures(p),
+    overage: buildOverage(p),
+  };
+});
+
+/* ──────────────────────────────────────────────
+   COMPARISON TABLE — derived from PLANS where possible
+   ────────────────────────────────────────────── */
+
+function compVal(planIds, fn) {
+  return planIds.map((id) => fn(PLANS[id]));
+}
 
 const comparisonCategories = [
   {
     name: "Volume & Workflows",
     rows: [
-      { label: "Tickets / mois", values: ["50", "1 000", "5 000", "Illimite"] },
-      { label: "Workflows actifs", values: ["1", "3", "Illimite", "Illimite"] },
-      { label: "Membres d'equipe", values: ["1", "2", "5", "Illimite"] },
-      { label: "Historique", values: ["\u2014", "3 mois", "Illimite", "Illimite"] },
+      {
+        label: "Tickets / mois",
+        values: compVal(PLAN_ORDER, (p) => fmt(p.limits.tickets_per_month)),
+      },
+      {
+        label: "Workflows actifs",
+        values: compVal(PLAN_ORDER, (p) => fmt(p.limits.workflows_active)),
+      },
+      {
+        label: "Membres d'equipe",
+        values: compVal(PLAN_ORDER, (p) => fmt(p.limits.team_members)),
+      },
+      {
+        label: "Historique",
+        values: compVal(PLAN_ORDER, (p) =>
+          p.limits.history_days === 7
+            ? "\u2014"
+            : p.limits.history_days === 90
+              ? "3 mois"
+              : "Illimite"
+        ),
+      },
     ],
   },
   {
     name: "Integrations",
     rows: [
-      { label: "Shopify", values: [true, true, true, true] },
-      { label: "Gorgias / Zendesk", values: [false, true, true, true] },
-      { label: "Klaviyo / HubSpot", values: [false, true, true, true] },
-      { label: "API + Webhooks", values: [false, true, true, true] },
-      { label: "Integrations custom", values: [false, false, false, true] },
+      {
+        label: "Shopify",
+        values: compVal(PLAN_ORDER, (p) => p.limits.integrations >= 1),
+      },
+      {
+        label: "Gorgias / Zendesk",
+        values: compVal(PLAN_ORDER, (p) => p.limits.integrations > 1),
+      },
+      {
+        label: "Klaviyo / HubSpot",
+        values: compVal(PLAN_ORDER, (p) => p.limits.integrations > 1),
+      },
+      {
+        label: "API + Webhooks",
+        values: compVal(PLAN_ORDER, (p) => p.features.api_webhooks),
+      },
+      {
+        label: "Integrations custom",
+        values: compVal(PLAN_ORDER, (p) =>
+          p.id === "enterprise"
+        ),
+      },
     ],
   },
   {
     name: "Agents IA",
     rows: [
-      { label: "Agent email / chat", values: [true, true, true, true] },
-      { label: "Agents specialises", values: [false, true, true, true] },
-      { label: "Agent vocal", values: [false, false, "200 min", "Custom"] },
-      { label: "WhatsApp Agent", values: [false, true, true, true] },
-      { label: "Simulateur conversation", values: [false, false, true, true] },
+      {
+        label: "Agent email / chat",
+        values: [true, true, true, true],
+      },
+      {
+        label: "Agents specialises",
+        values: compVal(PLAN_ORDER, (p) => p.features.specialized_agents),
+      },
+      {
+        label: "Agent vocal",
+        values: compVal(PLAN_ORDER, (p) => {
+          if (!p.features.voice_agent) return false;
+          if (p.limits.voice_minutes === Infinity) return "Custom";
+          if (p.limits.voice_minutes > 0) return `${p.limits.voice_minutes} min`;
+          return false;
+        }),
+      },
+      {
+        label: "WhatsApp Agent",
+        values: compVal(PLAN_ORDER, (p) => p.features.whatsapp_agent),
+      },
+      {
+        label: "Simulateur conversation",
+        values: compVal(PLAN_ORDER, (p) => p.features.simulator),
+      },
     ],
   },
   {
     name: "Personnalisation",
     rows: [
-      { label: "Editeur ton de marque", values: [false, true, true, true] },
-      { label: "Garde-fous & regles metier", values: [false, true, true, true] },
-      { label: "Regles metier avancees", values: [false, false, true, true] },
-      { label: "White-label", values: [false, false, false, true] },
-      { label: "Multi-boutiques", values: [false, false, false, "10 stores"] },
+      {
+        label: "Editeur ton de marque",
+        values: compVal(PLAN_ORDER, (p) => p.features.brand_editor),
+      },
+      {
+        label: "Garde-fous & regles metier",
+        values: compVal(PLAN_ORDER, (p) => p.features.guardrails),
+      },
+      {
+        label: "Regles metier avancees",
+        values: compVal(PLAN_ORDER, (p) =>
+          p.id === "pro" || p.id === "enterprise"
+        ),
+      },
+      {
+        label: "White-label",
+        values: compVal(PLAN_ORDER, (p) => p.features.white_label),
+      },
+      {
+        label: "Multi-boutiques",
+        values: compVal(PLAN_ORDER, (p) => {
+          if (!p.features.multi_shop) return false;
+          return "10 stores";
+        }),
+      },
     ],
   },
   {
     name: "Support & Reporting",
     rows: [
-      { label: "Dashboard ROI", values: ["Basique", "Complet", "Complet", "Sur mesure"] },
-      { label: "Support", values: ["\u2014", "Email 48h", "Prioritaire 24h", "Account manager"] },
-      { label: "SLA garanti", values: [false, false, false, "99,9%"] },
-      { label: "Formation equipe", values: [false, false, false, true] },
+      {
+        label: "Dashboard ROI",
+        values: compVal(PLAN_ORDER, (p) => {
+          const v = p.features.roi_dashboard;
+          if (v === "basic") return "Basique";
+          if (v === "full") return "Complet";
+          if (v === "custom") return "Sur mesure";
+          return false;
+        }),
+      },
+      {
+        label: "Support",
+        values: compVal(PLAN_ORDER, (p) => {
+          const s = p.support;
+          if (s === "docs") return "\u2014";
+          if (s === "email_48h") return "Email 48h";
+          if (s === "priority_24h") return "Prioritaire 24h";
+          if (s === "account_manager") return "Account manager";
+          return s;
+        }),
+      },
+      {
+        label: "SLA garanti",
+        values: compVal(PLAN_ORDER, (p) =>
+          p.id === "enterprise" ? "99,9%" : false
+        ),
+      },
+      {
+        label: "Formation equipe",
+        values: compVal(PLAN_ORDER, (p) => p.id === "enterprise"),
+      },
     ],
   },
 ];
+
+/* ──────────────────────────────────────────────
+   FAQ — static (not derivable from plans.js)
+   ────────────────────────────────────────────── */
 
 const faqs = [
   {
@@ -177,7 +324,7 @@ const faqs = [
   },
   {
     q: "Que se passe-t-il si je depasse mon quota de tickets ?",
-    a: "Au-dela de votre quota mensuel, chaque ticket supplementaire est facture a l'usage : 0,15\u20AC/ticket sur le plan Starter, 0,10\u20AC/ticket sur le plan Pro. Vous recevez une alerte a 80% et 100% de votre quota pour anticiper. Aucune coupure de service.",
+    a: `Au-dela de votre quota mensuel, chaque ticket supplementaire est facture a l'usage : ${PLANS.starter.overage_per_ticket.toFixed(2).replace(".", ",")}\u20AC/ticket sur le plan Starter, ${PLANS.pro.overage_per_ticket.toFixed(2).replace(".", ",")}\u20AC/ticket sur le plan Pro. Vous recevez une alerte a 80% et 100% de votre quota pour anticiper. Aucune coupure de service.`,
   },
   {
     q: "L'essai gratuit est-il sans engagement ?",
@@ -185,7 +332,7 @@ const faqs = [
   },
   {
     q: "Comment fonctionne l'agent vocal ?",
-    a: "L'agent vocal utilise ElevenLabs pour une voix naturelle en francais. Vous obtenez un numero FR dedie. Le plan Pro inclut 200 minutes/mois. Au-dela, les minutes supplementaires sont facturees a l'usage. Le plan Enterprise permet une voix custom a votre marque.",
+    a: `L'agent vocal utilise ElevenLabs pour une voix naturelle en francais. Vous obtenez un numero FR dedie. Le plan Pro inclut ${PLANS.pro.limits.voice_minutes} minutes/mois. Au-dela, les minutes supplementaires sont facturees a l'usage. Le plan Enterprise permet une voix custom a votre marque.`,
   },
   {
     q: "Quelles integrations sont disponibles ?",
@@ -193,7 +340,7 @@ const faqs = [
   },
   {
     q: "Proposez-vous un discount annuel ?",
-    a: "Oui, la facturation annuelle vous fait economiser 20% par rapport au tarif mensuel. Par exemple, le plan Pro passe de 399\u20AC/mois a 319\u20AC/mois (facture annuellement).",
+    a: `Oui, la facturation annuelle vous fait economiser 20% par rapport au tarif mensuel. Par exemple, le plan Pro passe de ${PLANS.pro.price.monthly}\u20AC/mois a ${PLANS.pro.price.annual}\u20AC/mois (facture annuellement).`,
   },
 ];
 

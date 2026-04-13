@@ -58,10 +58,10 @@ export default async function handler(req, res) {
       }
     }
 
-    // Build line items — remove setup fee if referral is valid or price is 0
+    // Build line items
     const lineItems = [];
 
-    if (!hasValidReferral && setupPrice > 0) {
+    if (setupPrice > 0) {
       lineItems.push({
         price_data: {
           currency: 'eur',
@@ -90,6 +90,12 @@ export default async function handler(req, res) {
       quantity: 1,
     });
 
+    // If valid referral, apply 1 month free trial (first month free for the referred person)
+    const subscriptionData = {};
+    if (hasValidReferral) {
+      subscriptionData.trial_period_days = 30;
+    }
+
     const metadata = {
       client,
       service: 'Actero',
@@ -104,6 +110,7 @@ export default async function handler(req, res) {
       mode: 'subscription',
       payment_method_types: ['card'],
       line_items: lineItems,
+      ...(subscriptionData.trial_period_days && { subscription_data: subscriptionData }),
       metadata,
       success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://actero.fr'}/success?client=${encodeURIComponent(client)}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://actero.fr'}/cancel?client=${encodeURIComponent(client)}`,

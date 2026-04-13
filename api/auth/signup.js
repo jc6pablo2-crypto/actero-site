@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Trop de tentatives. Réessayez plus tard.' });
   }
 
-  const { email, password, brand_name, shopify_url } = req.body || {};
+  const { email, password, brand_name, shopify_url, referral_code } = req.body || {};
 
   // --- Validation ---
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -99,10 +99,73 @@ export default async function handler(req, res) {
       console.error('[SIGNUP] Client-user link error:', linkError);
     }
 
-    // 5. Redirect to dashboard
+    // 5. Process referral code if present
+    let referralApplied = false;
+    if (referral_code) {
+      try {
+        const code = referral_code.toUpperCase();
+
+        // Verify the referrer exists
+        const { data: referrer } = await supabase
+          .from('clients')
+          .select('id, brand_name')
+          .eq('referral_code', code)
+          .maybeSingle();
+
+        if (referrer) {
+          // Mark the client as having a free first month
+          await supabase
+            .from('clients')
+            .update({ referral_first_month_free: true, referred_by_client_id: referrer.id })
+            .eq('id', clientId);
+
+          // Update the referral record (or create one) to link the referee
+          const { data: existingRef } = await supabase
+            .from('referrals')
+            .select('id')
+            .eq('referral_code', code)
+            .in('status', ['clicked'])
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+          if (existingRef) {
+            await supabase
+              .from('referrals')
+              .update({
+                status: 'signed_up',
+                referee_client_id: clientId,
+                signed_up_at: new Date().toISOString(),
+              })
+              .eq('id', existingRef.id);
+          } else {
+            // Direct signup with referral code (no prior click tracked)
+            await supabase
+              .from('referrals')
+              .insert({
+                referrer_client_id: referrer.id,
+                referee_client_id: clientId,
+                referral_code: code,
+                status: 'signed_up',
+                referral_link: `https://actero.fr/r/${code}`,
+                signed_up_at: new Date().toISOString(),
+                created_at: new Date().toISOString(),
+              });
+          }
+
+          referralApplied = true;
+          console.log(`[SIGNUP] Referral applied: code=${code}, referrer=${referrer.id}, referee=${clientId}`);
+        }
+      } catch (refErr) {
+        console.error('[SIGNUP] Referral processing error (non-blocking):', refErr);
+      }
+    }
+
+    // 6. Redirect to dashboard
     return res.status(200).json({
       success: true,
-      redirect: '/client/overview',
+      referral_applied: referralApplied,
+      redirect: '/signup/plan',
     });
 
   } catch (err) {

@@ -18,6 +18,7 @@ import { DemoDashboardPage } from "./components/ui/demo-dashboard";
 import { ProspectDemoPage } from "./pages/ProspectDemoPage";
 import { PromptLibraryPage } from "./components/ui/prompt-library-page";
 import { SignupPage } from "./pages/SignupPage";
+import { PlanSelectionPage } from "./pages/PlanSelectionPage";
 import { StartPage } from "./pages/StartPage";
 import { SuccessPage } from "./pages/SuccessPage";
 import { ShopifySuccessPage } from "./pages/ShopifySuccessPage";
@@ -98,6 +99,7 @@ function MainRouter() {
   else if (currentRoute === "/tarifs") page = <PricingPage onNavigate={navigate} />;
   else if (currentRoute === "/faq") page = <FaqPage onNavigate={navigate} />;
   else if (currentRoute === "/signup") page = <SignupPage onNavigate={navigate} />;
+  else if (currentRoute === "/signup/plan") page = <PlanSelectionPage onNavigate={navigate} />;
   else if (currentRoute === "/audit") page = <AuditPage onNavigate={navigate} />;
   else if (currentRoute === "/confidentialite") page = <PrivacyPage onNavigate={navigate} />;
   else if (currentRoute === "/support") page = <SupportGuidePage onNavigate={navigate} />;

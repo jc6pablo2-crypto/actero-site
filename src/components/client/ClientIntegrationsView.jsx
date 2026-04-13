@@ -454,7 +454,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
       const { data: clientRow } = await supabase.from('clients').select('plan').eq('id', clientId).maybeSingle()
       const plan = clientRow?.plan || 'free'
       const integLimit = getLimit(plan, 'integrations')
-      const connectedCount = connectedProviders?.length || 0
+      const connectedCount = integrations?.filter(i => i.status === 'active')?.length || 0
       if (integLimit !== Infinity && connectedCount >= integLimit) {
         const planName = getPlanConfig(plan).name
         toast?.error?.(`Limite atteinte : ${integLimit} integration${integLimit > 1 ? 's' : ''} sur le plan ${planName}. Passez au plan superieur.`)

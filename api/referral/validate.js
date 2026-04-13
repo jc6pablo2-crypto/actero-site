@@ -39,16 +39,17 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'Code de parrainage invalide' });
     }
 
-    // Count successful referrals for tiered reward
-    const { count: successCount } = await supabase
-      .from('referrals')
-      .select('id', { count: 'exact', head: true })
-      .eq('referrer_client_id', referrer.id)
-      .eq('status', 'rewarded');
+    // Reward: 1 month Stripe credit for the referrer
+    // Look up the referrer's monthly price to determine credit amount
+    const { data: referrerFunnelForPrice } = await supabase
+      .from('funnel_clients')
+      .select('monthly_price')
+      .eq('onboarded_client_id', referrer.id)
+      .maybeSingle();
 
-    // Tiered rewards: <= 2 successful = 800€, >= 3 = 1600€
-    const previousCount = successCount || 0;
-    const rewardCents = previousCount >= 2 ? 160000 : 80000;
+    // Default to 800€/month if no custom pricing found
+    const monthlyPrice = referrerFunnelForPrice?.monthly_price ?? 800;
+    const rewardCents = Math.round(monthlyPrice * 100);
 
     // Find/update the referral record
     const { data: referral } = await supabase
@@ -110,7 +111,7 @@ export default async function handler(req, res) {
         referee_client_id: referee_client_id || null,
         referrer_credit_amount: rewardCents,
         referrer_credit_applied: !!stripeCreditId,
-        referee_setup_waived: true,
+        referee_first_month_free: true,
         paid_at: new Date().toISOString(),
         rewarded_at: new Date().toISOString(),
       })
@@ -149,12 +150,12 @@ export default async function handler(req, res) {
               body: JSON.stringify({
                 from: 'Actero <notifications@actero.fr>',
                 to: user.email,
-                subject: `Parrainage validé — ${rewardCents / 100}€ de crédit !`,
+                subject: `Parrainage validé — 1 mois de crédit offert !`,
                 html: `
                   <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
                     <h2 style="color: #10b981;">Félicitations ! 🎉</h2>
-                    <p>Votre parrainage a été validé. Vous recevez <strong>${rewardCents / 100}€ de crédit</strong> sur votre prochaine facture Actero.</p>
-                    <p>Continuez à parrainer pour débloquer des récompenses encore plus élevées !</p>
+                    <p>Votre parrainage a été validé. Vous recevez <strong>${rewardCents / 100}€ de crédit</strong> (1 mois) sur votre prochaine facture Actero.</p>
+                    <p>Continuez à parrainer pour cumuler encore plus de crédits !</p>
                     <p style="margin-top: 20px;">
                       <a href="https://actero.fr/client" style="background: #10b981; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;">Voir mon tableau de bord</a>
                     </p>
