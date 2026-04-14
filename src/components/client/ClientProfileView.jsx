@@ -17,11 +17,11 @@ const NOTIFICATION_TOGGLES = [
   ]},
   { section: 'Rapports', items: [
     { key: 'daily_summary', label: 'Resume quotidien', desc: 'Email chaque matin avec les performances de la veille', defaultVal: true },
-    { key: 'weekly_summary', label: 'Resume hebdomadaire', desc: 'Rapport chaque lundi matin', defaultVal: false },
-    { key: 'monthly_report', label: 'Rapport mensuel', desc: 'Rapport detaille en fin de mois', defaultVal: true },
+    { key: 'weekly_summary', label: 'Résumé hebdomadaire', desc: 'Rapport chaque lundi matin', defaultVal: false },
+    { key: 'monthly_report', label: 'Rapport mensuel', desc: 'Rapport détaillé en fin de mois', defaultVal: true },
   ]},
-  { section: 'Celebrations', items: [
-    { key: 'milestone_alert', label: 'Jalons atteints', desc: 'Quand vous atteignez un nouveau palier (100h economisees, etc.)', defaultVal: true },
+  { section: 'Célébrations', items: [
+    { key: 'milestone_alert', label: 'Jalons atteints', desc: 'Quand vous atteignez un nouveau palier (100h économisées, etc.)', defaultVal: true },
   ]},
 ]
 

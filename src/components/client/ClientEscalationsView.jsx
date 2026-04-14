@@ -343,15 +343,15 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
               <div className="flex items-center gap-2 p-3 bg-emerald-50 rounded-xl border border-emerald-100">
                 <Mail className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                 <div className="text-[12px] text-emerald-700">
-                  <p>Votre reponse sera envoyee automatiquement par email a <span className="font-semibold">{conversation.customer_email}</span></p>
-                  <p className="text-[11px] text-emerald-600 mt-0.5">Envoye depuis votre adresse email connectee (SMTP) ou via Actero si non configure.</p>
+                  <p>Votre réponse sera envoyée automatiquement par email à <span className="font-semibold">{conversation.customer_email}</span></p>
+                  <p className="text-[11px] text-emerald-600 mt-0.5">Envoyé depuis votre adresse email connectée (SMTP) ou via Actero si non configuré.</p>
                 </div>
               </div>
             ) : (
               <div className="flex items-center gap-2 p-3 bg-amber-50 rounded-xl border border-amber-100">
                 <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
                 <p className="text-[12px] text-amber-700">
-                  Ce client n&apos;a pas fourni d&apos;email. Votre reponse sera enregistree mais ne sera pas envoyee.
+                  Ce client n&apos;a pas fourni d&apos;email. Votre réponse sera enregistrée mais ne sera pas envoyée.
                 </p>
               </div>
             )}
@@ -360,15 +360,15 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
             {emailSentStatus === 'sent' && (
               <div className="flex items-center gap-2 p-3 bg-emerald-50 rounded-xl border border-emerald-200">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <p className="text-[12px] text-emerald-700 font-semibold">Email envoye a {conversation.customer_email}</p>
+                <p className="text-[12px] text-emerald-700 font-semibold">Email envoyé à {conversation.customer_email}</p>
               </div>
             )}
             {emailSentStatus === 'error' && (
               <div className="flex items-start gap-2 p-3 bg-red-50 rounded-xl border border-red-200">
                 <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="text-[12px] text-red-700 font-semibold">Email non envoye</p>
-                  <p className="text-[11px] text-red-600 mt-0.5">{emailErrorMsg || 'Verifiez votre configuration SMTP dans Integrations.'}</p>
+                  <p className="text-[12px] text-red-700 font-semibold">Email non envoyé</p>
+                  <p className="text-[11px] text-red-600 mt-0.5">{emailErrorMsg || 'Vérifiez votre configuration SMTP dans Intégrations.'}</p>
                 </div>
               </div>
             )}
@@ -377,7 +377,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
             {conversation.ai_response && (
               <div>
                 <p className="text-[11px] text-[#9ca3af] mb-2">
-                  L&apos;IA propose une reponse — choisissez comment proceder :
+                  L&apos;IA propose une réponse — choisissez comment procéder :
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                   <button
@@ -391,7 +391,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
                     }`}
                   >
                     <Check className="w-4 h-4" />
-                    Envoyer la reponse IA telle quelle
+                    Envoyer la réponse IA telle quelle
                   </button>
                   <button
                     type="button"
@@ -403,7 +403,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
                     }`}
                   >
                     <Edit3 className="w-4 h-4" />
-                    Modifier la reponse IA
+                    Modifier la réponse IA
                   </button>
                   <button
                     type="button"
@@ -415,7 +415,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
                     }`}
                   >
                     <Pen className="w-4 h-4" />
-                    Ecrire ma propre reponse
+                    Écrire ma propre réponse
                   </button>
                 </div>
               </div>
@@ -424,14 +424,14 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
             {/* Feature 16: Template selector */}
             <div className="relative">
               <div className="flex items-center justify-between mb-2">
-                <label className="block text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider">Votre reponse</label>
+                <label className="block text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider">Votre réponse</label>
                 <button
                   type="button"
                   onClick={() => setShowTemplatePicker((v) => !v)}
                   className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-[#f5f5f5] text-[#1a1a1a] border border-[#ebebeb] hover:bg-[#ececec] transition-all"
                 >
                   <Sparkles className="w-3 h-3" />
-                  Inserer un template
+                  Insérer un template
                   <ChevronDown className="w-3 h-3" />
                 </button>
               </div>
@@ -453,7 +453,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
                   <div className="max-h-60 overflow-y-auto">
                     {filteredTemplates.length === 0 ? (
                       <div className="px-4 py-6 text-center text-[12px] text-[#9ca3af]">
-                        {templates.length === 0 ? 'Aucun template. Sauvegardez votre premiere reponse !' : 'Aucun resultat'}
+                        {templates.length === 0 ? 'Aucun template. Sauvegardez votre première réponse !' : 'Aucun résultat'}
                       </div>
                     ) : (
                       filteredTemplates.map((tpl) => (
@@ -499,10 +499,10 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
               />
               <div>
                 <span className="text-sm text-[#9ca3af] group-hover:text-[#1a1a1a] transition-colors">
-                  Ajouter cette reponse a ma base de connaissances
+                  Ajouter cette réponse à ma base de connaissances
                 </span>
                 <p className="text-xs text-[#9ca3af] mt-0.5">
-                  L&apos;IA saura repondre a cette question la prochaine fois
+                  L&apos;IA saura répondre à cette question la prochaine fois
                 </p>
               </div>
             </label>
@@ -514,14 +514,14 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
                 className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-[12px] font-semibold bg-[#0F5F35] text-white hover:bg-[#003725] transition-all disabled:opacity-50"
               >
                 {respondMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                {isRealEmail ? 'Envoyer par email' : 'Enregistrer la reponse'}
+                {isRealEmail ? 'Envoyer par email' : 'Enregistrer la réponse'}
               </button>
               <button
                 type="button"
                 onClick={() => setShowSaveTemplateModal(true)}
                 disabled={!response.trim()}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-[12px] font-semibold bg-white text-[#1a1a1a] border border-[#ebebeb] hover:bg-[#fafafa] transition-all disabled:opacity-50"
-                title="Sauvegarder cette reponse comme template reutilisable"
+                title="Sauvegarder cette réponse comme template réutilisable"
               >
                 <Save className="w-4 h-4" />
                 Sauvegarder comme template
@@ -770,8 +770,8 @@ export const ClientEscalationsView = ({ clientId, theme = 'dark' }) => {
       {/* Filters */}
       <div className="flex p-1 rounded-xl border border-[#f0f0f0] bg-[#fafafa] w-fit">
         {[
-          { id: 'pending', label: 'A traiter', count: pendingCount },
-          { id: 'resolved', label: 'Traites' },
+          { id: 'pending', label: 'À traiter', count: pendingCount },
+          { id: 'resolved', label: 'Traités' },
           { id: 'all', label: 'Tous' },
         ].map((f) => (
           <button

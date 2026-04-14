@@ -245,7 +245,7 @@ export function AdminAddEnterpriseView({ onNavigateToClients }) {
             className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[13px] font-semibold bg-[#0F5F35] text-white hover:bg-[#0F5F35]/90 disabled:opacity-50 transition-colors"
           >
             <Send className="w-4 h-4" />
-            {submitting ? 'Creation en cours...' : 'Creer le client Enterprise'}
+            {submitting ? 'Création en cours...' : 'Créer le client Enterprise'}
           </button>
         </form>
       </SectionCard>

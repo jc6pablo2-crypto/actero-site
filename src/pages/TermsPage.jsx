@@ -63,7 +63,7 @@ Le Client peut inviter des membres de son equipe avec des roles differencies (Ad
 - Le deploiement d'agents IA pour le support client e-commerce (Shopify)
 - La configuration personnalisee du ton de marque, des regles metier et des garde-fous
 - Un dashboard de suivi des performances en temps reel
-- La connexion aux outils tiers via OAuth (Shopify, Slack, Gorgias, Zendesk, Gmail, Google Sheets)
+- La connexion aux outils tiers via OAuth (Shopify, Slack, Gorgias, Zendesk, Gmail)
 - Un simulateur de conversation pour tester l'agent avant mise en production
 - Un systeme d'escalade vers un humain quand l'agent IA ne peut pas repondre
 

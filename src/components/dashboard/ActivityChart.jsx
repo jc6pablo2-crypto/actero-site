@@ -153,7 +153,7 @@ export const ActivityChart = ({ theme = "dark", supabase, selectedPeriod = "this
     <div className={`rounded-2xl border p-6 shadow-sm flex flex-col transition-colors duration-300 ${isLight ? "bg-white border-gray-200" : "bg-[#F9F7F1] border-gray-200"}`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-[#1a1a1a] flex items-center gap-2">
-          Graphique d'activite <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+          Graphique d'activité <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
         </h3>
       </div>
 
@@ -168,7 +168,7 @@ export const ActivityChart = ({ theme = "dark", supabase, selectedPeriod = "this
             className="h-[200px] flex flex-col items-center justify-center text-center"
           >
             <Activity className="w-8 h-8 text-[#ccc] mb-2" />
-            <p className="text-sm text-[#999]">Aucune activite pour le moment.</p>
+            <p className="text-sm text-[#999]">Aucune activité pour le moment.</p>
           </motion.div>
         ) : (
           <motion.div

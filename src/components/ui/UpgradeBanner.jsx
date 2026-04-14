@@ -3,12 +3,12 @@ import { getPlanConfig } from '../../lib/plans'
 
 const FEATURE_LABELS = {
   simulator: 'Simulateur de conversation',
-  voice_agent: 'Agent vocal telephonique',
+  voice_agent: 'Agent vocal téléphonique',
   whatsapp_agent: 'Agent WhatsApp',
-  brand_editor: 'Editeur de ton de marque',
-  guardrails: 'Garde-fous & regles metier',
+  brand_editor: 'Éditeur de ton de marque',
+  guardrails: 'Garde-fous & règles métier',
   api_webhooks: 'API & webhooks',
-  specialized_agents: 'Agents IA specialises',
+  specialized_agents: 'Agents IA spécialisés',
   pdf_report: 'Rapport PDF mensuel',
 }
 

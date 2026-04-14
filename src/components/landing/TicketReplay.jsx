@@ -38,9 +38,9 @@ const STEPS = [
     icon: Brain,
     color: 'text-[#003725]',
     bg: 'bg-[#F9F7F1] border-[#003725]/20',
-    title: 'Generation reponse IA',
+    title: 'Génération réponse IA',
     subtitle: 'Gemini + contexte client',
-    detail: 'Reponse personnalisee generee avec excuses, proposition de renvoi gratuit, et code promo -15% pour le prochain achat.',
+    detail: 'Réponse personnalisée générée avec excuses, proposition de renvoi gratuit, et code promo -15% pour le prochain achat.',
     time: '1.2s',
   },
   {
@@ -48,9 +48,9 @@ const STEPS = [
     icon: Send,
     color: 'text-cyan-500',
     bg: 'bg-cyan-50 border-cyan-200',
-    title: 'Envoi de la reponse',
+    title: 'Envoi de la réponse',
     subtitle: 'Email automatique',
-    detail: 'Email envoye a marie.d@email.com avec la proposition de resolution. Ticket marque comme "resolu".',
+    detail: 'Email envoyé à marie.d@email.com avec la proposition de résolution. Ticket marqué comme "résolu".',
     time: '1.5s',
   },
   {
@@ -58,9 +58,9 @@ const STEPS = [
     icon: CheckCircle2,
     color: 'text-[#003725]',
     bg: 'bg-[#F9F7F1] border-[#003725]/20',
-    title: 'Ticket resolu',
+    title: 'Ticket résolu',
     subtitle: 'Automatiquement',
-    detail: 'Temps total : 1.5 secondes | Temps economise : 8 minutes | Satisfaction client preservee',
+    detail: 'Temps total : 1.5 secondes | Temps économisé : 8 minutes | Satisfaction client préservée',
     time: '1.5s',
   },
 ]
@@ -225,7 +225,7 @@ export const TicketReplay = () => {
                   </div>
                   <div className="w-px h-8 bg-gray-200" />
                   <div>
-                    <span className="text-[#716D5C]">Temps economise</span>
+                    <span className="text-[#716D5C]">Temps économisé</span>
                     <p className="text-xl font-black text-[#262626]">8 min</p>
                   </div>
                   <div className="w-px h-8 bg-gray-200" />

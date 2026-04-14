@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   TrendingUp, ArrowRight, ArrowLeft, CheckCircle2, Loader2, X,
   Mail, MessageSquare, FileText, Bell, AlertTriangle, Calendar,
-  DollarSign, Clock, Plug, Table, HelpCircle, ExternalLink,
+  DollarSign, Clock, Plug, HelpCircle, ExternalLink,
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
@@ -30,7 +30,7 @@ export const ComptabiliteWizard = ({ clientId, connectedProviders, onComplete, o
   const [relanceDelai, setRelanceDelai] = useState('7')
   const [alerteSeuil, setAlerteSeuil] = useState('1000')
   const [exportFrequency, setExportFrequency] = useState('mensuel')
-  const [selectedChannels, setSelectedChannels] = useState({ email: true, slack: false, google_sheets: false })
+  const [selectedChannels, setSelectedChannels] = useState({ email: true, slack: false })
   const [activating, setActivating] = useState(false)
   const [activated, setActivated] = useState(false)
 
@@ -106,8 +106,7 @@ export const ComptabiliteWizard = ({ clientId, connectedProviders, onComplete, o
                     {[
                       { icon: FileText, title: 'Relance de factures', desc: 'L\'IA detecte les factures impayees et envoie des relances automatiques a vos clients.' },
                       { icon: AlertTriangle, title: 'Alertes de tresorerie', desc: 'Recevez une alerte quand votre tresorerie passe sous un seuil que vous definissez.' },
-                      { icon: Calendar, title: 'Exports comptables', desc: 'Recevez un export automatique de vos donnees comptables par email ou Google Sheets.' },
-                      { icon: Table, title: 'Export Google Sheets', desc: 'Vos donnees comptables sont automatiquement exportees dans un Google Sheet partage.' },
+                      { icon: Calendar, title: 'Rapports comptables', desc: 'Recevez un recapitulatif automatique de vos donnees comptables par email.' },
                       { icon: Bell, title: 'Notifications', desc: 'Soyez prevenu par email ou Slack de chaque action comptable.' },
                     ].map(item => {
                       const Icon = item.icon
@@ -170,7 +169,7 @@ export const ComptabiliteWizard = ({ clientId, connectedProviders, onComplete, o
                     <div className="p-3 bg-amber-50 rounded-xl border border-amber-100">
                       <p className="text-[11px] text-amber-700">
                         <Plug className="w-3 h-3 inline mr-1" />
-                        Vous devrez connecter {selectedTool} dans Integrations pour que l'automatisation fonctionne pleinement.
+                        Vous devrez connecter {selectedTool} dans Intégrations pour que l'automatisation fonctionne pleinement.
                       </p>
                     </div>
                   )}
@@ -180,11 +179,11 @@ export const ComptabiliteWizard = ({ clientId, connectedProviders, onComplete, o
               {/* Step 3: Config */}
               {step === 2 && (
                 <div className="space-y-5">
-                  <h3 className="text-[16px] font-semibold text-[#1a1a1a]">Parametres</h3>
+                  <h3 className="text-[16px] font-semibold text-[#1a1a1a]">Paramètres</h3>
 
                   <div>
-                    <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider">Delai avant relance de facture</label>
-                    <p className="text-[11px] text-[#c4c4c4] mb-1.5">Combien de jours apres l'echeance avant d'envoyer une relance ?</p>
+                    <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider">Délai avant relance de facture</label>
+                    <p className="text-[11px] text-[#c4c4c4] mb-1.5">Combien de jours après l'échéance avant d'envoyer une relance ?</p>
                     <div className="flex items-center gap-2">
                       <input
                         type="number"
@@ -263,30 +262,12 @@ export const ComptabiliteWizard = ({ clientId, connectedProviders, onComplete, o
                       <div className="flex-1">
                         <p className="text-[13px] font-semibold text-[#1a1a1a]">Slack</p>
                         <p className="text-[11px] text-[#9ca3af]">
-                          {connectedProviders.includes('slack') ? 'Alertes dans votre canal Slack' : 'Connectez Slack dans Integrations'}
+                          {connectedProviders.includes('slack') ? 'Alertes dans votre canal Slack' : 'Connectez Slack dans Intégrations'}
                         </p>
                       </div>
                       {selectedChannels.slack && <CheckCircle2 className="w-5 h-5 text-indigo-600" />}
                     </button>
 
-                    <button
-                      onClick={() => setSelectedChannels(c => ({ ...c, google_sheets: !c.google_sheets }))}
-                      disabled={!connectedProviders.includes('google_sheets')}
-                      className={`w-full flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all ${
-                        selectedChannels.google_sheets ? 'border-indigo-500 bg-indigo-50/50' :
-                        connectedProviders.includes('google_sheets') ? 'border-[#f0f0f0] hover:border-[#e0e0e0]' :
-                        'border-[#f0f0f0] opacity-50 cursor-not-allowed'
-                      }`}
-                    >
-                      <Table className="w-5 h-5 text-[#0F9D58]" />
-                      <div className="flex-1">
-                        <p className="text-[13px] font-semibold text-[#1a1a1a]">Google Sheets</p>
-                        <p className="text-[11px] text-[#9ca3af]">
-                          {connectedProviders.includes('google_sheets') ? 'Exports automatiques dans un Google Sheet' : 'Connectez Google Sheets dans Integrations'}
-                        </p>
-                      </div>
-                      {selectedChannels.google_sheets && <CheckCircle2 className="w-5 h-5 text-indigo-600" />}
-                    </button>
                   </div>
                 </div>
               )}
@@ -305,7 +286,7 @@ export const ComptabiliteWizard = ({ clientId, connectedProviders, onComplete, o
                         <div className="flex items-center gap-2 text-[12px]"><CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" /> <span>Relance apres {relanceDelai} jours</span></div>
                         <div className="flex items-center gap-2 text-[12px]"><CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" /> <span>Alerte tresorerie sous {alerteSeuil}€</span></div>
                         <div className="flex items-center gap-2 text-[12px]"><CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" /> <span>Exports {exportFrequency}s</span></div>
-                        <div className="flex items-center gap-2 text-[12px]"><CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" /> <span>Canaux : {[selectedChannels.email && 'Email', selectedChannels.slack && 'Slack', selectedChannels.google_sheets && 'Google Sheets'].filter(Boolean).join(', ')}</span></div>
+                        <div className="flex items-center gap-2 text-[12px]"><CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" /> <span>Canaux : {[selectedChannels.email && 'Email', selectedChannels.slack && 'Slack'].filter(Boolean).join(', ')}</span></div>
                       </div>
                       <button
                         onClick={handleActivate}

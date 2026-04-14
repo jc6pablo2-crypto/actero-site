@@ -97,13 +97,13 @@ export const WeeklySummary = ({ clientId, setActiveTab }) => {
       <div className="flex-1 min-w-0 pt-1">
         {!stats.hasActivity ? (
           <p className="text-[14px] text-[#1a1a1a] leading-relaxed">
-            Votre agent est pret — aucun message recu cette semaine.
+            Votre agent est prêt — aucun message reçu cette semaine.
           </p>
         ) : (
           <p className="text-[14px] text-[#1a1a1a] leading-relaxed">
-            Cette semaine, votre agent a resolu{' '}
+            Cette semaine, votre agent a résolu{' '}
             <span className="font-bold text-[#0F5F35]">{stats.ticketsResolved} ticket{stats.ticketsResolved > 1 ? 's' : ''}</span>
-            , economise{' '}
+            , économisé{' '}
             <span className="font-bold text-[#0F5F35]">
               {formatHours(stats.hoursSaved)} dont {stats.valueSaved.toLocaleString('fr-FR')}€
             </span>
@@ -117,7 +117,7 @@ export const WeeklySummary = ({ clientId, setActiveTab }) => {
                 >
                   {stats.pending} cas
                 </button>{' '}
-                vous attendent dans 'A traiter'.
+                vous attendent dans 'À traiter'.
               </>
             ) : (
               <>.</>

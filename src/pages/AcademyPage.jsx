@@ -18,9 +18,9 @@ const CATEGORIES = [
 
 const LEVELS = [
   { id: "all", label: "Tous niveaux" },
-  { id: "beginner", label: "Debutant" },
-  { id: "intermediate", label: "Intermediaire" },
-  { id: "advanced", label: "Avance" },
+  { id: "beginner", label: "Débutant" },
+  { id: "intermediate", label: "Intermédiaire" },
+  { id: "advanced", label: "Avancé" },
 ];
 
 const GRADIENT_MAP = {
@@ -62,9 +62,9 @@ function CourseCover({ cover, title }) {
 
 function LevelBadge({ level }) {
   const map = {
-    beginner: { label: "Debutant", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-    intermediate: { label: "Intermediaire", cls: "bg-amber-50 text-amber-700 border-amber-200" },
-    advanced: { label: "Avance", cls: "bg-rose-50 text-rose-700 border-rose-200" },
+    beginner: { label: "Débutant", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+    intermediate: { label: "Intermédiaire", cls: "bg-amber-50 text-amber-700 border-amber-200" },
+    advanced: { label: "Avancé", cls: "bg-rose-50 text-rose-700 border-rose-200" },
   };
   const info = map[level] || map.beginner;
   return (

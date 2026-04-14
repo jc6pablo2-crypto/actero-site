@@ -6,7 +6,7 @@ import {
   RefreshCw, Trash2, Star, Search, Mail
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
-import { INTEGRATIONS, ALL_INTEGRATIONS, getIntegrationById } from '../../config/integrations'
+import { INTEGRATIONS, ALL_INTEGRATIONS, getIntegrationById, getConflictingActive, getConflictGroup } from '../../config/integrations'
 
 const ProviderIcon = ({ provider, connected, size = 40 }) => {
   const config = getIntegrationById(provider.id || provider) || provider;
@@ -417,7 +417,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
       const { error } = await supabase.from('client_integrations').upsert({
         client_id: clientId,
         provider: smtpProvider.id,
-        provider_label: 'Email personnalise (SMTP/IMAP)',
+        provider_label: 'Email personnalisé (SMTP/IMAP)',
         auth_type: 'smtp',
         status: 'active',
         api_key: String(smtpValues.password),
@@ -450,9 +450,19 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
   const handleOAuthConnect = async (provider) => {
     // Check integration limit before connecting
     try {
-      const { getLimit, getPlanConfig } = await import('../../lib/plans.js')
+      const { getLimit, getPlanConfig, PLANS } = await import('../../lib/plans.js')
       const { data: clientRow } = await supabase.from('clients').select('plan').eq('id', clientId).maybeSingle()
       const plan = clientRow?.plan || 'free'
+
+      // WhatsApp requires Pro+
+      if (provider.id === 'whatsapp') {
+        const whatsappAllowed = PLANS?.[plan]?.limits?.whatsapp === true
+        if (!whatsappAllowed) {
+          toast?.error?.(`WhatsApp est disponible à partir du plan Pro. Mettez à niveau pour l'activer.`)
+          return
+        }
+      }
+
       const integLimit = getLimit(plan, 'integrations')
       const connectedCount = integrations?.filter(i => i.status === 'active')?.length || 0
       if (integLimit !== Infinity && connectedCount >= integLimit) {
@@ -462,6 +472,27 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
       }
     } catch { /* skip if plans.js not available */ }
 
+    // Check conflict groups (e.g. only one e-commerce platform, one helpdesk, one email sender)
+    const conflicting = getConflictingActive(provider.id, integrations || [])
+    if (conflicting) {
+      const [, group] = getConflictGroup(provider.id) || []
+      const conflictConfig = getIntegrationById(conflicting.provider)
+      const confirmed = window.confirm(
+        `${group?.message || 'Conflit d\'intégration détecté.'}\n\n` +
+        `${conflictConfig?.name || conflicting.provider} est déjà connecté. ` +
+        `Voulez-vous le déconnecter et connecter ${provider.name} à la place ?`
+      )
+      if (!confirmed) return
+      // Disconnect the conflicting integration
+      try {
+        await supabase.from('client_integrations').update({ status: 'disconnected' }).eq('id', conflicting.id)
+        queryClient.invalidateQueries({ queryKey: ['client-integrations'] })
+      } catch (err) {
+        console.error('Failed to disconnect conflicting integration:', err)
+        return
+      }
+    }
+
     if (provider.authType === 'smtp') {
       setSmtpProvider(provider);
       setSmtpValues({});
@@ -470,6 +501,10 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
     if (provider.authType === 'api_key') {
       setApiKeyProvider(provider);
       setApiKeyValue('');
+      return;
+    }
+    if (provider.authType === 'embedded_signup' && provider.wizardRoute) {
+      window.location.href = provider.wizardRoute;
       return;
     }
 
@@ -777,7 +812,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
               </div>
             </div>
             <label className="block text-xs font-bold mb-2 text-[#9ca3af]">
-              {apiKeyProvider.apiKeyLabel || 'Cle API'}
+              {apiKeyProvider.apiKeyLabel || 'Clé API'}
             </label>
             <input
               type="text"
@@ -785,7 +820,7 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
               onChange={(e) => setApiKeyValue(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleApiKeySubmit()}
               autoFocus
-              placeholder={apiKeyProvider.apiKeyPlaceholder || 'Votre cle API...'}
+              placeholder={apiKeyProvider.apiKeyPlaceholder || 'Votre clé API...'}
               className="w-full px-4 py-3 rounded-lg text-[13px] outline-none bg-[#fafafa] border border-[#ebebeb] text-[#1a1a1a] focus:ring-1 focus:ring-[#0F5F35]/20"
             />
             {apiKeyProvider.apiKeyHint && (

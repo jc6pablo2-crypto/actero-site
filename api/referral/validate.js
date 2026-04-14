@@ -27,11 +27,20 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Code de parrainage manquant' });
   }
 
+  // Reward amounts in EUR based on the referrer's current SaaS plan.
+  // Mirrors src/lib/plans.js (monthly price). Free plan => no credit reward.
+  const PLAN_MONTHLY_EUR = {
+    free: 0,
+    starter: 99,
+    pro: 399,
+    enterprise: 399, // fallback for enterprise (sur devis) — conservative
+  };
+
   try {
-    // Find the referrer client
+    // Find the referrer client (include current plan to determine reward)
     const { data: referrer } = await supabase
       .from('clients')
-      .select('id, brand_name, referral_code')
+      .select('id, brand_name, referral_code, plan')
       .eq('referral_code', referral_code.toUpperCase())
       .maybeSingle();
 
@@ -39,16 +48,9 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'Code de parrainage invalide' });
     }
 
-    // Reward: 1 month Stripe credit for the referrer
-    // Look up the referrer's monthly price to determine credit amount
-    const { data: referrerFunnelForPrice } = await supabase
-      .from('funnel_clients')
-      .select('monthly_price')
-      .eq('onboarded_client_id', referrer.id)
-      .maybeSingle();
-
-    // Default to 800€/month if no custom pricing found
-    const monthlyPrice = referrerFunnelForPrice?.monthly_price ?? 800;
+    // Reward: 1 month Stripe credit = 1 month of the referrer's current plan.
+    const referrerPlan = referrer.plan || 'free';
+    const monthlyPrice = PLAN_MONTHLY_EUR[referrerPlan] ?? 0;
     const rewardCents = Math.round(monthlyPrice * 100);
 
     // Find/update the referral record
@@ -91,7 +93,7 @@ export default async function handler(req, res) {
         .maybeSingle();
 
       const referrerStripeId = referrerFunnel?.stripe_customer_id;
-      if (referrerStripeId) {
+      if (referrerStripeId && rewardCents > 0) {
         const balanceTx = await stripe.customers.createBalanceTransaction(referrerStripeId, {
           amount: -rewardCents, // Negative = credit
           currency: 'eur',
@@ -128,10 +130,11 @@ export default async function handler(req, res) {
         stripe_credit_note_id: stripeCreditId,
       });
 
-    // Send reward email to referrer (best-effort)
+    // Send reward email to referrer (best-effort). Skip if there is no credit
+    // (e.g. referrer is on Free plan — the referee still gets their 1st month free).
     try {
       const resendKey = process.env.RESEND_API_KEY;
-      if (resendKey) {
+      if (resendKey && rewardCents > 0) {
         const { data: users } = await supabase
           .from('client_users')
           .select('user_id')

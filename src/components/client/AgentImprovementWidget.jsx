@@ -103,11 +103,11 @@ export const AgentImprovementWidget = ({ clientId, theme }) => {
           results.push({
             id: 'negative_category',
             type: 'rules',
-            title: `${topCat[1]} retours negatifs sur "${topCat[0]}"`,
-            description: 'Les clients notent mal les reponses sur ce sujet. Ajoutez une regle ou enrichissez la FAQ.',
-            action: 'Creer une regle',
+            title: `${topCat[1]} retours négatifs sur "${topCat[0]}"`,
+            description: 'Les clients notent mal les réponses sur ce sujet. Ajoutez une règle ou enrichissez la FAQ.',
+            action: 'Créer une règle',
             actionTab: 'guardrails',
-            impact: 'Ameliorer la qualite sur ce sujet',
+            impact: 'Améliorer la qualité sur ce sujet',
           })
         }
       }

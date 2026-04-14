@@ -188,23 +188,39 @@ export default async function handler(req, res) {
     if (trialDays) {
       subscriptionData.trial_period_days = trialDays;
     }
+
+    // Resolve the referrer's referral_code so the webhook can trigger
+    // /api/referral/validate (which rewards the referrer).
+    let referrerCode = null;
     if (client.referral_first_month_free && client.referred_by_client_id) {
+      const { data: referrerRow } = await supabaseAdmin
+        .from('clients')
+        .select('referral_code')
+        .eq('id', client.referred_by_client_id)
+        .maybeSingle();
+      referrerCode = referrerRow?.referral_code || null;
+
       subscriptionData.metadata = {
         referral_first_month_free: 'true',
         referred_by_client_id: client.referred_by_client_id,
+        ...(referrerCode ? { referral_code: referrerCode } : {}),
       };
     }
+
+    // Session-level metadata — stripe-webhook.js reads referral_code here.
+    const sessionMetadata = {
+      actero_client_id: client_id,
+      upgrade_from: currentPlan,
+      upgrade_to: target_plan,
+      ...(referrerCode ? { referral_code: referrerCode } : {}),
+    };
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       customer: stripeCustomerId,
       line_items: [{ price: priceId, quantity: 1 }],
       ...(Object.keys(subscriptionData).length > 0 ? { subscription_data: subscriptionData } : {}),
-      metadata: {
-        actero_client_id: client_id,
-        upgrade_from: currentPlan,
-        upgrade_to: target_plan,
-      },
+      metadata: sessionMetadata,
       // Collect billing info
       billing_address_collection: 'required',
       tax_id_collection: { enabled: true },

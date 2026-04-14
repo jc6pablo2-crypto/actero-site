@@ -37,6 +37,7 @@ import { runBrain } from '../brain.js'
 import { normalizeWhatsAppMessage } from '../lib/whatsapp-normalizer.js'
 import { sendWhatsAppMessage } from '../connectors/whatsapp.js'
 import { decryptToken } from '../../integrations/whatsapp/_helpers.js'
+import { canAccessFeature } from '../../lib/plan-limits.js'
 
 // Raw body is mandatory for HMAC verification.
 export const config = { api: { bodyParser: false } }
@@ -204,6 +205,20 @@ async function processChange(value) {
     return
   }
   const clientId = account.client_id
+
+  // Enforce plan gate — WhatsApp agent is Pro/Enterprise only.
+  const { data: clientRow } = await supabase
+    .from('clients')
+    .select('plan, trial_ends_at')
+    .eq('id', clientId)
+    .maybeSingle()
+
+  const clientPlan = clientRow?.plan || 'free'
+  const inTrial = clientRow?.trial_ends_at && new Date(clientRow.trial_ends_at) > new Date()
+  if (!inTrial && !canAccessFeature(clientPlan, 'whatsapp_agent')) {
+    console.log(`[whatsapp-webhook] plan "${clientPlan}" does not include whatsapp_agent, skipping client ${clientId}`)
+    return
+  }
 
   // Respect client_settings kill-switch.
   const { data: settings } = await supabase

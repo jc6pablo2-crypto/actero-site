@@ -69,7 +69,7 @@ export const ROISettingsView = ({ clientId, theme }) => {
         updated_at: new Date().toISOString(),
       }, { onConflict: 'client_id' })
       queryClient.invalidateQueries({ queryKey: ['roi-settings', clientId] })
-      toast.success('Parametres ROI sauvegardes')
+      toast.success('Paramètres ROI sauvegardés')
     } catch (err) {
       toast.error('Erreur: ' + err.message)
     }
@@ -105,15 +105,15 @@ export const ROISettingsView = ({ clientId, theme }) => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
             <p className="text-[28px] font-bold text-[#1a1a1a] tabular-nums">{ticketsResolved}</p>
-            <p className="text-[11px] text-[#9ca3af]">Tickets resolus</p>
+            <p className="text-[11px] text-[#9ca3af]">Tickets résolus</p>
           </div>
           <div>
             <p className="text-[28px] font-bold text-[#1a1a1a] tabular-nums">{totalTimeSavedHours.toFixed(1)}h</p>
-            <p className="text-[11px] text-[#9ca3af]">Temps economise</p>
+            <p className="text-[11px] text-[#9ca3af]">Temps économisé</p>
           </div>
           <div>
             <p className="text-[28px] font-bold text-[#1a1a1a] tabular-nums">{valueSaved.toFixed(0)}€</p>
-            <p className="text-[11px] text-[#9ca3af]">Valeur economisee</p>
+            <p className="text-[11px] text-[#9ca3af]">Valeur économisée</p>
           </div>
           <div>
             {roi === null ? (
@@ -129,12 +129,12 @@ export const ROISettingsView = ({ clientId, theme }) => {
             )}
           </div>
         </div>
-        <p className="text-[10px] text-[#c4c4c4] mt-3">ROI = (Temps economise × Cout horaire) - Abonnement Actero</p>
+        <p className="text-[10px] text-[#c4c4c4] mt-3">ROI = (Temps économisé × Coût horaire) - Abonnement Actero</p>
       </div>
 
       {/* Settings form */}
       <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#f0f0f0] p-6 space-y-5">
-        <h3 className="text-[15px] font-semibold text-[#1a1a1a]">Vos parametres</h3>
+        <h3 className="text-[15px] font-semibold text-[#1a1a1a]">Vos paramètres</h3>
 
         <div>
           <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider inline-flex items-center gap-1.5">Cout horaire de votre equipe support <HelpTooltip text="Coût horaire chargé d'un agent support (salaire brut + charges). Sert à valoriser le temps économisé par l'agent IA." /></label>

@@ -42,7 +42,7 @@ export const Sidebar = ({
     { id: 'profile', label: 'Mon Profil', icon: User },
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'billing', label: 'Facturation', icon: CreditCard },
-    { id: 'team', label: 'Equipe', icon: Users },
+    { id: 'team', label: 'Équipe', icon: Users },
     { id: 'referral', label: 'Parrainage', icon: Gift },
     { id: 'partner', label: 'Actero Partners', icon: Award },
   ]
@@ -246,7 +246,7 @@ export const Sidebar = ({
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-red-500 hover:bg-red-50 transition-colors"
               >
                 <LogOut className="w-4 h-4" />
-                Deconnexion
+                Déconnexion
               </button>
             </div>
           </div>

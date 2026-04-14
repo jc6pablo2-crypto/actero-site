@@ -114,7 +114,7 @@ const TypingIndicator = ({ theme }) => {
 const DataPills = ({ metrics, periodStats, theme }) => {
   const isLight = theme === 'light'
   const pills = [
-    { icon: Clock, label: `${periodStats?.time_saved || 0}h economisees`, color: 'emerald' },
+    { icon: Clock, label: `${periodStats?.time_saved || 0}h économisées`, color: 'emerald' },
     { icon: DollarSign, label: `${(periodStats?.roi || 0).toLocaleString()}€ ROI`, color: 'amber' },
     { icon: Activity, label: `${periodStats?.tasks_executed || 0} actions IA`, color: 'blue' },
   ]

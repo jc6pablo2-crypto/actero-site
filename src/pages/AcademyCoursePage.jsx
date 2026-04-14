@@ -32,9 +32,9 @@ const CATEGORY_LABELS = {
 };
 
 const LEVEL_LABELS = {
-  beginner: "Debutant",
-  intermediate: "Intermediaire",
-  advanced: "Avance",
+  beginner: "Débutant",
+  intermediate: "Intermédiaire",
+  advanced: "Avancé",
 };
 
 async function enrollUser(email, courseId) {

@@ -267,7 +267,7 @@ export const AdminPartnersView = () => {
                   className="flex items-center gap-2 px-5 py-2.5 bg-[#0F5F35] text-white rounded-xl text-[13px] font-semibold hover:bg-[#003725] transition-colors disabled:opacity-50"
                 >
                   {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-                  Creer le partenaire
+                  Créer le partenaire
                 </button>
                 <button
                   onClick={() => setShowCreateForm(false)}

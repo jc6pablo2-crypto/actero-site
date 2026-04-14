@@ -94,7 +94,7 @@ export const formatEvent = (event) => {
   const type = event.ticket_type;
   const meta = event.metadata || {};
   const timeSaved = event.time_saved_seconds ? Math.round(event.time_saved_seconds / 60) : 0;
-  const timeSavedLabel = timeSaved > 0 ? `${timeSaved} min economisees` : null;
+  const timeSavedLabel = timeSaved > 0 ? `${timeSaved} min économisées` : null;
   const confidence = meta.confidence ? `${Math.round(meta.confidence * 100)}%` : null;
   const orderId = meta.order_id;
   const source = meta.source || event.source_channel;
@@ -281,7 +281,7 @@ export const ActivityView = ({ supabase, theme = "dark" }) => {
         <div>
           <div className="flex items-center gap-3 mb-1">
             <h2 className="text-2xl font-semibold tracking-tight text-[#1a1a1a]">
-              Activite en direct
+              Activité en direct
             </h2>
             <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white border border-[#e5e5e5]">
               <div className={`w-1.5 h-1.5 rounded-full ${isConnected ? "bg-emerald-500 animate-pulse" : "bg-rose-400"}`} />

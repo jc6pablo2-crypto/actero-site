@@ -2,22 +2,17 @@ import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Send, Loader2, Sparkles, ArrowUp, Volume2, Square } from 'lucide-react'
 
-const QUICK_QUESTIONS_ECOMMERCE = [
+const QUICK_QUESTIONS = [
   "Comment fonctionne le SAV automatique ?",
-  "Comment sont relancés les paniers abandonnés ?",
-  "Pourquoi mon ROI a changé ?",
-  "Comment lire mes métriques ?",
+  "Comment améliorer mon taux d'automatisation ?",
+  "Pourquoi mon ROI a changé ce mois-ci ?",
+  "Quelles intégrations sont recommandées pour mon plan ?",
+  "Comment connecter mon compte Shopify ?",
+  "Comment fonctionne le programme de parrainage ?",
 ]
 
-const QUICK_QUESTIONS_IMMOBILIER = [
-  "Comment fonctionne la qualification des leads ?",
-  "Comment sont planifiées les visites automatiquement ?",
-  "Pourquoi mon nombre de leads qualifiés a baissé ?",
-  "Comment lire mes métriques ?",
-]
-
-export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) => {
-  const quickQuestions = clientType === 'immobilier' ? QUICK_QUESTIONS_IMMOBILIER : QUICK_QUESTIONS_ECOMMERCE;
+export const ClientCopilotBubble = ({ clientId, theme = 'dark' }) => {
+  const quickQuestions = QUICK_QUESTIONS;
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
@@ -175,10 +170,7 @@ export const ClientCopilotBubble = ({ clientId, clientType, theme = 'dark' }) =>
                     <div className={`px-3 py-2.5 rounded-2xl rounded-bl-md text-xs leading-relaxed ${
                       isLight ? 'bg-gray-100 text-slate-700' : 'bg-gray-50 text-[#71717a]'
                     }`}>
-                      {clientType === 'immobilier'
-                        ? "Bonjour ! Je suis votre assistant Actero. Je peux vous aider à comprendre vos leads, visites, métriques et répondre à vos questions sur vos automatisations immobilières."
-                        : "Bonjour ! Je suis votre assistant Actero. Je peux vous aider à comprendre vos métriques SAV, paniers récupérés et répondre à vos questions sur vos automatisations e-commerce."
-                      }
+                      Bonjour ! Je suis votre assistant Actero. Je peux vous aider à comprendre vos métriques SAV, paniers récupérés, intégrations et répondre à toutes vos questions sur votre dashboard.
                     </div>
                   </div>
 

@@ -30,13 +30,13 @@ const PLAYBOOK_ICONS = {
 const PLAYBOOK_TESTS = {
   sav_ecommerce: [
     { label: 'Suivi commande', message: "Bonjour, ou en est ma commande #4521 ? Ca fait 8 jours que j'attends.", event_type: 'email_inbound' },
-    { label: 'Retour produit', message: "Je voudrais retourner le serum que j'ai recu. Il ne convient pas a ma peau.", event_type: 'email_inbound' },
-    { label: 'Client agressif', message: "C'est INADMISSIBLE ! 3 semaines sans reponse ! Je vais porter plainte !", event_type: 'email_inbound' },
+    { label: 'Retour produit', message: "Je voudrais retourner le sérum que j'ai reçu. Il ne convient pas à ma peau.", event_type: 'email_inbound' },
+    { label: 'Client agressif', message: "C'est INADMISSIBLE ! 3 semaines sans réponse ! Je vais porter plainte !", event_type: 'email_inbound' },
     { label: 'Question produit', message: "Est-ce que le serum hydratant convient aux peaux sensibles ?", event_type: 'widget_message' },
   ],
   abandoned_cart: [
-    { label: 'Panier 50€', message: 'Panier abandonne', event_type: 'shopify_abandoned_cart', metadata: { total_price: '49.90', line_items: [{ title: 'Serum Hydratant', quantity: 1, price: '49.90' }] } },
-    { label: 'Panier 150€ multi-articles', message: 'Panier abandonne', event_type: 'shopify_abandoned_cart', metadata: { total_price: '149.70', line_items: [{ title: 'Serum', quantity: 1, price: '49.90' }, { title: 'Creme jour', quantity: 2, price: '49.90' }] } },
+    { label: 'Panier 50€', message: 'Panier abandonné', event_type: 'shopify_abandoned_cart', metadata: { total_price: '49.90', line_items: [{ title: 'Serum Hydratant', quantity: 1, price: '49.90' }] } },
+    { label: 'Panier 150€ multi-articles', message: 'Panier abandonné', event_type: 'shopify_abandoned_cart', metadata: { total_price: '149.70', line_items: [{ title: 'Serum', quantity: 1, price: '49.90' }, { title: 'Creme jour', quantity: 2, price: '49.90' }] } },
   ],
   shipping_tracker: [
     { label: 'Ou est mon colis ?', message: "Bonjour, je n'ai toujours pas recu mon colis. Commande #4521.", event_type: 'email_inbound' },

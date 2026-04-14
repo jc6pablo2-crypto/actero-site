@@ -8,21 +8,6 @@ const PROVIDER_TEST_ENDPOINTS = {
       'Authorization': `Basic ${Buffer.from(`${c.email || ''}:${c.api_key}`).toString('base64')}`,
     }),
   },
-  zendesk: {
-    method: 'GET',
-    url: (c) => `https://${c.subdomain}.zendesk.com/api/v2/users/me.json`,
-    headers: (c) => ({
-      'Authorization': `Basic ${Buffer.from(`${c.email}/token:${c.api_key}`).toString('base64')}`,
-    }),
-  },
-  klaviyo: {
-    method: 'GET',
-    url: () => 'https://a.klaviyo.com/api/accounts/',
-    headers: (c) => ({
-      'Authorization': `Klaviyo-API-Key ${c.api_key}`,
-      'revision': '2024-02-15',
-    }),
-  },
   freshdesk: {
     method: 'GET',
     url: (c) => `https://${c.domain}/api/v2/agents/me`,
@@ -42,11 +27,6 @@ const PROVIDER_TEST_ENDPOINTS = {
     method: 'GET',
     url: () => 'https://api.calendly.com/users/me',
     headers: (c) => ({ 'Authorization': `Bearer ${c.api_key}` }),
-  },
-  google_sheets: {
-    method: 'GET',
-    url: () => 'https://www.googleapis.com/oauth2/v2/userinfo',
-    headers: (c) => ({ 'Authorization': `Bearer ${c.access_token}` }),
   },
   gmail: {
     method: 'GET',

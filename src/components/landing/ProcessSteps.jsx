@@ -17,7 +17,7 @@ const MockupAudit = ({ isImmo }) => (
       ] : [
         { name: 'Shopify', status: 'connected' },
         { name: 'Gorgias', status: 'connected' },
-        { name: 'Klaviyo', status: 'connected' },
+        { name: 'Slack', status: 'connected' },
         { name: 'Stripe', status: 'pending' },
       ]).map((tool, i) => (
         <motion.div

@@ -32,11 +32,11 @@ const POLICY_TEMPLATES = [
 ]
 
 const PLACEHOLDERS = {
-  policy: 'Decrivez vos conditions, delais, zones couvertes...',
-  faq: 'Redigez la reponse a cette question...',
-  product: 'Decrivez les caracteristiques, tailles, prix...',
+  policy: 'Décrivez vos conditions, délais, zones couvertes...',
+  faq: 'Rédigez la réponse à cette question...',
+  product: 'Décrivez les caractéristiques, tailles, prix...',
   tone: '',
-  temporary: 'Decrivez l\'information temporaire...',
+  temporary: 'Décrivez l\'information temporaire...',
 }
 
 const syncBrandContext = async (clientId) => {
@@ -614,9 +614,9 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
                   className="w-full py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
                 >
                   {importing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
-                  {importing ? 'Import en cours...' : 'Generer les FAQ'}
+                  {importing ? 'Import en cours...' : 'Générer les FAQ'}
                 </button>
-                <p className="text-[10px] text-[#71717a]">L'IA va analyser la page et generer des paires Question/Reponse automatiquement</p>
+                <p className="text-[10px] text-[#71717a]">L'IA va analyser la page et générer des paires Question/Réponse automatiquement</p>
               </div>
             </motion.div>
           )}

@@ -1,3 +1,37 @@
+/**
+ * Conflict groups — only one integration per group can be active at a time.
+ * When connecting an integration, any other active integration in the same group
+ * must be disconnected first (or the user must choose).
+ */
+export const CONFLICT_GROUPS = {
+  ecommerce_platform: {
+    label: 'Plateforme e-commerce',
+    message: 'Vous ne pouvez connecter qu\'une seule plateforme e-commerce à la fois.',
+    ids: ['shopify', 'woocommerce', 'webflow'],
+  },
+  helpdesk: {
+    label: 'Helpdesk',
+    message: 'Vous ne pouvez connecter qu\'un seul helpdesk à la fois.',
+    ids: ['gorgias', 'zendesk'],
+  },
+  email_sending: {
+    label: 'Envoi d\'emails',
+    message: 'Vous ne pouvez utiliser qu\'un seul service d\'envoi d\'emails à la fois.',
+    ids: ['resend', 'smtp_imap'],
+  },
+}
+
+export function getConflictGroup(integrationId) {
+  return Object.entries(CONFLICT_GROUPS).find(([, group]) => group.ids.includes(integrationId))
+}
+
+export function getConflictingActive(integrationId, activeIntegrations) {
+  const entry = getConflictGroup(integrationId)
+  if (!entry) return null
+  const [, group] = entry
+  return activeIntegrations.find(i => group.ids.includes(i.provider) && i.provider !== integrationId && i.status === 'active')
+}
+
 export const INTEGRATIONS = {
   ecommerce: [
     {
@@ -48,20 +82,6 @@ export const INTEGRATIONS = {
       color: '#03363D',
     },
     {
-      id: 'klaviyo',
-      name: 'Klaviyo',
-      description: 'Email & SMS marketing — declenchez des sequences automatiquement',
-      icon: 'https://ejgdwjjcpjtwaqcxptke.supabase.co/storage/v1/object/public/logo/images.png',
-      authType: 'api_key',
-      apiKeyLabel: 'Cle API Klaviyo',
-      apiKeyPlaceholder: 'pk_xxxxxxxxxxxxxxxx',
-      apiKeyHint: 'Trouvez-la dans Klaviyo → Settings → API Keys',
-      category: 'ecommerce',
-      docsUrl: 'https://developers.klaviyo.com/en',
-      color: '#000000',
-      popular: true,
-    },
-    {
       id: 'webflow',
       name: 'Webflow',
       description: 'Connectez votre boutique Webflow en 1 clic — commandes, clients, produits',
@@ -82,7 +102,7 @@ export const INTEGRATIONS = {
       oauthPrompt: 'store_url',
       oauthPromptLabel: 'URL de votre boutique WooCommerce',
       oauthPromptPlaceholder: 'https://ma-boutique.com',
-      oauthPromptHint: 'L\'adresse de votre site WordPress avec WooCommerce installe',
+      oauthPromptHint: 'L\'adresse de votre site WordPress avec WooCommerce installé',
       oauthUrl: (params) => `/api/integrations/woocommerce/authorize?store_url=${encodeURIComponent(params.store_url)}&client_id=${encodeURIComponent(params.client_id || '')}&token=${encodeURIComponent(params.token || '')}`,
       category: 'ecommerce',
       docsUrl: 'https://woocommerce.github.io/woocommerce-rest-api-docs/',
@@ -92,7 +112,7 @@ export const INTEGRATIONS = {
     {
       id: 'whatsapp',
       name: 'WhatsApp Business',
-      description: 'Repondez aux clients directement via WhatsApp',
+      description: 'Répondez aux clients directement via WhatsApp',
       icon: 'https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg',
       authType: 'embedded_signup',
       wizardRoute: '/client/whatsapp-agent',
@@ -116,23 +136,12 @@ export const INTEGRATIONS = {
       popular: true,
     },
     {
-      id: 'google_sheets',
-      name: 'Google Sheets',
-      description: 'Export automatique de vos donnees vers Google Sheets',
-      icon: 'https://ssl.gstatic.com/docs/spreadsheets/favicon3.ico',
-      authType: 'oauth',
-      oauthUrl: (params) => `/api/integrations/oauth/google/install?token=${encodeURIComponent(params.token)}`,
-      category: 'general',
-      docsUrl: 'https://developers.google.com/sheets/api',
-      color: '#0F9D58',
-    },
-    {
       id: 'resend',
       name: 'Resend',
       description: 'Envoi d\'emails transactionnels — notifications, relances, escalades',
       icon: 'https://ejgdwjjcpjtwaqcxptke.supabase.co/storage/v1/object/public/logo/resend-icon-black.svg',
       authType: 'api_key',
-      apiKeyLabel: 'Cle API Resend',
+      apiKeyLabel: 'Clé API Resend',
       apiKeyPlaceholder: 're_xxxxxxxxxxxxxxxx',
       apiKeyHint: 'Trouvez-la dans Resend → API Keys → Create API Key',
       category: 'general',
@@ -143,12 +152,12 @@ export const INTEGRATIONS = {
     {
       id: 'axonaut',
       name: 'Axonaut',
-      description: 'CRM et facturation pour PME — devis, factures, tresorerie',
+      description: 'CRM et facturation pour PME — devis, factures, trésorerie',
       icon: 'https://www.axonaut.com/favicon.ico',
       authType: 'api_key',
-      apiKeyLabel: 'Cle API Axonaut',
+      apiKeyLabel: 'Clé API Axonaut',
       apiKeyPlaceholder: 'ak_xxxxxxxxxxxxxxxx',
-      apiKeyHint: 'Trouvez-la dans Axonaut → Parametres → API',
+      apiKeyHint: 'Trouvez-la dans Axonaut → Paramètres → API',
       category: 'general',
       docsUrl: 'https://axonaut.com/api',
       color: '#FF6B35',
@@ -156,12 +165,12 @@ export const INTEGRATIONS = {
     {
       id: 'pennylane',
       name: 'Pennylane',
-      description: 'Comptabilite automatisee — rapprochement bancaire, factures, bilan',
+      description: 'Comptabilité automatisée — rapprochement bancaire, factures, bilan',
       icon: 'https://www.pennylane.com/favicon.ico',
       authType: 'api_key',
       apiKeyLabel: 'Token API Pennylane',
       apiKeyPlaceholder: 'pl_xxxxxxxxxxxxxxxx',
-      apiKeyHint: 'Trouvez-le dans Pennylane → Parametres → Integrations → API',
+      apiKeyHint: 'Trouvez-le dans Pennylane → Paramètres → Intégrations → API',
       category: 'general',
       docsUrl: 'https://pennylane.com/api',
       color: '#1B1464',
@@ -172,16 +181,16 @@ export const INTEGRATIONS = {
       description: 'Collecte et classement automatique de factures et justificatifs',
       icon: 'https://ejgdwjjcpjtwaqcxptke.supabase.co/storage/v1/object/public/logo/iPaidThat.png',
       authType: 'api_key',
-      apiKeyLabel: 'Cle API iPaidThat',
+      apiKeyLabel: 'Clé API iPaidThat',
       apiKeyPlaceholder: 'ipt_xxxxxxxxxxxxxxxx',
-      apiKeyHint: 'Trouvez-la dans iPaidThat → Parametres → API & Integrations',
+      apiKeyHint: 'Trouvez-la dans iPaidThat → Paramètres → API & Intégrations',
       category: 'general',
       docsUrl: 'https://ipaidthat.io',
       color: '#00B4D8',
     },
     {
       id: 'smtp_imap',
-      name: 'Email personnalise (SMTP/IMAP)',
+      name: 'Email personnalisé (SMTP/IMAP)',
       description: 'Connectez votre adresse email professionnelle pour envoyer et recevoir',
       icon: null,
       authType: 'smtp',

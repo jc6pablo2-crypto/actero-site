@@ -112,14 +112,14 @@ export function AdminStripeSetupView() {
               </div>
             </div>
           ) : (
-            <p className="text-[13px] text-[#9ca3af]">Impossible de verifier le statut.</p>
+            <p className="text-[13px] text-[#9ca3af]">Impossible de vérifier le statut.</p>
           )}
         </SectionCard>
 
         {/* Create Products Section */}
-        <SectionCard title="Creer les produits Stripe" icon={CreditCard}>
+        <SectionCard title="Créer les produits Stripe" icon={CreditCard}>
           <p className="text-[13px] text-[#71717a] mb-4">
-            Cree automatiquement les 4 produits et 8 prix dans votre compte Stripe.
+            Crée automatiquement les 4 produits et 8 prix dans votre compte Stripe.
           </p>
 
           {/* Products table */}
@@ -156,12 +156,12 @@ export function AdminStripeSetupView() {
             {creating ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Creation en cours...
+                Création en cours...
               </>
             ) : (
               <>
                 <CreditCard className="w-4 h-4" />
-                Creer les produits Stripe
+                Créer les produits Stripe
               </>
             )}
           </button>

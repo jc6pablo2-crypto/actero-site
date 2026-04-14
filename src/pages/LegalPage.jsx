@@ -41,9 +41,9 @@ export const LegalPage = ({ onNavigate }) => {
             <div className="space-y-12">
 
               <section>
-                <h2 className="text-xl md:text-2xl font-bold text-[#262626] mb-4">1. Editeur du site</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-[#262626] mb-4">1. Éditeur du site</h2>
                 <div className="text-[#716D5C] leading-relaxed text-[15px] space-y-2">
-                  <p>Le site <strong className="text-[#262626]">actero.fr</strong> est edite par :</p>
+                  <p>Le site <strong className="text-[#262626]">actero.fr</strong> est édité par :</p>
                   <div className="bg-[#F9F7F1] rounded-xl p-5 mt-3 space-y-1.5">
                     <p><strong className="text-[#262626]">Anne AIN EI — Actero</strong></p>
                     <p>Entrepreneur individuel — Micro-entrepreneur</p>

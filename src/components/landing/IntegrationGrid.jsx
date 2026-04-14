@@ -5,7 +5,6 @@ const INTEGRATIONS = {
   ecommerce: [
     { name: "Shopify", icon: "shopify", color: "95BF47", desc: "Commandes & clients en temps réel" },
     { name: "Stripe", icon: "stripe", color: "635BFF", desc: "Paiements et anomalies de facturation" },
-    { name: "Klaviyo", src: "/klaviyo.svg", desc: "Séquences email et SMS personnalisées" },
     { name: "Gorgias", icon: "gorgias", color: "EA580C", desc: "Tickets support automatisés" },
     { name: "HubSpot", icon: "hubspot", color: "FF7A59", desc: "Synchronisation CRM et scoring clients" },
     { name: "Slack", src: "/slack.svg", desc: "Alertes temps réel dans vos channels" },

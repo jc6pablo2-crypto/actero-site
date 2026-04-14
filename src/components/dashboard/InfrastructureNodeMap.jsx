@@ -84,7 +84,7 @@ export const InfrastructureNodeMap = ({ theme = "dark" }) => {
             <span
               className={`text-xs font-bold uppercase tracking-widest ${isLight ? "text-[#716D5C]" : "text-[#716D5C]"}`}
             >
-              Klaviyo
+              Resend
             </span>
           </div>
           <div className="flex flex-col items-center gap-3">

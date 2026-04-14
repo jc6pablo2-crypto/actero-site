@@ -194,7 +194,7 @@ export const OnboardingConcierge = ({ clientId, setActiveTab }) => {
         ...prev,
         {
           role: 'assistant',
-          content: data.response || 'Desole, je nai pas de reponse pour le moment.',
+          content: data.response || 'Désolé, je n\'ai pas de réponse pour le moment.',
           suggested_action: data.suggested_action || null,
           escalate: !!data.escalate_to_human,
         },

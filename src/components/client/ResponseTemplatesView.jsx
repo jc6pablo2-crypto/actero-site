@@ -168,7 +168,7 @@ export const ResponseTemplatesView = ({ clientId, theme = 'light' }) => {
           className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-[12px] font-semibold bg-[#0F5F35] text-white hover:bg-[#003725] transition-all"
         >
           <Plus className="w-4 h-4" />
-          Creer un template
+          Créer un template
         </button>
       </div>
 
@@ -367,7 +367,7 @@ export const ResponseTemplatesView = ({ clientId, theme = 'light' }) => {
                   className="flex items-center gap-2 px-4 py-2 rounded-lg text-[12px] font-semibold bg-[#0F5F35] text-white hover:bg-[#003725] transition-all disabled:opacity-50"
                 >
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                  {editing ? 'Enregistrer' : 'Creer'}
+                  {editing ? 'Enregistrer' : 'Créer'}
                 </button>
               </div>
             </motion.div>

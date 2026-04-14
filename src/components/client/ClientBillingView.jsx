@@ -47,26 +47,25 @@ const PLAN_FEATURES_SHORT = {
   starter: [
     '1 000 tickets / mois',
     '3 workflows actifs',
-    'Editeur de marque',
-    'Guardrails IA',
-    'Agents specialises',
+    'Éditeur de marque',
+    'Dashboard ROI complet',
     'Support email 48h',
   ],
   pro: [
     '5 000 tickets / mois',
-    'Workflows illimites',
-    'Agent vocal (200 min)',
-    'WhatsApp',
-    'Simulateur IA',
+    'Workflows illimités',
+    'Guardrails & règles métier',
+    'Agents IA spécialisés',
+    'API + webhooks',
     'Support prioritaire 24h',
   ],
   enterprise: [
-    'Tickets illimites',
+    'Tickets illimités',
     'Multi-boutique',
     'White-label',
-    'Account manager dedie',
+    'Account manager dédié',
     'SLA garanti',
-    'Integrations sur mesure',
+    'Intégrations sur mesure',
   ],
 }
 
@@ -266,7 +265,7 @@ export const ClientBillingView = ({ theme }) => {
             </p>
             {currentPrice > 0 && (
               <p className="text-[11px] text-[#9ca3af]">
-                par mois{billingPeriod === 'annual' ? ' (facture annuellement)' : ''}
+                par mois{billingPeriod === 'annual' ? ' (facturé annuellement)' : ''}
               </p>
             )}
           </div>
@@ -380,7 +379,10 @@ export const ClientBillingView = ({ theme }) => {
             } else if (isDowngrade) {
               ctaText = 'Inclus dans votre plan'
             } else {
-              ctaText = `Passer au ${p.name} — Essai 7j gratuit`
+              const isReferred = client?.referral_first_month_free
+              ctaText = isReferred
+                ? `Passer au ${p.name} — 30 jours gratuits`
+                : `Passer au ${p.name} — Essai 7j gratuit`
             }
 
             return (

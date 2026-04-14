@@ -135,7 +135,7 @@ const PLAYBOOK_META = {
     configType: 'vocal',
     channels: [
       { id: 'widget_vocal', label: 'Widget vocal sur le site', desc: 'Bouton d\'appel vocal sur votre boutique Shopify', icon: Phone, needsIntegration: ['shopify'] },
-      { id: 'phone', label: 'Numero de telephone', desc: 'Un numero dedie que vos clients peuvent appeler', icon: Phone, needsIntegration: [] },
+      { id: 'phone', label: 'Numéro de téléphone', desc: 'Un numéro dédié que vos clients peuvent appeler', icon: Phone, needsIntegration: [] },
     ],
   },
 }
@@ -505,7 +505,7 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
                             <p className="text-[12px] font-semibold text-blue-900">Recommandation : connectez votre email professionnel</p>
                             <p className="text-[11px] text-blue-700 mt-0.5 leading-relaxed">
                               Quand un client est agressif ou a besoin d&apos;un suivi, l&apos;IA lui demande son email dans le widget.
-                              En connectant votre adresse email (SMTP/IMAP), vos reponses dans &quot;A traiter&quot; seront envoyees automatiquement <strong>depuis votre propre adresse</strong> (ex: contact@votreboutique.com).
+                              En connectant votre adresse email (SMTP/IMAP), vos réponses dans &quot;À traiter&quot; seront envoyées automatiquement <strong>depuis votre propre adresse</strong> (ex: contact@votreboutique.com).
                             </p>
                             <button
                               onClick={(e) => { e.stopPropagation(); setActiveTab('integrations') }}

@@ -884,11 +884,11 @@ export const LandingPage = ({ onNavigate }) => {
                   {/* Free card */}
                   <div className="bg-white rounded-2xl border border-[#f0f0f0] shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-5 flex flex-col">
                     <h3 className="text-lg font-bold text-[#1a1a1a]">Free</h3>
-                    <p className="text-[12px] text-[#71717a] mb-3">Decouvrir sans engagement</p>
+                    <p className="text-[12px] text-[#71717a] mb-3">Découvrir sans engagement</p>
                     <div className="text-3xl font-bold text-[#1a1a1a] mb-4">0€<span className="text-sm font-normal text-[#71717a]">/mois</span></div>
                     <ul className="space-y-1.5 flex-1 mb-4">
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />50 tickets / mois</li>
-                      <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Integration Shopify</li>
+                      <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Intégration Shopify</li>
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Dashboard ROI basique</li>
                     </ul>
                     <a href="/signup" className="block text-center py-2.5 rounded-full text-[13px] font-semibold bg-[#0F5F35]/10 text-[#0F5F35] hover:bg-[#0F5F35]/20 transition">
@@ -899,13 +899,13 @@ export const LandingPage = ({ onNavigate }) => {
                   {/* Starter card */}
                   <div className="bg-white rounded-2xl border border-[#f0f0f0] shadow-[0_1px_3px_rgba(0,0,0,0.08)] p-5 flex flex-col">
                     <h3 className="text-lg font-bold text-[#1a1a1a]">Starter</h3>
-                    <p className="text-[12px] text-[#71717a] mb-3">Automatiser les premieres taches</p>
+                    <p className="text-[12px] text-[#71717a] mb-3">Automatiser les premières tâches</p>
                     <div className="text-3xl font-bold text-[#1a1a1a] mb-1">99€<span className="text-sm font-normal text-[#71717a]">/mois</span></div>
                     <p className="text-[11px] text-[#0F5F35] font-semibold mb-4">7 jours d'essai gratuit</p>
                     <ul className="space-y-1.5 flex-1 mb-4">
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />1 000 tickets / mois</li>
-                      <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />5 agents IA specialises</li>
-                      <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Editeur ton de marque</li>
+                      <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />3 workflows actifs</li>
+                      <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Éditeur ton de marque</li>
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Support email 48h</li>
                     </ul>
                     <a href="/signup" className="block text-center py-2.5 rounded-full text-[13px] font-semibold bg-[#0F5F35]/10 text-[#0F5F35] hover:bg-[#0F5F35]/20 transition">
@@ -915,9 +915,9 @@ export const LandingPage = ({ onNavigate }) => {
 
                   {/* Pro card — highlighted */}
                   <div className="relative bg-white rounded-2xl border-2 border-[#0F5F35] shadow-lg p-5 flex flex-col">
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0F5F35] text-white text-[10px] font-bold px-3 py-1 rounded-full">Recommande</span>
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0F5F35] text-white text-[10px] font-bold px-3 py-1 rounded-full">Recommandé</span>
                     <h3 className="text-lg font-bold text-[#1a1a1a]">Pro</h3>
-                    <p className="text-[12px] text-[#71717a] mb-3">Automatisation complete + vocal</p>
+                    <p className="text-[12px] text-[#71717a] mb-3">Automatisation complète + vocal</p>
                     <div className="text-3xl font-bold text-[#1a1a1a] mb-1">399€<span className="text-sm font-normal text-[#71717a]">/mois</span></div>
                     <p className="text-[11px] text-[#0F5F35] font-semibold mb-4">7 jours d'essai gratuit</p>
                     <ul className="space-y-1.5 flex-1 mb-4">
@@ -938,19 +938,19 @@ export const LandingPage = ({ onNavigate }) => {
                     <p className="text-[12px] text-[#71717a] mb-3">Sur mesure grands comptes</p>
                     <div className="text-3xl font-bold text-[#1a1a1a] mb-4">Sur devis</div>
                     <ul className="space-y-1.5 flex-1 mb-4">
-                      <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Tickets illimites</li>
+                      <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Tickets illimités</li>
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Multi-boutiques (10)</li>
                       <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />White-label + SLA 99,9%</li>
-                      <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Account manager dedie</li>
+                      <li className="flex items-center gap-1.5 text-[12px] text-[#1a1a1a]"><Check className="w-3.5 h-3.5 text-[#0F5F35]" />Account manager dédié</li>
                     </ul>
                     <a href="mailto:contact@actero.fr" className="block text-center py-2.5 rounded-full text-[13px] font-semibold border border-[#f0f0f0] text-[#1a1a1a] hover:bg-white transition">
-                      Contacter l'equipe
+                      Contacter l'équipe
                     </a>
                   </div>
                 </div>
 
                 <p className="text-center text-[13px] text-[#71717a] mt-8">
-                  Tous les plans incluent l'integration Shopify native. <a href="/tarifs" className="text-[#0F5F35] font-semibold hover:underline">Voir le comparatif complet →</a>
+                  Tous les plans incluent l'intégration Shopify native. <a href="/tarifs" className="text-[#0F5F35] font-semibold hover:underline">Voir le comparatif complet →</a>
                 </p>
               </div>
             </section>
@@ -984,7 +984,7 @@ export const LandingPage = ({ onNavigate }) => {
                     },
                     {
                       q: "Quels outils supportez-vous ?",
-                      a: "Shopify, Klaviyo, Gorgias, Zendesk, Intercom, HubSpot, Stripe, Slack, et bien d'autres. Si votre outil n'est pas dans la liste, on trouve un moyen de le connecter."
+                      a: "Shopify, WooCommerce, Webflow, Gorgias, Zendesk, WhatsApp, Stripe, Slack, Resend, Axonaut, Pennylane, iPaidThat, et bien d'autres. Si votre outil n'est pas dans la liste, on trouve un moyen de le connecter."
                     },
                     {
                       q: "Quelle est la différence avec Make ou Zapier ?",

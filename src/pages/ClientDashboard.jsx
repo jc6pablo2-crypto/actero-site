@@ -31,6 +31,7 @@ import {
   Shield,
   Users,
   Code,
+  Gift,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
@@ -50,8 +51,6 @@ import { ConversationSimulator } from '../components/client/ConversationSimulato
 import { TeamManager, canAccessTab } from '../components/client/TeamManager'
 import { ClientEscalationsView } from '../components/client/ClientEscalationsView'
 import { ResponseTemplatesView } from '../components/client/ResponseTemplatesView'
-import { VoiceCallsView } from '../components/client/VoiceCallsView'
-import { VoiceAgentSetupView } from '../components/client/VoiceAgentSetupView'
 import { WhatsAppAgentSetupView } from '../components/client/WhatsAppAgentSetupView'
 import { ApiDocsView } from '../components/client/ApiDocsView'
 import { NotificationCenterView } from '../components/client/NotificationCenterView'
@@ -63,8 +62,7 @@ import { ROISettingsView } from '../components/client/ROISettingsView'
 import { WeeklySummary } from '../components/client/WeeklySummary'
 import { PeakHoursChart } from '../components/client/PeakHoursChart'
 import { SetupChecklist } from '../components/client/SetupChecklist'
-import { MyMarketplaceTemplatesView } from '../components/client/MyMarketplaceTemplatesView'
-import { AchievementsView, AchievementsBanner, AchievementsToast } from '../components/client/AchievementsView'
+import { AchievementsToast } from '../components/client/AchievementsView'
 import ProductTour from '../components/client/ProductTour'
 import { IndustryPicker } from '../components/client/IndustryPicker'
 import { usePlan } from '../hooks/usePlan'
@@ -94,14 +92,14 @@ const FeedbackButtons = ({ eventId, currentFeedback, supabase }) => {
       <button
         onClick={(e) => { e.stopPropagation(); handleFeedback('positive'); }}
         className={`p-1 rounded transition-colors ${feedback === 'positive' ? 'text-[#003725] bg-emerald-50' : 'text-gray-300 hover:text-[#003725] hover:bg-emerald-50'}`}
-        title="Bonne reponse"
+        title="Bonne réponse"
       >
         <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" /></svg>
       </button>
       <button
         onClick={(e) => { e.stopPropagation(); handleFeedback('negative'); }}
         className={`p-1 rounded transition-colors ${feedback === 'negative' ? 'text-red-500 bg-red-50' : 'text-gray-300 hover:text-red-500 hover:bg-red-50'}`}
-        title="Mauvaise reponse"
+        title="Mauvaise réponse"
       >
         <svg className="w-3.5 h-3.5 rotate-180" fill="currentColor" viewBox="0 0 20 20"><path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" /></svg>
       </button>
@@ -119,7 +117,7 @@ const LiveActivityWidget = ({ supabase, setActiveTab, isLight }) => {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
             <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-[#0F5F35] animate-pulse' : 'bg-red-500'}`} />
-            <h3 className="font-bold text-[#1a1a1a] text-sm">Activite recente</h3>
+            <h3 className="font-bold text-[#1a1a1a] text-sm">Activité récente</h3>
           </div>
           <span className="text-[10px] font-bold text-[#71717a] uppercase tracking-widest px-2 py-0.5 bg-[#F9F7F1] rounded-full">
             LIVE
@@ -196,7 +194,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/marketplace") return "marketplace";
     if (route === "/client/weekly-summary") return "weekly-summary";
     if (route === "/client/peak-hours") return "peak-hours";
-    if (route === "/client/achievements") return "achievements";
     if (route === "/client/account") return "profile";
     return "overview";
   };
@@ -636,12 +633,12 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { type: 'section', label: 'Quotidien' },
     {
       id: 'escalations',
-      label: 'A traiter',
+      label: 'À traiter',
       icon: Inbox,
       badge: urgentEscalationCount > 0 ? urgentEscalationCount : null,
       badgeColor: 'bg-red-100 text-red-600',
     },
-    { id: 'response-templates', label: 'Modeles de reponse', icon: FileText },
+    { id: 'response-templates', label: 'Modèles de réponse', icon: FileText },
 
     {
       type: 'expandable',
@@ -653,16 +650,16 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         { id: 'agent-config', label: 'Configuration', icon: Bot },
         { id: 'playbooks', label: 'Scenarios', icon: Zap },
         { id: 'knowledge', label: 'Base de connaissances', icon: BookOpen },
-        { id: 'guardrails', label: 'Garde-fous', icon: Shield, ...(can('guardrails') ? {} : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-700 border border-blue-200' }) },
+        { id: 'guardrails', label: 'Garde-fous', icon: Shield, ...(can('guardrails') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' }) },
         { id: 'simulator', label: 'Simulateur', icon: MessageSquare, ...(can('simulator') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' }) },
-        { id: 'whatsapp-agent', label: 'WhatsApp', icon: MessageCircle, ...(can('whatsapp_agent') ? { badge: 'Nouveau', badgeColor: 'bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/30' } : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-700 border border-blue-200' }) },
+        { id: 'whatsapp-agent', label: 'WhatsApp', icon: MessageCircle, ...(can('whatsapp_agent') ? { badge: 'Nouveau', badgeColor: 'bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/30' } : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' }) },
       ],
     },
 
     { type: 'section', label: 'Connexions' },
-    { id: 'integrations', label: 'Integrations', icon: Plug },
-    { id: 'api-docs', label: 'API', icon: Code, ...(can('api_webhooks') ? {} : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-700 border border-blue-200' }) },
-    { id: 'voice-agent', label: 'Agent vocal', icon: Phone, ...(can('voice_agent') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' }) },
+    { id: 'integrations', label: 'Intégrations', icon: Plug },
+    { id: 'api-docs', label: 'API', icon: Code, ...(can('api_webhooks') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' }) },
+    { id: 'voice-agent', label: 'Agent vocal', icon: Phone, badge: 'Bientôt', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' },
 
     {
       type: 'expandable',
@@ -673,21 +670,21 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         { id: 'weekly-summary', label: 'Performance', icon: BarChart3 },
         { id: 'roi', label: 'ROI', icon: TrendingUp },
         { id: 'peak-hours', label: 'Heures de pic', icon: Clock },
-        { id: 'voice-calls', label: 'Appels vocaux', icon: PhoneCall, badge: 'Bientot', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' },
-        { id: 'achievements', label: 'Recompenses', icon: Trophy },
+        { id: 'voice-calls', label: 'Appels vocaux', icon: PhoneCall, badge: 'Bientôt', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' },
       ],
     },
 
-    { type: 'section', label: 'Decouvrir' },
-    { id: 'marketplace', label: 'Marketplace', icon: Store },
+    { type: 'section', label: 'Découvrir' },
+    { id: 'referral', label: 'Parrainage', icon: Gift, badge: '1 mois offert', badgeColor: 'bg-emerald-50 text-emerald-600 border border-emerald-200' },
+    { id: 'marketplace', label: 'Marketplace', icon: Store, badge: 'Bientôt', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' },
 
     {
       type: 'expandable',
-      label: 'Parametres',
+      label: 'Paramètres',
       icon: Settings,
       children: [
         { id: 'profile', label: 'Compte', icon: User },
-        { id: 'team', label: 'Equipe', icon: Users },
+        { id: 'team', label: 'Équipe', icon: Users },
         { id: 'notifications', label: 'Notifications', icon: Bell },
         { id: 'billing', label: 'Facturation', icon: CreditCard },
         { id: 'support', label: 'Aide', icon: MessageSquare },
@@ -824,18 +821,18 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         <header className="sticky top-0 z-40 bg-white px-5 md:px-8 h-[48px] flex items-center justify-between border-b border-[#f0f0f0]">
           <h1 className="text-[14px] font-semibold text-[#1a1a1a]">
             {activeTab === "overview" && "Tableau de bord"}
-            {activeTab === "activity" && "Activite"}
+            {activeTab === "activity" && "Activité"}
             {activeTab === "knowledge" && "Base de savoir"}
             {activeTab === "support" && "Aide"}
             {activeTab === "referral" && "Parrainage"}
             {activeTab === "partner" && "Actero Partners"}
-            {activeTab === "integrations" && "Integrations"}
+            {activeTab === "integrations" && "Intégrations"}
             {activeTab === "agent-config" && "Configuration"}
             {activeTab === "simulator" && "Tester"}
-            {activeTab === "team" && "Equipe"}
+            {activeTab === "team" && "Équipe"}
             {activeTab === "guardrails" && "Garde-fous"}
-            {activeTab === "escalations" && "A traiter"}
-            {activeTab === "response-templates" && "Modeles de reponse"}
+            {activeTab === "escalations" && "À traiter"}
+            {activeTab === "response-templates" && "Modèles de réponse"}
             {activeTab === "voice-calls" && "Appels vocaux"}
             {activeTab === "voice-agent" && "Agent vocal"}
             {activeTab === "whatsapp-agent" && "Agent WhatsApp"}
@@ -844,7 +841,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "marketplace" && "Marketplace"}
             {activeTab === "weekly-summary" && "Performance"}
             {activeTab === "peak-hours" && "Heures de pic"}
-            {activeTab === "achievements" && "Recompenses"}
             {activeTab === "roi" && "ROI"}
             {activeTab === "profile" && "Compte"}
             {activeTab === "api-docs" && "API Actero"}
@@ -1128,10 +1124,10 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                     <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-center justify-between mb-8">
                       <div>
                         <p className="text-[13px] font-semibold text-amber-900">
-                          Vous avez utilise {ticketsUsed}/{ticketsLimit} tickets ce mois
+                          Vous avez utilisé {ticketsUsed}/{ticketsLimit} tickets ce mois
                         </p>
                         <p className="text-[11px] text-amber-700 mt-0.5">
-                          Passez au Starter pour 1 000 tickets/mois et debloquer les agents IA specialises.
+                          Passez au Starter pour 1 000 tickets/mois et débloquer l'éditeur de ton de marque.
                         </p>
                       </div>
                       <button onClick={() => setActiveTab('billing')} className="px-4 py-2 bg-[#0F5F35] text-white text-[12px] font-semibold rounded-full hover:bg-[#003725] transition flex-shrink-0">
@@ -1228,14 +1224,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
                   {/* ── Suggestions ── */}
                   <AgentImprovementWidget clientId={currentClient?.id} theme={theme} />
-
-                  {/* ── Achievements banner (only if at least 1 unlocked) ── */}
-                  <div className="mt-6">
-                    <AchievementsBanner
-                      clientId={currentClient?.id}
-                      onViewAll={() => setActiveTab('achievements')}
-                    />
-                  </div>
 
                   {/* ── Starter → Pro upsell ── */}
                   {planId === 'starter' && (
@@ -1342,13 +1330,29 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
 
           {activeTab === "voice-calls" && (
-            <VoiceCallsView clientId={currentClient?.id} theme={theme} />
+            <div className="max-w-2xl mx-auto text-center py-20">
+              <div className="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center mx-auto mb-4">
+                <PhoneCall className="w-8 h-8 text-amber-500" />
+              </div>
+              <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Appels vocaux</h3>
+              <p className="text-sm text-[#71717a] mb-1">Bientôt disponible</p>
+              <p className="text-xs text-[#9ca3af] max-w-md mx-auto">
+                Visualisez l'historique, les transcriptions et les métriques de vos appels traités par l'agent vocal IA.
+              </p>
+            </div>
           )}
 
           {activeTab === "voice-agent" && (
-            <PlanGate feature="voice_agent" planId={planId} inTrial={inTrial} onUpgrade={() => setActiveTab('billing')}>
-              <VoiceAgentSetupView clientId={currentClient?.id} />
-            </PlanGate>
+            <div className="max-w-2xl mx-auto text-center py-20">
+              <div className="w-16 h-16 rounded-2xl bg-violet-50 flex items-center justify-center mx-auto mb-4">
+                <Phone className="w-8 h-8 text-violet-500" />
+              </div>
+              <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Agent vocal IA</h3>
+              <p className="text-sm text-[#71717a] mb-1">Bientôt disponible</p>
+              <p className="text-xs text-[#9ca3af] max-w-md mx-auto">
+                Un agent vocal intelligent qui répond aux appels de vos clients 24h/24, avec transcription et escalade automatique.
+              </p>
+            </div>
           )}
 
           {activeTab === "whatsapp-agent" && (
@@ -1372,7 +1376,16 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
 
           {activeTab === "marketplace" && (
-            <MyMarketplaceTemplatesView clientId={currentClient?.id} />
+            <div className="max-w-2xl mx-auto text-center py-20">
+              <div className="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center mx-auto mb-4">
+                <Store className="w-8 h-8 text-amber-500" />
+              </div>
+              <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Marketplace</h3>
+              <p className="text-sm text-[#71717a] mb-1">Bientôt disponible</p>
+              <p className="text-xs text-[#9ca3af] max-w-md mx-auto">
+                Découvrez et installez des templates de workflows, des playbooks communautaires et des intégrations créées par la communauté Actero.
+              </p>
+            </div>
           )}
 
           {activeTab === "weekly-summary" && (
@@ -1387,15 +1400,12 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             </div>
           )}
 
-          {activeTab === "achievements" && (
-            <AchievementsView clientId={currentClient?.id} />
-          )}
 
         </main>
       </div>
 
       {/* Copilot Chat Bubble */}
-      {currentClient?.id && <ClientCopilotBubble clientId={currentClient.id} clientType={currentClient.client_type} theme={theme} />}
+      {currentClient?.id && <ClientCopilotBubble clientId={currentClient.id} theme={theme} />}
 
       {/* Onboarding Concierge — auto-hides once the 7 setup steps are done */}
       {currentClient?.id && <OnboardingConcierge clientId={currentClient.id} setActiveTab={setActiveTab} />}

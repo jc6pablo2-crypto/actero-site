@@ -91,6 +91,7 @@ import { AdminAlertBuilderView } from '../components/admin/AdminAlertBuilderView
 import { AdminAddEnterpriseView } from '../components/admin/AdminAddEnterpriseView'
 import { AdminStripeSetupView } from '../components/admin/AdminStripeSetupView'
 import { AdminConversionPipelineView } from '../components/admin/AdminConversionPipelineView'
+import { AdminAITerminal } from '../components/admin/AdminAITerminal'
 import { KpiCard, KpiRow } from '../components/ui/KpiCard'
 import { SectionCard } from '../components/ui/SectionCard'
 import { StatusPill } from '../components/ui/StatusPill'
@@ -254,7 +255,7 @@ const QuickAddClientModal = ({ onClose, onSubmit }) => {
               disabled={submitting || !brandName.trim()}
               className="px-4 py-2 rounded-xl text-[13px] font-semibold bg-[#0F5F35] text-white hover:bg-[#0F5F35]/90 disabled:opacity-50"
             >
-              {submitting ? 'Creation...' : 'Creer'}
+              {submitting ? 'Création...' : 'Créer'}
             </button>
           </div>
         </form>
@@ -274,6 +275,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const [isAddClientOpen, setIsAddClientOpen] = useState(false);
 
   const getAdminTabFromRoute = (route) => {
+    if (route === "/admin/ai-terminal") return "ai-terminal";
     if (route === "/admin/clients") return "clients";
     if (route === "/admin/requests") return "requests";
     if (route === "/admin/leads") return "leads";
@@ -452,6 +454,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   // Les pages retirées de la sidebar restent accessibles via URL directe
   const sidebarItems = [
     { type: 'section', label: 'ACCUEIL' },
+    { id: 'ai-terminal', label: 'Terminal IA', icon: TerminalSquare, badge: 'IA', badgeColor: 'bg-violet-50 text-violet-600 border border-violet-200' },
     { id: 'overview', label: 'Vue d\'ensemble', icon: LayoutDashboard },
     { id: 'clients', label: 'Clients', icon: Users },
     { id: 'add-enterprise', label: 'Ajout Enterprise', icon: UserPlus },
@@ -473,7 +476,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     { type: 'section', label: 'ANALYTICS' },
     { id: 'mrr', label: 'Revenus', icon: DollarSign },
     { id: 'roi-leaderboard', label: 'ROI', icon: Trophy },
-    { id: 'cost-tracker', label: 'Couts IA', icon: Coins },
+    { id: 'cost-tracker', label: 'Coûts IA', icon: Coins },
     { id: 'conversion-pipeline', label: 'Conversion Free', icon: TrendingUp },
 
     {
@@ -487,7 +490,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         { id: 'billing', label: 'Facturation', icon: Receipt },
         { id: 'shopify', label: 'App Shopify', icon: ShoppingBag },
         { id: 'stripe-setup', label: 'Config Stripe', icon: CreditCard },
-        { id: 'team', label: 'Equipe', icon: UserCog },
+        { id: 'team', label: 'Équipe', icon: UserCog },
       ],
     },
   ];
@@ -500,7 +503,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       if (error) throw error;
       queryClient.invalidateQueries({ queryKey: ['admin-clients'] });
       setIsAddClientOpen(false);
-      toast.success?.('Client ajoute avec succes');
+      toast.success?.('Client ajouté avec succès');
     } catch (err) {
       toast.error("Erreur: " + err.message);
     }
@@ -522,7 +525,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       setCallNotesClient(null);
       setDeploymentState({ deploymentId: data.deployment_id, clientName: client?.brand_name || 'Client' });
     } catch (err) {
-      toast.error('Erreur deploiement: ' + err.message);
+      toast.error('Erreur déploiement : ' + err.message);
     }
   };
 
@@ -620,8 +623,8 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               shopify: 'App Shopify',
               referrals: 'Parrainages',
               partners: 'Partenaires',
-              team: 'Equipe Actero',
-              settings: 'Parametres',
+              team: 'Équipe Actero',
+              settings: 'Paramètres',
               requests: 'Demandes IA',
               leads: 'Leads captures',
             }[activeTab] || activeTab.replace('-', ' ')}
@@ -635,6 +638,8 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         </header>
 
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
+          {activeTab === "ai-terminal" && <AdminAITerminal />}
+
           {activeTab === "funnel" && (
             <div className="max-w-6xl mx-auto">
               <AdminFunnelView />

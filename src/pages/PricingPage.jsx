@@ -18,13 +18,13 @@ import { PLANS, PLAN_ORDER } from "../lib/plans";
    HELPERS — derive display data from PLANS
    ────────────────────────────────────────────── */
 
-const fmt = (v) => (v === Infinity ? "Illimite" : v.toLocaleString("fr-FR"));
+const fmt = (v) => (v === Infinity ? "Illimité" : v.toLocaleString("fr-FR"));
 
 const SUPPORT_LABELS = {
   docs: "\u2014",
   email_48h: "Support email 48h",
   priority_24h: "Support prioritaire 24h",
-  account_manager: "Account manager dedie",
+  account_manager: "Account manager dédié",
 };
 
 const ROI_LABELS = {
@@ -36,7 +36,7 @@ const ROI_LABELS = {
 const HISTORY_LABELS = {
   7: "\u2014",
   90: "Historique 3 mois",
-  Infinity: "Historique illimite",
+  Infinity: "Historique illimité",
 };
 
 const CTA_LINKS = {
@@ -60,7 +60,7 @@ function buildFeatures(plan) {
     return [
       "50 tickets / mois",
       "1 workflow actif",
-      "Integration Shopify",
+      "Intégration Shopify",
       "Dashboard ROI basique",
       "Pas de carte bancaire",
     ];
@@ -68,17 +68,17 @@ function buildFeatures(plan) {
 
   if (plan.id === "enterprise") {
     return [
-      "Tickets illimites",
-      "Workflows illimites",
-      `Multi-boutiques (${limits.team_members === Infinity ? "illimite" : limits.team_members} stores)`,
-      ...(features.voice_agent ? ["Agent vocal avance (voix custom)"] : []),
+      "Tickets illimités",
+      "Workflows illimités",
+      `Multi-boutiques (${limits.team_members === Infinity ? "illimité" : limits.team_members} stores)`,
+      ...(features.voice_agent ? ["Agent vocal avancé (voix custom)"] : []),
       ...(features.white_label ? ["White-label disponible"] : []),
-      "API avancee + integrations custom",
+      "API avancée + intégrations custom",
       "SLA 99,9% garanti",
-      "Membres illimites",
+      "Membres illimités",
       ROI_LABELS[features.roi_dashboard] || "Rapport sur mesure",
       SUPPORT_LABELS[support] || support,
-      "Formation equipe incluse",
+      "Formation équipe incluse",
     ];
   }
 
@@ -88,21 +88,21 @@ function buildFeatures(plan) {
   lines.push(`${fmt(limits.tickets_per_month)} tickets / mois`);
   lines.push(
     limits.workflows_active === Infinity
-      ? "Workflows illimites"
+      ? "Workflows illimités"
       : `${limits.workflows_active} workflows actifs`
   );
 
   if (limits.integrations === Infinity) {
-    lines.push("Toutes les integrations");
+    lines.push("Toutes les intégrations");
   } else if (limits.integrations > 1) {
-    lines.push(`Shopify + ${limits.integrations - 1} integrations`);
+    lines.push(`Shopify + ${limits.integrations - 1} intégrations`);
   } else {
-    lines.push("Integration Shopify");
+    lines.push("Intégration Shopify");
   }
 
-  if (features.brand_editor) lines.push("Editeur ton de marque");
-  if (features.guardrails) lines.push("Garde-fous & regles metier");
-  if (features.specialized_agents) lines.push("Agents IA specialises");
+  if (features.brand_editor) lines.push("Éditeur ton de marque");
+  if (features.guardrails) lines.push("Garde-fous & règles métier");
+  if (features.specialized_agents) lines.push("Agents IA spécialisés");
   if (features.voice_agent && limits.voice_minutes > 0) {
     lines.push(`Agent vocal (${limits.voice_minutes} min incluses)`);
   }
@@ -119,8 +119,8 @@ function buildFeatures(plan) {
 
   lines.push(
     limits.team_members === Infinity
-      ? "Membres illimites"
-      : `${limits.team_members} membres d'equipe`
+      ? "Membres illimités"
+      : `${limits.team_members} membres d'équipe`
   );
 
   lines.push(SUPPORT_LABELS[support] || support);
@@ -183,13 +183,13 @@ const comparisonCategories = [
             ? "\u2014"
             : p.limits.history_days === 90
               ? "3 mois"
-              : "Illimite"
+              : "Illimité"
         ),
       },
     ],
   },
   {
-    name: "Integrations",
+    name: "Intégrations",
     rows: [
       {
         label: "Shopify",
@@ -200,7 +200,7 @@ const comparisonCategories = [
         values: compVal(PLAN_ORDER, (p) => p.limits.integrations > 1),
       },
       {
-        label: "Klaviyo / HubSpot",
+        label: "Slack / Resend",
         values: compVal(PLAN_ORDER, (p) => p.limits.integrations > 1),
       },
       {
@@ -208,7 +208,7 @@ const comparisonCategories = [
         values: compVal(PLAN_ORDER, (p) => p.features.api_webhooks),
       },
       {
-        label: "Integrations custom",
+        label: "Intégrations custom",
         values: compVal(PLAN_ORDER, (p) =>
           p.id === "enterprise"
         ),
@@ -223,7 +223,7 @@ const comparisonCategories = [
         values: [true, true, true, true],
       },
       {
-        label: "Agents specialises",
+        label: "Agents spécialisés",
         values: compVal(PLAN_ORDER, (p) => p.features.specialized_agents),
       },
       {
@@ -249,15 +249,15 @@ const comparisonCategories = [
     name: "Personnalisation",
     rows: [
       {
-        label: "Editeur ton de marque",
+        label: "Éditeur ton de marque",
         values: compVal(PLAN_ORDER, (p) => p.features.brand_editor),
       },
       {
-        label: "Garde-fous & regles metier",
+        label: "Garde-fous & règles métier",
         values: compVal(PLAN_ORDER, (p) => p.features.guardrails),
       },
       {
-        label: "Regles metier avancees",
+        label: "Règles métier avancées",
         values: compVal(PLAN_ORDER, (p) =>
           p.id === "pro" || p.id === "enterprise"
         ),
@@ -306,7 +306,7 @@ const comparisonCategories = [
         ),
       },
       {
-        label: "Formation equipe",
+        label: "Formation équipe",
         values: compVal(PLAN_ORDER, (p) => p.id === "enterprise"),
       },
     ],
@@ -319,28 +319,28 @@ const comparisonCategories = [
 
 const faqs = [
   {
-    q: "Puis-je changer de plan a tout moment ?",
-    a: "Oui, vous pouvez upgrader ou downgrader a tout moment depuis votre dashboard. Le changement prend effet immediatement et le prorata est calcule automatiquement sur votre prochain cycle de facturation.",
+    q: "Puis-je changer de plan à tout moment ?",
+    a: "Oui, vous pouvez upgrader ou downgrader à tout moment depuis votre dashboard. Le changement prend effet immédiatement et le prorata est calculé automatiquement sur votre prochain cycle de facturation.",
   },
   {
-    q: "Que se passe-t-il si je depasse mon quota de tickets ?",
-    a: `Au-dela de votre quota mensuel, chaque ticket supplementaire est facture a l'usage : ${PLANS.starter.overage_per_ticket.toFixed(2).replace(".", ",")}\u20AC/ticket sur le plan Starter, ${PLANS.pro.overage_per_ticket.toFixed(2).replace(".", ",")}\u20AC/ticket sur le plan Pro. Vous recevez une alerte a 80% et 100% de votre quota pour anticiper. Aucune coupure de service.`,
+    q: "Que se passe-t-il si je dépasse mon quota de tickets ?",
+    a: `Au-delà de votre quota mensuel, chaque ticket supplémentaire est facturé à l'usage : ${PLANS.starter.overage_per_ticket.toFixed(2).replace(".", ",")}\u20AC/ticket sur le plan Starter, ${PLANS.pro.overage_per_ticket.toFixed(2).replace(".", ",")}\u20AC/ticket sur le plan Pro. Vous recevez une alerte à 80% et 100% de votre quota pour anticiper. Aucune coupure de service.`,
   },
   {
     q: "L'essai gratuit est-il sans engagement ?",
-    a: "Oui, l'essai de 7 jours est 100% gratuit et sans engagement. Aucune carte bancaire requise pour le plan Free. Pour Starter et Pro, vous pouvez annuler a tout moment pendant l'essai sans etre debite.",
+    a: "Oui, l'essai de 7 jours est 100% gratuit et sans engagement. Aucune carte bancaire requise pour le plan Free. Pour Starter et Pro, vous pouvez annuler à tout moment pendant l'essai sans être débité.",
   },
   {
     q: "Comment fonctionne l'agent vocal ?",
-    a: `L'agent vocal utilise ElevenLabs pour une voix naturelle en francais. Vous obtenez un numero FR dedie. Le plan Pro inclut ${PLANS.pro.limits.voice_minutes} minutes/mois. Au-dela, les minutes supplementaires sont facturees a l'usage. Le plan Enterprise permet une voix custom a votre marque.`,
+    a: `L'agent vocal utilise ElevenLabs pour une voix naturelle en français. Vous obtenez un numéro FR dédié. Le plan Pro inclut ${PLANS.pro.limits.voice_minutes} minutes/mois. Au-delà, les minutes supplémentaires sont facturées à l'usage. Le plan Enterprise permet une voix custom à votre marque.`,
   },
   {
-    q: "Quelles integrations sont disponibles ?",
-    a: "Actero se connecte nativement a Shopify, Gorgias, Zendesk, Klaviyo, HubSpot, Intercom, Stripe, Slack et bien d'autres. Le plan Pro ajoute l'acces API et webhooks. Le plan Enterprise permet des integrations custom sur mesure.",
+    q: "Quelles intégrations sont disponibles ?",
+    a: "Actero se connecte nativement à Shopify, WooCommerce, Webflow, Gorgias, Zendesk, WhatsApp (Pro+), Stripe, Slack, Resend, Axonaut, Pennylane, iPaidThat et bien d'autres. Le plan Pro ajoute l'accès API et webhooks. Le plan Enterprise permet des intégrations custom sur mesure.",
   },
   {
     q: "Proposez-vous un discount annuel ?",
-    a: `Oui, la facturation annuelle vous fait economiser 20% par rapport au tarif mensuel. Par exemple, le plan Pro passe de ${PLANS.pro.price.monthly}\u20AC/mois a ${PLANS.pro.price.annual}\u20AC/mois (facture annuellement).`,
+    a: `Oui, la facturation annuelle vous fait économiser 20% par rapport au tarif mensuel. Par exemple, le plan Pro passe de ${PLANS.pro.price.monthly}\u20AC/mois à ${PLANS.pro.price.annual}\u20AC/mois (facturé annuellement).`,
   },
 ];
 
@@ -363,7 +363,7 @@ const ComparisonTable = () => {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-center gap-2 text-lg font-bold text-[#262626] mb-8 hover:text-[#0F5F35] transition-colors"
       >
-        Comparatif detaille
+        Comparatif détaillé
         <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>
 
@@ -467,7 +467,7 @@ export const PricingPage = ({ onNavigate }) => {
 
   const getSubPrice = (plan) => {
     if (plan.monthlyPrice === null || plan.monthlyPrice === 0) return null;
-    if (isAnnual) return `soit ${plan.annualPrice * 12}\u20AC facture annuellement`;
+    if (isAnnual) return `soit ${plan.annualPrice * 12}\u20AC facturé annuellement`;
     return `ou ${plan.annualPrice}\u20AC/mois en annuel`;
   };
 
@@ -642,7 +642,7 @@ export const PricingPage = ({ onNavigate }) => {
                 className="text-3xl font-bold text-center text-[#262626] mb-12"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                Questions frequentes
+                Questions fréquentes
               </h2>
               <div className="space-y-3">
                 {faqs.map((faq, i) => (
@@ -690,10 +690,10 @@ export const PricingPage = ({ onNavigate }) => {
                   className="text-3xl md:text-4xl font-bold text-white mb-4"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  Pret a automatiser votre support ?
+                  Prêt à automatiser votre support ?
                 </h2>
                 <p className="text-white/70 text-lg mb-8 max-w-xl mx-auto">
-                  Rejoignez les marques qui economisent des dizaines d'heures par semaine grace a Actero.
+                  Rejoignez les marques qui économisent des dizaines d'heures par semaine grâce à Actero.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <button
@@ -712,7 +712,7 @@ export const PricingPage = ({ onNavigate }) => {
                     }}
                     className="inline-flex items-center justify-center h-12 px-8 rounded-full border border-white/30 text-white font-bold text-[15px] hover:bg-white/10 transition-colors gap-2"
                   >
-                    Contacter l'equipe
+                    Contacter l'équipe
                   </button>
                 </div>
               </motion.div>

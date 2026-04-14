@@ -106,9 +106,9 @@ export const BeforeAfterSlider = () => {
                 <div className="w-6 h-6 md:w-7 md:h-7 rounded bg-[#95BF47]/20 flex items-center justify-center text-[#95BF47] font-bold text-[10px] md:text-xs">S</div> Shopify
             </div>
 
-            {/* RIGHT NODE: Klaviyo */}
+            {/* RIGHT NODE: Resend */}
             <div className="absolute top-1/2 right-[4%] md:right-[8%] transform -translate-y-1/2 p-2.5 md:p-3.5 border border-white/10 bg-[#0E1424] rounded-lg md:rounded-xl flex items-center gap-2 text-white text-[11px] md:text-sm font-medium z-10">
-                <div className="w-6 h-6 md:w-7 md:h-7 rounded bg-white/10 flex items-center justify-center font-bold text-[10px] md:text-xs">K</div> Klaviyo / CRM
+                <div className="w-6 h-6 md:w-7 md:h-7 rounded bg-white/10 flex items-center justify-center font-bold text-[10px] md:text-xs">R</div> Resend / Email
             </div>
 
             {/* TOP NODE: Zendesk */}

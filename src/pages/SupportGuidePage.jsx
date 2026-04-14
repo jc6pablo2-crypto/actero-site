@@ -6,7 +6,8 @@ import {
   CheckCircle2, Clock, AlertTriangle, Sparkles, Settings,
   MessageSquare, Phone, CreditCard, Bell, Globe, Sliders,
   Brain, HelpCircle, Send, Key, Calendar, TrendingUp,
-  PlayCircle, Volume2, Mic,
+  PlayCircle, Volume2, Mic, Gift, Users, Terminal, Calculator,
+  GitBranch, ArrowUpCircle, Rocket,
 } from "lucide-react";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
@@ -106,7 +107,7 @@ const GUIDES = [
       },
       {
         title: 'Mon integration affiche une erreur',
-        content: "Si une integration montre un badge rouge, cliquez sur le bouton Tester pour verifier la connexion. Si le test echoue, essayez Reconnecter. Si c'est une integration par cle API (Klaviyo, Calendly...), verifiez que la cle est toujours valide dans l'outil d'origine. Parfois, les cles expirent ou sont revoquees. Regenerez-en une nouvelle et mettez-la a jour dans Actero.",
+        content: "Si une integration montre un badge rouge, cliquez sur le bouton Tester pour verifier la connexion. Si le test echoue, essayez Reconnecter. Si c'est une integration par cle API (Resend, Axonaut, Pennylane...), verifiez que la cle est toujours valide dans l'outil d'origine. Parfois, les cles expirent ou sont revoquees. Regenerez-en une nouvelle et mettez-la a jour dans Actero.",
       },
     ],
   },
@@ -114,6 +115,32 @@ const GUIDES = [
   // ─────────────────────────────────
   // INTEGRATIONS
   // ─────────────────────────────────
+  {
+    id: 'choisir-ecommerce',
+    category: 'integrations',
+    title: 'Comment choisir entre Shopify, WooCommerce et Webflow',
+    summary: 'Une seule plateforme e-commerce peut etre connectee. Voici comment choisir.',
+    icon: GitBranch,
+    readTime: '3 min',
+    sections: [
+      {
+        title: 'La regle : une seule e-commerce a la fois',
+        content: "Actero autorise une seule integration e-commerce active parmi Shopify, WooCommerce et Webflow. Si vous essayez d'en connecter une deuxieme, l'interface vous demandera de deconnecter la premiere. Cette regle evite les doublons de commandes et les conflits de donnees.",
+      },
+      {
+        title: 'Choisir selon votre stack',
+        content: "- Shopify : si votre boutique est deja sur Shopify ou Shopify Plus. Connexion OAuth en un clic, synchronisation complete.\n- WooCommerce : si votre site tourne sous WordPress avec le plugin WooCommerce. Connexion via cles API REST.\n- Webflow : si votre site est sur Webflow avec Webflow Ecommerce. Connexion via token API Webflow.",
+      },
+      {
+        title: 'Que faire si vous changez de plateforme',
+        content: "Vous migrez de WooCommerce vers Shopify ? Deconnectez WooCommerce dans Integrations, puis connectez Shopify. Les donnees historiques restent dans Actero, seules les nouvelles commandes proviendront de la nouvelle plateforme. Pensez a re-tester votre agent apres le changement.",
+      },
+      {
+        title: 'Les autres groupes de conflit',
+        content: "La meme logique s'applique a :\n- Helpdesk : Gorgias OU Zendesk (pas les deux)\n- Email : Resend OU SMTP personnalise (pas les deux)\n\nToutes les autres integrations (Slack, WhatsApp, Axonaut, Pennylane, iPaidThat) se cumulent sans limite.",
+      },
+    ],
+  },
   {
     id: 'connecter-shopify',
     category: 'integrations',
@@ -197,6 +224,32 @@ const GUIDES = [
     ],
   },
   {
+    id: 'email-resend-vs-smtp',
+    category: 'integrations',
+    title: 'Quelle integration email choisir : Resend ou SMTP',
+    summary: 'Les differences entre Resend (cle API) et SMTP personnalise, et laquelle choisir.',
+    icon: Mail,
+    readTime: '3 min',
+    sections: [
+      {
+        title: 'Une seule integration email a la fois',
+        content: "Vous devez choisir entre Resend ET SMTP personnalise : les deux ne peuvent pas etre actives en meme temps. Les deux permettent d'envoyer les emails de l'agent (reponses SAV, relances, notifications).",
+      },
+      {
+        title: 'Resend (recommande)',
+        content: "Resend est un service d'envoi d'email transactionnel moderne. Connexion en 30 secondes avec une cle API.\n\nAvantages :\n- Setup ultra rapide\n- Deliverabilite premium (SPF/DKIM geres automatiquement)\n- Dashboard de suivi des emails envoyes\n- 3 000 emails/mois gratuits chez Resend\n\nIdeal si : vous demarrez, vous voulez le moins de friction possible, ou vous n'avez pas de domaine pro configure.",
+      },
+      {
+        title: 'SMTP personnalise',
+        content: "Utilise votre propre serveur email (OVH, Ionos, Infomaniak, Google Workspace, etc.). Les emails partent depuis votre adresse pro existante (contact@maboutique.com).\n\nAvantages :\n- Vos emails partent depuis votre domaine officiel\n- Continuite avec l'email que vos clients connaissent deja\n- Pas de service tiers supplementaire\n\nIdeal si : vous avez deja une adresse pro active et voulez conserver une signature de marque forte.",
+      },
+      {
+        title: 'Comment changer',
+        content: "Pour passer de l'un a l'autre : Integrations > deconnecter l'actuel > connecter le nouveau. Aucune donnee n'est perdue. Les automatisations actives basculent automatiquement sur le nouveau canal email.",
+      },
+    ],
+  },
+  {
     id: 'connecter-slack',
     category: 'integrations',
     title: 'Connecter Slack',
@@ -267,46 +320,28 @@ const GUIDES = [
     ],
   },
   {
-    id: 'connecter-klaviyo',
-    category: 'integrations',
-    title: 'Connecter Klaviyo',
-    summary: 'Relier Klaviyo pour les relances par email et SMS marketing.',
-    icon: Mail,
-    readTime: '3 min',
-    sections: [
-      {
-        title: 'A quoi sert Klaviyo dans Actero',
-        content: "Klaviyo est un outil de marketing par email et SMS. En le connectant a Actero, vous permettez a l'IA d'envoyer des relances SMS pour les paniers abandonnes et de declencher des sequences marketing automatiquement. Si vous utilisez deja Klaviyo pour vos campagnes, Actero peut s'en servir comme canal supplementaire.",
-      },
-      {
-        title: 'Trouver votre cle API',
-        content: "1. Connectez-vous a votre compte Klaviyo\n2. Cliquez sur votre nom en bas a gauche, puis Parametres\n3. Allez dans API Keys (ou Cles API)\n4. Cliquez Create Private API Key\n5. Donnez-lui un nom (par exemple 'Actero')\n6. Copiez la cle qui commence par pk_\n\nAttention : cette cle ne s'affiche qu'une seule fois. Gardez-la en lieu sur.",
-      },
-      {
-        title: 'Connecter dans Actero',
-        content: "1. Allez dans Integrations dans votre dashboard\n2. Trouvez Klaviyo et cliquez Connecter\n3. Collez votre cle API dans le champ\n4. Cliquez Connecter\n5. Actero teste la connexion automatiquement. Si tout est bon, badge vert !",
-      },
-    ],
-  },
-  {
     id: 'connecter-whatsapp',
     category: 'integrations',
     title: 'Connecter WhatsApp Business',
-    summary: 'Configurer WhatsApp Business API pour communiquer avec vos clients.',
+    summary: 'Configurer WhatsApp Business API pour communiquer avec vos clients. Plan Pro requis.',
     icon: Phone,
     readTime: '4 min',
     sections: [
       {
-        title: 'A quoi sert WhatsApp dans Actero',
-        content: "WhatsApp Business vous permet de recevoir et repondre aux messages de vos clients via WhatsApp. Votre agent IA peut envoyer des notifications, repondre aux questions et suivre les commandes directement dans la conversation WhatsApp du client. C'est un canal tres apprecie car les clients recoivent les reponses instantanement sur leur telephone.",
+        title: 'Plan requis',
+        content: "WhatsApp Business est disponible uniquement sur le plan Pro (399 €/mois) et Enterprise. Les plans Free et Starter n'ont pas acces a ce canal. Si vous etes sur un plan inferieur, la carte WhatsApp apparait verrouillee dans Integrations avec un bouton Passer au Pro.",
       },
       {
-        title: 'Obtenir votre token API',
-        content: "WhatsApp Business utilise l'API Meta. Pour obtenir votre token :\n\n1. Allez sur business.facebook.com et connectez-vous\n2. Allez dans WhatsApp puis Configuration de l'API\n3. Vous verrez votre Token d'acces permanent (il commence par EAA...)\n4. Copiez ce token\n\nSi vous n'avez pas encore de compte WhatsApp Business API, il faut d'abord le creer via Meta Business Suite. C'est gratuit mais il y a un processus de verification.",
+        title: 'A quoi sert WhatsApp dans Actero',
+        content: "WhatsApp Business vous permet de recevoir et repondre aux messages de vos clients via WhatsApp. Votre agent IA peut envoyer des notifications, repondre aux questions et relancer les paniers abandonnes directement dans la conversation WhatsApp du client. C'est un canal a fort taux d'ouverture (plus de 95 %).",
+      },
+      {
+        title: 'Obtenir votre token API Meta',
+        content: "WhatsApp Business utilise l'API Meta. Pour obtenir votre token :\n\n1. Allez sur business.facebook.com et connectez-vous\n2. Ouvrez WhatsApp puis Configuration de l'API\n3. Copiez le Token d'acces permanent (il commence par EAA...)\n4. Notez aussi votre Phone Number ID\n\nSi vous n'avez pas encore de compte WhatsApp Business API, creez-le via Meta Business Suite (gratuit, avec verification).",
       },
       {
         title: 'Connecter dans Actero',
-        content: "1. Allez dans Integrations\n2. Trouvez WhatsApp Business et cliquez Connecter\n3. Collez votre token API dans le champ\n4. Cliquez Connecter\n5. C'est fait ! Vous pouvez maintenant utiliser WhatsApp comme canal dans vos automatisations.",
+        content: "1. Integrations > WhatsApp Business > Connecter\n2. Collez le token API et le Phone Number ID\n3. Cliquez Connecter\n4. Un badge vert confirme la connexion\n5. Activez WhatsApp dans les canaux de vos automatisations (SAV, Relance paniers)",
       },
     ],
   },
@@ -429,6 +464,37 @@ const GUIDES = [
     ],
   },
 
+  {
+    id: 'configurer-mcp-claude-desktop',
+    category: 'integrations',
+    title: 'Configurer le serveur MCP avec Claude Desktop',
+    summary: 'Brancher Actero directement dans Claude Desktop ou Cursor via MCP.',
+    icon: Terminal,
+    readTime: '4 min',
+    sections: [
+      {
+        title: "Qu'est-ce que MCP",
+        content: "MCP (Model Context Protocol) est un standard ouvert qui permet a des assistants IA comme Claude Desktop ou Cursor d'acceder a vos donnees Actero. Une fois connecte, vous pouvez demander dans Claude : \"Resume-moi les escalades Actero du jour\" ou \"Quel est le taux de resolution ce mois-ci ?\". Claude appellera Actero en temps reel.",
+      },
+      {
+        title: "URL du serveur Actero",
+        content: "L'endpoint MCP public d'Actero est :\n\nhttps://actero.fr/api/mcp\n\nL'authentification se fait via OAuth (pas de cle API a copier). Vous vous connectez a votre compte Actero lors de la premiere utilisation.",
+      },
+      {
+        title: "Configurer Claude Desktop",
+        content: "1. Ouvrez Claude Desktop\n2. Settings > Developer > Edit Config\n3. Ajoutez dans claude_desktop_config.json :\n\n{\n  \"mcpServers\": {\n    \"actero\": {\n      \"url\": \"https://actero.fr/api/mcp\"\n    }\n  }\n}\n\n4. Sauvegardez et relancez Claude Desktop\n5. Au premier appel, Claude ouvrira une fenetre d'authentification OAuth Actero",
+      },
+      {
+        title: "Configurer Cursor",
+        content: "1. Cursor > Settings > MCP\n2. Ajoutez un nouveau serveur avec l'URL https://actero.fr/api/mcp\n3. Sauvegardez\n4. Authentifiez-vous via OAuth au premier appel",
+      },
+      {
+        title: "Ce que vous pouvez demander",
+        content: "Une fois connecte, exemples de requetes :\n- \"Liste les 5 dernieres escalades Actero\"\n- \"Quelles integrations sont connectees ?\"\n- \"Quel est mon ROI ce mois-ci ?\"\n- \"Montre-moi la conversation du ticket #1234\"\n\nClaude appellera les bons endpoints Actero et synthetisera la reponse.",
+      },
+    ],
+  },
+
   // ─────────────────────────────────
   // AUTOMATISATIONS
   // ─────────────────────────────────
@@ -498,7 +564,7 @@ const GUIDES = [
       },
       {
         title: 'Ce qu\'il faut pour que ca fonctionne',
-        content: "Pour que la relance fonctionne, vous avez besoin de deux choses : Shopify connecte (pour detecter les paniers abandonnes) et un canal email connecte (Gmail ou email SMTP pour envoyer la relance). Si vous avez Klaviyo connecte, vous pouvez aussi envoyer des relances par SMS. Activez les canaux souhaites dans l'automatisation.",
+        content: "Pour que la relance fonctionne, vous avez besoin de deux choses : Shopify connecte (pour detecter les paniers abandonnes) et un canal email connecte (Resend, Gmail ou email SMTP pour envoyer la relance). Si vous avez WhatsApp connecte (Pro+), vous pouvez aussi envoyer des relances par WhatsApp. Activez les canaux souhaites dans l'automatisation.",
       },
       {
         title: 'La sequence de relance',
@@ -533,6 +599,36 @@ const GUIDES = [
       {
         title: 'Comment ca se passe au quotidien',
         content: "Une fois activee, l'automatisation tourne en arriere-plan. Quand une facture n'est pas payee apres un certain delai, l'IA envoie un email de relance poli au client. Si votre tresorerie passe sous un seuil que vous definissez, vous recevez une alerte dans Slack. Les exports comptables sont envoyes periodiquement a votre comptable ou vers votre outil de comptabilite.",
+      },
+    ],
+  },
+  {
+    id: 'playbook-comptabilite-detail',
+    category: 'automatisations',
+    title: 'Comprendre le playbook Comptabilite',
+    summary: 'Comment fonctionnent les relances de factures impayees avec Axonaut, Pennylane ou iPaidThat.',
+    icon: Calculator,
+    readTime: '4 min',
+    sections: [
+      {
+        title: 'Ce que fait le playbook',
+        content: "Le playbook Comptabilite automatise la detection et la relance des factures en retard. Toutes les nuits (cron 3h du matin), Actero verifie vos factures dans l'outil comptable connecte, detecte celles en retard, et envoie une relance adaptee selon l'anciennete du retard.",
+      },
+      {
+        title: 'Les outils comptables supportes',
+        content: "Vous devez connecter un outil comptable parmi :\n- Axonaut : CRM + facturation PME francaises\n- Pennylane : comptabilite en ligne, souvent utilise avec expert-comptable\n- iPaidThat : collecte et classement automatique de factures\n\nUn seul peut etre actif a la fois. Si aucun n'est connecte, le playbook reste inactif.",
+      },
+      {
+        title: 'Les niveaux de relance',
+        content: "Actero applique 3 niveaux automatiques :\n- J+7 apres echeance : rappel courtois (ton amical)\n- J+15 : relance ferme avec recap des penalites\n- J+30 : mise en demeure formelle (avec piece jointe si configure)\n\nChaque relance est envoyee via votre canal email (Resend ou SMTP). Le ton suit votre agent, mais le playbook est plus direct par design.",
+      },
+      {
+        title: 'Alertes Slack tresorerie',
+        content: "Si Slack est connecte, vous recevez une alerte quand :\n- Une facture passe en retard\n- Un client ignore 2 relances de suite\n- Votre encours clients depasse un seuil\n\nLe seuil se configure dans Mon Agent > Regles > Tresorerie.",
+      },
+      {
+        title: 'Personnaliser les relances',
+        content: "Vous pouvez editer les templates dans Automatisations > Comptabilite > Modeles. Variables disponibles : {{client.nom}}, {{facture.numero}}, {{facture.montant}}, {{facture.jours_retard}}. Les changements s'appliquent au prochain run (nuit suivante).",
       },
     ],
   },
@@ -671,6 +767,33 @@ const GUIDES = [
     ],
   },
 
+  {
+    id: 'agents-ia-specialises',
+    category: 'agent-ia',
+    title: 'Debloquer les agents IA specialises',
+    summary: 'Agents metier (juridique, comptable, technique) disponibles sur le plan Pro.',
+    icon: Sparkles,
+    readTime: '3 min',
+    sections: [
+      {
+        title: 'Qu\'est-ce qu\'un agent specialise',
+        content: "En plus de votre agent generaliste, le plan Pro debloque des agents specialises par metier. Chacun a son propre prompt, sa base de connaissances et ses regles. Exemples : agent Juridique (CGV, RGPD), agent Comptable (factures, relances), agent Technique produit (specs, compatibilite).",
+      },
+      {
+        title: 'Plan requis',
+        content: "Les agents specialises sont inclus dans le plan Pro (399 €/mois) et Enterprise. Les plans Free et Starter n'ont acces qu'a un agent generaliste unique. Pour passer au Pro : Facturation > Changer de plan.",
+      },
+      {
+        title: 'Activer un agent specialise',
+        content: "1. Mon Agent > onglet Agents specialises\n2. Choisissez un modele (Juridique, Compta, Technique, ou Custom)\n3. Configurez ton, regles et base de connaissances propres\n4. Assignez des categories de tickets a cet agent (ex : agent Juridique recoit toutes les demandes mentionnant retractation ou RGPD)\n5. Sauvegardez",
+      },
+      {
+        title: 'Routage automatique',
+        content: "Quand un ticket arrive, Actero detecte la categorie et route vers l'agent le mieux arme. Si aucun agent specialise ne matche, l'agent generaliste prend le relais. Vous pouvez forcer un routage manuel depuis A traiter.",
+      },
+    ],
+  },
+
   // ─────────────────────────────────
   // DASHBOARD & METRIQUES
   // ─────────────────────────────────
@@ -749,6 +872,62 @@ const GUIDES = [
     ],
   },
   {
+    id: 'roi-calcul-detaille',
+    category: 'dashboard',
+    title: 'Tableau ROI : comment c\'est calcule',
+    summary: 'La formule exacte derriere les chiffres du dashboard ROI.',
+    icon: Calculator,
+    readTime: '3 min',
+    sections: [
+      {
+        title: 'La formule',
+        content: "ROI net = (Tickets resolus x Temps moyen par ticket x Cout horaire) - Abonnement Actero mensuel\n\nExemple concret :\n- 800 tickets resolus ce mois\n- 5 minutes par ticket = 66,6 heures economisees\n- Cout horaire : 25 €\n- Valeur economisee : 1 666 €\n- Abonnement Starter : 99 €\n- ROI net : 1 567 €",
+      },
+      {
+        title: 'D\'ou viennent les chiffres',
+        content: "- Tickets resolus : compte uniquement les tickets cloturees par l'IA sans intervention humaine (les escalades ne comptent pas)\n- Temps moyen par ticket : valeur que vous renseignez dans Mon Profil > ROI (par defaut 5 min)\n- Cout horaire : que vous renseignez aussi (par defaut 25 €, charges comprises)\n- Abonnement : recupere automatiquement de votre plan Stripe",
+      },
+      {
+        title: 'Mois en cours vs mois precedent',
+        content: "Les chiffres se reinitialisent chaque 1er du mois a 00h00. Le pourcentage vert/rouge compare au mois precedent sur la meme periode (ex : le 14 du mois, il compare aux 14 premiers jours du mois d'avant). Les 3 premiers jours du mois, l'indicateur peut etre volatile.",
+      },
+      {
+        title: 'Ajuster vos parametres',
+        content: "Si le ROI vous semble sous-estime, verifiez vos parametres dans Mon Profil > ROI. Un temps moyen de 5 min est prudent : la plupart des SAV comptent 7 a 10 min par ticket incluant la recherche d'infos. Un cout horaire de 25 € correspond a un SMIC charge ; augmentez a 35-45 € pour un agent experimente.",
+      },
+    ],
+  },
+  {
+    id: 'compteur-tickets-bloque',
+    category: 'dashboard',
+    title: 'Mon compteur de tickets n\'avance pas',
+    summary: 'Les 5 raisons courantes et comment debloquer la situation.',
+    icon: AlertTriangle,
+    readTime: '3 min',
+    sections: [
+      {
+        title: '1. Aucune automatisation active',
+        content: "Verifiez Automatisations : au moins une doit avoir le toggle vert. Sans automatisation active, l'IA ne traite rien et le compteur reste a zero, meme si les messages arrivent.",
+      },
+      {
+        title: '2. Aucun canal selectionne',
+        content: "Une automatisation peut etre activee sans canal. Cliquez dessus et verifiez que au moins un canal (Email, Chat, Gorgias...) est coche. Sans canal, l'IA ne recoit pas les messages.",
+      },
+      {
+        title: '3. Integration en erreur',
+        content: "Integrations > verifiez les badges. Un badge rouge (erreur de connexion) bloque le flux de messages. Cliquez Tester puis Reconnecter si besoin. Les cles API expirent parfois chez les fournisseurs.",
+      },
+      {
+        title: '4. Limite du plan atteinte',
+        content: "Le plan Free inclut 50 tickets/mois et le Starter 1 000. Si vous atteignez la limite, les nouveaux messages sont mis en file d'attente mais non traites. Facturation > vous verrez un badge Limite atteinte. Upgradez pour debloquer.",
+      },
+      {
+        title: '5. Cache ou delai d\'affichage',
+        content: "Le compteur se met a jour en quasi temps reel mais un leger delai (jusqu'a 60 sec) peut exister. Rafraichissez la page (Cmd+R / Ctrl+R). Si le probleme persiste apres 5 minutes avec toutes les autres causes ecartees, contactez contact@actero.fr.",
+      },
+    ],
+  },
+  {
     id: 'configurer-notifications',
     category: 'dashboard',
     title: 'Configurer les notifications',
@@ -778,6 +957,66 @@ const GUIDES = [
   // ─────────────────────────────────
   // FACTURATION
   // ─────────────────────────────────
+  {
+    id: 'upgrade-plan',
+    category: 'billing',
+    title: 'Upgrade de plan : que se passe-t-il',
+    summary: 'Trial, proration, crediting : ce qui se passe quand vous changez de plan.',
+    icon: ArrowUpCircle,
+    readTime: '3 min',
+    sections: [
+      {
+        title: 'Les 4 plans Actero',
+        content: "- Free : 50 tickets/mois, 1 integration, agent generaliste\n- Starter : 99 €/mois, 1 000 tickets, integrations illimitees\n- Pro : 399 €/mois, tickets illimites, WhatsApp, Guardrails avances, API publique, agents specialises\n- Enterprise : sur devis, SLA, SSO, multi-workspace",
+      },
+      {
+        title: 'Upgrade en cours de mois',
+        content: "Stripe applique une proration automatique. Exemple : vous etes au Starter (99 €), vous passez au Pro (399 €) au 15 du mois. Stripe calcule :\n- Credit restant Starter : 99 € x 15/30 = 49,50 €\n- Pro prorate : 399 € x 15/30 = 199,50 €\n- Debite maintenant : 150 €\n\nLa prochaine facture mensuelle sera le montant plein du nouveau plan.",
+      },
+      {
+        title: 'Trial gratuit',
+        content: "Les nouveaux inscrits beneficient d'une periode d'essai de 14 jours sur le plan Starter, sans carte requise. A la fin, vous basculez vers le plan Free (pas de coupure de service) sauf si vous souscrivez. Les parraines beneficient en plus de 30 jours offerts (cumulable avec le trial).",
+      },
+      {
+        title: 'Downgrade',
+        content: "Un passage a un plan inferieur prend effet a la fin de la periode en cours (pas de remboursement). Vous gardez les fonctionnalites payantes jusqu'a la bascule. Attention : si vous passez de Pro a Starter, WhatsApp et agents specialises seront desactives.",
+      },
+      {
+        title: 'Comment changer',
+        content: "Facturation > Changer de plan, ou directement via le Portail Stripe > Modifier l'abonnement. Le changement est effectif immediatement pour un upgrade, en fin de periode pour un downgrade.",
+      },
+    ],
+  },
+  {
+    id: 'programme-parrainage',
+    category: 'billing',
+    title: 'Comprendre le programme de parrainage',
+    summary: '30 jours offerts pour le parraine, 1 mois de credit Stripe pour le parrain.',
+    icon: Gift,
+    readTime: '3 min',
+    sections: [
+      {
+        title: 'Les recompenses',
+        content: "- Le parraine (nouveau client) : 30 jours gratuits a l'inscription sur n'importe quel plan payant. Cumulable avec les 14 jours de trial standard.\n- Le parrain (vous) : 1 mois d'abonnement offert sous forme de credit Stripe, applique automatiquement sur la prochaine facture.\n\nPas de limite : plus vous parrainez, plus vous cumulez de mois gratuits.",
+      },
+      {
+        title: 'Trouver votre lien de parrainage',
+        content: "Dashboard > Parrainage. Vous y trouvez :\n- Votre code personnel (ex : PABLO-H3X)\n- Votre lien direct (https://actero.fr/?referral_code=PABLO-H3X)\n- Un bouton de partage rapide (email, Slack, WhatsApp)\n- L'historique de vos filleuls et recompenses",
+      },
+      {
+        title: 'Comment ca marche pour le parraine',
+        content: "Le nouvel utilisateur :\n1. Clique sur votre lien de parrainage\n2. Voit une banniere \"30 jours offerts\" sur la landing et le signup\n3. S'inscrit normalement\n4. Les 30 jours sont automatiquement ajoutes a sa periode de trial\n\nLa banniere n'apparait QUE si l'URL contient ?referral_code=. Les visiteurs sans code ne voient pas l'offre.",
+      },
+      {
+        title: 'Quand le credit parrain est-il applique',
+        content: "Le credit parrain est declenche quand le filleul paie sa premiere facture (apres son trial + les 30 jours offerts). Le credit apparait alors dans Facturation et est automatiquement deduit de votre prochaine echeance Stripe. Vous recevez un email de confirmation.",
+      },
+      {
+        title: 'Conditions',
+        content: "- Pas d'auto-parrainage (meme email, meme IP bloques)\n- Le filleul doit atteindre au moins 1 facture payee pour que le credit parrain se declenche\n- Pas de plafond sur le nombre de parrainages",
+      },
+    ],
+  },
   {
     id: 'gerer-facturation',
     category: 'billing',

@@ -81,9 +81,9 @@ export const GuardrailsEditor = ({ clientId, theme }) => {
             <ShieldAlert className="w-5 h-5 text-red-500" />
           </div>
           <div>
-            <h2 className="text-[22px] font-semibold text-[#1a1a1a]">Regles d'exclusion</h2>
+            <h2 className="text-[22px] font-semibold text-[#1a1a1a]">Règles d'exclusion</h2>
             <p className="text-sm text-[#9ca3af]">
-              {activeCount} regle{activeCount !== 1 ? 's' : ''} active{activeCount !== 1 ? 's' : ''} — appliquee{activeCount !== 1 ? 's' : ''} avant chaque reponse IA
+              {activeCount} règle{activeCount !== 1 ? 's' : ''} active{activeCount !== 1 ? 's' : ''} — appliquée{activeCount !== 1 ? 's' : ''} avant chaque réponse IA
             </p>
           </div>
         </div>
@@ -147,7 +147,7 @@ export const GuardrailsEditor = ({ clientId, theme }) => {
       ) : guardrails.length === 0 ? (
         <div className="text-center py-12 text-[#9ca3af]">
           <ShieldAlert className="w-10 h-10 mx-auto mb-3 opacity-30" />
-          <p className="text-sm">Aucune regle definie. Ajoutez votre premiere regle ci-dessus.</p>
+          <p className="text-sm">Aucune règle définie. Ajoutez votre première règle ci-dessus.</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -301,7 +301,7 @@ const VisualRuleBuilder = ({ clientId, onRuleCreated }) => {
             <Zap className="w-5 h-5 text-white" />
           </div>
           <div className="text-left">
-            <p className="font-bold text-sm text-[#1a1a1a]">Creer une regle visuelle</p>
+            <p className="font-bold text-sm text-[#1a1a1a]">Créer une règle visuelle</p>
             <p className="text-xs text-[#9ca3af]">SI [condition] → ALORS [action] — sans code</p>
           </div>
         </div>
@@ -454,7 +454,7 @@ const VisualRuleBuilder = ({ clientId, onRuleCreated }) => {
               className="w-full py-3 bg-[#0F5F35] text-white text-sm font-bold rounded-xl hover:bg-[#003725] disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
             >
               {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-              Creer la regle
+              Créer la règle
             </button>
           </div>
         </motion.div>

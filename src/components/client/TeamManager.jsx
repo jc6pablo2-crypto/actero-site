@@ -156,7 +156,7 @@ export const TeamManager = ({ clientId }) => {
             <Users className="w-5 h-5 text-[#003725]" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-[#1a1a1a]">Equipe</h2>
+            <h2 className="text-2xl font-bold text-[#1a1a1a]">Équipe</h2>
             <p className="text-sm text-[#71717a]">{members.length} membre{members.length > 1 ? 's' : ''}</p>
           </div>
         </div>

@@ -137,7 +137,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
               onClick={handleCTA}
               className="group bg-[#0F5F35] hover:bg-[#003725] text-white px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3 shadow-lg shadow-[#003725]/15"
             >
-              Creer mon compte gratuitement
+              Créer mon compte gratuitement
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
             <p className="text-sm text-[#716D5C] mt-4">Sans carte bancaire — Premier mois offert</p>
@@ -162,19 +162,19 @@ export const ReferralLanding = ({ code, onNavigate }) => {
               {
                 icon: Zap,
                 title: 'Deploiement rapide',
-                desc: 'Vos automatisations sont operationnelles en quelques jours, pas des mois.',
+                desc: 'Vos automatisations sont opérationnelles en quelques jours, pas des mois.',
                 color: 'amber',
               },
               {
                 icon: Clock,
-                title: '+40h economisees/mois',
-                desc: 'Nos clients economisent en moyenne 40 heures de travail manuel par mois.',
+                title: '+40h économisées/mois',
+                desc: 'Nos clients économisent en moyenne 40 heures de travail manuel par mois.',
                 color: 'emerald',
               },
               {
                 icon: Shield,
                 title: 'ROI garanti',
-                desc: 'Si vous ne voyez pas de resultats en 30 jours, on vous rembourse.',
+                desc: 'Si vous ne voyez pas de résultats en 30 jours, on vous rembourse.',
                 color: 'blue',
               },
             ].map((item, i) => (
@@ -206,7 +206,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
             ))}
           </div>
           <p className="text-lg text-[#716D5C] mb-6 italic">
-            "Actero a transforme notre support client. On a reduit nos temps de reponse de 80% en 2 semaines."
+            "Actero a transformé notre support client. On a réduit nos temps de réponse de 80% en 2 semaines."
           </p>
           <p className="text-sm text-[#716D5C]">— Client Actero depuis 2025</p>
         </div>
@@ -232,7 +232,7 @@ export const ReferralLanding = ({ code, onNavigate }) => {
               onClick={handleCTA}
               className="bg-[#0F5F35] hover:bg-[#003725] text-white px-8 py-4 rounded-2xl text-lg font-bold transition-all inline-flex items-center gap-3"
             >
-              Creer mon compte gratuitement
+              Créer mon compte gratuitement
               <ArrowRight className="w-5 h-5" />
             </button>
             <div className="flex items-center justify-center gap-6 mt-6 text-sm text-[#716D5C]">

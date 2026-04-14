@@ -534,7 +534,7 @@ export const PromptEditor = ({ clientId, theme }) => {
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[11px] font-semibold text-[#9ca3af] inline-flex items-center gap-1">
                         Froid
-                        <HelpTooltip text="Niveau d'empathie. A droite : l'agent reconnait explicitement les emotions du client et personnalise sa reponse." />
+                        <HelpTooltip text="Niveau d'empathie. À droite : l'agent reconnaît explicitement les émotions du client et personnalise sa réponse." />
                       </span>
                       <span className="text-[11px] font-semibold text-[#9ca3af]">Chaleureux</span>
                     </div>
@@ -643,7 +643,7 @@ export const PromptEditor = ({ clientId, theme }) => {
                 ) : (
                   <div className="text-center py-12 border border-dashed border-[#ebebeb] rounded-2xl">
                     <ShieldAlert className="w-8 h-8 text-[#d4d4d4] mx-auto mb-2" />
-                    <p className="text-[12px] text-[#9ca3af]">Aucune regle definie. Ajoutez votre premiere regle ci-dessus.</p>
+                    <p className="text-[12px] text-[#9ca3af]">Aucune règle définie. Ajoutez votre première règle ci-dessus.</p>
                   </div>
                 )}
               </div>

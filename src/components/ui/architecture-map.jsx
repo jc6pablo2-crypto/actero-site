@@ -14,14 +14,14 @@ const scenarios = [
     {
         id: 'cart',
         name: 'Relance Panier VIP',
-        description: 'Détection d\'un panier abandonné >500€. L\'IA génère un e-mail hyper-personnalisé via Klaviyo.',
-        flow: ['shopify', 'actero', 'crm', 'actero', 'klaviyo']
+        description: 'Détection d\'un panier abandonné >500€. L\'IA génère un e-mail hyper-personnalisé via Resend.',
+        flow: ['shopify', 'actero', 'crm', 'actero', 'email']
     },
     {
         id: 'review',
         name: 'Gestion des Avis Négatifs',
         description: 'Un avis 1 étoile est posté. L\'IA crée un ticket urgent et prépare un brouillon d\'excuse + code promo.',
-        flow: ['shopify', 'actero', 'zendesk', 'klaviyo']
+        flow: ['shopify', 'actero', 'zendesk', 'email']
     }
 ];
 
@@ -31,7 +31,7 @@ const nodes = {
     shopify: { id: 'shopify', label: 'Shopify / Boutique', icon: ShoppingCart, color: 'text-[#95BF47]', bg: 'bg-[#95BF47]/10', border: 'border-[#95BF47]/20', pos: 'col-start-1 row-start-1' },
     stripe: { id: 'stripe', label: 'Stripe / Paiement', icon: Activity, color: 'text-[#635BFF]', bg: 'bg-[#635BFF]/10', border: 'border-[#635BFF]/20', pos: 'col-start-3 row-start-1' },
     zendesk: { id: 'zendesk', label: 'Zendesk / Support', icon: MessageSquare, color: 'text-[#17494D]', bg: 'bg-[#17494D]/30', border: 'border-[#17494D]/40', pos: 'col-start-1 row-start-3' },
-    klaviyo: { id: 'klaviyo', label: 'Klaviyo / E-mail', icon: Mail, color: 'text-white', bg: 'bg-white/10', border: 'border-white/20', pos: 'col-start-3 row-start-3' },
+    email: { id: 'email', label: 'Resend / E-mail', icon: Mail, color: 'text-white', bg: 'bg-white/10', border: 'border-white/20', pos: 'col-start-3 row-start-3' },
     crm: { id: 'crm', label: 'HubSpot / CRM', icon: Database, color: 'text-[#FF7A59]', bg: 'bg-[#FF7A59]/10', border: 'border-[#FF7A59]/20', pos: 'col-start-2 row-start-1 mt-[-60px]' }
 };
 

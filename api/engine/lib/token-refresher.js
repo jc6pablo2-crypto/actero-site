@@ -111,8 +111,8 @@ async function refreshToken(integration) {
       }
     }
 
-    // Google/Gmail
-    if ((provider === 'google_sheets' || provider === 'gmail') && process.env.GOOGLE_CLIENT_ID) {
+    // Gmail
+    if (provider === 'gmail' && process.env.GOOGLE_CLIENT_ID) {
       const res = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

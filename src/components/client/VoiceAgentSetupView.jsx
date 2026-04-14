@@ -201,7 +201,7 @@ export const VoiceAgentSetupView = ({ clientId }) => {
           </div>
           <h3 className="text-[18px] font-semibold text-[#1a1a1a]">Activez votre agent vocal</h3>
           <p className="text-[13px] text-[#9ca3af] mt-2 max-w-md mx-auto">
-            En un clic, nous creons un agent vocal IA personnalise pour votre boutique, pret a recevoir les appels clients.
+            En un clic, nous créons un agent vocal IA personnalisé pour votre boutique, prêt à recevoir les appels clients.
           </p>
           <button
             onClick={handleActivate}

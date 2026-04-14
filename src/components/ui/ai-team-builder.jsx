@@ -44,7 +44,7 @@ const AI_AGENTS = [
         color: 'text-amber-400',
         bg: 'bg-amber-500/10',
         border: 'border-amber-500/20',
-        desc: 'Nettoie et segmente votre Hubspot/Klaviyo en temps réel.',
+        desc: 'Nettoie et segmente vos contacts CRM en temps réel.',
         humanSalary: 2000,
         aiCost: 199
     }

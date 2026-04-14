@@ -12,43 +12,43 @@ export const PrivacyPage = ({ onNavigate }) => {
   const sections = [
     {
       title: "1. Responsable du traitement",
-      content: `Le responsable du traitement des donnees personnelles est la societe Actero, dont le siege social est situe en France.\n\nContact : contact@actero.fr`,
+      content: `Le responsable du traitement des données personnelles est la société Actero, dont le siège social est situé en France.\n\nContact : contact@actero.fr`,
     },
     {
-      title: "2. Donnees collectees",
-      content: `Dans le cadre de nos services, nous collectons les donnees suivantes :\n\n- Donnees d'identification : nom, prenom, adresse email, numero de telephone\n- Donnees professionnelles : nom de l'entreprise, site web, secteur d'activite\n- Donnees de connexion : adresse IP, logs de connexion, type de navigateur\n- Donnees de paiement : traitees exclusivement par Stripe, nous ne stockons aucun numero de carte bancaire\n- Donnees d'utilisation : interactions avec le dashboard, metriques de performance`,
+      title: "2. Données collectées",
+      content: `Dans le cadre de nos services, nous collectons les données suivantes :\n\n- Données d'identification : nom, prénom, adresse email, numéro de téléphone\n- Données professionnelles : nom de l'entreprise, site web, secteur d'activité\n- Données de connexion : adresse IP, logs de connexion, type de navigateur\n- Données de paiement : traitées exclusivement par Stripe, nous ne stockons aucun numéro de carte bancaire\n- Données d'utilisation : interactions avec le dashboard, métriques de performance`,
     },
     {
-      title: "3. Finalites du traitement",
-      content: `Vos donnees sont utilisees pour :\n\n- La fourniture et la gestion de nos services d'automatisation IA\n- La creation et la gestion de votre compte client\n- La facturation et le suivi des paiements\n- L'amelioration de nos services et le support technique\n- L'envoi de communications relatives a votre compte (rapports, alertes, mises a jour)\n- Le respect de nos obligations legales et reglementaires`,
+      title: "3. Finalités du traitement",
+      content: `Vos données sont utilisées pour :\n\n- La fourniture et la gestion de nos services d'automatisation IA\n- La création et la gestion de votre compte client\n- La facturation et le suivi des paiements\n- L'amélioration de nos services et le support technique\n- L'envoi de communications relatives à votre compte (rapports, alertes, mises à jour)\n- Le respect de nos obligations légales et réglementaires`,
     },
     {
-      title: "4. Base legale du traitement",
-      content: `Le traitement de vos donnees repose sur :\n\n- L'execution du contrat : traitement necessaire a la fourniture de nos services\n- Le consentement : pour l'envoi de communications marketing (vous pouvez le retirer a tout moment)\n- L'interet legitime : pour l'amelioration de nos services et la securite de notre plateforme\n- L'obligation legale : pour la conservation des donnees de facturation`,
+      title: "4. Base légale du traitement",
+      content: `Le traitement de vos données repose sur :\n\n- L'exécution du contrat : traitement nécessaire à la fourniture de nos services\n- Le consentement : pour l'envoi de communications marketing (vous pouvez le retirer à tout moment)\n- L'intérêt légitime : pour l'amélioration de nos services et la sécurité de notre plateforme\n- L'obligation légale : pour la conservation des données de facturation`,
     },
     {
-      title: "5. Destinataires des donnees",
-      content: `Vos donnees peuvent etre transmises aux sous-traitants suivants, tous conformes au RGPD :\n\n- Supabase (hebergement et base de donnees) — serveurs en Europe\n- Vercel (hebergement du site) — serveurs internationaux avec garanties adequates\n- Stripe (paiements) — certifie PCI DSS niveau 1\n- Resend (envoi d'emails transactionnels)\n- n8n (automatisation des workflows)\n\nNous ne vendons jamais vos donnees a des tiers. Vos donnees ne sont partagees qu'avec les prestataires strictement necessaires a la fourniture du service.`,
+      title: "5. Destinataires des données",
+      content: `Vos données peuvent être transmises aux sous-traitants suivants, tous conformes au RGPD :\n\n- Supabase (hébergement et base de données) — serveurs en Europe\n- Vercel (hébergement du site) — serveurs internationaux avec garanties adéquates\n- Stripe (paiements) — certifié PCI DSS niveau 1\n- Resend (envoi d'emails transactionnels)\n- n8n (automatisation des workflows)\n\nNous ne vendons jamais vos données à des tiers. Vos données ne sont partagées qu'avec les prestataires strictement nécessaires à la fourniture du service.`,
     },
     {
-      title: "6. Duree de conservation",
-      content: `Nous conservons vos donnees pendant les durees suivantes :\n\n- Donnees de compte : pendant toute la duree de la relation contractuelle, puis 3 ans apres la fin du contrat\n- Donnees de facturation : 10 ans (obligation legale)\n- Logs de connexion : 12 mois\n- Donnees de prospection : 3 ans apres le dernier contact`,
+      title: "6. Durée de conservation",
+      content: `Nous conservons vos données pendant les durées suivantes :\n\n- Données de compte : pendant toute la durée de la relation contractuelle, puis 3 ans après la fin du contrat\n- Données de facturation : 10 ans (obligation légale)\n- Logs de connexion : 12 mois\n- Données de prospection : 3 ans après le dernier contact`,
     },
     {
       title: "7. Vos droits",
-      content: `Conformement au RGPD, vous disposez des droits suivants :\n\n- Droit d'acces : obtenir une copie de vos donnees personnelles\n- Droit de rectification : corriger des donnees inexactes ou incompletes\n- Droit a l'effacement : demander la suppression de vos donnees\n- Droit a la limitation : restreindre le traitement de vos donnees\n- Droit a la portabilite : recevoir vos donnees dans un format structure\n- Droit d'opposition : vous opposer au traitement de vos donnees\n\nPour exercer ces droits, contactez-nous a : contact@actero.fr\nNous nous engageons a repondre dans un delai de 30 jours.`,
+      content: `Conformément au RGPD, vous disposez des droits suivants :\n\n- Droit d'accès : obtenir une copie de vos données personnelles\n- Droit de rectification : corriger des données inexactes ou incomplètes\n- Droit à l'effacement : demander la suppression de vos données\n- Droit à la limitation : restreindre le traitement de vos données\n- Droit à la portabilité : recevoir vos données dans un format structuré\n- Droit d'opposition : vous opposer au traitement de vos données\n\nPour exercer ces droits, contactez-nous à : contact@actero.fr\nNous nous engageons à répondre dans un délai de 30 jours.`,
     },
     {
       title: "8. Cookies",
-      content: `Notre site utilise des cookies strictement necessaires au fonctionnement du service (authentification, preferences). Nous utilisons egalement Amplitude pour l'analyse d'audience de maniere anonymisee.\n\nVous pouvez configurer votre navigateur pour refuser les cookies. Cela n'affectera pas l'acces aux fonctionnalites essentielles du site.`,
+      content: `Notre site utilise des cookies strictement nécessaires au fonctionnement du service (authentification, préférences). Nous utilisons également Amplitude pour l'analyse d'audience de manière anonymisée.\n\nVous pouvez configurer votre navigateur pour refuser les cookies. Cela n'affectera pas l'accès aux fonctionnalités essentielles du site.`,
     },
     {
-      title: "9. Securite des donnees",
-      content: `Nous mettons en oeuvre des mesures techniques et organisationnelles appropriees pour proteger vos donnees :\n\n- Chiffrement des donnees en transit (HTTPS/TLS)\n- Authentification securisee via Supabase Auth\n- Controle d'acces strict (Row Level Security)\n- Aucun stockage de donnees bancaires\n- Audits de securite reguliers`,
+      title: "9. Sécurité des données",
+      content: `Nous mettons en oeuvre des mesures techniques et organisationnelles appropriées pour protéger vos données :\n\n- Chiffrement des données en transit (HTTPS/TLS)\n- Authentification sécurisée via Supabase Auth\n- Contrôle d'accès strict (Row Level Security)\n- Aucun stockage de données bancaires\n- Audits de sécurité réguliers`,
     },
     {
       title: "10. Transferts internationaux",
-      content: `Certains de nos sous-traitants sont situes en dehors de l'Union Europeenne. Dans ce cas, nous nous assurons que des garanties appropriees sont en place (clauses contractuelles types de la Commission europeenne, certification adequacy decision).`,
+      content: `Certains de nos sous-traitants sont situés en dehors de l'Union Européenne. Dans ce cas, nous nous assurons que des garanties appropriées sont en place (clauses contractuelles types de la Commission européenne, certification adequacy decision).`,
     },
     {
       title: "11. Modifications",

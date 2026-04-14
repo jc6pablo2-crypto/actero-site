@@ -1,18 +1,24 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, Gift } from "lucide-react";
 import { Logo } from "../components/layout/Logo";
 import { PLANS, PLAN_ORDER } from "../lib/plans";
 import { SEO } from "../components/SEO";
 
 const PLAN_HIGHLIGHTS = {
   free: ["50 tickets/mois", "1 workflow", "1 intégration"],
-  starter: ["1 000 tickets/mois", "3 workflows", "WhatsApp inclus"],
-  pro: ["5 000 tickets/mois", "Workflows illimités", "Agent vocal 200 min"],
+  starter: ["1 000 tickets/mois", "3 workflows", "Éditeur de ton de marque"],
+  pro: ["5 000 tickets/mois", "Workflows illimités", "WhatsApp + Agent vocal 200 min"],
   enterprise: ["Volume illimité", "Multi-boutique", "Account manager dédié"],
 };
 
 export const PlanSelectionPage = ({ onNavigate }) => {
+  // Check if user has referral benefit (cookie or URL)
+  const isReferred = useMemo(() => {
+    if (new URLSearchParams(window.location.search).get("referral_code")) return true;
+    return document.cookie.includes("referral_code=");
+  }, []);
+
   const handleSelect = (planId) => {
     if (planId === "enterprise") {
       window.location.href = "mailto:contact@actero.fr?subject=Actero Enterprise";
@@ -48,8 +54,16 @@ export const PlanSelectionPage = ({ onNavigate }) => {
             Choisissez votre plan
           </h1>
           <p className="text-[#716D5C] text-sm mt-2 max-w-md mx-auto">
-            Commencez gratuitement ou démarrez un essai de 7 jours sur nos plans payants.
+            {isReferred
+              ? "Grâce à votre parrain, bénéficiez de 30 jours gratuits sur n'importe quel plan payant."
+              : "Commencez gratuitement ou démarrez un essai de 7 jours sur nos plans payants."}
           </p>
+          {isReferred && (
+            <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full">
+              <Gift className="w-4 h-4 text-emerald-600" />
+              <span className="text-xs font-semibold text-emerald-700">Votre premier mois est offert</span>
+            </div>
+          )}
         </motion.div>
 
         {/* Plan cards */}
@@ -78,7 +92,7 @@ export const PlanSelectionPage = ({ onNavigate }) => {
                 ctaLabel = "Contacter l\u2019\u00E9quipe";
                 ctaStyle = "bg-[#F9F7F1] text-[#262626] border border-gray-200 hover:bg-gray-100";
               } else {
-                ctaLabel = "Essai gratuit 7 jours";
+                ctaLabel = isReferred ? "30 jours gratuits" : "Essai gratuit 7 jours";
                 ctaStyle = isPopular
                   ? "bg-[#0F5F35] text-white hover:bg-[#003725]"
                   : "bg-[#0F5F35] text-white hover:bg-[#003725]";

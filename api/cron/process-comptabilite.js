@@ -46,7 +46,11 @@ export default async function handler(req, res) {
 
       const delayThreshold = settings?.compta_relance_delai || 7
       const alertThreshold = settings?.compta_alerte_seuil || 1000
-      const channels = settings?.compta_channels || []
+      // compta_channels can be an object {email: true, slack: false} or an array ['email', 'slack']
+      const rawChannels = settings?.compta_channels || []
+      const channels = Array.isArray(rawChannels)
+        ? rawChannels
+        : Object.entries(rawChannels).filter(([, v]) => v).map(([k]) => k)
 
       // Fetch overdue invoices
       const { invoices, provider, error } = await fetchOverdueInvoices(clientId)

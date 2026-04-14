@@ -33,11 +33,6 @@ import { PrivacyPage } from "./pages/PrivacyPage";
 import { SupportGuidePage } from "./pages/SupportGuidePage";
 import { LegalPage } from "./pages/LegalPage";
 import { TermsPage } from "./pages/TermsPage";
-import { MarketplacePage } from "./pages/MarketplacePage";
-import { MarketplaceTemplatePage } from "./pages/MarketplaceTemplatePage";
-import { AcademyPage } from "./pages/AcademyPage";
-import { AcademyCoursePage } from "./pages/AcademyCoursePage";
-import { AcademyModulePage } from "./pages/AcademyModulePage";
 import { ActeroForStartupsPage } from "./pages/ActeroForStartupsPage";
 import { CursorGlow } from "./components/ui/cursor-glow";
 import { CommandPalette } from "./components/ui/command-palette";
@@ -108,19 +103,33 @@ function MainRouter() {
   else if (currentRoute === "/demo") page = <DemoDashboardPage onNavigate={navigate} />;
   else if (currentRoute.startsWith("/demo-prospect")) page = <ProspectDemoPage onNavigate={navigate} />;
   else if (currentRoute === "/ressources") page = <PromptLibraryPage onNavigate={navigate} />;
-  else if (currentRoute === "/marketplace") page = <MarketplacePage onNavigate={navigate} />;
-  else if (currentRoute.startsWith("/marketplace/")) {
-    const slug = currentRoute.replace("/marketplace/", "").split("?")[0];
-    page = <MarketplaceTemplatePage slug={slug} onNavigate={navigate} />;
+  else if (currentRoute === "/marketplace" || currentRoute.startsWith("/marketplace/")) {
+    page = (
+      <div className="min-h-screen bg-[#fafafa] flex items-center justify-center">
+        <div className="text-center max-w-md px-6">
+          <div className="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">🏪</span>
+          </div>
+          <h2 className="text-2xl font-bold text-[#1a1a1a] mb-2">Marketplace</h2>
+          <p className="text-sm text-[#71717a] mb-6">Bientôt disponible — des templates, playbooks et intégrations créés par la communauté Actero.</p>
+          <button onClick={() => navigate("/")} className="text-[#0F5F35] font-semibold text-sm hover:underline">Retour à l'accueil</button>
+        </div>
+      </div>
+    );
   }
-  else if (currentRoute === "/academy") page = <AcademyPage onNavigate={navigate} />;
-  else if (currentRoute.startsWith("/academy/")) {
-    const parts = currentRoute.replace("/academy/", "").split("/").filter(Boolean);
-    if (parts.length === 1) {
-      page = <AcademyCoursePage slug={parts[0]} onNavigate={navigate} />;
-    } else if (parts.length >= 2) {
-      page = <AcademyModulePage courseSlug={parts[0]} moduleSlug={parts[1]} onNavigate={navigate} />;
-    }
+  else if (currentRoute === "/academy" || currentRoute.startsWith("/academy/")) {
+    page = (
+      <div className="min-h-screen bg-[#fafafa] flex items-center justify-center">
+        <div className="text-center max-w-md px-6">
+          <div className="w-16 h-16 rounded-2xl bg-violet-50 flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">🎓</span>
+          </div>
+          <h2 className="text-2xl font-bold text-[#1a1a1a] mb-2">Actero Academy</h2>
+          <p className="text-sm text-[#71717a] mb-6">Bientôt disponible — des cours et tutoriels pour maîtriser l'automatisation IA de votre e-commerce.</p>
+          <button onClick={() => navigate("/")} className="text-[#0F5F35] font-semibold text-sm hover:underline">Retour à l'accueil</button>
+        </div>
+      </div>
+    );
   }
   else if (currentRoute.startsWith("/r/")) {
     const referralCode = currentRoute.replace("/r/", "");
@@ -176,6 +185,13 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error, errorInfo) {
     console.error('[ErrorBoundary] Caught:', error?.message, error?.stack?.split('\n').slice(0, 5).join('\n'))
     console.error('[ErrorBoundary] Component stack:', errorInfo?.componentStack?.split('\n').slice(0, 10).join('\n'))
+    // Report to Sentry in production
+    if (typeof window !== 'undefined' && window.Sentry) {
+      window.Sentry.withScope((scope) => {
+        scope.setExtras({ componentStack: errorInfo?.componentStack })
+        window.Sentry.captureException(error)
+      })
+    }
   }
   render() {
     if (this.state.hasError) {

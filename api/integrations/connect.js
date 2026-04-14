@@ -15,14 +15,6 @@ const PROVIDER_TEST_ENDPOINTS = {
       'Authorization': `Basic ${Buffer.from(`${c.email}/token:${c.api_key}`).toString('base64')}`,
     }),
   },
-  klaviyo: {
-    method: 'GET',
-    url: () => 'https://a.klaviyo.com/api/accounts/',
-    headers: (c) => ({
-      'Authorization': `Klaviyo-API-Key ${c.api_key}`,
-      'revision': '2024-02-15',
-    }),
-  },
   resend: {
     method: 'GET',
     url: () => 'https://api.resend.com/api-keys',
