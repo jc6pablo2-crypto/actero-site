@@ -65,6 +65,8 @@ import { SetupChecklist } from '../components/client/SetupChecklist'
 import { AchievementsToast } from '../components/client/AchievementsView'
 import ProductTour from '../components/client/ProductTour'
 import { IndustryPicker } from '../components/client/IndustryPicker'
+import { CommandPalette } from '../components/CommandPalette'
+import { useCommandPalette } from '../hooks/useCommandPalette'
 import { usePlan } from '../hooks/usePlan'
 import { PlanGate } from '../components/ui/PlanGate'
 import { UpgradeBanner } from '../components/ui/UpgradeBanner'
@@ -168,6 +170,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showTour, setShowTour] = useState(false);
   const queryClient = useQueryClient();
+  const { open: cmdkOpen, close: closeCmdk, isMac } = useCommandPalette();
 
   const getTabFromRoute = (route) => {
     if (route === "/client/activity") return "activity";
@@ -1377,6 +1380,17 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
       {/* Interactive Product Tour (Linear-style spotlight) */}
       <ProductTour isOpen={showTour} onClose={handleCloseTour} />
+
+      {/* Cmd+K command palette */}
+      <CommandPalette
+        open={cmdkOpen}
+        onClose={closeCmdk}
+        mode="client"
+        clientId={currentClient?.id}
+        setActiveTab={setActiveTab}
+        onNavigate={onNavigate}
+        isMac={isMac}
+      />
     </div>
   );
 };

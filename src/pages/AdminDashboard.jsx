@@ -57,7 +57,8 @@ import { supabase } from '../lib/supabase'
 import { AdminClientSettingsModal } from '../components/admin/AdminClientSettingsModal'
 import { Logo } from '../components/layout/Logo'
 import { Sidebar } from '../components/layout/Sidebar'
-import { CommandKModal } from '../components/layout/CommandKModal'
+import { CommandPalette } from '../components/CommandPalette'
+import { useCommandPalette } from '../hooks/useCommandPalette'
 import { AdminKanbanBoard } from '../components/admin/AdminKanbanBoard'
 import { AnimatedCounter } from '../components/ui/animated-counter'
 import { IntelligenceView } from '../components/dashboard/IntelligenceView'
@@ -271,7 +272,6 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCommandKOpen, setIsCommandKOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
   const [callNotesClient, setCallNotesClient] = useState(null);
   const [deploymentState, setDeploymentState] = useState(null); // { deploymentId, clientName }
@@ -330,17 +330,8 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     onNavigate(route);
   };
 
-  // Command-K Listener
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setIsCommandKOpen((prev) => !prev);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  // Command-K hotkey centralise dans useCommandPalette
+  const { open: cmdkOpen, close: closeCmdk, isMac } = useCommandPalette();
 
   // Fetching Data with React Query
   const { data: clients = [], isLoading: clientsLoading } = useQuery({
@@ -590,11 +581,13 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         )}
       </AnimatePresence>
 
-      <CommandKModal 
-        isOpen={isCommandKOpen} 
-        onClose={() => setIsCommandKOpen(false)} 
-        clients={clients} 
-        setActiveTab={setActiveTab} 
+      <CommandPalette
+        open={cmdkOpen}
+        onClose={closeCmdk}
+        mode="admin"
+        setActiveTab={setActiveTab}
+        onNavigate={onNavigate}
+        isMac={isMac}
       />
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
