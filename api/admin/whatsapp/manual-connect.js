@@ -32,8 +32,17 @@ const supabaseAdmin = createClient(
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  const admin = await requireAdmin(req, res, supabaseAdmin)
-  if (!admin) return
+  // Two auth modes:
+  // 1) Bootstrap: x-bootstrap-secret header matches WHATSAPP_BOOTSTRAP_SECRET env
+  // 2) Admin JWT: standard requireAdmin()
+  const bootstrapSecret = process.env.WHATSAPP_BOOTSTRAP_SECRET
+  const providedBootstrap = req.headers['x-bootstrap-secret']
+  const bootstrapOk = bootstrapSecret && providedBootstrap && providedBootstrap === bootstrapSecret
+
+  if (!bootstrapOk) {
+    const admin = await requireAdmin(req, res, supabaseAdmin)
+    if (!admin) return
+  }
 
   const { client_id, access_token, phone_number_id, waba_id } = req.body || {}
   if (!client_id || !access_token || !phone_number_id || !waba_id) {
