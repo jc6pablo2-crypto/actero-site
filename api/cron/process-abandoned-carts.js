@@ -120,7 +120,7 @@ export default async function handler(req, res) {
     .select('*')
     .eq('event_type', 'shopify_abandoned_cart')
     .eq('status', 'pending_delay')
-    .order('created_at', { ascending: true })
+    .order('received_at', { ascending: true })
     .limit(50)
 
   if (fetchError) {
