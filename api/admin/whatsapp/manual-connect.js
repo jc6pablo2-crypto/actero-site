@@ -126,7 +126,7 @@ export default async function handler(req, res) {
           pin_configured: false,
           updated_at: new Date().toISOString(),
         },
-        { onConflict: 'client_id' },
+        { onConflict: 'phone_number_id' },
       )
       .select()
       .single()
