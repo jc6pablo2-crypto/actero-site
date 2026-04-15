@@ -14,10 +14,11 @@ const PLAN_HIGHLIGHTS = {
 };
 
 export const PlanSelectionPage = ({ onNavigate }) => {
-  // Check if user has referral benefit (cookie or URL)
+  // Show "1 month free" only if ?referral_code= is explicitly in the URL.
+  // (Cookie fallback is too unreliable — it can persist from old sessions
+  //  or be set by other flows, falsely showing the promo.)
   const isReferred = useMemo(() => {
-    if (new URLSearchParams(window.location.search).get("referral_code")) return true;
-    return document.cookie.includes("referral_code=");
+    return !!new URLSearchParams(window.location.search).get("referral_code");
   }, []);
 
   const [loading, setLoading] = useState(null);
