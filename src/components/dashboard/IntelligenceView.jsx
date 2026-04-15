@@ -77,7 +77,7 @@ export const ExecutionPlanDrawer = ({
     ],
     risk: [
       { title: "Audit de sécurité", desc: "Identification des failles et vulnérabilités potentielles." },
-      { title: "Mise en place de garde-fous", desc: "Déploiement des règles de mitigation des risques." },
+      { title: "Mise en place de règles & limites", desc: "Déploiement des règles de mitigation des risques." },
       { title: "Alerting", desc: "Configuration des notifications d'anomalies en temps réel." },
     ],
     automation: [

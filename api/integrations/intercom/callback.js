@@ -65,7 +65,7 @@ export default async function handler(req, res) {
       }
     } catch { /* silent */ }
 
-    await supabase.from('client_integrations').upsert({
+    const { error: upsertErr } = await supabase.from('client_integrations').upsert({
       client_id: clientId,
       provider: 'intercom',
       auth_type: 'oauth',
@@ -78,6 +78,11 @@ export default async function handler(req, res) {
       },
       connected_at: new Date().toISOString(),
     }, { onConflict: 'client_id,provider' })
+
+    if (upsertErr) {
+      console.error('[intercom/callback] DB upsert error:', upsertErr.message)
+      return redirectBack({ integration: 'intercom', status: 'error', message: upsertErr.message })
+    }
 
     return redirectBack({ integration: 'intercom', status: 'success' })
   } catch (err) {

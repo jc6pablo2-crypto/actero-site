@@ -6,7 +6,7 @@ const FEATURE_LABELS = {
   voice_agent: 'Agent vocal téléphonique',
   whatsapp_agent: 'Agent WhatsApp',
   brand_editor: 'Éditeur de ton de marque',
-  guardrails: 'Garde-fous & règles métier',
+  guardrails: 'Règles & limites',
   api_webhooks: 'API & webhooks',
   specialized_agents: 'Agents IA spécialisés',
   pdf_report: 'Rapport PDF mensuel',

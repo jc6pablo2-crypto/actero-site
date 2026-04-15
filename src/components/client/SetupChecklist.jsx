@@ -29,21 +29,21 @@ export const SetupChecklist = ({ clientId, setActiveTab, dismissible = true }) =
   const { data: completion } = useQuery({
     queryKey: ['setup-checklist', clientId],
     queryFn: async () => {
-      // 1. Shopify connection
-      const { data: shopify } = await supabase
-        .from('client_shopify_connections')
-        .select('id')
-        .eq('client_id', clientId)
-        .maybeSingle()
+      // 1. E-commerce platform (one of: Shopify, WooCommerce, Webflow)
+      const [shopifyRes, wooWebflowRes] = await Promise.all([
+        supabase.from('client_shopify_connections').select('id').eq('client_id', clientId).maybeSingle(),
+        supabase.from('client_integrations').select('id, provider').eq('client_id', clientId).eq('status', 'active').in('provider', ['woocommerce', 'webflow']),
+      ])
+      const ecommerce = !!shopifyRes.data || ((wooWebflowRes.data || []).length > 0)
 
-      // 2. SMTP/IMAP email connected
-      const { data: smtp } = await supabase
+      // 2. Email service (SMTP personnalisé OR Resend)
+      const { data: emailList } = await supabase
         .from('client_integrations')
-        .select('id')
+        .select('id, provider')
         .eq('client_id', clientId)
-        .eq('provider', 'smtp_imap')
         .eq('status', 'active')
-        .maybeSingle()
+        .in('provider', ['smtp_imap', 'resend'])
+      const email = (emailList || []).length > 0
 
       // 3. Brand tone + 4. ROI hourly_cost
       const { data: settings } = await supabase
@@ -74,8 +74,8 @@ export const SetupChecklist = ({ clientId, setActiveTab, dismissible = true }) =
         .eq('client_id', clientId)
 
       return {
-        shopify: !!shopify,
-        email: !!smtp,
+        shopify: ecommerce, // kept key name for backward compat but now checks 3 platforms
+        email: email,
         tone: !!(settings?.brand_tone && settings.brand_tone.trim().length > 0),
         roi: !!(settings?.hourly_cost && Number(settings.hourly_cost) > 0),
         tested: (runsCount || 0) > 0,
@@ -94,14 +94,14 @@ export const SetupChecklist = ({ clientId, setActiveTab, dismissible = true }) =
   const steps = [
     {
       id: 'shopify',
-      label: 'Connecter Shopify',
+      label: 'Connecter votre boutique (Shopify, WooCommerce ou Webflow)',
       icon: ShoppingBag,
       tab: 'integrations',
       done: completion.shopify,
     },
     {
       id: 'email',
-      label: 'Connecter votre email professionnel',
+      label: 'Connecter votre email (SMTP personnalisé ou Resend)',
       icon: Mail,
       tab: 'integrations',
       done: completion.email,

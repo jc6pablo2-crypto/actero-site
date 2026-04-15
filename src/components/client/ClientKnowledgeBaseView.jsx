@@ -745,21 +745,24 @@ export const ClientKnowledgeBaseView = ({ clientId, clientType, theme = 'dark' }
           {showFileUpload && (
             <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} className="overflow-hidden border-t border-gray-100">
               <div className="p-4 space-y-3">
-                <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center hover:border-[#0F5F35]/30 transition-colors">
+                <label className={`relative block border-2 border-dashed rounded-xl p-6 text-center transition-colors ${
+                  uploading
+                    ? 'border-gray-200 cursor-wait'
+                    : 'border-gray-200 cursor-pointer hover:border-[#0F5F35]/30 hover:bg-gray-50'
+                }`}>
                   <Upload className="w-6 h-6 text-[#71717a] mx-auto mb-2" />
                   <p className="text-sm text-[#1a1a1a] font-medium">
-                    {uploading ? 'Analyse en cours...' : 'Glissez un fichier ou cliquez'}
+                    {uploading ? 'Analyse en cours...' : 'Cliquez pour choisir un fichier'}
                   </p>
-                  <p className="text-[10px] text-[#71717a] mt-1">PDF, TXT, CSV — max 4 Mo</p>
+                  <p className="text-[10px] text-[#71717a] mt-1">TXT, CSV, MD — max 4 Mo</p>
                   <input
                     type="file"
-                    accept=".pdf,.txt,.csv,.md,.doc,.docx"
+                    accept=".txt,.csv,.md"
                     onChange={handleFileUpload}
                     disabled={uploading}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    style={{ position: 'relative' }}
+                    className="sr-only"
                   />
-                </div>
+                </label>
                 {uploading && (
                   <div className="flex items-center justify-center gap-2 py-2">
                     <Loader2 className="w-4 h-4 animate-spin text-violet-600" />

@@ -34,10 +34,43 @@ export const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
           attempts++;
           dLog(`Attempt ${attempts} failed:`, error.message);
           if (attempts >= maxRetries) throw error;
-          await new Promise((r) => setTimeout(r, delayMs * attempts)); 
+          await new Promise((r) => setTimeout(r, delayMs * attempts));
         }
       }
     };
+
+    /**
+     * Wait for Supabase to finish restoring the session from storage.
+     * Without this, getSession() can return null on cold start because the
+     * SDK hasn't finished its async hydration yet, causing spurious redirects
+     * to /login when the user has a valid persisted session.
+     */
+    const waitForSessionRestore = () => new Promise((resolve) => {
+      // Try immediate fetch first
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) return resolve(session);
+
+        // Otherwise listen for the auth state change with a short timeout
+        let resolved = false;
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, sess) => {
+          if (resolved) return;
+          if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+            resolved = true;
+            subscription?.unsubscribe();
+            resolve(sess);
+          }
+        });
+
+        // Safety timeout: if no event after 2s, give up and resolve with null
+        setTimeout(() => {
+          if (!resolved) {
+            resolved = true;
+            subscription?.unsubscribe();
+            resolve(null);
+          }
+        }, 2000);
+      });
+    });
 
     const checkTenant = async () => {
       try {
@@ -46,12 +79,7 @@ export const DashboardGate = ({ onNavigate, onLogout, currentRoute }) => {
           throw new Error("Base de données non configurée.");
         }
 
-        const {
-          data: { session: activeSession },
-          error: authError,
-        } = await supabase.auth.getSession();
-
-        if (authError) throw authError;
+        const activeSession = await waitForSessionRestore();
 
         if (!activeSession) {
           dLog("Session status: Unauthenticated, redirecting to login.");

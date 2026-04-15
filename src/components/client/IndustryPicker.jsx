@@ -134,7 +134,7 @@ export function IndustryPicker({ clientId, onClose, onApplied }) {
             </h2>
             <p className="text-sm text-[#71717a] mt-2 max-w-2xl">
               Choisissez votre secteur pour pre-configurer votre agent en un clic :
-              ton de marque, 15 reponses types, 5 garde-fous et 3 playbooks actifs.
+              ton de marque, 15 reponses types, 5 règles & limites et 3 playbooks actifs.
               Vous pourrez tout modifier ensuite.
             </p>
           </div>
@@ -228,7 +228,7 @@ export function IndustryPicker({ clientId, onClose, onApplied }) {
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-[#0F5F35]" />
-                      {selected.guardrails.length} garde-fous metier
+                      {selected.guardrails.length} règles & limites metier
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-[#0F5F35]" />

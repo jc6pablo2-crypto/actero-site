@@ -1,9 +1,10 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Check, Gift } from "lucide-react";
+import { Check, Gift, Loader2 } from "lucide-react";
 import { Logo } from "../components/layout/Logo";
 import { PLANS, PLAN_ORDER } from "../lib/plans";
 import { SEO } from "../components/SEO";
+import { supabase } from "../lib/supabase";
 
 const PLAN_HIGHLIGHTS = {
   free: ["50 tickets/mois", "1 workflow", "1 intégration"],
@@ -19,14 +20,77 @@ export const PlanSelectionPage = ({ onNavigate }) => {
     return document.cookie.includes("referral_code=");
   }, []);
 
-  const handleSelect = (planId) => {
+  const [loading, setLoading] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleSelect = async (planId) => {
+    if (loading) return;
+    setError(null);
+
     if (planId === "enterprise") {
       window.location.href = "mailto:contact@actero.fr?subject=Actero Enterprise";
       return;
     }
-    // Free, Starter, Pro all go to dashboard for now
-    // Stripe checkout for Starter/Pro will be added later
-    onNavigate("/client/overview");
+
+    if (planId === "free") {
+      // Free plan → go straight to dashboard
+      onNavigate("/client/overview");
+      return;
+    }
+
+    // Starter / Pro → Stripe Checkout
+    setLoading(planId);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setError("Session expirée. Reconnectez-vous.");
+        setLoading(null);
+        return;
+      }
+
+      // Get client id for this user
+      const { data: link } = await supabase
+        .from("client_users")
+        .select("client_id")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+
+      if (!link?.client_id) {
+        setError("Aucun client associé à votre compte.");
+        setLoading(null);
+        return;
+      }
+
+      const res = await fetch("/api/billing/upgrade", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          client_id: link.client_id,
+          target_plan: planId,
+          billing_period: "monthly",
+        }),
+      });
+
+      const data = await res.json();
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url;
+      } else if (data.error === "Stripe not configured") {
+        setError("Paiement indisponible. Contactez le support.");
+        setLoading(null);
+      } else if (data.error) {
+        setError(data.error);
+        setLoading(null);
+      } else {
+        // Fallback: redirect to dashboard
+        onNavigate("/client/overview");
+      }
+    } catch (err) {
+      setError("Erreur réseau. Réessayez.");
+      setLoading(null);
+    }
   };
 
   return (
@@ -134,14 +198,28 @@ export const PlanSelectionPage = ({ onNavigate }) => {
 
                   <button
                     onClick={() => handleSelect(planId)}
-                    className={`w-full py-3 rounded-full text-sm font-semibold transition-colors ${ctaStyle}`}
+                    disabled={loading === planId || !!loading}
+                    className={`w-full py-3 rounded-full text-sm font-semibold transition-colors flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed ${ctaStyle}`}
                   >
-                    {ctaLabel}
+                    {loading === planId ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Redirection…
+                      </>
+                    ) : (
+                      ctaLabel
+                    )}
                   </button>
                 </motion.div>
               );
             })}
           </div>
+
+          {error && (
+            <div className="max-w-xl mx-auto mt-6 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm text-center">
+              {error}
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -26,7 +26,7 @@ const LANGUAGES = [
 const STEPS = [
   { id: 'identity', label: 'Identite', icon: Building, desc: 'Marque & langue' },
   { id: 'tone', label: 'Ton', icon: MessageCircle, desc: 'Personnalite' },
-  { id: 'rules', label: 'Regles', icon: ShieldAlert, desc: 'Garde-fous' },
+  { id: 'rules', label: 'Regles', icon: ShieldAlert, desc: 'Règles & limites' },
   { id: 'knowledge', label: 'Connaissances', icon: BookOpen, desc: 'FAQ & infos' },
   { id: 'preview', label: 'Apercu', icon: Eye, desc: 'Prompt final' },
 ]

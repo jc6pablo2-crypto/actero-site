@@ -691,7 +691,21 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               if (planCounts[p] !== undefined) planCounts[p]++;
               else planCounts.free++;
             });
-            const mrr = Object.entries(planCounts).reduce((s, [p, n]) => s + (PLAN_PRICES[p] || 0) * n, 0);
+
+            // MRR: only count clients with an active Stripe subscription, NOT in trial,
+            // NOT test accounts (@actero.fr), and status=active
+            const now = Date.now();
+            const isTestEmail = (email) => !email || email.endsWith('@actero.fr') || email.includes('+test');
+            const mrrClients = clients.filter(c => {
+              if (!c.plan || c.plan === 'free') return false;
+              if (!c.stripe_subscription_id) return false; // no real subscription
+              if (c.status !== 'active') return false;
+              if (c.trial_ends_at && new Date(c.trial_ends_at).getTime() > now) return false; // in trial
+              if (isTestEmail(c.contact_email)) return false; // test accounts
+              return true;
+            });
+            const mrr = mrrClients.reduce((s, c) => s + (PLAN_PRICES[c.plan] || 0), 0);
+
             const paidCount = planCounts.starter + planCounts.pro + planCounts.enterprise;
             const freeCount = planCounts.free;
             const totalClients = clients.length;

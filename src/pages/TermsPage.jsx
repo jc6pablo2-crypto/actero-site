@@ -61,7 +61,7 @@ Le Client peut inviter des membres de son equipe avec des roles differencies (Ad
               <Section title="5. Description du Service" content={`Actero fournit un service d'automatisation base sur l'intelligence artificielle, comprenant :
 
 - Le deploiement d'agents IA pour le support client e-commerce (Shopify)
-- La configuration personnalisee du ton de marque, des regles metier et des garde-fous
+- La configuration personnalisee du ton de marque, des regles metier et des règles & limites
 - Un dashboard de suivi des performances en temps reel
 - La connexion aux outils tiers via OAuth (Shopify, Slack, Gorgias, Zendesk, Gmail)
 - Un simulateur de conversation pour tester l'agent avant mise en production
@@ -77,7 +77,7 @@ Le Service est fourni "en l'etat". Actero ne garantit pas l'absence d'erreurs ou
 - Ne pas tenter d'acceder aux systemes informatiques d'Actero de maniere non autorisee
 - Ne pas copier, reproduire ou extraire le contenu de la Plateforme
 - Respecter les lois applicables, notamment le RGPD concernant les donnees de ses propres clients
-- Configurer les garde-fous de son agent IA de maniere responsable`} />
+- Configurer les règles & limites de son agent IA de maniere responsable`} />
 
               <Section title="7. Tarification et paiement" content={`Les tarifs du Service sont communiques sur devis apres un audit gratuit.
 
@@ -99,7 +99,7 @@ En cas de resiliation, le Client conserve l'acces a ses donnees pendant 30 jours
 
 Le Client dispose d'un droit d'utilisation personnel, non exclusif et non cessible du Service pendant la duree de son abonnement.
 
-Les donnees saisies par le Client (base de connaissances, regles metier, garde-fous) restent la propriete du Client.`} />
+Les donnees saisies par le Client (base de connaissances, regles metier, règles & limites) restent la propriete du Client.`} />
 
               <Section title="10. Donnees personnelles" content={`Actero traite les donnees personnelles conformement au Reglement General sur la Protection des Donnees (RGPD).
 

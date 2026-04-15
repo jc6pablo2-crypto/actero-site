@@ -101,7 +101,7 @@ function buildFeatures(plan) {
   }
 
   if (features.brand_editor) lines.push("Éditeur ton de marque");
-  if (features.guardrails) lines.push("Garde-fous & règles métier");
+  if (features.guardrails) lines.push("Règles & limites");
   if (features.specialized_agents) lines.push("Agents IA spécialisés");
   if (features.voice_agent && limits.voice_minutes > 0) {
     lines.push(`Agent vocal (${limits.voice_minutes} min incluses)`);
@@ -253,7 +253,7 @@ const comparisonCategories = [
         values: compVal(PLAN_ORDER, (p) => p.features.brand_editor),
       },
       {
-        label: "Garde-fous & règles métier",
+        label: "Règles & limites",
         values: compVal(PLAN_ORDER, (p) => p.features.guardrails),
       },
       {

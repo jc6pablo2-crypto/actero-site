@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     const tokens = await tokenRes.json()
     if (!tokenRes.ok) return redirectBack({ integration: 'notion', status: 'error', message: tokens.error || 'token_exchange' })
 
-    await supabase.from('client_integrations').upsert({
+    const { error: upsertErr } = await supabase.from('client_integrations').upsert({
       client_id: clientId,
       provider: 'notion',
       auth_type: 'oauth',
@@ -65,6 +65,11 @@ export default async function handler(req, res) {
       },
       connected_at: new Date().toISOString(),
     }, { onConflict: 'client_id,provider' })
+
+    if (upsertErr) {
+      console.error('[notion/callback] DB upsert error:', upsertErr.message)
+      return redirectBack({ integration: 'notion', status: 'error', message: upsertErr.message })
+    }
 
     return redirectBack({ integration: 'notion', status: 'success' })
   } catch (err) {

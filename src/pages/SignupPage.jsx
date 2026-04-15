@@ -1,17 +1,24 @@
-import React, { useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import { Mail, Lock, Store, Gift } from "lucide-react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Mail, Lock, Store, Gift, ArrowLeft } from "lucide-react";
 import { Logo } from "../components/layout/Logo";
 import { supabase } from "../lib/supabase";
 import { SEO } from "../components/SEO";
 
 export const SignupPage = ({ onNavigate }) => {
+  const [step, setStep] = useState("form"); // 'form' | 'verify'
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [brandName, setBrandName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  // Verification step
+  const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const [attemptsLeft, setAttemptsLeft] = useState(null);
+  const codeRefs = useRef([]);
 
   // Referral: URL param for display, cookie as silent fallback for API only
   const referralFromUrl = useMemo(() => {
@@ -22,6 +29,12 @@ export const SignupPage = ({ onNavigate }) => {
     const match = document.cookie.match(/(?:^|;\s*)referral_code=([^;]*)/);
     return match ? decodeURIComponent(match[1]) : null;
   }, [referralFromUrl]);
+
+  useEffect(() => {
+    if (step === "verify") {
+      setTimeout(() => codeRefs.current[0]?.focus(), 100);
+    }
+  }, [step]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,48 +49,116 @@ export const SignupPage = ({ onNavigate }) => {
       setError("Le mot de passe doit contenir au moins 8 caractères.");
       return;
     }
+    if (password !== confirmPassword) {
+      setError("Les mots de passe ne correspondent pas.");
+      return;
+    }
     if (!brandName.trim()) {
       setError("Le nom de la boutique est requis.");
       return;
     }
 
     setLoading(true);
-
     try {
-      const res = await fetch("/api/auth/signup", {
+      const res = await fetch("/api/auth/send-verification-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
           password,
           brand_name: brandName.trim(),
-          plan: "free",
           ...(referralCode && { referral_code: referralCode }),
         }),
       });
-
       const data = await res.json();
-
       if (!res.ok) {
         setError(data.error || "Une erreur est survenue.");
         setLoading(false);
         return;
       }
-
-      if (data.message) {
-        setSuccessMessage(data.message);
-      }
-
-      if (data.redirect) {
-        setTimeout(() => {
-          onNavigate(data.redirect);
-        }, data.message ? 2000 : 0);
-      }
+      setStep("verify");
+      setLoading(false);
     } catch {
       setError("Erreur réseau. Veuillez réessayer.");
-    } finally {
       setLoading(false);
     }
+  };
+
+  const handleCodeChange = (i, value) => {
+    const v = value.replace(/\D/g, "").slice(-1);
+    const newCode = [...code];
+    newCode[i] = v;
+    setCode(newCode);
+    setError("");
+    if (v && i < 5) codeRefs.current[i + 1]?.focus();
+  };
+
+  const handleCodePaste = (e) => {
+    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (pasted.length === 6) {
+      e.preventDefault();
+      setCode(pasted.split(""));
+      codeRefs.current[5]?.focus();
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    const fullCode = code.join("");
+    if (fullCode.length !== 6) {
+      setError("Entrez les 6 chiffres.");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/auth/verify-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code: fullCode }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Code invalide.");
+        if (typeof data.attempts_left === "number") setAttemptsLeft(data.attempts_left);
+        setCode(["", "", "", "", "", ""]);
+        codeRefs.current[0]?.focus();
+        setLoading(false);
+        return;
+      }
+      // Auto-login after successful verification
+      try {
+        await supabase.auth.signInWithPassword({ email, password });
+      } catch { /* fallback: user can login manually */ }
+      setSuccessMessage("Compte créé ! Redirection…");
+      setTimeout(() => onNavigate(data.redirect || "/signup/plan"), 1200);
+    } catch {
+      setError("Erreur réseau. Veuillez réessayer.");
+      setLoading(false);
+    }
+  };
+
+  const handleResendCode = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      await fetch("/api/auth/send-verification-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          brand_name: brandName.trim(),
+          ...(referralCode && { referral_code: referralCode }),
+        }),
+      });
+      setSuccessMessage("Nouveau code envoyé !");
+      setCode(["", "", "", "", "", ""]);
+      setAttemptsLeft(null);
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch {
+      setError("Erreur réseau.");
+    }
+    setLoading(false);
   };
 
   const handleGoogleSignup = async () => {
@@ -118,12 +199,87 @@ export const SignupPage = ({ onNavigate }) => {
                 <Logo className="w-7 h-7 text-[#262626]" />
               </div>
               <h1 className="text-[#262626] text-2xl font-bold tracking-tight">
-                Créer votre compte
+                {step === "verify" ? "Vérifiez votre email" : "Créer votre compte"}
               </h1>
-              <p className="text-[#716D5C] text-sm mt-1.5">
-                Gratuit, sans carte bancaire.
+              <p className="text-[#716D5C] text-sm mt-1.5 text-center">
+                {step === "verify" ? (
+                  <>Un code à 6 chiffres a été envoyé à <strong className="text-[#262626]">{email}</strong></>
+                ) : (
+                  "Gratuit, sans carte bancaire."
+                )}
               </p>
             </div>
+
+            {/* Verification step */}
+            {step === "verify" && (
+              <>
+                {/* Alerts */}
+                {error && (
+                  <div className="p-3 mb-4 bg-red-50 text-red-600 text-xs font-medium rounded-xl border border-red-100 text-center">
+                    {error}
+                    {attemptsLeft !== null && attemptsLeft > 0 && ` (${attemptsLeft} essai${attemptsLeft > 1 ? 's' : ''} restant${attemptsLeft > 1 ? 's' : ''})`}
+                  </div>
+                )}
+                {successMessage && (
+                  <div className="p-3 mb-4 bg-emerald-50 text-emerald-600 text-xs font-medium rounded-xl border border-emerald-100 text-center">
+                    {successMessage}
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between gap-2 mb-6" onPaste={handleCodePaste}>
+                  {code.map((digit, i) => (
+                    <input
+                      key={i}
+                      ref={(el) => (codeRefs.current[i] = el)}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleCodeChange(i, e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Backspace" && !digit && i > 0) codeRefs.current[i - 1]?.focus();
+                        if (e.key === "Enter") handleVerifyCode();
+                      }}
+                      disabled={loading}
+                      className="w-12 h-14 text-center text-2xl font-bold bg-[#F9F7F1] border-2 border-gray-200 rounded-xl focus:outline-none focus:border-[#0F5F35] transition-all disabled:opacity-50"
+                    />
+                  ))}
+                </div>
+
+                <button
+                  onClick={handleVerifyCode}
+                  disabled={loading || code.join("").length !== 6}
+                  className="w-full py-3.5 rounded-full text-sm font-bold text-white bg-[#0F5F35] hover:bg-[#003725] transition-colors disabled:opacity-50"
+                >
+                  {loading ? (
+                    <svg className="animate-spin h-5 w-5 text-white mx-auto" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                  ) : "Vérifier le code"}
+                </button>
+
+                <div className="flex items-center justify-between mt-4 text-xs">
+                  <button
+                    onClick={() => { setStep("form"); setCode(["","","","","",""]); setError(""); }}
+                    className="flex items-center gap-1 text-[#716D5C] hover:text-[#262626]"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    Modifier l'email
+                  </button>
+                  <button
+                    onClick={handleResendCode}
+                    disabled={loading}
+                    className="text-[#0F5F35] hover:underline font-semibold disabled:opacity-50"
+                  >
+                    Renvoyer le code
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* Form step */}
+            {step === "form" && <>
 
             {/* Referral banner */}
             {referralFromUrl && (
@@ -170,6 +326,24 @@ export const SignupPage = ({ onNavigate }) => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-11 pr-4 py-3.5 bg-[#F9F7F1] border border-gray-200 rounded-xl text-sm text-[#262626] placeholder:text-[#716D5C]/60 focus:outline-none focus:border-[#0F5F35]/40 transition-all"
                   placeholder="Mot de passe (min. 8 caractères)"
+                />
+              </div>
+
+              {/* Confirm password */}
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#716D5C]" />
+                <input
+                  type="password"
+                  required
+                  minLength={8}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className={`w-full pl-11 pr-4 py-3.5 bg-[#F9F7F1] border rounded-xl text-sm text-[#262626] placeholder:text-[#716D5C]/60 focus:outline-none transition-all ${
+                    confirmPassword && password !== confirmPassword
+                      ? 'border-red-300 focus:border-red-400'
+                      : 'border-gray-200 focus:border-[#0F5F35]/40'
+                  }`}
+                  placeholder="Confirmer le mot de passe"
                 />
               </div>
 
@@ -252,6 +426,7 @@ export const SignupPage = ({ onNavigate }) => {
                 Se connecter
               </button>
             </p>
+            </>}
           </div>
         </motion.div>
       </div>

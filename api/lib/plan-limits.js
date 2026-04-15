@@ -11,8 +11,8 @@ export const PLAN_LIMITS = {
 }
 
 export const PLAN_FEATURES = {
-  free: { brand_editor: false, guardrails: false, simulator: false, voice_agent: false, whatsapp_agent: false, specialized_agents: false, api_webhooks: false },
-  starter: { brand_editor: true, guardrails: false, simulator: false, voice_agent: false, whatsapp_agent: false, specialized_agents: false, api_webhooks: false },
+  free: { brand_editor: false, guardrails: true, simulator: false, voice_agent: false, whatsapp_agent: false, specialized_agents: false, api_webhooks: false },
+  starter: { brand_editor: true, guardrails: true, simulator: true, voice_agent: false, whatsapp_agent: false, specialized_agents: false, api_webhooks: true },
   pro: { brand_editor: true, guardrails: true, simulator: true, voice_agent: true, whatsapp_agent: true, specialized_agents: true, api_webhooks: true },
   enterprise: { brand_editor: true, guardrails: true, simulator: true, voice_agent: true, whatsapp_agent: true, specialized_agents: true, api_webhooks: true },
 }

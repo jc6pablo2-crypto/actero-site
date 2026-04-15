@@ -21,7 +21,7 @@ export const AdminErrorReportsView = () => {
   const [selected, setSelected] = useState(null)
   const [statusFilter, setStatusFilter] = useState('all')
 
-  const { data: reports = [], isLoading } = useQuery({
+  const { data: reports = [], isLoading, refetch, isFetching } = useQuery({
     queryKey: ['admin-error-reports', statusFilter],
     queryFn: async () => {
       const { data: { session } } = await supabase.auth.getSession()
@@ -34,6 +34,7 @@ export const AdminErrorReportsView = () => {
       return data.reports || []
     },
     refetchInterval: 30000, // refresh every 30s
+    staleTime: 0, // always consider data stale so manual refetch works
   })
 
   const updateMutation = useMutation({
@@ -76,10 +77,12 @@ export const AdminErrorReportsView = () => {
           </p>
         </div>
         <button
-          onClick={() => queryClient.invalidateQueries({ queryKey: ['admin-error-reports'] })}
-          className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white text-sm font-medium hover:bg-gray-50"
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className="flex items-center gap-2 px-3 py-2 rounded-xl border border-gray-200 bg-white text-sm font-medium hover:bg-gray-50 disabled:opacity-60 transition-all"
         >
-          <RefreshCw className="w-4 h-4" /> Rafraîchir
+          <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+          {isFetching ? 'Actualisation…' : 'Rafraîchir'}
         </button>
       </div>
 

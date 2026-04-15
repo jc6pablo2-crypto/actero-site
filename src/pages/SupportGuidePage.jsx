@@ -315,7 +315,7 @@ const GUIDES = [
       },
       {
         title: 'Comment l\'IA traite vos tickets Zendesk',
-        content: "Le fonctionnement est le meme qu'avec Gorgias : chaque nouveau ticket est lu et analyse par l'IA. Si elle peut repondre avec confiance, elle le fait. Sinon, elle escalade. L'IA respecte vos regles de garde-fou, votre ton de marque, et utilise votre base de connaissances pour formuler ses reponses. Les tickets traites par l'IA sont tagges automatiquement dans Zendesk pour que vous puissiez les retrouver facilement.",
+        content: "Le fonctionnement est le meme qu'avec Gorgias : chaque nouveau ticket est lu et analyse par l'IA. Si elle peut repondre avec confiance, elle le fait. Sinon, elle escalade. L'IA respecte vos règles & limites, votre ton de marque, et utilise votre base de connaissances pour formuler ses reponses. Les tickets traites par l'IA sont tagges automatiquement dans Zendesk pour que vous puissiez les retrouver facilement.",
       },
     ],
   },
@@ -546,7 +546,7 @@ const GUIDES = [
       },
       {
         title: 'Quand l\'IA escalade',
-        content: "L'IA ne repond pas au hasard. Si elle n'est pas assez sure de sa reponse, si le client est agressif, si la commande depasse un certain montant, ou si un garde-fou est declenche, elle escalade la demande vers vous dans l'onglet A traiter. Vous pouvez alors approuver, modifier ou rejeter la reponse proposee. C'est un filet de securite qui garantit que vos clients recoivent toujours une reponse de qualite.",
+        content: "L'IA ne repond pas au hasard. Si elle n'est pas assez sure de sa reponse, si le client est agressif, si la commande depasse un certain montant, ou si une règle & limite est declenchee, elle escalade la demande vers vous dans l'onglet A traiter. Vous pouvez alors approuver, modifier ou rejeter la reponse proposee. C'est un filet de securite qui garantit que vos clients recoivent toujours une reponse de qualite.",
       },
     ],
   },
@@ -728,7 +728,7 @@ const GUIDES = [
       },
       {
         title: 'Pourquoi l\'agent escalade',
-        content: "Les raisons les plus courantes sont : l'agent n'a pas assez d'informations dans sa base de connaissances pour repondre, le client est agressif ou menacant, un de vos garde-fous s'est declenche (par exemple une demande de remboursement au-dessus d'un certain montant), la confiance de l'IA est trop basse sur sa reponse, ou le message contient un mot-cle sensible que vous avez defini (comme 'avocat' ou 'plainte').",
+        content: "Les raisons les plus courantes sont : l'agent n'a pas assez d'informations dans sa base de connaissances pour repondre, le client est agressif ou menacant, une de vos règles & limites s'est declenchee (par exemple une demande de remboursement au-dessus d'un certain montant), la confiance de l'IA est trop basse sur sa reponse, ou le message contient un mot-cle sensible que vous avez defini (comme 'avocat' ou 'plainte').",
       },
       {
         title: 'Comment traiter une escalade',
@@ -744,13 +744,13 @@ const GUIDES = [
     id: 'definir-regles-agent',
     category: 'agent-ia',
     title: 'Definir vos regles',
-    summary: 'Les garde-fous et seuils d\'escalade pour controler ce que l\'agent peut faire.',
+    summary: 'Les règles & limites et seuils d\'escalade pour controler ce que l\'agent peut faire.',
     icon: Shield,
     readTime: '4 min',
     sections: [
       {
-        title: 'Les garde-fous',
-        content: "Les garde-fous sont des regles que votre agent ne doit JAMAIS enfreindre. Par exemple : ne jamais proposer un remboursement sans votre accord, ne jamais mentionner un concurrent, toujours demander le numero de commande avant de traiter un retour. Vous pouvez definir autant de regles que vous voulez. L'agent les verifie avant chaque reponse.",
+        title: 'Les règles & limites',
+        content: "Les règles & limites sont des regles que votre agent ne doit JAMAIS enfreindre. Par exemple : ne jamais proposer un remboursement sans votre accord, ne jamais mentionner un concurrent, toujours demander le numero de commande avant de traiter un retour. Vous pouvez definir autant de regles que vous voulez. L'agent les verifie avant chaque reponse.",
       },
       {
         title: 'Les seuils d\'escalade',
@@ -762,7 +762,7 @@ const GUIDES = [
       },
       {
         title: 'Trouver le bon equilibre',
-        content: "Si vous mettez trop de regles ou des seuils trop bas, l'agent escalade tout et ne traite plus rien automatiquement. Si vous en mettez trop peu, l'agent risque de mal repondre sur des cas delicats. Le bon equilibre : commencez avec les regles par defaut, surveillez les escalades pendant une semaine, puis ajustez. La plupart des boutiques n'ont besoin que de 3-5 garde-fous bien choisis.",
+        content: "Si vous mettez trop de regles ou des seuils trop bas, l'agent escalade tout et ne traite plus rien automatiquement. Si vous en mettez trop peu, l'agent risque de mal repondre sur des cas delicats. Le bon equilibre : commencez avec les regles par defaut, surveillez les escalades pendant une semaine, puis ajustez. La plupart des boutiques n'ont besoin que de 3-5 règles & limites bien choisies.",
       },
     ],
   },
@@ -867,7 +867,7 @@ const GUIDES = [
       },
       {
         title: 'Quand tester',
-        content: "Testez apres chaque modification importante : ajout de FAQ, changement de ton, nouvelle regle de garde-fou. C'est aussi utile quand vous ajoutez de nouveaux produits a votre catalogue ou quand vous changez votre politique de retour. Les tests vous evitent de decouvrir un probleme avec un vrai client.",
+        content: "Testez apres chaque modification importante : ajout de FAQ, changement de ton, nouvelle règle & limite. C'est aussi utile quand vous ajoutez de nouveaux produits a votre catalogue ou quand vous changez votre politique de retour. Les tests vous evitent de decouvrir un probleme avec un vrai client.",
       },
     ],
   },
@@ -967,7 +967,7 @@ const GUIDES = [
     sections: [
       {
         title: 'Les 4 plans Actero',
-        content: "- Free : 50 tickets/mois, 1 integration, agent generaliste\n- Starter : 99 €/mois, 1 000 tickets, integrations illimitees\n- Pro : 399 €/mois, tickets illimites, WhatsApp, Guardrails avances, API publique, agents specialises\n- Enterprise : sur devis, SLA, SSO, multi-workspace",
+        content: "- Free : 50 tickets/mois, 1 integration, agent generaliste\n- Starter : 99 €/mois, 1 000 tickets, integrations illimitees\n- Pro : 399 €/mois, tickets illimites, WhatsApp, Règles & limites avancees, API publique, agents specialises\n- Enterprise : sur devis, SLA, SSO, multi-workspace",
       },
       {
         title: 'Upgrade en cours de mois',

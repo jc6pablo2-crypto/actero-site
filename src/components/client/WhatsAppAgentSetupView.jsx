@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
+import { WhatsAppAdminPhones } from './WhatsAppAdminPhones'
 
 const API_BASE = ''
 
@@ -370,6 +371,7 @@ export const WhatsAppAgentSetupView = ({ clientId }) => {
         />
       ) : (
         <ConnectedView
+          clientId={clientId}
           waAccount={waAccount}
           customPrompt={customPrompt}
           onChangeCustomPrompt={handleSaveCustomPrompt}
@@ -768,6 +770,7 @@ const Step4TestActivate = ({
 // ============ Connected View ============
 
 const ConnectedView = ({
+  clientId,
   waAccount, customPrompt, onChangeCustomPrompt, greeting, onChangeGreeting,
   testPhone, setTestPhone, onSendTest, sendingTest, testResult,
   onRefresh, refreshing, onDisconnect, disconnecting,
@@ -879,6 +882,9 @@ const ConnectedView = ({
           </button>
         </div>
       </Card>
+
+      {/* Admin commands section */}
+      {clientId && <WhatsAppAdminPhones clientId={clientId} />}
     </>
   )
 }

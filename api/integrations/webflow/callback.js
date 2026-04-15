@@ -22,13 +22,13 @@ export default async function handler(req, res) {
   const siteUrl = process.env.PUBLIC_API_URL || process.env.SITE_URL || 'https://actero.fr'
 
   if (!code || !state) {
-    return res.redirect(302, `${siteUrl}/client/integrations?webflow=error&reason=missing_code`)
+    return res.redirect(302, `${siteUrl}/client/integrations?integration=webflow&status=error&message=missing_code`)
   }
 
   // Parse state = "client_id:token"
   const colonIdx = state.indexOf(':')
   if (colonIdx === -1) {
-    return res.redirect(302, `${siteUrl}/client/integrations?webflow=error&reason=invalid_state`)
+    return res.redirect(302, `${siteUrl}/client/integrations?integration=webflow&status=error&message=invalid_state`)
   }
   const clientId = state.slice(0, colonIdx)
   const token = state.slice(colonIdx + 1)
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
   // Verify auth
   const { data: { user }, error: authErr } = await supabase.auth.getUser(token)
   if (authErr || !user) {
-    return res.redirect(302, `${siteUrl}/client/integrations?webflow=error&reason=auth_failed`)
+    return res.redirect(302, `${siteUrl}/client/integrations?integration=webflow&status=error&message=auth_failed`)
   }
 
   // Verify user has access to client
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
     .eq('client_id', clientId)
     .maybeSingle()
   if (!link) {
-    return res.redirect(302, `${siteUrl}/client/integrations?webflow=error&reason=access_denied`)
+    return res.redirect(302, `${siteUrl}/client/integrations?integration=webflow&status=error&message=access_denied`)
   }
 
   try {
@@ -72,7 +72,7 @@ export default async function handler(req, res) {
 
     if (!tokenRes.ok || !tokenData.access_token) {
       console.error('[webflow/callback] Token exchange failed:', tokenData)
-      return res.redirect(302, `${siteUrl}/client/integrations?webflow=error&reason=token_failed`)
+      return res.redirect(302, `${siteUrl}/client/integrations?integration=webflow&status=error&message=token_failed`)
     }
 
     const accessToken = tokenData.access_token
@@ -107,14 +107,14 @@ export default async function handler(req, res) {
 
     if (upsertErr) {
       console.error('[webflow/callback] Upsert error:', upsertErr.message)
-      return res.redirect(302, `${siteUrl}/client/integrations?webflow=error&reason=save_failed`)
+      return res.redirect(302, `${siteUrl}/client/integrations?integration=webflow&status=error&message=save_failed`)
     }
 
     console.log(`[webflow/callback] Webflow connected for client ${clientId} (site: ${siteName})`)
 
-    return res.redirect(302, `${siteUrl}/client/integrations?webflow=success`)
+    return res.redirect(302, `${siteUrl}/client/integrations?integration=webflow&status=success`)
   } catch (err) {
     console.error('[webflow/callback] Error:', err.message)
-    return res.redirect(302, `${siteUrl}/client/integrations?webflow=error&reason=internal`)
+    return res.redirect(302, `${siteUrl}/client/integrations?integration=webflow&status=error&message=internal`)
   }
 }

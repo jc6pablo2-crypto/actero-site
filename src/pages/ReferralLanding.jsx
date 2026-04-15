@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Gift, ArrowRight, CheckCircle2, Shield, Zap, Clock, Star } from 'lucide-react'
+import { Gift, ArrowRight, CheckCircle2, Shield, Zap, Clock, Star, Check, Crown } from 'lucide-react'
 import { Logo } from '../components/layout/Logo'
+import { PLANS, PLAN_ORDER } from '../lib/plans'
 
 export const ReferralLanding = ({ code, onNavigate }) => {
   const [referrerName, setReferrerName] = useState(null)
@@ -194,6 +195,112 @@ export const ReferralLanding = ({ code, onNavigate }) => {
               </motion.div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Pricing */}
+      <div className="py-20 px-6 border-t border-gray-100 bg-[#F9F7F1]">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-center mb-10"
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-[11px] font-bold uppercase tracking-widest mb-4">
+              <Gift className="w-3 h-3" />
+              1er mois offert sur n'importe quel plan
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">
+              Nos plans
+            </h2>
+            <p className="text-[#716D5C] max-w-xl mx-auto">
+              Choisissez le plan qui correspond à votre boutique. Grâce à votre parrain, le premier mois est offert.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {['free', 'starter', 'pro'].map((planId, i) => {
+              const plan = PLANS[planId]
+              const isPopular = plan.popular
+              const features = {
+                free: ['50 tickets / mois', '1 workflow actif', 'Intégration Shopify', 'Règles & limites'],
+                starter: ['1 000 tickets / mois', '3 workflows actifs', 'Éditeur de marque', 'API + webhooks', 'Simulateur'],
+                pro: ['5 000 tickets / mois', 'Workflows illimités', 'Agent vocal (200 min)', 'WhatsApp Business', 'Agents spécialisés'],
+              }[planId]
+
+              return (
+                <motion.div
+                  key={planId}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className={`relative rounded-2xl p-6 border ${
+                    isPopular
+                      ? 'border-[#0F5F35] bg-white shadow-lg ring-2 ring-[#0F5F35]/10'
+                      : 'border-gray-200 bg-white'
+                  }`}
+                >
+                  {isPopular && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#0F5F35] text-white text-[10px] font-bold uppercase tracking-wider">
+                      Populaire
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-2 mb-1">
+                    {isPopular && <Crown className="w-4 h-4 text-amber-500" />}
+                    <h3 className="text-lg font-bold text-[#262626]">{plan.name}</h3>
+                  </div>
+                  <p className="text-xs text-[#716D5C] mb-4">{plan.tagline}</p>
+
+                  <div className="mb-5">
+                    {plan.price.monthly === 0 ? (
+                      <>
+                        <span className="text-3xl font-bold text-[#262626]">Gratuit</span>
+                        <span className="text-xs text-[#716D5C] ml-1">à vie</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-3xl font-bold text-[#262626]">{plan.price.monthly}€</span>
+                        <span className="text-xs text-[#716D5C] ml-1">/ mois</span>
+                      </>
+                    )}
+                    {planId !== 'free' && (
+                      <p className="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+                        <Gift className="w-3 h-3" />
+                        1er mois offert grâce au parrainage
+                      </p>
+                    )}
+                  </div>
+
+                  <ul className="space-y-2 mb-6">
+                    {features.map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-xs text-[#262626]">
+                        <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button
+                    onClick={handleCTA}
+                    className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                      isPopular
+                        ? 'bg-[#0F5F35] text-white hover:bg-[#003725]'
+                        : 'bg-[#F9F7F1] text-[#262626] hover:bg-gray-100 border border-gray-200'
+                    }`}
+                  >
+                    {planId === 'free' ? 'Commencer gratuitement' : 'Essayer 30 jours gratuits'}
+                  </button>
+                </motion.div>
+              )
+            })}
+          </div>
+
+          <p className="text-center text-[11px] text-[#716D5C] mt-6">
+            Besoin de plus ? <span className="font-semibold">Plan Enterprise sur devis</span> — contactez contact@actero.fr
+          </p>
         </div>
       </div>
 

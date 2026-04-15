@@ -63,17 +63,22 @@ export default async function handler(req, res) {
     } catch { /* silent */ }
 
     // Upsert integration
-    await supabase.from('client_integrations').upsert({
+    const { error: upsertErr } = await supabase.from('client_integrations').upsert({
       client_id: clientId,
       provider: 'google_docs',
       auth_type: 'oauth',
       status: 'active',
       access_token: tokens.access_token,
       refresh_token: tokens.refresh_token || null,
-      token_expires_at: tokens.expires_in ? new Date(Date.now() + tokens.expires_in * 1000).toISOString() : null,
+      expires_at: tokens.expires_in ? new Date(Date.now() + tokens.expires_in * 1000).toISOString() : null,
       extra_config: { email, scopes: tokens.scope },
       connected_at: new Date().toISOString(),
     }, { onConflict: 'client_id,provider' })
+
+    if (upsertErr) {
+      console.error('[google-docs/callback] DB upsert error:', upsertErr.message)
+      return redirectBack({ integration: 'google_docs', status: 'error', message: upsertErr.message })
+    }
 
     return redirectBack({ integration: 'google_docs', status: 'success' })
   } catch (err) {

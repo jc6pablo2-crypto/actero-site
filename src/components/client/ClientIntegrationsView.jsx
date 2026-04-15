@@ -373,18 +373,43 @@ export const ClientIntegrationsView = ({ clientId, clientType, theme }) => {
   const [oauthPromptValue, setOauthPromptValue] = useState('');
 
   // Handle OAuth callback messages
+  // Supports two formats:
+  //   1. Legacy: ?success=notion or ?error=...
+  //   2. New: ?integration=notion&status=success OR ?integration=notion&status=error&message=...
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+
+    // New format (from /api/integrations/*/callback)
+    const integration = params.get('integration');
+    const status = params.get('status');
+    const message = params.get('message');
+    if (integration && status) {
+      const providerLabel = getIntegrationById(integration)?.name || integration;
+      if (status === 'success') {
+        setOauthMessage({ type: 'success', text: `${providerLabel} connecté avec succès !` });
+        queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
+      } else {
+        setOauthMessage({
+          type: 'error',
+          text: `Erreur ${providerLabel} : ${(message || 'connexion échouée').replace(/_/g, ' ')}`,
+        });
+      }
+      window.history.replaceState({}, '', window.location.pathname);
+      return;
+    }
+
+    // Legacy format
     const success = params.get('success');
     const error = params.get('error');
     if (success) {
       setOauthMessage({ type: 'success', text: `${success.charAt(0).toUpperCase() + success.slice(1)} connecté avec succès !` });
+      queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
       window.history.replaceState({}, '', window.location.pathname);
     } else if (error) {
       setOauthMessage({ type: 'error', text: `Erreur de connexion : ${error.replace(/_/g, ' ')}` });
       window.history.replaceState({}, '', window.location.pathname);
     }
-  }, []);
+  }, [queryClient]);
 
   const handleTestConnection = async (integrationId) => {
     try {

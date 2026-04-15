@@ -93,7 +93,7 @@ export const GuardrailsEditor = ({ clientId, theme }) => {
       <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200">
         <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
         <p className="text-sm text-amber-800">
-          Ces regles sont des garde-fous. L'agent IA les verifie <strong>avant chaque reponse</strong>.
+          Ces regles sont des règles & limites. L'agent IA les verifie <strong>avant chaque reponse</strong>.
           Definissez ce que l'agent ne doit <strong>jamais</strong> faire.
         </p>
       </div>

@@ -4,17 +4,17 @@ export default async function handler(req, res) {
   const { code, state, error: oauthError } = req.query;
 
   if (oauthError) {
-    return res.redirect(302, '/client/integrations?error=gmail_denied');
+    return res.redirect(302, '/client/integrations?integration=gmail&status=error&message=denied');
   }
 
   if (!code || !state) {
-    return res.redirect(302, '/client/integrations?error=gmail_missing_params');
+    return res.redirect(302, '/client/integrations?integration=gmail&status=error&message=missing_params');
   }
 
   const parts = state.split(':');
   const userToken = parts.slice(1).join(':');
   if (!userToken) {
-    return res.redirect(302, '/client/integrations?error=gmail_invalid_state');
+    return res.redirect(302, '/client/integrations?integration=gmail&status=error&message=invalid_state');
   }
 
   const supabase = createClient(
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 
   const { data: { user }, error: authError } = await supabase.auth.getUser(userToken);
   if (authError || !user) {
-    return res.redirect(302, '/client/integrations?error=gmail_auth_failed');
+    return res.redirect(302, '/client/integrations?integration=gmail&status=error&message=auth_failed');
   }
 
   try {
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
 
     const tokenData = await tokenRes.json();
     if (tokenData.error) {
-      return res.redirect(302, '/client/integrations?error=gmail_token_failed');
+      return res.redirect(302, '/client/integrations?integration=gmail&status=error&message=token_failed');
     }
 
     // Get user email
@@ -72,7 +72,7 @@ export default async function handler(req, res) {
 
     const clientId = clientUser?.client_id || ownedClient?.id;
     if (!clientId) {
-      return res.redirect(302, '/client/integrations?error=gmail_no_client');
+      return res.redirect(302, '/client/integrations?integration=gmail&status=error&message=no_client');
     }
 
     const { error: dbError } = await supabase
@@ -98,11 +98,11 @@ export default async function handler(req, res) {
       }, { onConflict: 'client_id,provider' });
 
     if (dbError) {
-      return res.redirect(302, '/client/integrations?error=gmail_db_error');
+      return res.redirect(302, '/client/integrations?integration=gmail&status=error&message=db_error');
     }
 
-    return res.redirect(302, '/client/integrations?success=gmail');
+    return res.redirect(302, '/client/integrations?integration=gmail&status=success');
   } catch (err) {
-    return res.redirect(302, '/client/integrations?error=gmail_exception');
+    return res.redirect(302, '/client/integrations?integration=gmail&status=error&message=exception');
   }
 }

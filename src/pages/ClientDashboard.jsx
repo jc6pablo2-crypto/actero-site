@@ -41,8 +41,8 @@ import { ActivityView, useLiveActivityFeed, formatEvent, formatRelativeTime } fr
 import { ClientProfileView } from '../components/client/ClientProfileView'
 import { ClientCopilotBubble } from '../components/client/ClientCopilotBubble'
 import { ReportErrorButton } from '../components/client/ReportErrorButton'
-import { OnboardingWizard } from '../components/client/OnboardingWizard'
-import { OnboardingConcierge } from '../components/client/OnboardingConcierge'
+import { VoiceAgentSetupView } from '../components/client/VoiceAgentSetupView'
+import { VoiceCallsView } from '../components/client/VoiceCallsView'
 import { ClientReferralView } from '../components/client/ClientReferralView'
 import { PartnerDashboardView } from '../components/client/PartnerDashboardView'
 import { ClientKnowledgeBaseView } from '../components/client/ClientKnowledgeBaseView'
@@ -652,16 +652,16 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         { id: 'agent-config', label: 'Configuration', icon: Bot },
         { id: 'playbooks', label: 'Scenarios', icon: Zap },
         { id: 'knowledge', label: 'Base de connaissances', icon: BookOpen },
-        { id: 'guardrails', label: 'Garde-fous', icon: Shield, ...(can('guardrails') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' }) },
-        { id: 'simulator', label: 'Simulateur', icon: MessageSquare, ...(can('simulator') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' }) },
+        { id: 'guardrails', label: 'Règles & limites', icon: Shield },
+        { id: 'simulator', label: 'Simulateur', icon: MessageSquare, ...(can('simulator') ? {} : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-600 border border-blue-200' }) },
         { id: 'whatsapp-agent', label: 'WhatsApp', icon: MessageCircle, ...(can('whatsapp_agent') ? { badge: 'Nouveau', badgeColor: 'bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/30' } : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' }) },
       ],
     },
 
     { type: 'section', label: 'Connexions' },
     { id: 'integrations', label: 'Intégrations', icon: Plug },
-    { id: 'api-docs', label: 'API', icon: Code, ...(can('api_webhooks') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' }) },
-    { id: 'voice-agent', label: 'Agent vocal', icon: Phone, badge: 'Bientôt', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' },
+    { id: 'api-docs', label: 'API', icon: Code, ...(can('api_webhooks') ? {} : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-600 border border-blue-200' }) },
+    { id: 'voice-agent', label: 'Agent vocal', icon: Phone, ...(can('voice_agent') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' }) },
 
     {
       type: 'expandable',
@@ -672,7 +672,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         { id: 'weekly-summary', label: 'Performance', icon: BarChart3 },
         { id: 'roi', label: 'ROI', icon: TrendingUp },
         { id: 'peak-hours', label: 'Heures de pic', icon: Clock },
-        { id: 'voice-calls', label: 'Appels vocaux', icon: PhoneCall, badge: 'Bientôt', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' },
+        { id: 'voice-calls', label: 'Appels vocaux', icon: PhoneCall, ...(can('voice_agent') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' }) },
       ],
     },
 
@@ -832,7 +832,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "agent-config" && "Configuration"}
             {activeTab === "simulator" && "Tester"}
             {activeTab === "team" && "Équipe"}
-            {activeTab === "guardrails" && "Garde-fous"}
+            {activeTab === "guardrails" && "Règles & limites"}
             {activeTab === "escalations" && "À traiter"}
             {activeTab === "response-templates" && "Modèles de réponse"}
             {activeTab === "voice-calls" && "Appels vocaux"}
@@ -1332,29 +1332,15 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
 
           {activeTab === "voice-calls" && (
-            <div className="max-w-2xl mx-auto text-center py-20">
-              <div className="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center mx-auto mb-4">
-                <PhoneCall className="w-8 h-8 text-amber-500" />
-              </div>
-              <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Appels vocaux</h3>
-              <p className="text-sm text-[#71717a] mb-1">Bientôt disponible</p>
-              <p className="text-xs text-[#9ca3af] max-w-md mx-auto">
-                Visualisez l'historique, les transcriptions et les métriques de vos appels traités par l'agent vocal IA.
-              </p>
-            </div>
+            <PlanGate feature="voice_agent" planId={planId} inTrial={inTrial} onUpgrade={() => setActiveTab('billing')}>
+              <VoiceCallsView clientId={currentClient?.id} theme={theme} />
+            </PlanGate>
           )}
 
           {activeTab === "voice-agent" && (
-            <div className="max-w-2xl mx-auto text-center py-20">
-              <div className="w-16 h-16 rounded-2xl bg-violet-50 flex items-center justify-center mx-auto mb-4">
-                <Phone className="w-8 h-8 text-violet-500" />
-              </div>
-              <h3 className="text-xl font-bold text-[#1a1a1a] mb-2">Agent vocal IA</h3>
-              <p className="text-sm text-[#71717a] mb-1">Bientôt disponible</p>
-              <p className="text-xs text-[#9ca3af] max-w-md mx-auto">
-                Un agent vocal intelligent qui répond aux appels de vos clients 24h/24, avec transcription et escalade automatique.
-              </p>
-            </div>
+            <PlanGate feature="voice_agent" planId={planId} inTrial={inTrial} onUpgrade={() => setActiveTab('billing')}>
+              <VoiceAgentSetupView clientId={currentClient?.id} />
+            </PlanGate>
           )}
 
           {activeTab === "whatsapp-agent" && (
@@ -1409,10 +1395,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       {/* Copilot Chat Bubble */}
       {currentClient?.id && <ClientCopilotBubble clientId={currentClient.id} theme={theme} />}
       {currentClient?.id && <ReportErrorButton />}
-      {currentClient?.id && <OnboardingWizard clientId={currentClient.id} client={currentClient} setActiveTab={setActiveTab} />}
-
-      {/* Onboarding Concierge — auto-hides once the 7 setup steps are done */}
-      {currentClient?.id && <OnboardingConcierge clientId={currentClient.id} setActiveTab={setActiveTab} />}
 
       {/* Achievements celebration toast */}
       {currentClient?.id && <AchievementsToast clientId={currentClient.id} />}

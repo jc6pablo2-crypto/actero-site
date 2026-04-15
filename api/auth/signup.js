@@ -161,7 +161,21 @@ export default async function handler(req, res) {
       }
     }
 
-    // 6. Redirect to dashboard
+    // 6. Send welcome email (non-blocking)
+    try {
+      const { sendWelcomeEmail } = await import('../lib/welcome-email.js');
+      sendWelcomeEmail({
+        email,
+        brand_name: brand_name.trim(),
+        has_referral: referralApplied,
+      }).then((r) => {
+        if (r.sent) console.log(`[SIGNUP] Welcome email sent to ${email}`);
+      });
+    } catch (welcomeErr) {
+      console.error('[SIGNUP] Welcome email error:', welcomeErr.message);
+    }
+
+    // 7. Redirect to dashboard
     return res.status(200).json({
       success: true,
       referral_applied: referralApplied,

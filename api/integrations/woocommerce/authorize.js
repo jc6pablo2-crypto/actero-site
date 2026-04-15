@@ -51,7 +51,7 @@ export default async function handler(req, res) {
   // Docs: https://woocommerce.github.io/woocommerce-rest-api-docs/#authentication
   const siteUrl = process.env.PUBLIC_API_URL || process.env.SITE_URL || 'https://actero.fr'
   const callbackUrl = `${siteUrl}/api/integrations/woocommerce/callback`
-  const returnUrl = `${siteUrl}/client/integrations?woo=success`
+  const returnUrl = `${siteUrl}/client/integrations?integration=woocommerce&status=success`
 
   const params = new URLSearchParams({
     app_name: 'Actero',

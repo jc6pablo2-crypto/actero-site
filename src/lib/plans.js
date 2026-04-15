@@ -25,7 +25,7 @@ export const PLANS = {
     },
     features: {
       brand_editor: false,
-      guardrails: false,
+      guardrails: true, // Règles & limites — dès Free
       simulator: false,
       voice_agent: false,
       whatsapp_agent: false,
@@ -64,12 +64,12 @@ export const PLANS = {
     },
     features: {
       brand_editor: true,
-      guardrails: false,
-      simulator: false,
+      guardrails: true, // Règles & limites — dès Free
+      simulator: true, // Simulateur — dès Starter
       voice_agent: false,
       whatsapp_agent: false,
       specialized_agents: false,
-      api_webhooks: false,
+      api_webhooks: true, // API — dès Starter
       pdf_report: false,
       multi_shop: false,
       white_label: false,

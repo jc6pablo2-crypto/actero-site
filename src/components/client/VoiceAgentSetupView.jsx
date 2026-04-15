@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Phone, Mic, Copy, Check, ExternalLink, Loader2,
   Sparkles, Power, PlayCircle, Smartphone, Building2, Trash2,
+  Server, Shield, AlertCircle,
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
@@ -41,9 +42,18 @@ export const VoiceAgentSetupView = ({ clientId }) => {
   const [savingVoice, setSavingVoice] = useState(false)
   const [greeting, setGreeting] = useState('')
   const [greetingSaving, setGreetingSaving] = useState(false)
-  const [phoneType, setPhoneType] = useState('mobile')
-  const [provisioning, setProvisioning] = useState(false)
   const [releasing, setReleasing] = useState(false)
+
+  // SIP trunk form
+  const [sipForm, setSipForm] = useState({
+    phone_number: '',
+    sip_server: '',
+    sip_username: '',
+    sip_password: '',
+    transport: 'UDP',
+  })
+  const [attaching, setAttaching] = useState(false)
+  const [attachError, setAttachError] = useState(null)
   const greetingTimer = useRef(null)
   const didInitGreeting = useRef(false)
 
@@ -52,7 +62,7 @@ export const VoiceAgentSetupView = ({ clientId }) => {
     queryFn: async () => {
       const { data } = await supabase
         .from('client_settings')
-        .select('voice_agent_enabled, elevenlabs_agent_id, elevenlabs_voice_id, voice_phone_number, voice_greeting, voice_phone_provider, voice_phone_country, voice_phone_type, voice_phone_provisioned_at')
+        .select('voice_agent_enabled, elevenlabs_agent_id, elevenlabs_voice_id, voice_phone_number, voice_greeting, voice_phone_provider, voice_phone_country, voice_phone_type, voice_phone_provisioned_at, voice_sip_phone_number, voice_sip_server, voice_sip_username, voice_sip_transport, voice_sip_attached_at')
         .eq('client_id', clientId)
         .maybeSingle()
       return data || {}
@@ -143,32 +153,33 @@ export const VoiceAgentSetupView = ({ clientId }) => {
     setTimeout(() => setCopied(false), 1500)
   }
 
-  const handleProvision = async () => {
-    setProvisioning(true)
+  const handleAttachSip = async () => {
+    setAttaching(true)
+    setAttachError(null)
     try {
-      const r = await apiCall('/api/voice/provision-twilio-number', {
+      await apiCall('/api/voice/attach-sip-trunk', {
         client_id: clientId,
-        country: 'FR',
-        type: phoneType,
+        ...sipForm,
       })
-      toast.success(`Numero attribue : ${r.phone_number}`)
+      toast.success('SIP trunk connecté avec succès')
+      setSipForm({ phone_number: '', sip_server: '', sip_username: '', sip_password: '', transport: 'UDP' })
       refresh()
     } catch (e) {
-      toast.error(e.message || 'Impossible d\'obtenir un numero')
+      setAttachError(e.message || 'Impossible de connecter le SIP trunk')
     } finally {
-      setProvisioning(false)
+      setAttaching(false)
     }
   }
 
   const handleRelease = async () => {
-    if (!window.confirm('Liberer ce numero ? Vos clients ne pourront plus appeler.')) return
+    if (!window.confirm('Déconnecter votre SIP trunk ? Les appels entrants ne seront plus routés vers l\'agent IA.')) return
     setReleasing(true)
     try {
-      await apiCall('/api/voice/release-twilio-number', { client_id: clientId })
-      toast.success('Numero libere')
+      await apiCall('/api/voice/detach-sip-trunk', { client_id: clientId })
+      toast.success('SIP trunk déconnecté')
       refresh()
     } catch (e) {
-      toast.error(e.message || 'Echec de la liberation')
+      toast.error(e.message || 'Échec de la déconnexion')
     } finally {
       setReleasing(false)
     }
@@ -273,59 +284,110 @@ export const VoiceAgentSetupView = ({ clientId }) => {
             ) : (
               <div className="space-y-4">
                 <div>
-                  <p className="text-[14px] font-medium text-[#1a1a1a]">Aucun numero attribue</p>
+                  <p className="text-[14px] font-medium text-[#1a1a1a]">Connectez votre numéro existant (SIP)</p>
                   <p className="text-[12px] text-[#9ca3af] mt-1">
-                    Obtenez votre numero francais en 30 secondes — inclus dans votre abonnement.
+                    Utilisez votre standard actuel (OVH, Bouygues Pro, Orange Pro, 3CX…) — aucun nouveau numéro à acheter.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setPhoneType('mobile')}
-                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-[12px] font-semibold transition-colors ${
-                      phoneType === 'mobile'
-                        ? 'border-[#0F5F35] bg-[#0F5F35]/5 text-[#0F5F35]'
-                        : 'border-[#f0f0f0] bg-[#fafafa] text-[#71717a] hover:bg-white'
-                    }`}
-                  >
-                    <Smartphone className="w-4 h-4" />
-                    Mobile (06 / 07)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPhoneType('local')}
-                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl border text-[12px] font-semibold transition-colors ${
-                      phoneType === 'local'
-                        ? 'border-[#0F5F35] bg-[#0F5F35]/5 text-[#0F5F35]'
-                        : 'border-[#f0f0f0] bg-[#fafafa] text-[#71717a] hover:bg-white'
-                    }`}
-                  >
-                    <Building2 className="w-4 h-4" />
-                    Fixe (01 a 05)
-                  </button>
+                <div className="grid grid-cols-1 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#71717a] uppercase tracking-wider mb-1.5">Numéro de téléphone</label>
+                    <input
+                      type="tel"
+                      value={sipForm.phone_number}
+                      onChange={(e) => setSipForm({ ...sipForm, phone_number: e.target.value })}
+                      placeholder="+33 1 23 45 67 89"
+                      className="w-full px-3 py-2.5 rounded-xl border border-[#f0f0f0] bg-[#fafafa] text-[13px] text-[#1a1a1a] font-mono focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]/30"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#71717a] uppercase tracking-wider mb-1.5">Serveur SIP</label>
+                    <input
+                      type="text"
+                      value={sipForm.sip_server}
+                      onChange={(e) => setSipForm({ ...sipForm, sip_server: e.target.value })}
+                      placeholder="sip.votre-operateur.com"
+                      className="w-full px-3 py-2.5 rounded-xl border border-[#f0f0f0] bg-[#fafafa] text-[13px] text-[#1a1a1a] font-mono focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]/30"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[#71717a] uppercase tracking-wider mb-1.5">Identifiant SIP</label>
+                      <input
+                        type="text"
+                        value={sipForm.sip_username}
+                        onChange={(e) => setSipForm({ ...sipForm, sip_username: e.target.value })}
+                        placeholder="username"
+                        className="w-full px-3 py-2.5 rounded-xl border border-[#f0f0f0] bg-[#fafafa] text-[13px] text-[#1a1a1a] font-mono focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]/30"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold text-[#71717a] uppercase tracking-wider mb-1.5">Mot de passe</label>
+                      <input
+                        type="password"
+                        value={sipForm.sip_password}
+                        onChange={(e) => setSipForm({ ...sipForm, sip_password: e.target.value })}
+                        placeholder="••••••••"
+                        className="w-full px-3 py-2.5 rounded-xl border border-[#f0f0f0] bg-[#fafafa] text-[13px] text-[#1a1a1a] font-mono focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]/30"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[#71717a] uppercase tracking-wider mb-1.5">Transport</label>
+                    <div className="flex gap-2">
+                      {['UDP', 'TCP', 'TLS'].map((t) => (
+                        <button
+                          key={t}
+                          type="button"
+                          onClick={() => setSipForm({ ...sipForm, transport: t })}
+                          className={`flex-1 px-3 py-2 rounded-lg border text-[12px] font-semibold transition-colors ${
+                            sipForm.transport === t
+                              ? 'border-[#0F5F35] bg-[#0F5F35]/5 text-[#0F5F35]'
+                              : 'border-[#f0f0f0] bg-[#fafafa] text-[#71717a] hover:bg-white'
+                          }`}
+                        >
+                          {t}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
+                {attachError && (
+                  <div className="flex items-start gap-2 p-3 rounded-xl bg-red-50 border border-red-200">
+                    <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-[12px] text-red-700">{attachError}</p>
+                  </div>
+                )}
+
                 <button
-                  onClick={handleProvision}
-                  disabled={provisioning}
+                  onClick={handleAttachSip}
+                  disabled={attaching || !sipForm.phone_number || !sipForm.sip_server || !sipForm.sip_username || !sipForm.sip_password}
                   className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#0F5F35] hover:bg-[#0c4e2b] disabled:opacity-60 text-white text-[13px] font-semibold transition-colors"
                 >
-                  {provisioning ? (
+                  {attaching ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Provisioning en cours, ~30s...
+                      Connexion en cours…
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4" />
-                      Obtenir mon numero automatiquement
+                      <Server className="w-4 h-4" />
+                      Connecter mon SIP trunk
                     </>
                   )}
                 </button>
-                <p className="text-[11px] text-[#9ca3af] text-center">
-                  Numero francais Twilio attribue automatiquement, integre a ElevenLabs et lie a votre agent en 1 clic.
-                </p>
+
+                <div className="flex items-start gap-2 p-3 rounded-xl bg-blue-50 border border-blue-100">
+                  <Shield className="w-3.5 h-3.5 text-blue-500 flex-shrink-0 mt-0.5" />
+                  <div className="text-[11px] text-blue-700 leading-relaxed">
+                    Vos identifiants SIP sont chiffrés (AES-256) avant stockage. ElevenLabs établit la connexion de manière sécurisée.
+                  </div>
+                </div>
               </div>
             )}
           </Card>

@@ -285,6 +285,49 @@ async function handleInboundMessage({ clientId, account, integration, value, mes
 
   const normalized = normalizeWhatsAppMessage({ value, message, contact })
 
+  // Check if this is an admin command (starts with /)
+  try {
+    const { tryHandleAdminCommand } = await import('../whatsapp-admin-commands.js')
+    const adminResponse = await tryHandleAdminCommand(supabase, {
+      clientId,
+      fromPhone: message.from,
+      message: normalized.message,
+      account,
+    })
+    if (adminResponse?.reply) {
+      // Send admin response directly and skip Brain
+      try {
+        const decryptedToken = account.access_token_encrypted
+          ? decryptToken(account.access_token_encrypted)
+          : account.access_token
+        await sendWhatsAppMessage({
+          phoneNumberId: account.phone_number_id,
+          accessToken: decryptedToken,
+          to: message.from,
+          text: adminResponse.reply,
+        })
+        // Log outbound
+        await supabase.from('whatsapp_messages').insert({
+          client_id: clientId,
+          whatsapp_account_id: account.id,
+          phone_number_id: account.phone_number_id,
+          direction: 'outbound',
+          from_phone: account.display_phone_number || null,
+          to_phone: message.from,
+          body: adminResponse.reply,
+          status: 'sent',
+          metadata: { admin_command: true },
+        })
+      } catch (err) {
+        console.error('[whatsapp-webhook] admin reply failed:', err.message)
+      }
+      return // stop here, do NOT run Brain
+    }
+  } catch (err) {
+    console.error('[whatsapp-webhook] admin command handler error:', err.message)
+    // Fall through to normal Brain flow
+  }
+
   // Store the inbound row.
   const { data: inboundRow } = await supabase
     .from('whatsapp_messages')
