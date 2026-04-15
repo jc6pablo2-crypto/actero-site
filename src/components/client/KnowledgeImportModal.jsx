@@ -50,15 +50,16 @@ export const KnowledgeImportModal = ({ clientId, provider, onClose, onSuccess })
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Erreur')
-      return data
-    },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['client-knowledge-base'] })
-      // If everything failed, show the first error instead of a misleading "0 imported"
+      // If everything failed, throw with the first error so onError fires (not onSuccess)
       if (data.count === 0 && data.errors?.length > 0) {
         const firstErr = data.errors[0]?.error || 'Erreur inconnue'
         throw new Error(`Aucun document importé. Cause : ${firstErr}`)
       }
+      return data
+    },
+    onSuccess: (data) => {
+      // Invalidate the correct query key used by ClientKnowledgeBaseView
+      queryClient.invalidateQueries({ queryKey: ['knowledge-base'] })
       onSuccess?.(data.count)
     },
   })
