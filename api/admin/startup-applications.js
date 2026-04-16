@@ -46,28 +46,56 @@ async function ensureParentCoupon(stripe) {
   try {
     const existing = await stripe.coupons.retrieve(PARENT_COUPON_ID)
     if (existing && !existing.deleted) return existing
-  } catch {
-    // not found — create
+  } catch (err) {
+    // not found — will create below
+    console.log('[startup-applications] parent coupon not found, creating new one:', err?.code || err?.message)
   }
-  return stripe.coupons.create({
-    id: PARENT_COUPON_ID,
-    percent_off: 50,
-    duration: 'repeating',
-    duration_in_months: 6,
-    name: 'Actero for Startups — 50% off 6 months',
-    metadata: { source: 'startup_program' },
-  })
+  try {
+    return await stripe.coupons.create({
+      id: PARENT_COUPON_ID,
+      percent_off: 50,
+      duration: 'repeating',
+      duration_in_months: 6,
+      name: 'Actero for Startups — 50% off 6 months',
+      metadata: { source: 'startup_program' },
+    })
+  } catch (err) {
+    // If id is already taken (race condition), retrieve it again
+    if (err?.code === 'resource_already_exists' || err?.message?.includes('already exists')) {
+      return stripe.coupons.retrieve(PARENT_COUPON_ID)
+    }
+    throw err
+  }
 }
 
 async function createPromotionCode(stripe, code, email) {
-  await ensureParentCoupon(stripe)
-  const promo = await stripe.promotionCodes.create({
-    coupon: PARENT_COUPON_ID,
+  const parentCoupon = await ensureParentCoupon(stripe)
+  console.log('[startup-applications] parent coupon ready:', parentCoupon.id)
+
+  // Pass the real coupon id we got back (handles case where the Stripe account
+  // couldn't use our custom id and auto-generated one).
+  const payload = {
+    coupon: parentCoupon.id,
     code,
-    max_redemptions: 1, // one-shot code per startup
+    max_redemptions: 1,
     metadata: { program: 'actero_for_startups', contact_email: email },
-  })
-  return promo
+  }
+
+  try {
+    const promo = await stripe.promotionCodes.create(payload)
+    return promo
+  } catch (err) {
+    // Log everything for debugging
+    console.error('[startup-applications] promotionCodes.create failed', {
+      code: err?.code,
+      type: err?.type,
+      message: err?.message,
+      param: err?.param,
+      raw: err?.raw,
+      payload,
+    })
+    throw err
+  }
 }
 
 async function sendAcceptedEmail({ email, boutique_name, promo_code }) {
@@ -239,7 +267,10 @@ export default async function handler(req, res) {
       } catch (e) {
         return res.status(500).json({ error: 'Stripe SDK not available: ' + e.message })
       }
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+      // Force a recent API version that supports promotion_codes.
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+        apiVersion: '2024-11-20.acacia',
+      })
 
       const promoCode = generatePromoCode()
       let promotion
