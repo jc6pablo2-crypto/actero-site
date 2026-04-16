@@ -15,7 +15,14 @@ export default async function handler(req, res) {
   const state = `${nonce}:${token}`;
 
   const redirectUri = process.env.SLACK_REDIRECT_URI || 'https://actero.fr/api/integrations/oauth/slack/callback';
-  const scopes = 'incoming-webhook,chat:write,channels:read,team:read';
+  // Scopes for full Slack Copilot:
+  //   - incoming-webhook, chat:write        (post messages)
+  //   - channels:read, team:read            (list channels / team info)
+  //   - app_mentions:read                   (receive @Actero mentions)
+  //   - commands                            (slash /actero)
+  //   - im:history, im:read, im:write       (DMs with the bot)
+  //   - chat:write.public                   (post to channels without being invited)
+  const scopes = 'incoming-webhook,chat:write,chat:write.public,channels:read,team:read,app_mentions:read,commands,im:history,im:read,im:write';
 
   const authUrl = `https://slack.com/oauth/v2/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${encodeURIComponent(state)}`;
 

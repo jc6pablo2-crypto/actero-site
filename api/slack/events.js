@@ -1,0 +1,160 @@
+/**
+ * POST /api/slack/events
+ *
+ * Slack Events API endpoint. Handles:
+ *   - url_verification challenge (first-time setup)
+ *   - app_mention events (@Actero ... in any channel)
+ *   - message.im events (DM to the bot)
+ *
+ * Security:
+ *   - Verifies x-slack-signature HMAC with SLACK_SIGNING_SECRET
+ *   - Rejects events older than 5 min (replay protection)
+ *
+ * Tenant isolation:
+ *   - Looks up team_id -> client_id via client_integrations
+ *   - Zero cross-tenant data leakage
+ *
+ * Slack requires a response in <3s. We ack immediately, then process the
+ * question in the background and post the reply via chat.postMessage.
+ */
+import {
+  readRawBody,
+  verifySlackSignature,
+  resolveTeam,
+  postSlackMessage,
+  formatAsBlocks,
+  stripBotMention,
+  supabaseAdmin,
+} from '../lib/slack.js'
+import { askCopilot } from '../lib/kpi-tools.js'
+
+// Raw body is mandatory for Slack signature verification.
+export const config = { api: { bodyParser: false } }
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  // 1) Read raw body + verify signature
+  let rawBody
+  try {
+    rawBody = await readRawBody(req)
+  } catch (err) {
+    console.error('[slack/events] body read failed:', err.message)
+    return res.status(400).json({ error: 'Cannot read body' })
+  }
+
+  const timestamp = req.headers['x-slack-request-timestamp']
+  const signature = req.headers['x-slack-signature']
+  if (!verifySlackSignature(rawBody, timestamp, signature)) {
+    return res.status(401).json({ error: 'Invalid signature' })
+  }
+
+  let payload
+  try {
+    payload = JSON.parse(rawBody.toString('utf8') || '{}')
+  } catch {
+    return res.status(400).json({ error: 'Invalid JSON' })
+  }
+
+  // 2) URL verification challenge — Slack's initial handshake
+  if (payload.type === 'url_verification') {
+    return res.status(200).json({ challenge: payload.challenge })
+  }
+
+  // 3) Event callback — we must ACK <3s, then process async
+  if (payload.type === 'event_callback') {
+    // Ack immediately — Slack retries otherwise
+    res.status(200).json({ ok: true })
+
+    // Fire-and-forget async processing (swallow errors to not crash the function)
+    processEvent(payload).catch(err => {
+      console.error('[slack/events] processEvent error:', err?.message || err)
+    })
+    return
+  }
+
+  // Unknown payload type
+  return res.status(200).json({ ok: true })
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Event processor                                                           */
+/* -------------------------------------------------------------------------- */
+
+async function processEvent(payload) {
+  const event = payload.event || {}
+  const teamId = payload.team_id
+
+  // Only handle app_mention and direct message events
+  const isMention = event.type === 'app_mention'
+  const isDM = event.type === 'message' && event.channel_type === 'im'
+  if (!isMention && !isDM) return
+
+  // Ignore messages from bots (including ourselves) to avoid loops
+  if (event.bot_id || event.subtype === 'bot_message') return
+
+  // Resolve tenant from team_id
+  const team = await resolveTeam(teamId)
+  if (!team) {
+    console.warn(`[slack/events] no active Slack integration for team_id=${teamId}`)
+    return
+  }
+
+  // Extract the user's question — strip bot mention
+  const rawText = event.text || ''
+  const question = stripBotMention(rawText, team.botUserId)
+  if (!question) {
+    await postSlackMessage({
+      token: team.botToken,
+      channel: event.channel,
+      thread_ts: event.thread_ts || event.ts,
+      text: 'Bonjour ! Posez-moi une question sur vos KPIs (ex: "combien de tickets aujourd\'hui ?")',
+    })
+    return
+  }
+
+  // Idempotence — Slack may retry events. Track by event_id + team
+  const eventId = payload.event_id
+  if (eventId) {
+    const { data: seen } = await supabaseAdmin
+      .from('slack_events_seen')
+      .select('event_id')
+      .eq('event_id', eventId)
+      .maybeSingle()
+    if (seen) {
+      console.log(`[slack/events] duplicate event ${eventId}, skipping`)
+      return
+    }
+    await supabaseAdmin.from('slack_events_seen').insert({
+      event_id: eventId,
+      team_id: teamId,
+      client_id: team.clientId,
+    }).catch(() => { /* ignore race */ })
+  }
+
+  // Ask Claude Copilot with KPI tools
+  let reply
+  try {
+    const result = await askCopilot(supabaseAdmin, {
+      clientId: team.clientId,
+      message: question,
+      brandName: team.brandName,
+      channel: 'slack',
+    })
+    reply = result.reply
+  } catch (err) {
+    console.error('[slack/events] askCopilot error:', err.message)
+    reply = `Désolé, erreur côté IA: ${err.message.slice(0, 120)}`
+  }
+
+  // Post the reply (threaded if from mention, direct if DM)
+  await postSlackMessage({
+    token: team.botToken,
+    channel: event.channel,
+    thread_ts: isMention ? (event.thread_ts || event.ts) : undefined,
+    text: reply.slice(0, 300), // fallback for notifications
+    blocks: formatAsBlocks(reply),
+  })
+}

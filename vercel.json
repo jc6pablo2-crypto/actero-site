@@ -53,6 +53,10 @@
         {
             "path": "/api/cron/churn-predictions",
             "schedule": "0 6 * * 0"
+        },
+        {
+            "path": "/api/cron/slack-daily-digest",
+            "schedule": "30 7 * * 1-5"
         }
     ],
     "headers": [
