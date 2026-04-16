@@ -1,11 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Zap, ShoppingBag, Headphones, Loader2, Play,
-  CheckCircle2, AlertTriangle, Plug, Star, Shield,
-  Heart, Search, TrendingUp, Package, Gift, Mail,
-  MessageSquare, ArrowRight, Copy, Check, Phone, HelpCircle,
+  Zap, ShoppingBag, Headphones, Loader2,
+  CheckCircle2, Plug, TrendingUp, Mail,
+  MessageSquare, ArrowRight, Phone, HelpCircle,
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
@@ -64,57 +62,6 @@ const PLAYBOOK_META = {
     channels: [
       { id: 'email', label: 'Email', desc: 'Envoie un email de relance panier', icon: Mail, needsIntegration: ['smtp_imap'] },
     ],
-  },
-  shipping_tracker: {
-    icon: Package, color: 'from-blue-500 to-blue-600',
-    simpleDesc: 'Repond aux questions "ou est mon colis ?" avec le vrai statut de la commande.',
-    requires: [
-      { type: 'all', providers: ['shopify'], label: 'Shopify' },
-      { type: 'any', providers: ['gmail', 'gorgias', 'zendesk'], label: 'Gmail, Gorgias ou Zendesk' },
-    ],
-  },
-  order_issue_handler: {
-    icon: AlertTriangle, color: 'from-red-500 to-red-600',
-    simpleDesc: 'Gere les problemes de commande : retard, colis abime, article manquant.',
-    requires: [{ type: 'any', providers: ['gmail', 'gorgias', 'zendesk'], label: 'Gmail, Gorgias ou Zendesk' }],
-  },
-  promo_code_handler: {
-    icon: Gift, color: 'from-pink-500 to-pink-600',
-    simpleDesc: 'Aide les clients dont le code promo ne fonctionne pas.',
-    requires: [{ type: 'any', providers: ['gmail'], label: 'Gmail' }],
-  },
-  vip_customer_care: {
-    icon: Star, color: 'from-violet-500 to-violet-600',
-    simpleDesc: 'Detecte vos meilleurs clients et leur repond en priorite.',
-    requires: [
-      { type: 'any', providers: ['gmail', 'gorgias', 'zendesk'], label: 'Gmail, Gorgias ou Zendesk' },
-      { type: 'all', providers: ['slack'], label: 'Slack' },
-    ],
-  },
-  anti_churn: {
-    icon: Shield, color: 'from-rose-500 to-rose-600',
-    simpleDesc: 'Detecte les clients mecontents et lance une action de retention.',
-    requires: [{ type: 'any', providers: ['gmail', 'gorgias', 'zendesk'], label: 'Gmail, Gorgias ou Zendesk' }],
-  },
-  post_purchase_followup: {
-    icon: Mail, color: 'from-cyan-500 to-cyan-600',
-    simpleDesc: 'Envoie un email de remerciement et conseils 3 jours apres la commande.',
-    requires: [{ type: 'all', providers: ['shopify'], label: 'Shopify' }],
-  },
-  winback_inactive: {
-    icon: TrendingUp, color: 'from-indigo-500 to-indigo-600',
-    simpleDesc: 'Relance les clients qui n\'ont pas commande depuis 60 jours.',
-    requires: [{ type: 'all', providers: ['shopify'], label: 'Shopify' }],
-  },
-  review_collector: {
-    icon: MessageSquare, color: 'from-teal-500 to-teal-600',
-    simpleDesc: 'Demande un avis client 7 jours apres la livraison.',
-    requires: [{ type: 'all', providers: ['shopify'], label: 'Shopify' }],
-  },
-  support_technique: {
-    icon: Headphones, color: 'from-gray-500 to-gray-600',
-    simpleDesc: 'Repond aux questions techniques et cree des tickets si besoin.',
-    requires: [{ type: 'any', providers: ['gmail', 'gorgias', 'zendesk'], label: 'Gmail, Gorgias ou Zendesk' }],
   },
   comptabilite_auto: {
     icon: TrendingUp, color: 'from-indigo-500 to-indigo-600',

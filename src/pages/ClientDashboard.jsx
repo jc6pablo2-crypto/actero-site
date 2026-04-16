@@ -1390,7 +1390,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {/* ===== Refonte nav — nouvelles pages hub ===== */}
 
           {activeTab === "automation" && (
-            <AutomationHubView clientId={currentClient?.id} theme={theme} />
+            <AutomationHubView clientId={currentClient?.id} theme={theme} setActiveTab={setActiveTab} />
           )}
 
           {activeTab === "agent-control" && (
