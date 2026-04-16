@@ -37,6 +37,7 @@ import { ActeroForStartupsPage } from "./pages/ActeroForStartupsPage";
 import { CursorGlow } from "./components/ui/cursor-glow";
 import { CommandPalette } from "./components/ui/command-palette";
 import { ToastProvider } from "./components/ui/Toast";
+import { Toaster } from "./components/ui/Toaster";
 
 const queryClient = new QueryClient();
 
@@ -218,6 +219,7 @@ export default function App() {
           <ErrorBoundary>
             <MainRouter />
             <Analytics />
+            <Toaster />
           </ErrorBoundary>
         </ToastProvider>
       </QueryClientProvider>
