@@ -28,18 +28,28 @@ async function authHeaders() {
 export const EmailAgentView = ({ clientId }) => {
   const queryClient = useQueryClient()
 
-  // Check if IMAP integration is connected
+  // Check if Gmail OAuth OR IMAP integration is connected
   const { data: integration, isLoading: loadingIntegration } = useQuery({
-    queryKey: ['smtp-imap', clientId],
+    queryKey: ['email-provider', clientId],
     queryFn: async () => {
       if (!clientId) return null
-      const { data } = await supabase
+      // Prefer Gmail when both are connected
+      const { data: gmail } = await supabase
         .from('client_integrations')
-        .select('status, extra_config, connected_at')
+        .select('provider, status, extra_config, connected_at')
+        .eq('client_id', clientId)
+        .eq('provider', 'gmail')
+        .eq('status', 'active')
+        .maybeSingle()
+      if (gmail) return gmail
+      const { data: imap } = await supabase
+        .from('client_integrations')
+        .select('provider, status, extra_config, connected_at')
         .eq('client_id', clientId)
         .eq('provider', 'smtp_imap')
+        .eq('status', 'active')
         .maybeSingle()
-      return data
+      return imap
     },
     enabled: !!clientId,
   })
@@ -67,6 +77,7 @@ export const EmailAgentView = ({ clientId }) => {
 
   const settings = settingsData?.settings || {}
   const isConnected = integration?.status === 'active'
+  const providerKind = integration?.provider // 'gmail' or 'smtp_imap'
 
   const updateMutation = useMutation({
     mutationFn: async (patch) => {
@@ -107,13 +118,21 @@ export const EmailAgentView = ({ clientId }) => {
           <p className="text-[13px] text-[#71717a] max-w-md mx-auto mb-6 leading-relaxed">
             Actero lit automatiquement vos emails entrants et répond aux questions clients courantes (livraison, retours, etc.) 24/7, avec votre ton de marque.
           </p>
-          <a
-            href="/client/integrations"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[12px] font-semibold bg-[#0F5F35] text-white hover:bg-[#003725] transition-colors"
-          >
-            Configurer SMTP/IMAP
-            <ChevronRight className="w-3.5 h-3.5" />
-          </a>
+          <div className="inline-flex flex-col gap-2 items-center">
+            <a
+              href="/client/integrations"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[12px] font-semibold bg-[#0F5F35] text-white hover:bg-[#003725] transition-colors"
+            >
+              Connecter Gmail (recommandé)
+              <ChevronRight className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="/client/integrations"
+              className="text-[11px] text-[#71717a] hover:text-[#1a1a1a] underline"
+            >
+              Ou configurer SMTP/IMAP manuel
+            </a>
+          </div>
         </div>
       </div>
     )
@@ -192,7 +211,16 @@ function StatusHero({ clientId, settings, activity, integration, onToggle, toggl
               </span>
             </div>
             <p className="text-[12px] text-[#71717a] mt-0.5 truncate">
-              Boîte : <span className="font-mono">{mailbox}</span>
+              {integration?.provider === 'gmail' ? (
+                <>
+                  <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded mr-1.5">
+                    Gmail
+                  </span>
+                  <span className="font-mono">{integration?.extra_config?.email || mailbox}</span>
+                </>
+              ) : (
+                <>Boîte : <span className="font-mono">{mailbox}</span></>
+              )}
               {minsAgo !== null && <> · Dernier poll il y a {minsAgo} min</>}
             </p>
           </div>
