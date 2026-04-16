@@ -31,6 +31,10 @@ import { askCopilot } from '../lib/kpi-tools.js'
 // Raw body is mandatory for Slack signature verification.
 export const config = { api: { bodyParser: false } }
 
+// Slack requires ack <3s but our Claude processing can take 5-15s.
+// We process synchronously and rely on idempotence for Slack retries.
+export const maxDuration = 60
+
 export default async function handler(req, res) {
   try {
     return await mainHandler(req, res)
