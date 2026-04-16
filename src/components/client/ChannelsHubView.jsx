@@ -54,7 +54,7 @@ export const ChannelsHubView = ({ clientId, onNavigate }) => {
       icon: Mail,
       color: '#4285F4',
       status: emailConnected ? 'connected' : 'available',
-      targetTab: 'integrations',
+      targetTab: emailConnected ? 'email-agent' : 'integrations',
     },
     {
       id: 'chat',

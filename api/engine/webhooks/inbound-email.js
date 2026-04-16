@@ -17,6 +17,7 @@ import { runBrain } from '../brain.js'
 import { runExecutor } from '../executor.js'
 import { logRun } from '../logger.js'
 import { checkRateLimit } from '../lib/rate-limiter.js'
+import { cleanEmailBody, isExcludedSender, shouldAutoReply } from '../../lib/email.js'
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
@@ -100,8 +101,30 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Email vide ou expediteur manquant' })
   }
 
-  // Clean HTML if present
-  textBody = textBody.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim()
+  // Fetch client email-agent settings up-front (used for exclusions + auto-reply logic)
+  const { data: clientSettings } = await supabase
+    .from('client_settings')
+    .select('email_agent_enabled, email_auto_reply_enabled, email_confidence_threshold, email_quiet_hours_start, email_quiet_hours_end, email_exclusions, email_signature, email_attach_voice, email_send_delay_seconds')
+    .eq('client_id', resolvedClientId)
+    .maybeSingle()
+
+  // Sender exclusions (internal domains, no-reply, etc.)
+  const exclusions = Array.isArray(clientSettings?.email_exclusions)
+    ? clientSettings.email_exclusions
+    : []
+  if (isExcludedSender(fromEmail, exclusions)) {
+    return res.status(200).json({ status: 'excluded_sender', from: fromEmail })
+  }
+
+  // Clean HTML if present + strip quoted history + signatures via shared util
+  textBody = cleanEmailBody(
+    textBody.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').trim(),
+  )
+
+  // Threading headers — preserve for in-thread replies later
+  const messageId = body.message_id || body.messageId || null
+  const inReplyTo = body.in_reply_to || body.inReplyTo || null
+  const refs = body.references || null
 
   // Rate limit
   const rateCheck = await checkRateLimit(supabase, { clientId: resolvedClientId, customerEmail: fromEmail })
@@ -143,9 +166,35 @@ export default async function handler(req, res) {
       event, playbook, clientId: resolvedClientId, normalized,
     })
 
+    // Respect email agent settings — maybe escalate even if Brain is confident
+    // (quiet hours, agent disabled, low confidence vs user's threshold, etc.)
+    const autoReplyCheck = shouldAutoReply({
+      confidence: brainResult.confidence,
+      settings: clientSettings,
+    })
+    const shouldEscalateBySettings = !autoReplyCheck.reply && !brainResult.needsReview
+
+    // Store the inbound conversation with threading headers so replies thread correctly
+    try {
+      await supabase.from('ai_conversations').insert({
+        client_id: resolvedClientId,
+        customer_email: fromEmail,
+        customer_name: fromName,
+        customer_message: textBody,
+        subject,
+        ai_response: brainResult.aiResponse || null,
+        status: (brainResult.needsReview || shouldEscalateBySettings) ? 'escalated' : 'resolved',
+        escalation_reason: shouldEscalateBySettings ? autoReplyCheck.reason : (brainResult.reviewReason || null),
+        email_message_id: messageId,
+        email_references: refs || inReplyTo,
+      })
+    } catch (convErr) {
+      console.warn('[inbound-email] ai_conversations insert failed (non-fatal):', convErr.message)
+    }
+
     // Execute or Review
     let runResult
-    if (brainResult.needsReview) {
+    if (brainResult.needsReview || shouldEscalateBySettings) {
       runResult = await logRun(supabase, {
         clientId: resolvedClientId, eventId: event.id, playbookId: playbook.id,
         status: 'needs_review', classification: brainResult.classification,

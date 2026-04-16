@@ -66,6 +66,7 @@ import { PlaybooksView } from '../components/client/PlaybooksView'
 import { AutomationHubView } from '../components/client/AutomationHubView'
 import { AgentControlCenterView } from '../components/client/AgentControlCenterView'
 import { ChannelsHubView } from '../components/client/ChannelsHubView'
+import { EmailAgentView } from '../components/client/EmailAgentView'
 import { OpportunitiesView } from '../components/client/OpportunitiesView'
 import { InsightsHubView } from '../components/client/InsightsHubView'
 import { SettingsHubView } from '../components/client/SettingsHubView'
@@ -191,6 +192,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/agent-control") return "agent-control";
     if (route === "/client/alerts") return "alerts";
     if (route === "/client/channels") return "channels";
+    if (route === "/client/email-agent") return "email-agent";
     if (route === "/client/opportunities") return "opportunities";
     if (route === "/client/insights") return "insights";
     if (route === "/client/settings") return "settings";
@@ -827,6 +829,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "partner" && "Actero Partners"}
             {activeTab === "integrations" && "Intégrations"}
             {activeTab === "channels" && "Canaux"}
+            {activeTab === "email-agent" && "Agent Email"}
             {activeTab === "agent-config" && "Configuration"}
             {activeTab === "simulator" && "Tester mon agent"}
             {activeTab === "team" && "Équipe"}
@@ -1398,6 +1401,10 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
           {activeTab === "channels" && (
             <ChannelsHubView clientId={currentClient?.id} onNavigate={setActiveTab} />
+          )}
+
+          {activeTab === "email-agent" && (
+            <EmailAgentView clientId={currentClient?.id} />
           )}
 
           {activeTab === "opportunities" && (

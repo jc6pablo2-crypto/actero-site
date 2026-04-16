@@ -8,7 +8,7 @@ const supabase = createClient(
 /**
  * Send email via SMTP using nodemailer (loaded dynamically to avoid bundle issues).
  */
-async function sendViaSMTP(smtpConfig, { to, subject, html, brandName }) {
+async function sendViaSMTP(smtpConfig, { to, subject, html, brandName, inReplyTo, references }) {
   // Dynamic require to avoid Vercel bundling issues
   let nodemailer;
   try {
@@ -40,7 +40,20 @@ async function sendViaSMTP(smtpConfig, { to, subject, html, brandName }) {
   const fromEmail = smtpConfig.email || smtpConfig.username;
   const fromDisplay = brandName ? `${brandName} <${fromEmail}>` : fromEmail;
 
-  const info = await transporter.sendMail({ from: fromDisplay, to, subject, html });
+  // Threading headers — make the reply land in the customer's existing thread.
+  const extraHeaders = {};
+  if (inReplyTo) extraHeaders['In-Reply-To'] = inReplyTo;
+  if (references) extraHeaders['References'] = references;
+
+  const info = await transporter.sendMail({
+    from: fromDisplay,
+    to,
+    subject,
+    html,
+    headers: Object.keys(extraHeaders).length ? extraHeaders : undefined,
+    inReplyTo: inReplyTo || undefined,
+    references: references || undefined,
+  });
   return { sent: true, from: fromEmail, messageId: info.messageId };
 }
 
@@ -150,7 +163,16 @@ export default async function handler(req, res) {
       `;
 
       try {
-        emailResult = await sendViaSMTP(smtpConfig, { to: conversation.customer_email, subject, html, brandName });
+        // Build threading — reuse customer's Message-ID to keep the convo in one thread
+        const inReplyTo = conversation.email_message_id || null;
+        const references = conversation.email_references
+          ? `${conversation.email_references} ${conversation.email_message_id || ''}`.trim()
+          : conversation.email_message_id || null;
+
+        emailResult = await sendViaSMTP(smtpConfig, {
+          to: conversation.customer_email, subject, html, brandName,
+          inReplyTo, references,
+        });
         sentVia = 'smtp';
         console.log(`[escalation] Email sent via SMTP from ${emailResult.from} to ${conversation.customer_email}`);
       } catch (smtpErr) {
