@@ -59,7 +59,7 @@ export default async function handler(req, res) {
   let clientId = null
   try {
     const { data: run } = await supabaseAdmin
-      .from('engine_runs')
+      .from('engine_runs_v2')
       .select('client_id')
       .eq('id', run_id)
       .maybeSingle()

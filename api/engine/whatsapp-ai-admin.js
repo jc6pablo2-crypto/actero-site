@@ -83,12 +83,15 @@ function formatPeriodFR(period) {
 async function getTicketsStats(supabase, clientId, { period = 'week' } = {}) {
   const { start, end } = periodToDateRange(period)
 
+  // Real schema: automation_events.event_category = 'ticket_resolved' (auto)
+  // or 'ticket_escalated' (manuel). No handled_by column.
   const [totalRes, autoRes] = await Promise.all([
     supabase.from('automation_events').select('id', { count: 'exact', head: true })
-      .eq('client_id', clientId).gte('created_at', start).lte('created_at', end),
+      .eq('client_id', clientId).gte('created_at', start).lte('created_at', end)
+      .in('event_category', ['ticket_resolved', 'ticket_escalated']),
     supabase.from('automation_events').select('id', { count: 'exact', head: true })
       .eq('client_id', clientId).gte('created_at', start).lte('created_at', end)
-      .eq('handled_by', 'ai'),
+      .eq('event_category', 'ticket_resolved'),
   ])
 
   const total = totalRes.count || 0
@@ -147,14 +150,14 @@ async function getIntegrationsStatus(supabase, clientId) {
 }
 
 async function getReviewQueue(supabase, clientId, { limit = 3 } = {}) {
-  const { data } = await supabase.from('engine_reviews')
+  const { data } = await supabase.from('engine_reviews_v2')
     .select('id, reason, created_at, proposed_action')
     .eq('client_id', clientId)
     .eq('status', 'pending')
     .order('created_at', { ascending: false })
     .limit(Math.min(limit, 10))
 
-  const { count } = await supabase.from('engine_reviews')
+  const { count } = await supabase.from('engine_reviews_v2')
     .select('id', { count: 'exact', head: true })
     .eq('client_id', clientId)
     .eq('status', 'pending')
@@ -175,20 +178,20 @@ async function getReviewQueue(supabase, clientId, { limit = 3 } = {}) {
 async function getRevenueRecovered(supabase, clientId, { period = 'month' } = {}) {
   const { start, end } = periodToDateRange(period)
 
-  // metrics_daily aggregates revenue_recovered_cents (abandoned cart + reviews)
+  // Real columns: metrics_daily.date, .revenue_recovered (numeric EUR), .cart_recovered (count), .estimated_roi
   const { data } = await supabase.from('metrics_daily')
-    .select('revenue_recovered_cents, carts_recovered, estimated_roi')
+    .select('revenue_recovered, cart_recovered, estimated_roi')
     .eq('client_id', clientId)
-    .gte('day', start.slice(0, 10))
-    .lte('day', end.slice(0, 10))
+    .gte('date', start.slice(0, 10))
+    .lte('date', end.slice(0, 10))
 
-  const cents = (data || []).reduce((a, r) => a + (r.revenue_recovered_cents || 0), 0)
-  const carts = (data || []).reduce((a, r) => a + (r.carts_recovered || 0), 0)
-  const roi = (data || []).reduce((a, r) => a + (r.estimated_roi || 0), 0)
+  const revenueEur = (data || []).reduce((a, r) => a + Number(r.revenue_recovered || 0), 0)
+  const carts = (data || []).reduce((a, r) => a + Number(r.cart_recovered || 0), 0)
+  const roi = (data || []).reduce((a, r) => a + Number(r.estimated_roi || 0), 0)
 
   return {
     period: formatPeriodFR(period),
-    revenue_recovered_eur: Math.round(cents / 100),
+    revenue_recovered_eur: Math.round(revenueEur),
     carts_recovered: carts,
     estimated_roi_eur: Math.round(roi),
   }

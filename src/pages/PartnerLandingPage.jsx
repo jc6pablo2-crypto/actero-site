@@ -134,7 +134,7 @@ const PartnerLandingPageContent = ({ onNavigate, agencyName }) => {
     setFormLoading(true)
     setFormError('')
     try {
-      const res = await fetch('/api/partner/apply.js', {
+      const res = await fetch('/api/partners/apply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

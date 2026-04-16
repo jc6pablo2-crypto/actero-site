@@ -143,15 +143,28 @@ export const CommandPalette = ({
   // ---------------------------------------------------------------------------
 
   const clientNavItems = useMemo(() => ([
-    { id: 'overview',           label: 'Tableau de bord',        icon: LayoutDashboard },
+    { id: 'overview',           label: 'Vue d\'ensemble',         icon: LayoutDashboard },
+    { id: 'automation',         label: 'Automatisation',          icon: Sparkles },
+    // Gerer
     { id: 'escalations',        label: 'A traiter',              icon: AlertTriangle },
-    { id: 'response-templates', label: 'Modeles de reponse',     icon: FileText },
-    { id: 'agent-config',       label: 'Configuration agent',    icon: Bot },
-    { id: 'playbooks',          label: 'Scenarios',              icon: Sparkles },
+    { id: 'activity',           label: 'Activite de l\'agent',    icon: Activity },
+    // Agent IA
+    { id: 'agent-control',      label: 'Centre de controle',     icon: Bot },
+    { id: 'agent-config',       label: 'Configuration',          icon: Bot },
     { id: 'knowledge',          label: 'Base de connaissances',  icon: BookOpen },
-    { id: 'guardrails',         label: 'Regles & limites',       icon: Shield },
-    { id: 'simulator',          label: 'Simulateur',             icon: MessageSquare },
+    { id: 'guardrails',         label: 'Regles metier',          icon: Shield },
+    { id: 'simulator',          label: 'Tester mon agent',       icon: MessageSquare },
+    // Connexions
     { id: 'integrations',       label: 'Integrations',           icon: Plug },
+    { id: 'channels',           label: 'Canaux',                 icon: Phone },
+    { id: 'email-agent',        label: 'Agent Email',            icon: FileText },
+    // Croissance
+    { id: 'opportunities',      label: 'Opportunites',           icon: TrendingUp },
+    { id: 'insights',           label: 'Insights',               icon: BarChart3 },
+    // Systeme
+    { id: 'settings',           label: 'Parametres',             icon: CreditCard },
+    // Sous-pages accessibles directement
+    { id: 'response-templates', label: 'Modeles de reponse',     icon: FileText },
     { id: 'api-docs',           label: 'API',                    icon: Code },
     { id: 'voice-agent',        label: 'Agent vocal',            icon: Phone },
     { id: 'weekly-summary',     label: 'Performance',            icon: BarChart3 },
@@ -159,10 +172,8 @@ export const CommandPalette = ({
     { id: 'peak-hours',         label: 'Heures de pic',          icon: Clock },
     { id: 'voice-calls',        label: 'Appels vocaux',          icon: PhoneCall },
     { id: 'referral',           label: 'Parrainage',             icon: Gift },
-    { id: 'marketplace',        label: 'Marketplace',            icon: Store },
     { id: 'profile',            label: 'Compte',                 icon: User },
     { id: 'team',               label: 'Equipe',                 icon: Users },
-    { id: 'notifications',      label: 'Notifications',          icon: Bell },
     { id: 'billing',            label: 'Facturation',            icon: CreditCard },
     { id: 'support',            label: 'Aide',                   icon: BookOpen },
   ]), [])
