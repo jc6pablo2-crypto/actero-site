@@ -91,16 +91,23 @@ async function mainHandler(req, res) {
     return res.status(200).json({ challenge: payload.challenge })
   }
 
-  // 3) Event callback — we must ACK <3s, then process async
+  // 3) Event callback — process synchronously.
+  // Vercel kills fire-and-forget work once the function returns, so we await.
+  // If processing takes >3s, Slack will retry — but slack_events_seen idempotence
+  // catches duplicates, so it's safe.
   if (payload.type === 'event_callback') {
-    // Ack immediately — Slack retries otherwise
-    res.status(200).json({ ok: true })
-
-    // Fire-and-forget async processing (swallow errors to not crash the function)
-    processEvent(payload).catch(err => {
+    try {
+      await processEvent(payload)
+    } catch (err) {
       console.error('[slack/events] processEvent error:', err?.message || err)
-    })
-    return
+      try {
+        await supabaseAdmin.from('slack_debug_logs').insert({
+          stage: 'process_event_crash',
+          error: err?.message || String(err),
+        })
+      } catch { /* noop */ }
+    }
+    return res.status(200).json({ ok: true })
   }
 
   // Unknown payload type
