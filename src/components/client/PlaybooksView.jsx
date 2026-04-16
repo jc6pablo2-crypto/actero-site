@@ -158,15 +158,12 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
       ? [...currentChannels, channelId]
       : currentChannels.filter(c => c !== channelId)
 
-    // Auto-setup email polling when email channel is activated
+    // Activate the native email agent (cron-based, replaces old n8n setup)
     if (channelId === 'email' && isSelected) {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        await fetch('/api/engine/setup-email-polling', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
-          body: JSON.stringify({ client_id: clientId }),
-        })
+        await supabase.from('client_settings')
+          .update({ email_agent_enabled: true, updated_at: new Date().toISOString() })
+          .eq('client_id', clientId)
       } catch {} // Non-blocking
     }
 

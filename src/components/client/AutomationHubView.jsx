@@ -501,15 +501,14 @@ export const AutomationHubView = ({ clientId, theme, setActiveTab }) => {
       ? [...currentChannels, channelId]
       : currentChannels.filter(c => c !== channelId)
 
-    // Side-effects (email polling, widget install) — matches PlaybooksView
+    // Side-effects (email agent enable, widget install) — matches PlaybooksView
     if (channelId === 'email' && isSelected) {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        await fetch('/api/engine/setup-email-polling', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
-          body: JSON.stringify({ client_id: clientId }),
-        })
+        // Enable the native email agent (cron-based IMAP/Gmail polling).
+        // Remplace l'ancien setup-email-polling n8n.
+        await supabase.from('client_settings')
+          .update({ email_agent_enabled: true, updated_at: new Date().toISOString() })
+          .eq('client_id', clientId)
       } catch {}
     }
     if (channelId === 'widget' && isSelected) {

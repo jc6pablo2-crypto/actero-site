@@ -83,10 +83,10 @@ export const MyMarketplaceTemplatesView = ({ clientId }) => {
     queryFn: async () => {
       if (!clientId) return null
       const [rules, kb, templates, prompts] = await Promise.all([
-        supabase.from('agent_guardrails').select('id', { count: 'exact', head: true }).eq('client_id', clientId),
-        supabase.from('knowledge_base').select('id', { count: 'exact', head: true }).eq('client_id', clientId),
-        supabase.from('response_templates').select('id', { count: 'exact', head: true }).eq('client_id', clientId),
-        supabase.from('client_settings').select('tone, prompt').eq('client_id', clientId).maybeSingle(),
+        supabase.from('client_guardrails').select('id', { count: 'exact', head: true }).eq('client_id', clientId),
+        supabase.from('client_knowledge_base').select('id', { count: 'exact', head: true }).eq('client_id', clientId),
+        supabase.from('client_response_templates').select('id', { count: 'exact', head: true }).eq('client_id', clientId),
+        supabase.from('client_settings').select('brand_tone, custom_instructions').eq('client_id', clientId).maybeSingle(),
       ])
       return {
         rules_count: rules?.count || 0,

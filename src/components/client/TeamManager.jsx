@@ -27,8 +27,8 @@ const ROLE_LABELS = {
 export const ROLE_PERMISSIONS = {
   owner: '*', // all tabs
   manager: '*', // all tabs
-  operational: ['overview', 'automation', 'activity', 'escalations', 'alerts', 'response-templates', 'systems', 'integrations', 'channels', 'sentiment', 'voice-report', 'voice-calls', 'voice-agent', 'insights', 'opportunities'],
-  support: ['overview', 'escalations', 'alerts', 'response-templates', 'sentiment'],
+  operational: ['overview', 'automation', 'activity', 'escalations', 'response-templates', 'systems', 'integrations', 'channels', 'email-agent', 'sentiment', 'voice-report', 'voice-calls', 'voice-agent', 'insights', 'opportunities', 'agent-control', 'agent-config', 'knowledge', 'guardrails', 'simulator'],
+  support: ['overview', 'escalations', 'response-templates', 'sentiment', 'activity'],
   finance: ['overview', 'profile', 'supplier-negotiation', 'settings', 'billing'], // profile + settings for billing portal
 }
 

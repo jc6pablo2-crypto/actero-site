@@ -28,12 +28,13 @@ export const ChannelsHubView = ({ clientId, onNavigate }) => {
     queryKey: ['voice-agent-status', clientId],
     queryFn: async () => {
       if (!clientId) return null
+      // Use the client_settings.voice_agent_enabled flag which is the source of truth
       const { data } = await supabase
-        .from('voice_agents')
-        .select('id, status')
+        .from('client_settings')
+        .select('voice_agent_enabled, elevenlabs_agent_id')
         .eq('client_id', clientId)
         .maybeSingle()
-      return data
+      return data ? { status: (data.voice_agent_enabled && data.elevenlabs_agent_id) ? 'active' : null } : null
     },
     enabled: !!clientId,
   })
