@@ -72,6 +72,7 @@ import { CallNotesWizard } from '../components/admin/CallNotesWizard'
 import { DeploymentProgress } from '../components/admin/DeploymentProgress'
 import { AdminNegativeRatingsView } from '../components/admin/AdminNegativeRatingsView'
 import { AdminPartnersView } from '../components/admin/AdminPartnersView'
+import { AdminStartupApplicationsView } from '../components/admin/AdminStartupApplicationsView'
 import { AdminShopifyView } from '../components/admin/AdminShopifyView'
 import { AdminEngineTestView } from '../components/admin/AdminEngineTestView'
 import { AdminEngineRunsView } from '../components/admin/AdminEngineRunsView'
@@ -279,6 +280,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   const getAdminTabFromRoute = (route) => {
     if (route === "/admin/ai-terminal") return "ai-terminal";
+    if (route === "/admin/startup-applications") return "startup-applications";
     if (route === "/admin/partner-tokens") return "partner-tokens";
     if (route === "/admin/clients") return "clients";
     if (route === "/admin/requests") return "requests";
@@ -481,6 +483,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       label: 'Plus',
       icon: Settings,
       children: [
+        { id: 'startup-applications', label: 'Candidatures Startups', icon: Rocket },
         { id: 'referrals', label: 'Parrainages', icon: Gift },
         { id: 'partners', label: 'Partenaires', icon: Handshake },
         { id: 'partner-tokens', label: 'Liens Partenaires', icon: Handshake },
@@ -659,6 +662,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "referrals" && <AdminReferralsView />}
 
           {activeTab === "partners" && <AdminPartnersView />}
+          {activeTab === "startup-applications" && <AdminStartupApplicationsView />}
 
           {activeTab === "shopify" && <AdminShopifyView />}
 
