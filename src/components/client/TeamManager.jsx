@@ -27,9 +27,9 @@ const ROLE_LABELS = {
 export const ROLE_PERMISSIONS = {
   owner: '*', // all tabs
   manager: '*', // all tabs
-  operational: ['overview', 'activity', 'escalations', 'response-templates', 'systems', 'integrations', 'sentiment', 'voice-report', 'voice-calls', 'voice-agent'],
-  support: ['overview', 'escalations', 'response-templates', 'sentiment'],
-  finance: ['overview', 'profile', 'supplier-negotiation'], // profile for billing portal
+  operational: ['overview', 'automation', 'activity', 'escalations', 'alerts', 'response-templates', 'systems', 'integrations', 'channels', 'sentiment', 'voice-report', 'voice-calls', 'voice-agent', 'insights', 'opportunities'],
+  support: ['overview', 'escalations', 'alerts', 'response-templates', 'sentiment'],
+  finance: ['overview', 'profile', 'supplier-negotiation', 'settings', 'billing'], // profile + settings for billing portal
 }
 
 export const canAccessTab = (role, tabId) => {

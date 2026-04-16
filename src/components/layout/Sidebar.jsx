@@ -100,6 +100,41 @@ export const Sidebar = ({
             );
           }
 
+          if (item.type === 'star') {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                data-tour={item.dataTour}
+                onClick={() => { setActiveTab(item.id); if (onClose) onClose() }}
+                aria-current={isActive ? 'page' : undefined}
+                className={`relative w-full h-10 flex items-center justify-between px-2.5 rounded-xl text-[13px] font-semibold transition-all duration-150 group my-1.5 ${
+                  isActive
+                    ? "bg-gradient-to-r from-[#0F5F35] to-[#003725] text-white shadow-[0_2px_8px_rgba(15,95,53,0.25)]"
+                    : "bg-gradient-to-r from-[#0F5F35]/[0.06] to-[#0F5F35]/[0.02] text-[#0F5F35] hover:from-[#0F5F35]/[0.1] hover:to-[#0F5F35]/[0.04] border border-[#0F5F35]/15"
+                }`}
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className={`w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                    isActive ? 'bg-white/20' : 'bg-[#0F5F35]/10 group-hover:bg-[#0F5F35]/15'
+                  }`}>
+                    {item.icon && <item.icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-[#0F5F35]'}`} />}
+                  </div>
+                  <span className="tracking-tight">{item.label}</span>
+                </div>
+                {item.badge && (
+                  <span
+                    className={`flex-shrink-0 text-center px-1.5 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider ${
+                      isActive ? 'bg-white/25 text-white' : 'bg-[#0F5F35]/12 text-[#0F5F35]'
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
+              </button>
+            );
+          }
+
           if (item.type === 'expandable') {
             const isExpanded = expandedSections[item.label] ?? item.defaultOpen ?? false
             const hasActiveChild = (item.children || []).some(c => c.id === activeTab)

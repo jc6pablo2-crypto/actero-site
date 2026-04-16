@@ -31,6 +31,13 @@ import {
   Users,
   Code,
   Gift,
+  Home,
+  Rocket,
+  Activity,
+  FlaskConical,
+  Radio,
+  Target,
+  Cog,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
@@ -56,6 +63,12 @@ import { ApiDocsView } from '../components/client/ApiDocsView'
 import { NotificationCenterView } from '../components/client/NotificationCenterView'
 import { AgentImprovementWidget } from '../components/client/AgentImprovementWidget'
 import { PlaybooksView } from '../components/client/PlaybooksView'
+import { AutomationHubView } from '../components/client/AutomationHubView'
+import { AgentControlCenterView } from '../components/client/AgentControlCenterView'
+import { ChannelsHubView } from '../components/client/ChannelsHubView'
+import { OpportunitiesView } from '../components/client/OpportunitiesView'
+import { InsightsHubView } from '../components/client/InsightsHubView'
+import { SettingsHubView } from '../components/client/SettingsHubView'
 import { ClientBillingView } from '../components/client/ClientBillingView'
 import { HelpCenterView } from '../components/client/HelpCenterView'
 import { ROISettingsView } from '../components/client/ROISettingsView'
@@ -173,6 +186,15 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const { open: cmdkOpen, close: closeCmdk, isMac } = useCommandPalette();
 
   const getTabFromRoute = (route) => {
+    // New unified routes (Notion-style nav — octobre 2026 refonte)
+    if (route === "/client/automation") return "automation";
+    if (route === "/client/agent-control") return "agent-control";
+    if (route === "/client/alerts") return "alerts";
+    if (route === "/client/channels") return "channels";
+    if (route === "/client/opportunities") return "opportunities";
+    if (route === "/client/insights") return "insights";
+    if (route === "/client/settings") return "settings";
+    // Existing routes
     if (route === "/client/activity") return "activity";
     if (route === "/client/knowledge") return "knowledge";
     if (route === "/client/support") return "support";
@@ -629,11 +651,24 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     }).length
   }, [pendingEscalations]);
 
+  // Sidebar structure — refonte octobre 2026, inspirée Stripe/Linear/Notion.
+  // Objectif : nouveau client comprend en 5 secondes. Automation = star entry.
   const sidebarItems = [
-    { type: 'section', label: 'Accueil' },
-    { id: 'overview', label: 'Tableau de bord', icon: LayoutDashboard, dataTour: 'overview-tab' },
+    // Lien standalone hors section
+    { id: 'overview', label: 'Vue d\'ensemble', icon: Home, dataTour: 'overview-tab' },
 
-    { type: 'section', label: 'Quotidien' },
+    // STAR — cœur du produit, traitement visuel premium (fond gradient, icon pleine)
+    {
+      type: 'star',
+      id: 'automation',
+      label: 'Automatisation',
+      icon: Rocket,
+      dataTour: 'automation-tab',
+      badge: 'CORE',
+    },
+
+    // GÉRER — opérations quotidiennes
+    { type: 'section', label: 'Gérer' },
     {
       id: 'escalations',
       label: 'À traiter',
@@ -641,57 +676,30 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       badge: urgentEscalationCount > 0 ? urgentEscalationCount : null,
       badgeColor: 'bg-red-100 text-red-600',
     },
-    { id: 'response-templates', label: 'Modèles de réponse', icon: FileText },
+    { id: 'activity', label: 'Activité de l\'agent', icon: Activity },
+    { id: 'alerts', label: 'Alertes', icon: Bell },
 
-    {
-      type: 'expandable',
-      label: 'Mon Agent',
-      icon: Bot,
-      dataTour: 'agent-section',
-      defaultOpen: false,
-      children: [
-        { id: 'agent-config', label: 'Configuration', icon: Bot },
-        { id: 'playbooks', label: 'Scenarios', icon: Zap },
-        { id: 'knowledge', label: 'Base de connaissances', icon: BookOpen },
-        { id: 'guardrails', label: 'Règles & limites', icon: Shield },
-        { id: 'simulator', label: 'Simulateur', icon: MessageSquare, ...(can('simulator') ? {} : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-600 border border-blue-200' }) },
-      ],
-    },
+    // AGENT IA — configuration du cerveau
+    { type: 'section', label: 'Agent IA' },
+    { id: 'agent-control', label: 'Centre de contrôle', icon: Bot, dataTour: 'agent-section' },
+    { id: 'agent-config', label: 'Configuration', icon: Settings },
+    { id: 'knowledge', label: 'Base de connaissances', icon: BookOpen },
+    { id: 'guardrails', label: 'Règles métier', icon: Shield },
+    { id: 'simulator', label: 'Tester mon agent', icon: FlaskConical, ...(can('simulator') ? {} : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-600 border border-blue-200' }) },
 
+    // CONNEXIONS — intégrations + canaux
     { type: 'section', label: 'Connexions' },
     { id: 'integrations', label: 'Intégrations', icon: Plug },
-    { id: 'api-docs', label: 'API', icon: Code, ...(can('api_webhooks') ? {} : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-600 border border-blue-200' }) },
-    { id: 'voice-agent', label: 'Agent vocal', icon: Phone, ...(can('voice_agent') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' }) },
+    { id: 'channels', label: 'Canaux', icon: Radio },
 
-    {
-      type: 'expandable',
-      label: 'Insights',
-      icon: TrendingUp,
-      defaultOpen: false,
-      children: [
-        { id: 'weekly-summary', label: 'Performance', icon: BarChart3 },
-        { id: 'roi', label: 'ROI', icon: TrendingUp },
-        { id: 'peak-hours', label: 'Heures de pic', icon: Clock },
-        { id: 'voice-calls', label: 'Appels vocaux', icon: PhoneCall, ...(can('voice_agent') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' }) },
-      ],
-    },
+    // CROISSANCE — business & insights
+    { type: 'section', label: 'Croissance' },
+    { id: 'opportunities', label: 'Opportunités', icon: Target },
+    { id: 'insights', label: 'Insights', icon: BarChart3 },
 
-    { type: 'section', label: 'Découvrir' },
-    { id: 'referral', label: 'Parrainage', icon: Gift, badge: '1 mois offert', badgeColor: 'bg-emerald-50 text-emerald-600 border border-emerald-200' },
-    { id: 'marketplace', label: 'Marketplace', icon: Store, badge: 'Bientôt', badgeColor: 'bg-amber-50 text-amber-600 border border-amber-200' },
-
-    {
-      type: 'expandable',
-      label: 'Paramètres',
-      icon: Settings,
-      children: [
-        { id: 'profile', label: 'Compte', icon: User },
-        { id: 'team', label: 'Équipe', icon: Users },
-        { id: 'notifications', label: 'Notifications', icon: Bell },
-        { id: 'billing', label: 'Facturation', icon: CreditCard },
-        { id: 'support', label: 'Aide', icon: MessageSquare },
-      ],
-    },
+    // SYSTÈME — paramètres globaux (hub unique)
+    { type: 'section', label: 'Système' },
+    { id: 'settings', label: 'Paramètres', icon: Cog },
   ];
 
   const userRole = currentClient?._userRole || 'owner';
@@ -808,17 +816,21 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         {/* Header — clean, minimal like Instantly */}
         <header className="sticky top-0 z-40 bg-white px-5 md:px-8 h-[48px] flex items-center justify-between border-b border-[#f0f0f0]">
           <h1 className="text-[14px] font-semibold text-[#1a1a1a]">
-            {activeTab === "overview" && "Tableau de bord"}
-            {activeTab === "activity" && "Activité"}
-            {activeTab === "knowledge" && "Base de savoir"}
-            {activeTab === "support" && "Aide"}
+            {activeTab === "overview" && "Vue d'ensemble"}
+            {activeTab === "automation" && "Automatisation"}
+            {activeTab === "activity" && "Activité de l'agent"}
+            {activeTab === "alerts" && "Alertes"}
+            {activeTab === "agent-control" && "Centre de contrôle"}
+            {activeTab === "knowledge" && "Base de connaissances"}
+            {activeTab === "support" && "Centre d'aide"}
             {activeTab === "referral" && "Parrainage"}
             {activeTab === "partner" && "Actero Partners"}
             {activeTab === "integrations" && "Intégrations"}
+            {activeTab === "channels" && "Canaux"}
             {activeTab === "agent-config" && "Configuration"}
-            {activeTab === "simulator" && "Tester"}
+            {activeTab === "simulator" && "Tester mon agent"}
             {activeTab === "team" && "Équipe"}
-            {activeTab === "guardrails" && "Règles & limites"}
+            {activeTab === "guardrails" && "Règles métier"}
             {activeTab === "escalations" && "À traiter"}
             {activeTab === "response-templates" && "Modèles de réponse"}
             {activeTab === "voice-calls" && "Appels vocaux"}
@@ -829,8 +841,11 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "weekly-summary" && "Performance"}
             {activeTab === "peak-hours" && "Heures de pic"}
             {activeTab === "roi" && "ROI"}
-            {activeTab === "profile" && "Compte"}
-            {activeTab === "api-docs" && "API Actero"}
+            {activeTab === "opportunities" && "Opportunités"}
+            {activeTab === "insights" && "Insights"}
+            {activeTab === "settings" && "Paramètres"}
+            {activeTab === "profile" && "Mon compte"}
+            {activeTab === "api-docs" && "API & Webhooks"}
             {activeTab === "billing" && "Facturation"}
             {planName && (
               <span className={`ml-2 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
@@ -1367,6 +1382,35 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             </div>
           )}
 
+          {/* ===== Refonte nav — nouvelles pages hub ===== */}
+
+          {activeTab === "automation" && (
+            <AutomationHubView clientId={currentClient?.id} theme={theme} />
+          )}
+
+          {activeTab === "agent-control" && (
+            <AgentControlCenterView clientId={currentClient?.id} onNavigate={setActiveTab} />
+          )}
+
+          {activeTab === "alerts" && (
+            <NotificationCenterView clientId={currentClient?.id} theme={theme} />
+          )}
+
+          {activeTab === "channels" && (
+            <ChannelsHubView clientId={currentClient?.id} onNavigate={setActiveTab} />
+          )}
+
+          {activeTab === "opportunities" && (
+            <OpportunitiesView clientId={currentClient?.id} onNavigate={setActiveTab} />
+          )}
+
+          {activeTab === "insights" && (
+            <InsightsHubView onNavigate={setActiveTab} canAccessVoice={can('voice_agent')} />
+          )}
+
+          {activeTab === "settings" && (
+            <SettingsHubView onNavigate={setActiveTab} />
+          )}
 
         </main>
       </div>
