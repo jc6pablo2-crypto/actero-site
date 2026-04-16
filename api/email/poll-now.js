@@ -79,10 +79,21 @@ export default async function handler(req, res) {
 
   let processed = 0
   let errorMsg = null
-  const diagnostics = { connected: false, mailbox_total: 0, unread_count: 0, last_5: [] }
+  const diagnostics = { connected: false, mailbox_total: 0, unread_count: 0, last_5: [], folders: [] }
   try {
     await client.connect()
     diagnostics.connected = true
+
+    // List all folders for diagnostics — helps debug Ionos/OVH weirdness
+    try {
+      const list = await client.list()
+      diagnostics.folders = (list || []).map(f => ({
+        name: f.name,
+        path: f.path,
+        specialUse: f.specialUse || null,
+      }))
+    } catch { /* noop */ }
+
     const mb = await client.mailboxOpen('INBOX')
     diagnostics.mailbox_total = mb?.exists || 0
 

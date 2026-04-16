@@ -256,6 +256,20 @@ function StatusHero({ clientId, settings, activity, integration, onToggle, toggl
                   <div className="text-[10px] text-[#9ca3af] mt-2 pt-2 border-t border-[#f0f0f0]">
                     💡 Actero ne lit que les emails <strong>non-lus</strong> (point vert). Si vous ouvrez votre webmail, les emails passent en "lu" et sont ignorés. Envoyez un nouveau test sans ouvrir votre webmail.
                   </div>
+                  {pollNow.data.diagnostics.folders?.length > 0 && (
+                    <details className="mt-2 pt-2 border-t border-[#f0f0f0]">
+                      <summary className="cursor-pointer text-[10px] text-[#9ca3af] font-medium">
+                        Dossiers disponibles sur le serveur IMAP ({pollNow.data.diagnostics.folders.length})
+                      </summary>
+                      <ul className="mt-1 space-y-0.5 text-[10px] text-[#71717a]">
+                        {pollNow.data.diagnostics.folders.map((f, i) => (
+                          <li key={i} className="font-mono">
+                            {f.path} {f.specialUse && <span className="text-[#9ca3af]">({f.specialUse})</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
                 </div>
               </details>
             )}
