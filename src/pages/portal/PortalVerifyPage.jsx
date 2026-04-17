@@ -20,8 +20,8 @@ export default function PortalVerifyPage({ navigate }) {
     }).catch(() => setState('error'));
   }, [client, navigate]);
 
-  if (state === 'verifying') return <p>Connexion…</p>;
-  if (state === 'expired') return <p>Ce lien a expiré. <a href="/portal/login">Redemande-en un</a>.</p>;
-  if (state === 'error') return <p>Erreur inconnue.</p>;
+  if (state === 'verifying') return <p className="text-[#5A5A5A]">Connexion…</p>;
+  if (state === 'expired') return <p className="text-[#5A5A5A]">Ce lien a expiré. <a href="/portal/login" className="text-[#1F3A12] hover:underline">Redemande-en un</a>.</p>;
+  if (state === 'error') return <p className="text-[#5A5A5A]">Erreur inconnue.</p>;
   return null;
 }

@@ -27,22 +27,27 @@ export default function PortalOrderDetailPage({ orderName, navigate }) {
     setMsg(r.ok ? `Facture envoyée à ${b.sentTo}` : 'Erreur envoi facture');
   }
 
-  if (!order) return <p>Chargement…</p>;
+  if (!order) return <p className="text-[#5A5A5A]">Chargement…</p>;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
-      <button onClick={() => navigate('/portal/orders')} className="text-sm text-neutral-500">← Retour</button>
-      <h1 className="text-lg font-semibold">Commande {order.name}</h1>
-      <p className="text-sm text-neutral-600">Statut : {order.fulfillment_status || 'en préparation'} · Montant : {order.total} {order.currency}</p>
-      <ul className="list-disc pl-5 text-sm">{(order.lineItems || []).map((li) => <li key={li.id}>{li.title} × {li.quantity}</li>)}</ul>
-      <div className="flex gap-2 flex-wrap pt-4 border-t">
+    <div className="bg-white rounded-2xl border border-[rgba(0,0,0,0.06)] shadow-[0_2px_24px_rgba(0,0,0,0.06)] p-6 space-y-4">
+      <button onClick={() => navigate('/portal/orders')} className="text-sm text-[#5A5A5A] hover:text-[#1A1A1A]">← Retour</button>
+      <h1 className="text-lg font-semibold text-[#1A1A1A]">Commande {order.name}</h1>
+      <p className="text-sm text-[#5A5A5A]">Statut : {order.fulfillment_status || 'en préparation'} · Montant : {order.total} {order.currency}</p>
+      <ul className="list-disc pl-5 text-sm text-[#3A3A3A]">{(order.lineItems || []).map((li) => <li key={li.id}>{li.title} × {li.quantity}</li>)}</ul>
+      <div className="flex gap-2 flex-wrap pt-4 border-t border-[#E5E5E5]">
         <button onClick={() => act('/api/portal/request-refund', { orderName: order.name, reason: 'via_portal' })}
-          className="px-3 py-2 rounded border hover:bg-neutral-50">Demander un remboursement</button>
+          className="rounded-full border border-[rgba(0,0,0,0.08)] bg-white hover:bg-[#F4F0E6] text-[#1A1A1A] font-medium px-5 py-2.5 text-[13px] transition">Demander un remboursement</button>
         <button onClick={() => act('/api/portal/request-return', { orderName: order.name, reason: 'via_portal' })}
-          className="px-3 py-2 rounded border hover:bg-neutral-50">Lancer un retour</button>
-        <button onClick={invoice} className="px-3 py-2 rounded border hover:bg-neutral-50">Télécharger ma facture</button>
+          className="rounded-full border border-[rgba(0,0,0,0.08)] bg-white hover:bg-[#F4F0E6] text-[#1A1A1A] font-medium px-5 py-2.5 text-[13px] transition">Lancer un retour</button>
+        <button onClick={invoice}
+          className="rounded-full border border-[rgba(0,0,0,0.08)] bg-white hover:bg-[#F4F0E6] text-[#1A1A1A] font-medium px-5 py-2.5 text-[13px] transition">Télécharger ma facture</button>
       </div>
-      {msg && <p className="text-sm mt-2">{msg}</p>}
+      {msg && (
+        <div className="bg-[#F4F0E6] border border-[rgba(0,0,0,0.06)] text-[#3A3A3A] rounded-2xl px-4 py-3 text-sm">
+          {msg}
+        </div>
+      )}
     </div>
   );
 }

@@ -12,7 +12,7 @@ export default function PortalLayout({ children, navigate }) {
   const merchantName = client.merchantName;
   const customName = client.branding?.displayName;
   const customLogo = client.branding?.logoUrl;
-  const primaryColor = isMerchantBranded ? (client.branding?.primaryColor || '#000000') : '#000000';
+  const primaryColor = isMerchantBranded ? (client.branding?.primaryColor || '#1F3A12') : '#1F3A12';
 
   const headerContent = isMerchantBranded ? (
     <div className="flex items-center gap-3">
@@ -21,40 +21,45 @@ export default function PortalLayout({ children, navigate }) {
       ) : (
         <span className="text-xl font-bold tracking-tight">{customName || merchantName}</span>
       )}
-      <span className="text-sm text-neutral-500">·</span>
-      <span className="text-sm text-neutral-600">Espace SAV</span>
+      <span className="text-sm text-[#8B8070]">·</span>
+      <span className="text-sm text-[#5A5A5A]">Espace SAV</span>
     </div>
   ) : (
     <div className="flex items-baseline gap-3">
-      <span className="text-xl font-bold tracking-tight">Actero</span>
-      <span className="text-sm text-neutral-500">·</span>
-      <span className="text-sm text-neutral-600">Espace SAV · <span className="text-neutral-900 font-medium">{merchantName}</span></span>
+      <div className="flex items-center gap-2">
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 2L2 30H10L16 18L22 30H30L16 2Z" fill="#1A1A1A" />
+        </svg>
+        <span className="text-xl font-bold tracking-[-0.3px] text-[#1A1A1A]">Actero</span>
+      </div>
+      <span className="text-sm text-[#8B8070]">·</span>
+      <span className="text-sm text-[#5A5A5A]">Espace SAV · <span className="text-[#1A1A1A] font-medium">{merchantName}</span></span>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-neutral-50" style={{ '--portal-primary': primaryColor }}>
+    <div className="min-h-screen bg-[#FAFAFA]" style={{ '--portal-primary': primaryColor }}>
       <header className="flex items-center justify-between px-6 py-4 border-b bg-white">
         {headerContent}
         {authed && (
           <div className="flex items-center gap-3 text-sm">
-            <span className="text-neutral-600">{email}</span>
-            <button onClick={logout} className="text-neutral-500 hover:text-neutral-900">Déconnexion</button>
+            <span className="text-[#5A5A5A]">{email}</span>
+            <button onClick={logout} className="text-[#8B8070] hover:text-[#1A1A1A]">Déconnexion</button>
           </div>
         )}
       </header>
       {authed && (
         <nav className="flex gap-4 px-6 py-3 bg-white border-b text-sm">
-          <button onClick={() => navigate('/portal/tickets')} className="text-neutral-700 hover:text-black font-medium">Conversations</button>
-          <button onClick={() => navigate('/portal/orders')} className="text-neutral-700 hover:text-black font-medium">Commandes</button>
+          <button onClick={() => navigate('/portal/tickets')} className="text-[#5A5A5A] hover:text-[#1F3A12] font-medium">Conversations</button>
+          <button onClick={() => navigate('/portal/orders')} className="text-[#5A5A5A] hover:text-[#1F3A12] font-medium">Commandes</button>
         </nav>
       )}
       <main className="p-6 max-w-4xl mx-auto">{children}</main>
-      <footer className="text-center py-6 text-xs text-neutral-400">
+      <footer className="text-center py-6 text-xs text-[#8B8070]">
         {isMerchantBranded ? (
-          <>Propulsé par <a href="https://actero.fr" className="text-neutral-500 hover:text-neutral-700">Actero</a></>
+          <>Propulsé par <a href="https://actero.fr" className="text-[#8B8070] hover:text-[#5A5A5A]">Actero</a></>
         ) : (
-          <a href="https://actero.fr" className="text-neutral-500 hover:text-neutral-700">Actero</a>
+          <a href="https://actero.fr" className="text-[#8B8070] hover:text-[#5A5A5A]">Actero</a>
         )}
       </footer>
     </div>
