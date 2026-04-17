@@ -10,16 +10,17 @@ function buildMagicLinkEmailHtml({ url, merchantName, branding }) {
   const headerBlock = isMerchantBranded
     ? (branding.logoUrl
         ? `<img src="${branding.logoUrl}" alt="${branding.displayName || merchantName}" style="max-height:40px;max-width:180px;display:block;" />`
-        : `<div style="font-size:22px;font-weight:700;color:#000000;letter-spacing:-0.5px;">${branding.displayName || merchantName}</div>`)
-    : `<div style="font-size:22px;font-weight:700;color:#000000;letter-spacing:-0.5px;">Actero</div>`;
+        : `<div style="font-size:22px;font-weight:700;color:#1A1A1A;letter-spacing:-0.3px;">${branding.displayName || merchantName}</div>`)
+    : `<div style="display:flex;align-items:center;gap:8px;"><svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 2L2 30H10L16 18L22 30H30L16 2Z" fill="#1A1A1A" /></svg><span style="font-size:20px;font-weight:700;color:#1A1A1A;letter-spacing:-0.3px;">Actero</span></div>`;
 
-  const buttonColor = isMerchantBranded ? (branding.primaryColor || '#000000') : '#000000';
+  const buttonColor = isMerchantBranded ? (branding.primaryColor || '#1F3A12') : '#1F3A12';
+  const footerBg = isMerchantBranded ? '#fafafa' : '#F4F0E6';
   const bodyCopy = isMerchantBranded
     ? `Cliquez sur le bouton ci-dessous pour accéder à votre espace SAV ${branding.displayName || merchantName}.`
     : `Cliquez sur le bouton ci-dessous pour accéder à votre espace SAV pour <strong>${merchantName}</strong>.`;
   const footerAttribution = isMerchantBranded
-    ? `Espace SAV propulsé par <a href="https://actero.fr" style="color:#aaa;text-decoration:none;">Actero</a>`
-    : `<a href="https://actero.fr" style="color:#aaa;text-decoration:none;">Actero</a> · Support client automatisé`;
+    ? `Espace SAV propulsé par <a href="https://actero.fr" style="color:#8B8070;text-decoration:none;">Actero</a>`
+    : `<a href="https://actero.fr" style="color:#8B8070;text-decoration:none;">Actero</a> · Support client automatisé`;
 
   return `
 <!DOCTYPE html>
@@ -27,8 +28,10 @@ function buildMagicLinkEmailHtml({ url, merchantName, branding }) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body style="margin:0;padding:0;background-color:#f8f8f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<body style="margin:0;padding:0;background-color:#f8f8f8;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8f8f8;padding:40px 20px;">
     <tr>
       <td align="center">
@@ -42,7 +45,7 @@ function buildMagicLinkEmailHtml({ url, merchantName, branding }) {
 
           <tr>
             <td style="padding:32px 40px 8px 40px;">
-              <h1 style="font-size:24px;font-weight:700;color:#000000;margin:0 0 16px 0;line-height:1.3;letter-spacing:-0.5px;">
+              <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:26px;font-weight:700;color:#1A1A1A;margin:0 0 16px 0;line-height:1.3;letter-spacing:-0.3px;">
                 Votre lien de connexion
               </h1>
               <p style="font-size:15px;color:#444444;line-height:1.7;margin:0 0 20px 0;">
@@ -74,11 +77,11 @@ function buildMagicLinkEmailHtml({ url, merchantName, branding }) {
           </tr>
 
           <tr>
-            <td style="padding:24px 40px 28px 40px;background-color:#fafafa;border-top:1px solid #eee;">
-              <p style="font-size:12px;color:#888;margin:0 0 6px 0;">
+            <td style="padding:24px 40px 28px 40px;background-color:${footerBg};border-top:1px solid #eee;">
+              <p style="font-size:12px;color:#8B8070;margin:0 0 6px 0;">
                 Si vous n'avez pas demandé ce lien, ignorez simplement cet email.
               </p>
-              <p style="font-size:11px;color:#aaa;margin:0;letter-spacing:0.2px;">
+              <p style="font-size:11px;color:#8B8070;margin:0;letter-spacing:0.2px;">
                 ${footerAttribution}
               </p>
             </td>
