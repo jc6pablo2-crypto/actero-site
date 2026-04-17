@@ -6,6 +6,7 @@
  * Auth: Bearer token (Supabase session)
  */
 import { createClient } from '@supabase/supabase-js'
+import { syncProjectDomain } from '../lib/vercel.js'
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
@@ -44,10 +45,10 @@ export default async function handler(req, res) {
 
   if (!clientId) return res.status(404).json({ error: 'Client introuvable' })
 
-  // ── Fetch plan + trial to enforce Pro+ gate ───────────────────
+  // ── Fetch plan + trial + previous custom domain (for Vercel sync) ──
   const { data: clientData, error: clientError } = await supabase
     .from('clients')
-    .select('plan, trial_ends_at')
+    .select('plan, trial_ends_at, portal_custom_domain')
     .eq('id', clientId)
     .maybeSingle()
 
@@ -157,6 +158,21 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Erreur serveur' })
   }
 
+  // ── Sync custom domain with Vercel (best-effort, does not fail the request)
+  let vercelSync = null
+  if (portal_custom_domain !== undefined) {
+    const prev = clientData.portal_custom_domain || null
+    const next = update.portal_custom_domain || null
+    if (prev !== next) {
+      try {
+        vercelSync = await syncProjectDomain({ prev, next })
+      } catch (e) {
+        console.error('[update-portal-branding] Vercel sync error:', e)
+        vercelSync = { error: 'vercel_sync_failed' }
+      }
+    }
+  }
+
   return res.status(200).json({
     ok: true,
     branding: {
@@ -166,5 +182,6 @@ export default async function handler(req, res) {
       portal_custom_domain: update.portal_custom_domain ?? null,
       portal_hide_actero_branding: update.portal_hide_actero_branding ?? null,
     },
+    vercelSync,
   })
 }

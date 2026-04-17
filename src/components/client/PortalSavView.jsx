@@ -380,6 +380,28 @@ export const PortalSavView = ({ client, clientId, supabase, onUpgrade, onNavigat
   )
 }
 
+// ─── Status badge for the custom domain ──────────────────────────
+function DomainStatusBadge({ status, message }) {
+  if (!status || status === 'none') return null
+  const MAP = {
+    verified: { cls: 'bg-emerald-50 text-emerald-700 border-emerald-200', label: 'Actif', dot: 'bg-emerald-500' },
+    pending: { cls: 'bg-amber-50 text-amber-700 border-amber-200', label: 'En attente DNS', dot: 'bg-amber-500' },
+    misconfigured: { cls: 'bg-red-50 text-red-700 border-red-200', label: 'DNS incorrect', dot: 'bg-red-500' },
+    error: { cls: 'bg-[#f5f5f5] text-[#71717a] border-[#e8e8e8]', label: 'Erreur temporaire', dot: 'bg-[#9ca3af]' },
+    not_configured: { cls: 'bg-[#f5f5f5] text-[#71717a] border-[#e8e8e8]', label: 'Configuration Actero en attente', dot: 'bg-[#9ca3af]' },
+  }
+  const info = MAP[status] || MAP.error
+  return (
+    <div className="space-y-1.5">
+      <span className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-full border text-[11px] font-semibold ${info.cls}`}>
+        <span className={`w-1.5 h-1.5 rounded-full ${info.dot} ${status === 'pending' ? 'animate-pulse' : ''}`} />
+        {info.label}
+      </span>
+      {message && <p className="text-[11px] text-[#71717a]">{message}</p>}
+    </div>
+  )
+}
+
 // ─── Custom domain section (Pro+) ────────────────────────────────
 function CustomDomainSection({ clientRow, clientId, canCustomize, supabase, queryClient, onUpgrade }) {
   const existing = clientRow?.portal_custom_domain || ''
@@ -389,6 +411,22 @@ function CustomDomainSection({ clientRow, clientId, canCustomize, supabase, quer
   const [saved, setSaved] = useState(false)
 
   useEffect(() => { setDomain(existing) }, [existing])
+
+  // Poll domain status every 30s while a domain is configured (so DNS propagation
+  // reflects automatically in the UI).
+  const { data: statusInfo } = useQuery({
+    queryKey: ['portal-domain-status', clientId, existing],
+    enabled: !!(clientId && existing && canCustomize),
+    refetchInterval: 30_000,
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/client/portal-domain-status', {
+        headers: { 'Authorization': `Bearer ${session?.access_token}` },
+      })
+      if (!res.ok) return { status: 'error' }
+      return res.json()
+    },
+  })
 
   const handleSave = async (valueOverride) => {
     const next = valueOverride !== undefined ? valueOverride : domain
@@ -473,6 +511,10 @@ function CustomDomainSection({ clientRow, clientId, canCustomize, supabase, quer
               <CheckCheck className="w-3.5 h-3.5" />
               Domaine enregistré.
             </div>
+          )}
+
+          {existing && statusInfo && (
+            <DomainStatusBadge status={statusInfo.status} message={statusInfo.message} />
           )}
 
           {/* DNS instructions */}
