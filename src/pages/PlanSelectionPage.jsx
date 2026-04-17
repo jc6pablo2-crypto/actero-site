@@ -59,17 +59,61 @@ export const PlanSelectionPage = ({ onNavigate }) => {
         return;
       }
 
-      // Get client id for this user
-      const { data: link } = await supabase
+      // Get client id for this user — or auto-create if first visit (startup flow)
+      let { data: link } = await supabase
         .from("client_users")
         .select("client_id")
         .eq("user_id", session.user.id)
         .maybeSingle();
 
       if (!link?.client_id) {
-        setError("Aucun client associé à votre compte.");
-        setLoading(null);
-        return;
+        // Also check legacy owner_user_id
+        const { data: ownedClient } = await supabase
+          .from("clients")
+          .select("id")
+          .eq("owner_user_id", session.user.id)
+          .maybeSingle();
+
+        if (ownedClient?.id) {
+          link = { client_id: ownedClient.id };
+        } else {
+          // Auto-create client + link for new users (startup onboarding)
+          const userName = session.user.user_metadata?.full_name
+            || session.user.user_metadata?.name
+            || session.user.email?.split("@")[0]
+            || "Ma boutique";
+          const { data: newClient, error: createErr } = await supabase
+            .from("clients")
+            .insert({
+              brand_name: userName,
+              contact_email: session.user.email,
+              owner_user_id: session.user.id,
+              plan: "free",
+            })
+            .select("id")
+            .single();
+
+          if (createErr || !newClient) {
+            setError("Impossible de créer votre compte. Contactez le support.");
+            setLoading(null);
+            return;
+          }
+
+          // Create client_users link
+          await supabase.from("client_users").insert({
+            client_id: newClient.id,
+            user_id: session.user.id,
+            role: "owner",
+            email: session.user.email,
+          });
+
+          // Create default client_settings row
+          await supabase.from("client_settings").insert({
+            client_id: newClient.id,
+          });
+
+          link = { client_id: newClient.id };
+        }
       }
 
       const res = await fetch("/api/billing/upgrade", {
