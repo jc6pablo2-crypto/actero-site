@@ -34,12 +34,21 @@ import { SupportGuidePage } from "./pages/SupportGuidePage";
 import { LegalPage } from "./pages/LegalPage";
 import { TermsPage } from "./pages/TermsPage";
 import { ActeroForStartupsPage } from "./pages/ActeroForStartupsPage";
+import PortalApp from './pages/portal/PortalApp.jsx';
 import { CursorGlow } from "./components/ui/cursor-glow";
 import { CommandPalette } from "./components/ui/command-palette";
 import { ToastProvider } from "./components/ui/Toast";
 import { Toaster } from "./components/ui/Toaster";
 
 const queryClient = new QueryClient();
+
+function isPortalHostname(hostname) {
+  if (!hostname) return false;
+  if (hostname.endsWith('.portal.actero.fr')) return true;
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('portal') === '1') return true;
+  return false;
+}
 
 function getInitialRoute() {
   // Use INITIAL_URL saved BEFORE Supabase client consumed the hash fragment
@@ -57,6 +66,10 @@ function getInitialRoute() {
 }
 
 function MainRouter() {
+  if (isPortalHostname(window.location.hostname)) {
+    return <PortalApp />;
+  }
+
   const [currentRoute, setCurrentRoute] = useState(getInitialRoute);
   const [isRouting, _setIsRouting] = useState(false);
 
