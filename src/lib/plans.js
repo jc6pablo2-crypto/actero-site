@@ -37,6 +37,7 @@ export const PLANS = {
       roi_dashboard: 'basic', // 'basic' | 'full' | 'custom'
       portal_enabled: false,
       portal_customization: false,
+      email_agent: false,
     },
     support: 'docs', // 'docs' | 'email_48h' | 'priority_24h' | 'account_manager'
     onboarding: 'self_service',
@@ -78,6 +79,7 @@ export const PLANS = {
       roi_dashboard: 'full',
       portal_enabled: true,
       portal_customization: false,
+      email_agent: false,
     },
     support: 'email_48h',
     onboarding: 'guided',
@@ -119,6 +121,7 @@ export const PLANS = {
       roi_dashboard: 'full',
       portal_enabled: true,
       portal_customization: true,
+      email_agent: true, // Agent Email — dès Pro
     },
     support: 'priority_24h',
     onboarding: 'guided',
@@ -160,6 +163,7 @@ export const PLANS = {
       roi_dashboard: 'custom',
       portal_enabled: true,
       portal_customization: true,
+      email_agent: true,
     },
     support: 'account_manager',
     onboarding: 'white_glove',

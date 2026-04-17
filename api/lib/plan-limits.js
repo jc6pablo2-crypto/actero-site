@@ -65,6 +65,7 @@ export const PLAN_FEATURES = {
     multi_shop: false,
     white_label: false,
     roi_dashboard: 'basic',
+    email_agent: false,
   },
   starter: {
     brand_editor: true,
@@ -78,6 +79,7 @@ export const PLAN_FEATURES = {
     multi_shop: false,
     white_label: false,
     roi_dashboard: 'full',
+    email_agent: false,
   },
   pro: {
     brand_editor: true,
@@ -91,6 +93,7 @@ export const PLAN_FEATURES = {
     multi_shop: false,
     white_label: false,
     roi_dashboard: 'full',
+    email_agent: true,
   },
   enterprise: {
     brand_editor: true,
@@ -104,6 +107,7 @@ export const PLAN_FEATURES = {
     multi_shop: true,
     white_label: true,
     roi_dashboard: 'custom',
+    email_agent: true,
   },
 }
 

@@ -48,7 +48,6 @@ import { ActivityChart } from '../components/dashboard/ActivityChart'
 import { ActivityView, useLiveActivityFeed, formatEvent, formatRelativeTime } from '../components/dashboard/ActivityView'
 import { ClientProfileView } from '../components/client/ClientProfileView'
 import { ClientCopilotBubble } from '../components/client/ClientCopilotBubble'
-import { ReportErrorButton } from '../components/client/ReportErrorButton'
 import { VoiceAgentSetupView } from '../components/client/VoiceAgentSetupView'
 import { VoiceCallsView } from '../components/client/VoiceCallsView'
 import { ClientReferralView } from '../components/client/ClientReferralView'
@@ -713,9 +712,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       defaultOpen: false,
       children: [
         { id: 'integrations', label: 'Intégrations', icon: Plug },
-        { id: 'portal-sav', label: 'Portail SAV', icon: MonitorSmartphone },
+        { id: 'portal-sav', label: 'Portail SAV', icon: MonitorSmartphone, ...(can('portal_enabled') ? {} : { badge: 'STARTER', badgeColor: 'bg-blue-50 text-blue-600 border border-blue-200' }) },
         { id: 'channels', label: 'Canaux', icon: Radio },
-        { id: 'email-agent', label: 'Agent Email', icon: Mail },
+        { id: 'email-agent', label: 'Agent Email', icon: Mail, ...(can('email_agent') ? {} : { badge: 'PRO', badgeColor: 'bg-amber-50 text-amber-700 border border-amber-200' }) },
       ],
     },
 
@@ -1456,7 +1455,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
 
           {activeTab === "email-agent" && (
-            <EmailAgentView clientId={currentClient?.id} />
+            <PlanGate feature="email_agent" planId={planId} inTrial={inTrial} onUpgrade={() => setActiveTab('billing')}>
+              <EmailAgentView clientId={currentClient?.id} />
+            </PlanGate>
           )}
 
           {activeTab === "opportunities" && (
@@ -1476,7 +1477,6 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
       {/* Copilot Chat Bubble */}
       {currentClient?.id && <ClientCopilotBubble clientId={currentClient.id} theme={theme} />}
-      {currentClient?.id && <ReportErrorButton />}
 
       {/* Achievements celebration toast */}
       {currentClient?.id && <AchievementsToast clientId={currentClient.id} />}
