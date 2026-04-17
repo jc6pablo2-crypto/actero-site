@@ -1,14 +1,14 @@
-/**
- * Vercel Cron — Poll inbound emails (IMAP + Gmail OAuth).
- *
- * Schedule: */2 * * * * (every 2 min)
- *
- * For each active client integration (smtp_imap OR gmail) where the client has
- * email_agent_enabled = true, polls the mailbox and forwards new messages to
- * the Engine Gateway.
- *
- * Auth: Vercel Cron header OR Authorization: Bearer <CRON_SECRET>.
- */
+// Vercel Cron — Poll inbound emails (IMAP + Gmail OAuth).
+//
+// Schedule: every 2 min — cron expression configured in vercel.json
+// (the raw cron pattern is NOT repeated here on purpose: the "*/" sequence
+// prematurely closes JSDoc block comments and breaks ESM parsing on Node 24).
+//
+// For each active client integration (smtp_imap OR gmail) where the client has
+// email_agent_enabled = true, polls the mailbox and forwards new messages to
+// the Engine Gateway.
+//
+// Auth: Vercel Cron header OR Authorization: Bearer <CRON_SECRET>.
 import { createClient } from '@supabase/supabase-js'
 import { pollOneMailbox } from '../lib/email-poller.js'
 
