@@ -39,6 +39,7 @@ import {
   Target,
   Cog,
   Mail,
+  MonitorSmartphone,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Logo } from '../components/layout/Logo'
@@ -54,6 +55,7 @@ import { ClientReferralView } from '../components/client/ClientReferralView'
 import { PartnerDashboardView } from '../components/client/PartnerDashboardView'
 import { ClientKnowledgeBaseView } from '../components/client/ClientKnowledgeBaseView'
 import { ClientIntegrationsView } from '../components/client/ClientIntegrationsView'
+import { PortalSavView } from '../components/client/PortalSavView'
 import { GuardrailsEditor } from '../components/client/GuardrailsEditor'
 import { PromptEditor } from '../components/client/PromptEditor'
 import { ConversationSimulator } from '../components/client/ConversationSimulator'
@@ -207,6 +209,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     if (route === "/client/referral") return "referral";
     if (route === "/client/partner") return "partner";
     if (route === "/client/integrations") return "integrations";
+    if (route === "/client/portal-sav") return "portal-sav";
     if (route === "/client/api-docs") return "api-docs";
     if (route === "/client/team") return "team";
     if (route === "/client/agent-config") return "agent-config";
@@ -708,6 +711,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       defaultOpen: false,
       children: [
         { id: 'integrations', label: 'Intégrations', icon: Plug },
+        { id: 'portal-sav', label: 'Portail SAV', icon: MonitorSmartphone },
         { id: 'channels', label: 'Canaux', icon: Radio },
         { id: 'email-agent', label: 'Agent Email', icon: Mail },
       ],
@@ -854,6 +858,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             {activeTab === "referral" && "Parrainage"}
             {activeTab === "partner" && "Actero Partners"}
             {activeTab === "integrations" && "Intégrations"}
+            {activeTab === "portal-sav" && "Portail SAV"}
             {activeTab === "channels" && "Canaux"}
             {activeTab === "email-agent" && "Agent Email"}
             {activeTab === "agent-config" && "Configuration"}
@@ -1313,6 +1318,15 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               clientId={currentClient?.id}
               clientType={currentClient?.client_type}
               theme={theme}
+            />
+          )}
+
+          {activeTab === "portal-sav" && (
+            <PortalSavView
+              client={{ ...currentClient, plan: planId }}
+              clientId={currentClient?.id}
+              supabase={supabase}
+              onUpgrade={() => setActiveTab('billing')}
             />
           )}
 
