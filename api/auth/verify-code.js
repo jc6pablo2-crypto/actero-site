@@ -84,6 +84,7 @@ export default async function handler(req, res) {
   const brand_name = payload.brand_name
   const shopify_url = payload.shopify_url
   const referral_code = payload.referral_code
+  const acquisition_source = payload.acquisition_source || null
 
   let userId = null
   let clientId = null
@@ -116,6 +117,7 @@ export default async function handler(req, res) {
         plan: 'free',
         status: 'active',
         ...(shopify_url && { shopify_url }),
+        ...(acquisition_source && { acquisition_source }),
       }])
       .select()
       .single()
@@ -169,6 +171,18 @@ export default async function handler(req, res) {
       })
     } catch (welcomeErr) {
       console.error('[verify-code] welcome email error:', welcomeErr.message)
+    }
+
+    // 6b. Notify internal team via Slack (non-blocking)
+    try {
+      const { notifySignup } = await import('../lib/notify-signup.js')
+      notifySignup({
+        email: normalizedEmail,
+        brand_name,
+        acquisition_source,
+      }).catch(() => { /* silent */ })
+    } catch (notifyErr) {
+      console.error('[verify-code] notify error:', notifyErr.message)
     }
 
     // 7. Return success

@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Trop de demandes. Réessayez plus tard.' })
   }
 
-  const { email, password, brand_name, shopify_url, referral_code } = req.body || {}
+  const { email, password, brand_name, shopify_url, referral_code, acquisition_source } = req.body || {}
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: 'Email invalide.' })
@@ -69,6 +69,7 @@ export default async function handler(req, res) {
         brand_name: brand_name.trim(),
         shopify_url: shopify_url ? shopify_url.trim() : null,
         referral_code: referral_code || null,
+        acquisition_source: acquisition_source && typeof acquisition_source === 'object' ? acquisition_source : null,
       },
       expires_at,
     })

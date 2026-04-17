@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Trop de tentatives. Réessayez plus tard.' });
   }
 
-  const { email, password, brand_name, shopify_url, referral_code } = req.body || {};
+  const { email, password, brand_name, shopify_url, referral_code, acquisition_source } = req.body || {};
 
   // --- Validation ---
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -63,6 +63,7 @@ export default async function handler(req, res) {
         plan: 'free',
         status: 'active',
         ...(shopify_url && { shopify_url: shopify_url.trim() }),
+        ...(acquisition_source && typeof acquisition_source === 'object' && { acquisition_source }),
       }])
       .select()
       .single();
@@ -173,6 +174,18 @@ export default async function handler(req, res) {
       });
     } catch (welcomeErr) {
       console.error('[SIGNUP] Welcome email error:', welcomeErr.message);
+    }
+
+    // 6b. Notify internal team via Slack (non-blocking)
+    try {
+      const { notifySignup } = await import('../lib/notify-signup.js');
+      notifySignup({
+        email,
+        brand_name: brand_name.trim(),
+        acquisition_source,
+      }).catch(() => { /* silent */ });
+    } catch (notifyErr) {
+      console.error('[SIGNUP] Notify error:', notifyErr.message);
     }
 
     // 7. Redirect to dashboard

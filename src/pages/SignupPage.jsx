@@ -30,6 +30,26 @@ export const SignupPage = ({ onNavigate }) => {
     return match ? decodeURIComponent(match[1]) : null;
   }, [referralFromUrl]);
 
+  // UTM attribution — capture query string params + referrer at mount time.
+  // Sent along with signup requests for server-side storage in clients.acquisition_source.
+  const acquisitionSource = useMemo(() => {
+    const params = new URLSearchParams(window.location.search);
+    const payload = {
+      source: params.get("utm_source"),
+      medium: params.get("utm_medium"),
+      campaign: params.get("utm_campaign"),
+      content: params.get("utm_content"),
+      term: params.get("utm_term"),
+      referrer: document.referrer || null,
+      captured_at: new Date().toISOString(),
+    };
+    // Drop null keys to keep the JSONB clean — backend stores only what was present.
+    const cleaned = Object.fromEntries(
+      Object.entries(payload).filter(([, v]) => v !== null && v !== "")
+    );
+    return Object.keys(cleaned).length > 0 ? cleaned : null;
+  }, []);
+
   useEffect(() => {
     if (step === "verify") {
       setTimeout(() => codeRefs.current[0]?.focus(), 100);
@@ -68,6 +88,7 @@ export const SignupPage = ({ onNavigate }) => {
           password,
           brand_name: brandName.trim(),
           ...(referralCode && { referral_code: referralCode }),
+          ...(acquisitionSource && { acquisition_source: acquisitionSource }),
         }),
       });
       const data = await res.json();
@@ -149,6 +170,7 @@ export const SignupPage = ({ onNavigate }) => {
           password,
           brand_name: brandName.trim(),
           ...(referralCode && { referral_code: referralCode }),
+          ...(acquisitionSource && { acquisition_source: acquisitionSource }),
         }),
       });
       setSuccessMessage("Nouveau code envoyé !");
