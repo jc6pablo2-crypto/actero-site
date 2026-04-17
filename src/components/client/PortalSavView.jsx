@@ -76,8 +76,6 @@ function StatCard({ label, value }) {
 export const PortalSavView = ({ client, clientId, supabase, onUpgrade, onNavigate }) => {
   const queryClient = useQueryClient()
   const plan = client?.plan || 'free'
-  const slug = client?.slug || ''
-  const url = slug ? portalUrl(slug) : null
 
   // ── If free plan — full upgrade wall ─────────────────────────
   if (!canAccess(plan, 'portal_enabled')) {
@@ -123,6 +121,10 @@ export const PortalSavView = ({ client, clientId, supabase, onUpgrade, onNavigat
     enabled: !!clientId,
     initialData: client,
   })
+
+  // ── Derived values from the full row ─────────────────────────
+  const slug = clientRow?.slug || ''
+  const url = slug ? portalUrl(slug) : null
 
   // ── Toggle portal_enabled ────────────────────────────────────
   const [toggleLoading, setToggleLoading] = useState(false)
