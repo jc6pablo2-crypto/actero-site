@@ -5,16 +5,30 @@ let insertCall, resendCall;
 
 vi.mock('./lib/supabase.js', () => ({
   getServiceRoleClient: () => ({
-    from: () => ({
-      select: () => ({
-        eq: () => ({
+    from: (table) => {
+      if (table === 'clients') {
+        return {
+          select: () => ({
+            eq: () => ({
+              maybeSingle: () => Promise.resolve({
+                data: { brand_name: 'Horace', portal_display_name: 'Horace', portal_logo_url: null, portal_primary_color: '#111111' },
+                error: null,
+              }),
+            }),
+          }),
+        };
+      }
+      return {
+        select: () => ({
           eq: () => ({
-            eq: () => ({ gte: () => Promise.resolve({ count: 0, error: null }) }),
+            eq: () => ({
+              eq: () => ({ gte: () => Promise.resolve({ count: 0, error: null }) }),
+            }),
           }),
         }),
-      }),
-      insert: (row) => { insertCall = row; return Promise.resolve({ error: null }); },
-    }),
+        insert: (row) => { insertCall = row; return Promise.resolve({ error: null }); },
+      };
+    },
   }),
 }));
 

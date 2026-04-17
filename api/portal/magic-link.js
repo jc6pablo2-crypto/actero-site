@@ -5,6 +5,82 @@ import { checkMagicLinkRateLimit } from './lib/rate-limit.js';
 
 const MAGIC_LINK_TTL_MINUTES = 15;
 
+function buildMagicLinkEmailHtml({ url, branding }) {
+  const { displayName, primaryColor, logoUrl } = branding;
+  const textOnPrimary = '#ffffff';
+
+  const logoBlock = logoUrl
+    ? `<img src="${logoUrl}" alt="${displayName}" style="max-height:40px;max-width:180px;display:block;" />`
+    : `<div style="font-size:22px;font-weight:700;color:#000000;letter-spacing:-0.5px;">${displayName}</div>`;
+
+  return `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background-color:#f8f8f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8f8f8;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+
+          <tr>
+            <td style="padding:40px 40px 0 40px;">
+              ${logoBlock}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:32px 40px 8px 40px;">
+              <h1 style="font-size:24px;font-weight:700;color:#000000;margin:0 0 16px 0;line-height:1.3;letter-spacing:-0.5px;">
+                Votre lien de connexion
+              </h1>
+              <p style="font-size:15px;color:#444444;line-height:1.7;margin:0 0 24px 0;">
+                Cliquez sur le bouton ci-dessous pour accéder à votre espace SAV ${displayName}. Ce lien est valable <strong>15 minutes</strong> et utilisable une seule fois.
+              </p>
+
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding:4px 0 28px 0;">
+                    <a href="${url}" style="display:inline-block;background-color:${primaryColor};color:${textOnPrimary};font-size:16px;font-weight:700;text-decoration:none;padding:16px 40px;border-radius:12px;letter-spacing:-0.2px;">
+                      Accéder à mon espace
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <div style="border-top:1px solid #eee;padding-top:20px;">
+                <p style="font-size:13px;color:#888;margin:0 0 8px 0;">
+                  Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :
+                </p>
+                <p style="font-size:12px;color:#555;word-break:break-all;margin:0;">
+                  <a href="${url}" style="color:#555;text-decoration:underline;">${url}</a>
+                </p>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:24px 40px 28px 40px;background-color:#fafafa;border-top:1px solid #eee;">
+              <p style="font-size:12px;color:#888;margin:0 0 6px 0;">
+                Si vous n'avez pas demandé ce lien, ignorez simplement cet email.
+              </p>
+              <p style="font-size:11px;color:#aaa;margin:0;letter-spacing:0.2px;">
+                Espace SAV propulsé par <a href="https://actero.fr" style="color:#aaa;text-decoration:none;">Actero</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method_not_allowed' });
   const { clientId, email, slug } = req.body || {};
@@ -15,6 +91,18 @@ export default async function handler(req, res) {
 
   const rate = await checkMagicLinkRateLimit(supabase, clientId, normalizedEmail);
   if (!rate.allowed) return res.status(429).json({ error: 'rate_limited', retryAfter: rate.retryAfterSeconds });
+
+  const { data: client } = await supabase
+    .from('clients')
+    .select('brand_name, portal_display_name, portal_logo_url, portal_primary_color')
+    .eq('id', clientId)
+    .maybeSingle();
+
+  const branding = {
+    displayName: client?.portal_display_name || client?.brand_name || 'Mon espace SAV',
+    primaryColor: client?.portal_primary_color || '#0F766E',
+    logoUrl: client?.portal_logo_url || null,
+  };
 
   const raw = generateMagicLinkToken();
   const hash = await hashToken(raw);
@@ -38,8 +126,8 @@ export default async function handler(req, res) {
   await resend.emails.send({
     from: process.env.PORTAL_EMAIL_FROM || 'noreply@actero.fr',
     to: normalizedEmail,
-    subject: 'Votre lien de connexion',
-    html: `<p>Bonjour,</p><p>Cliquez pour vous connecter à votre espace SAV :</p><p><a href="${url}">${url}</a></p><p>Ce lien expire dans 15 minutes.</p>`,
+    subject: `Votre lien de connexion · ${branding.displayName}`,
+    html: buildMagicLinkEmailHtml({ url, branding }),
   });
 
   return res.status(200).json({ ok: true });
