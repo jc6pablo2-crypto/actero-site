@@ -10,7 +10,7 @@ import {
 const statusLabels = {
   active: { label: 'Actif', color: 'text-emerald-500', bg: 'bg-emerald-500/10 border-emerald-500/20' },
   past_due: { label: 'En retard', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' },
-  canceled: { label: 'Annulé', color: 'text-[#71717a]', bg: 'bg-[#fafafa]0/10 border-gray-500/20' },
+  canceled: { label: 'Annulé', color: 'text-[#71717a]', bg: 'bg-[#fafafa]/10 border-gray-500/20' },
   trialing: { label: 'Essai', color: 'text-blue-400', bg: 'bg-blue-500/10 border-blue-500/20' },
   incomplete: { label: 'Incomplet', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' },
   unpaid: { label: 'Impayé', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20' },

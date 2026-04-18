@@ -197,7 +197,7 @@ export const KnowledgeImportModal = ({ clientId, provider, onClose, onSuccess })
                         <a
                           href={doc.url}
                           target="_blank"
-                          rel="noreferrer"
+                          rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
                           className="p-1 rounded hover:bg-gray-100 text-[#9ca3af]"
                         >

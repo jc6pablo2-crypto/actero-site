@@ -158,13 +158,19 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
       ? [...currentChannels, channelId]
       : currentChannels.filter(c => c !== channelId)
 
-    // Activate the native email agent (cron-based, replaces old n8n setup)
+    // Activate the native email agent (cron-based, replaces old n8n setup).
+    // Non-blocking for the channel toggle, but user-visible if the side-effect fails —
+    // otherwise they wonder why email isn't processing.
     if (channelId === 'email' && isSelected) {
       try {
-        await supabase.from('client_settings')
+        const { error } = await supabase.from('client_settings')
           .update({ email_agent_enabled: true, updated_at: new Date().toISOString() })
           .eq('client_id', clientId)
-      } catch {} // Non-blocking
+        if (error) throw error
+      } catch (err) {
+        console.error('[PlaybooksView] email agent enable failed:', err)
+        toast.error('Activation de l\'agent email échouée — le canal est activé mais l\'agent doit être activé manuellement dans Paramètres.')
+      }
     }
 
     // Auto-install chat widget on Shopify when widget channel is activated
@@ -178,8 +184,13 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
         })
         if (widgetRes.ok) {
           toast.success('Widget chat installe sur votre boutique Shopify !')
+        } else {
+          toast.error('Installation du widget Shopify échouée. Vérifiez votre connexion Shopify.')
         }
-      } catch {} // Non-blocking
+      } catch (err) {
+        console.error('[PlaybooksView] widget install failed:', err)
+        toast.error('Installation du widget Shopify impossible. Réessayez.')
+      }
     }
 
     // Auto-uninstall chat widget when widget channel is deactivated
@@ -191,7 +202,10 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
           body: JSON.stringify({ action: 'uninstall', client_id: clientId }),
         })
-      } catch {}
+      } catch (err) {
+        // Background cleanup — if it fails the widget stays on the shop and we log it.
+        console.error('[PlaybooksView] widget uninstall failed:', err)
+      }
     }
 
     if (cp) {
@@ -317,7 +331,10 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
             body: JSON.stringify({ action: 'uninstall', client_id: clientId }),
           })
-        } catch {}
+        } catch (err) {
+          // Background cleanup — playbook is already deactivated, widget cleanup failure is not user-blocking.
+          console.error('[PlaybooksView] widget cleanup failed:', err)
+        }
       }
     }
 
@@ -624,7 +641,10 @@ const VocalAgentConfig = ({ clientId }) => {
       })
       setInstalled(false)
       toast.success('Agent vocal retire de votre boutique')
-    } catch {}
+    } catch (err) {
+      console.error('[PlaybooksView] vocal widget uninstall failed:', err)
+      toast.error('Échec du retrait de l\'agent vocal. Réessayez.')
+    }
     setInstalling(false)
   }
 

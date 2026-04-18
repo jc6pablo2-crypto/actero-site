@@ -21,7 +21,7 @@ const STEP_ICONS = {
 };
 
 const STATUS_STYLES = {
-  pending: { color: 'text-[#71717a]', bg: 'bg-[#fafafa]0/10', border: 'border-gray-500/20', label: 'En attente' },
+  pending: { color: 'text-[#71717a]', bg: 'bg-[#fafafa]/10', border: 'border-gray-500/20', label: 'En attente' },
   running: { color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20', label: 'En cours' },
   success: { color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', label: 'Succes' },
   warning: { color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20', label: 'Warning' },

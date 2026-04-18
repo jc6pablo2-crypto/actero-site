@@ -243,7 +243,7 @@ export const AdminPartnerTokensView = () => {
                         <a
                           href={`/partner?token=${t.token}`}
                           target="_blank"
-                          rel="noreferrer"
+                          rel="noopener noreferrer"
                           className="p-2 rounded-lg hover:bg-gray-50 transition-colors"
                           title="Ouvrir"
                         >

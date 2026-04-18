@@ -1,6 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { X, LogOut, ChevronDown, Bell, Users, Gift, User, CreditCard, Award, Search } from 'lucide-react'
 import { Logo } from './Logo'
+
+// Platform-aware shortcut hint (⌘ on Mac, Ctrl elsewhere).
+// Resolved once at module load — nav.platform is static per session.
+const IS_MAC = typeof navigator !== 'undefined'
+  && /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent || '')
+const CMD_SYMBOL = IS_MAC ? '⌘' : 'Ctrl'
+const CMD_LABEL = IS_MAC ? 'Cmd+K' : 'Ctrl+K'
 
 export const Sidebar = ({
   title = "Actero",
@@ -72,13 +79,14 @@ export const Sidebar = ({
         <button
           type="button"
           onClick={() => { window.dispatchEvent(new CustomEvent('actero:open-command-palette')) }}
-          aria-label="Rechercher (Cmd+K)"
+          aria-label={`Rechercher (${CMD_LABEL})`}
           className="w-full relative flex items-center gap-2 pl-3 pr-2 py-2 rounded-xl bg-[#fafafa] border border-[#f0f0f0] text-[12px] text-[#9ca3af] hover:bg-white hover:border-cta/20 hover:text-[#1a1a1a] transition-all group text-left"
         >
           <Search className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
           <span className="flex-1">Rechercher...</span>
           <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-sans font-medium text-[#9ca3af] bg-white border border-[#e5e5e5] rounded group-hover:border-[#d4d4d4] transition-colors">
-            <span className="text-[11px] leading-none">⌘</span>K
+            <span className="text-[11px] leading-none">{CMD_SYMBOL}</span>
+            {IS_MAC ? 'K' : '+K'}
           </kbd>
         </button>
       </div>

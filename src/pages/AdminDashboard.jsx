@@ -269,6 +269,25 @@ const QuickAddClientModal = ({ onClose, onSubmit }) => {
   );
 };
 
+// ── Module-scope constants (hoisted from render) ────────────────────────
+// Monthly plan prices in EUR — used for MRR calculation on the overview tab.
+// Stays in sync with billing/stripe setup; free = 0 intentionally (not counted in MRR).
+const PLAN_PRICES = { free: 0, starter: 99, pro: 399, enterprise: 999 };
+
+// Recent-events feed category styling. Hoisted to avoid re-allocating on every render
+// (6+ events render in overview tab's live feed — recreated 6 times per render prior).
+const EVENT_CATEGORY_LABELS = {
+  ticket_resolved: { label: 'Ticket résolu', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+  ticket_escalated: { label: 'Escaladé', color: 'text-amber-400', bg: 'bg-amber-500/10' },
+  cart_email_sent: { label: 'Email panier', color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  cart_recovered: { label: 'Panier récupéré', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+  visit_scheduled: { label: 'Visite planifiée', color: 'text-violet-400', bg: 'bg-violet-500/10' },
+  lead_qualified: { label: 'Lead qualifié', color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
+  visit_reply_sent: { label: 'Réponse visite', color: 'text-purple-400', bg: 'bg-purple-500/10' },
+  match_found: { label: 'Match trouvé', color: 'text-pink-400', bg: 'bg-pink-500/10' },
+};
+const EVENT_CATEGORY_FALLBACK = { color: 'text-[#71717a]', bg: 'bg-[#fafafa]' };
+
 export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -336,8 +355,12 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const { open: cmdkOpen, close: closeCmdk, isMac } = useCommandPalette();
 
   // Fetching Data with React Query
+  // staleTime: 60s across admin overview queries — admin tab-switches within 1 minute
+  // should serve cached data rather than refetching every time (prevents re-render thrash
+  // when the admin explores tabs). Data is still refetched on focus/remount naturally.
   const { data: clients = [], isLoading: clientsLoading } = useQuery({
     queryKey: ['admin-clients'],
+    staleTime: 60_000,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("clients")
@@ -350,6 +373,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   const { data: requests = [], isLoading: requestsLoading, refetch: refetchRequests } = useQuery({
     queryKey: ['admin-requests'],
+    staleTime: 60_000,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("requests")
@@ -362,6 +386,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   const { data: leads = [], isLoading: leadsLoading } = useQuery({
     queryKey: ['admin-leads'],
+    staleTime: 60_000,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("leads")
@@ -375,6 +400,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   // Overview data: metrics_daily aggregated
   const { data: overviewData } = useQuery({
     queryKey: ['admin-overview'],
+    staleTime: 60_000,
     queryFn: async () => {
       const [metricsRes, eventsRes, recentEventsRes, funnelRes] = await Promise.all([
         supabase.from("metrics_daily").select("client_id, date, tickets_total, tickets_auto, tasks_executed, time_saved_minutes, estimated_roi, active_automations").order("date", { ascending: false }),
@@ -680,8 +706,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
 
           {activeTab === "overview" && (() => {
-            // SaaS KPI calculations
-            const PLAN_PRICES = { free: 0, starter: 99, pro: 399, enterprise: 999 };
+            // SaaS KPI calculations — PLAN_PRICES is hoisted to module scope above.
             const planCounts = { free: 0, starter: 0, pro: 0, enterprise: 0 };
             clients.forEach(c => {
               const p = c.plan || 'free';
@@ -825,17 +850,8 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                   </div>
                   <div className="space-y-3">
                     {(overviewData?.recentEvents || []).slice(0, 6).map((event, i) => {
-                      const categoryLabels = {
-                        ticket_resolved: { label: 'Ticket résolu', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-                        ticket_escalated: { label: 'Escaladé', color: 'text-amber-400', bg: 'bg-amber-500/10' },
-                        cart_email_sent: { label: 'Email panier', color: 'text-blue-400', bg: 'bg-blue-500/10' },
-                        cart_recovered: { label: 'Panier récupéré', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-                        visit_scheduled: { label: 'Visite planifiée', color: 'text-violet-400', bg: 'bg-violet-500/10' },
-                        lead_qualified: { label: 'Lead qualifié', color: 'text-cyan-400', bg: 'bg-cyan-500/10' },
-                        visit_reply_sent: { label: 'Réponse visite', color: 'text-purple-400', bg: 'bg-purple-500/10' },
-                        match_found: { label: 'Match trouvé', color: 'text-pink-400', bg: 'bg-pink-500/10' },
-                      };
-                      const cat = categoryLabels[event.event_category] || { label: event.event_category, color: 'text-[#71717a]', bg: 'bg-[#fafafa]' };
+                      const cat = EVENT_CATEGORY_LABELS[event.event_category]
+                        ?? { label: event.event_category, ...EVENT_CATEGORY_FALLBACK };
                       const timeAgo = (() => {
                         const diff = (Date.now() - new Date(event.created_at).getTime()) / 1000;
                         if (diff < 60) return "à l'instant";
@@ -958,7 +974,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                                 initial={{ width: 0 }}
                                 animate={{ width: `${pct}%` }}
                                 transition={{ delay: i * 0.05, duration: 0.5 }}
-                                className={`h-full rounded-full ${colors[cat] || 'bg-[#fafafa]0'}`}
+                                className={`h-full rounded-full ${colors[cat] || 'bg-[#fafafa]'}`}
                               />
                             </div>
                           </div>

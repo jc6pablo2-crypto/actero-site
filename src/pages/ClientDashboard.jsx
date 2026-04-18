@@ -97,15 +97,23 @@ const FeedbackButtons = ({ eventId, currentFeedback, supabase }) => {
 
   const handleFeedback = async (value) => {
     if (saving) return;
+    const prev = feedback;
     const newValue = feedback === value ? null : value;
     setSaving(true);
-    setFeedback(newValue);
+    setFeedback(newValue); // optimistic
     try {
-      await supabase
+      const { error } = await supabase
         .from('automation_events')
         .update({ feedback: newValue, feedback_at: newValue ? new Date().toISOString() : null })
         .eq('id', eventId);
-    } catch {}
+      if (error) throw error;
+    } catch (err) {
+      // Rollback optimistic state on failure so the UI reflects server truth.
+      // No toast here (background feedback action, mid-list density) — errors
+      // are captured by Sentry via console.error.
+      console.error('[FeedbackButtons] feedback update failed:', err);
+      setFeedback(prev);
+    }
     setSaving(false);
   };
 
@@ -668,7 +676,9 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   // Sidebar structure — refonte avril 2026 (POV nouveau client).
   // Narrative : Vue d'ensemble → Mon Agent (star) → Mes tickets → Canaux clients → Outils → Performance → Système.
-  const sidebarItems = [
+  // Memoized: rebuild only when plan-gating (`can`), role, or urgent count changes — avoids recreating
+  // the full tree (~30 nodes with icon refs) on every render/rerender of unrelated state.
+  const sidebarItems = useMemo(() => [
     // Lien standalone hors section
     { id: 'overview', label: 'Vue d\'ensemble', icon: Home, dataTour: 'overview-tab' },
 
@@ -740,12 +750,13 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     // SYSTÈME
     { type: 'section', label: 'Système' },
     { id: 'settings', label: 'Paramètres', icon: Cog },
-  ];
+  ], [can, urgentEscalationCount]);
 
   const userRole = currentClient?._userRole || 'owner';
 
-  // Filter sidebar items based on user role
-  const filteredSidebarItems = sidebarItems.map(item => {
+  // Filter sidebar items based on user role.
+  // Memoized on sidebarItems + userRole — avoids re-walking the tree on every render of downstream state.
+  const filteredSidebarItems = useMemo(() => sidebarItems.map(item => {
     // Filter children of expandable sections
     if (item.type === 'expandable') {
       const filteredChildren = (item.children || []).filter(c => canAccessTab(userRole, c.id))
@@ -763,7 +774,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       return nextItem && nextItem.type !== 'section';
     }
     return true;
-  });
+  }), [sidebarItems, userRole]);
 
   const isLoading = clientLoading || metricsLoading || dailyMetricsLoading;
   const isLight = theme === "light";

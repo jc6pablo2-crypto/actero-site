@@ -7,7 +7,7 @@ import {
 import { supabase } from '../../lib/supabase'
 
 const STATUS_CONFIG = {
-  draft: { label: 'Brouillon', color: 'bg-[#fafafa]0/10 text-[#71717a] border-gray-500/20' },
+  draft: { label: 'Brouillon', color: 'bg-[#fafafa]/10 text-[#71717a] border-gray-500/20' },
   sent: { label: 'Email envoyé', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
   paid: { label: 'Payé — Actif', color: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
   canceled: { label: 'Annulé', color: 'bg-red-500/10 text-red-400 border-red-500/20' },

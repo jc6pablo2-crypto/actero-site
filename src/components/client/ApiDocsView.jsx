@@ -63,7 +63,12 @@ export function ApiDocsView({ clientId }) {
       setCopiedId(id)
       toast.success('Copié !')
       setTimeout(() => setCopiedId(null), 2000)
-    } catch {}
+    } catch (err) {
+      // Clipboard API can fail on insecure contexts or when the document isn't focused.
+      // Surface the failure so the user doesn't silently "copy nothing".
+      console.error('[ApiDocsView] clipboard copy failed:', err)
+      toast.error('Copie impossible — votre navigateur a bloqué l\'accès au presse-papier.')
+    }
   }
 
   const toggleVisibility = (id) => setVisibleKeys(prev => ({ ...prev, [id]: !prev[id] }))

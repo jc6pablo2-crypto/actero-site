@@ -15,7 +15,7 @@ const statusConfig = {
   active_ok: { label: 'Actif', color: 'text-emerald-500', bg: 'bg-emerald-500/10 border-emerald-500/20', dot: 'bg-emerald-500', icon: CheckCircle2 },
   active_error: { label: 'Erreur', color: 'text-red-400', bg: 'bg-red-500/10 border-red-500/20', dot: 'bg-red-400', icon: AlertTriangle },
   active_idle: { label: 'Inactif', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20', dot: 'bg-amber-400', icon: Clock },
-  inactive: { label: 'Désactivé', color: 'text-[#71717a]', bg: 'bg-[#fafafa]0/10 border-gray-500/20', dot: 'bg-[#fafafa]0', icon: Pause },
+  inactive: { label: 'Désactivé', color: 'text-[#71717a]', bg: 'bg-[#fafafa]/10 border-gray-500/20', dot: 'bg-[#fafafa]', icon: Pause },
 }
 
 const CATEGORIES = [
@@ -25,7 +25,7 @@ const CATEGORIES = [
   { id: 'metrics', label: 'Métriques', color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' },
   { id: 'prospection', label: 'Prospection', color: 'bg-pink-500/10 text-pink-400 border-pink-500/20' },
   { id: 'immobilier', label: 'Immobilier', color: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
-  { id: 'autre', label: 'Autre', color: 'bg-[#fafafa]0/10 text-[#71717a] border-gray-500/20' },
+  { id: 'autre', label: 'Autre', color: 'bg-[#fafafa]/10 text-[#71717a] border-gray-500/20' },
 ]
 
 function getStatus(wf) {
@@ -283,8 +283,8 @@ export const AdminMonitoringView = () => {
         {[
           { label: 'Total workflows', value: workflows.length, icon: Wifi, color: 'text-blue-400', bg: 'bg-blue-500/10' },
           { label: 'Actifs', value: activeCount, icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
-          { label: 'En erreur', value: errorCount, icon: AlertTriangle, color: errorCount > 0 ? 'text-red-400' : 'text-[#71717a]', bg: errorCount > 0 ? 'bg-red-500/10' : 'bg-[#fafafa]0/10' },
-          { label: 'Désactivés', value: inactiveCount, icon: Pause, color: 'text-[#71717a]', bg: 'bg-[#fafafa]0/10' },
+          { label: 'En erreur', value: errorCount, icon: AlertTriangle, color: errorCount > 0 ? 'text-red-400' : 'text-[#71717a]', bg: errorCount > 0 ? 'bg-red-500/10' : 'bg-[#fafafa]/10' },
+          { label: 'Désactivés', value: inactiveCount, icon: Pause, color: 'text-[#71717a]', bg: 'bg-[#fafafa]/10' },
           { label: 'Exécutions', value: totalExecs, icon: Activity, color: 'text-violet-400', bg: 'bg-violet-500/10' },
           { label: 'Taux succès', value: `${successRate}%`, icon: ShieldCheck, color: successRate >= 90 ? 'text-emerald-500' : 'text-amber-400', bg: successRate >= 90 ? 'bg-emerald-500/10' : 'bg-amber-500/10' },
         ].map(kpi => (

@@ -465,6 +465,7 @@ const VisualRuleBuilder = ({ clientId, onRuleCreated }) => {
 
 const EscalationThresholds = ({ clientId }) => {
   const queryClient = useQueryClient()
+  const toast = useToast()
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -524,7 +525,11 @@ const EscalationThresholds = ({ clientId }) => {
       setSaved(true)
       queryClient.invalidateQueries({ queryKey: ['escalation-thresholds', clientId] })
       setTimeout(() => setSaved(false), 3000)
-    } catch {}
+    } catch (err) {
+      // User-initiated form save — MUST surface failure or data loss happens silently.
+      console.error('[GuardrailsEditor] threshold save failed:', err)
+      toast.error('Échec de la sauvegarde des seuils. Réessayez ou contactez le support.')
+    }
     setSaving(false)
   }
 
