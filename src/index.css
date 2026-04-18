@@ -135,3 +135,34 @@ h3, h4 {
   background: rgba(27,125,58,0.2);
   color: #111827;
 }
+
+/* ────────────────────────────────────────────────────────────────
+   Data density utilities — Stripe-inspired.
+   Apply to KPI numbers, prices, timers, IDs. Prevents layout shift
+   when digits change (0.1s animations etc.) by using tabular figures.
+   ──────────────────────────────────────────────────────────────── */
+.tabular-nums,
+.font-tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+/* Stripe pattern: IDs, hashes, customer refs always in mono + uppercase-safe */
+.mono-id {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Focus ring — visible only on keyboard nav (Linear pattern).
+   Hidden on mouse clicks via :focus-visible so the UI feels calm.
+   ──────────────────────────────────────────────────────────────── */
+*:focus {
+  outline: none;
+}
+*:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
