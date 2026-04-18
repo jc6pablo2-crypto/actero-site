@@ -31,11 +31,19 @@ function applyTheme(theme: Theme) {
   else document.documentElement.classList.remove('dark')
 }
 
-/** Reads the persisted theme preference, defaults to 'system'. */
+/**
+ * Reads the persisted theme preference.
+ *
+ * Default is 'light' (not 'system') until the product has been audited
+ * screen-by-screen for dark-mode support. Many pages currently hard-code
+ * light backgrounds (bg-white, bg-[#F9F7F1]) that don't participate in
+ * the token-based dark swap — auto-switching on OS preference produces
+ * broken hybrids (dark CTA on light bg). Dark mode is opt-in explicitly.
+ */
 export function getStoredTheme(): Theme {
-  if (typeof window === 'undefined') return 'system'
+  if (typeof window === 'undefined') return 'light'
   const v = localStorage.getItem(STORAGE_KEY)
-  return v === 'light' || v === 'dark' || v === 'system' ? v : 'system'
+  return v === 'light' || v === 'dark' || v === 'system' ? v : 'light'
 }
 
 /** Sets + persists the theme, then applies it. */
