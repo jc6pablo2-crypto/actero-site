@@ -80,7 +80,7 @@ describe('update-portal-branding', () => {
     const { req, res } = makeReqRes({
       portal_display_name: 'Horace · Service client',
       portal_logo_url: 'https://cdn.example.com/logo.png',
-      portal_primary_color: '#0F5F35',
+      portal_primary_color: '#0E653A',
     })
     await handler(req, res)
     expect(res.statusCode).toBe(200)

@@ -700,7 +700,7 @@ export default async function handler(req, res) {
           <p style="font-size:15px;color:#444;line-height:1.7;margin:0 0 24px 0;">
             Si vous souhaitez annuler, rendez-vous dans votre dashboard avant la fin de l'essai.
           </p>
-          <a href="https://actero.fr/client/overview" style="display:inline-block;background-color:#0F5F35;color:#fff;font-size:15px;font-weight:600;padding:12px 28px;border-radius:12px;text-decoration:none;">Accéder à mon dashboard</a>
+          <a href="https://actero.fr/client/overview" style="display:inline-block;background-color:#0E653A;color:#fff;font-size:15px;font-weight:600;padding:12px 28px;border-radius:12px;text-decoration:none;">Accéder à mon dashboard</a>
         </td></tr>
         <tr><td style="padding:20px 40px 40px 40px;">
           <p style="font-size:14px;color:#444;line-height:1.7;margin:0;">À très vite,</p>

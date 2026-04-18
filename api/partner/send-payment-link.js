@@ -78,7 +78,7 @@ export default async function handler(req, res) {
             Voici votre lien de paiement pour un montant de <strong style="color:#262626;">${amount_eur} EUR</strong>.
           </p>
           <a href="${session.url}"
-             style="display:inline-block;background-color:#0F5F35;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:999px;">
+             style="display:inline-block;background-color:#0E653A;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:999px;">
             Proceder au paiement
           </a>
           <p style="font-size:13px;color:#716D5C;line-height:1.6;margin:24px 0 0 0;">

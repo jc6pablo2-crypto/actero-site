@@ -68,8 +68,8 @@ export const SettingsHubView = ({ onNavigate }) => {
                     onClick={() => onNavigate && onNavigate(it.id)}
                     className="group w-full flex items-center gap-3 px-4 py-3.5 hover:bg-[#fafafa] transition-colors text-left"
                   >
-                    <div className="w-9 h-9 rounded-lg bg-[#0F5F35]/10 flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-4 h-4 text-[#0F5F35]" />
+                    <div className="w-9 h-9 rounded-lg bg-[#0E653A]/10 flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-4 h-4 text-[#0E653A]" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">

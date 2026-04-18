@@ -39,7 +39,7 @@ function variationPct(cur, prev) {
 
 function variationBadge(v) {
   if (v === 0) return { arrow: '▬', color: '#9ca3af', sign: '' }
-  if (v > 0) return { arrow: '▲', color: '#0F5F35', sign: '+' }
+  if (v > 0) return { arrow: '▲', color: '#0E653A', sign: '+' }
   return { arrow: '▼', color: '#dc2626', sign: '' }
 }
 
@@ -201,7 +201,7 @@ function buildReportHtml({ brandName, periodLabel, current, previous }) {
   const metricCard = (label, value, suffix, v) => `
     <td width="50%" style="padding:18px 16px;background:#fafafa;border:1px solid #f0f0f0;border-radius:12px;">
       <div style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">${label}</div>
-      <div style="font-size:26px;font-weight:800;color:#0F5F35;margin-top:6px;letter-spacing:-0.5px;">
+      <div style="font-size:26px;font-weight:800;color:#0E653A;margin-top:6px;letter-spacing:-0.5px;">
         ${value}${suffix ? `<span style="font-size:16px;font-weight:700;color:#1a1a1a;"> ${suffix}</span>` : ''}
       </div>
       <div style="margin-top:6px;">${badge(v)}</div>
@@ -214,7 +214,7 @@ function buildReportHtml({ brandName, periodLabel, current, previous }) {
           <span style="font-size:13px;color:#1a1a1a;font-weight:500;">${escapeHtml(labelForType(p.type))}</span>
         </td>
         <td style="padding:12px 16px;border-bottom:1px solid #f0f0f0;text-align:right;">
-          <span style="font-size:13px;color:#0F5F35;font-weight:700;">${p.pct}%</span>
+          <span style="font-size:13px;color:#0E653A;font-weight:700;">${p.pct}%</span>
           <span style="font-size:11px;color:#9ca3af;margin-left:6px;">(${p.count})</span>
         </td>
       </tr>`)
@@ -238,7 +238,7 @@ function buildReportHtml({ brandName, periodLabel, current, previous }) {
         <tr><td style="padding:32px 32px 0 32px;">
           <table width="100%"><tr>
             <td style="vertical-align:middle;">
-              <div style="font-size:20px;font-weight:800;color:#0F5F35;letter-spacing:-0.5px;">Actero</div>
+              <div style="font-size:20px;font-weight:800;color:#0E653A;letter-spacing:-0.5px;">Actero</div>
             </td>
             <td style="vertical-align:middle;text-align:right;">
               <span style="font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;">${safeName}</span>
@@ -287,10 +287,10 @@ function buildReportHtml({ brandName, periodLabel, current, previous }) {
           <h2 style="font-size:13px;font-weight:700;color:#1a1a1a;margin:0 0 12px 0;text-transform:uppercase;letter-spacing:0.05em;">ROI net</h2>
         </td></tr>
         <tr><td style="padding:0 32px;">
-          <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;border:1px solid #0F5F35;border-radius:12px;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf4;border:1px solid #0E653A;border-radius:12px;">
             <tr><td style="padding:18px 20px;">
               <div style="font-size:12px;color:#6b7280;">${current.hours_saved}h economisees ${implicitHourly > 0 ? `× ~${implicitHourly}€/h` : ''}</div>
-              <div style="font-size:24px;font-weight:800;color:#0F5F35;margin-top:6px;letter-spacing:-0.5px;">
+              <div style="font-size:24px;font-weight:800;color:#0E653A;margin-top:6px;letter-spacing:-0.5px;">
                 ${current.roi.toLocaleString('fr-FR')}€ de valeur generee
               </div>
               <div style="font-size:11px;color:#6b7280;margin-top:6px;">vs mois precedent : ${badge(varRoi)}</div>
@@ -300,7 +300,7 @@ function buildReportHtml({ brandName, periodLabel, current, previous }) {
 
         <!-- CTA -->
         <tr><td align="center" style="padding:32px 32px 8px 32px;">
-          <a href="https://actero.fr/client" style="display:inline-block;background:#0F5F35;color:#fff;font-size:14px;font-weight:700;text-decoration:none;padding:14px 28px;border-radius:10px;">
+          <a href="https://actero.fr/client" style="display:inline-block;background:#0E653A;color:#fff;font-size:14px;font-weight:700;text-decoration:none;padding:14px 28px;border-radius:10px;">
             Voir le detail dans mon dashboard
           </a>
         </td></tr>

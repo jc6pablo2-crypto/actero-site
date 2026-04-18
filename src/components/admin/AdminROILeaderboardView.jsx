@@ -10,7 +10,7 @@ import { KpiCard, KpiRow } from '../ui/KpiCard'
 import { EmptyState } from '../ui/EmptyState'
 
 const HOURLY_RATE = 25 // € per hour default
-const BRAND = '#0F5F35'
+const BRAND = '#0E653A'
 
 const formatEuro = (v) =>
   new Intl.NumberFormat('fr-FR', {
@@ -237,7 +237,7 @@ export default function AdminROILeaderboardView() {
                           <td className="px-5 py-3 text-right">
                             <a
                               href={`/admin/clients/${row.client_id}`}
-                              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F5F35] hover:underline"
+                              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0E653A] hover:underline"
                             >
                               Voir
                               <ExternalLink className="w-3 h-3" />

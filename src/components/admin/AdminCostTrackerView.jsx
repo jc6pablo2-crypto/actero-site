@@ -266,7 +266,7 @@ export const AdminCostTrackerView = () => {
                     }}
                     formatter={(val) => [`$${val}`, 'Cout 30j']}
                   />
-                  <Bar dataKey="total" fill="#0F5F35" radius={[0, 6, 6, 0]} />
+                  <Bar dataKey="total" fill="#0E653A" radius={[0, 6, 6, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

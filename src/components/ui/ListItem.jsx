@@ -20,7 +20,7 @@ function Avatar({ avatar }) {
   }
   // Initiales
   return (
-    <div className="w-8 h-8 rounded-lg flex-shrink-0 bg-[#0F5F35]/10 text-[#0F5F35] flex items-center justify-center text-[11px] font-semibold">
+    <div className="w-8 h-8 rounded-lg flex-shrink-0 bg-[#0E653A]/10 text-[#0E653A] flex items-center justify-center text-[11px] font-semibold">
       {String(avatar).slice(0, 2).toUpperCase()}
     </div>
   );
@@ -32,7 +32,7 @@ function Avatar({ avatar }) {
  * Couleurs issues des tokens :
  * - tokens.colors.bg.border (#f0f0f0) pour le séparateur
  * - tokens.colors.bg.page (#fafafa) pour le hover
- * - tokens.colors.brand.primary (#0F5F35) pour l'état sélectionné
+ * - tokens.colors.brand.primary (#0E653A) pour l'état sélectionné
  * - tokens.colors.text.primary/muted pour la typographie
  *
  * @param {Object} props
@@ -77,7 +77,7 @@ export function ListItem({
         'flex items-center gap-3 px-5 py-3 border-b border-[#f0f0f0] transition-colors',
         clickable && 'cursor-pointer',
         !selected && 'hover:bg-[#fafafa]',
-        selected && 'bg-[#0F5F35]/5 border-l-2 border-l-[#0F5F35]',
+        selected && 'bg-[#0E653A]/5 border-l-2 border-l-[#0E653A]',
         className
       )}
     >

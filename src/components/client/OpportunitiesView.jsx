@@ -121,16 +121,16 @@ export const OpportunitiesView = ({ clientId, onNavigate }) => {
                   Action recommandée
                 </span>
               )}
-              <div className="w-9 h-9 rounded-lg bg-[#0F5F35]/10 flex items-center justify-center mb-3">
-                <Icon className="w-4 h-4 text-[#0F5F35]" />
+              <div className="w-9 h-9 rounded-lg bg-[#0E653A]/10 flex items-center justify-center mb-3">
+                <Icon className="w-4 h-4 text-[#0E653A]" />
               </div>
               <h3 className="text-[14px] font-semibold text-[#1a1a1a] mb-1">{opp.title}</h3>
               <p className="text-[12px] text-[#71717a] leading-relaxed mb-3">{opp.description}</p>
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-[#0F5F35]">{opp.impact}</span>
+                <span className="text-[11px] font-semibold text-[#0E653A]">{opp.impact}</span>
                 <button
                   onClick={() => onNavigate && onNavigate(opp.target)}
-                  className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#0F5F35] hover:text-[#003725] transition-colors"
+                  className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#0E653A] hover:text-[#003725] transition-colors"
                 >
                   {opp.action} <ArrowRight className="w-3.5 h-3.5" />
                 </button>

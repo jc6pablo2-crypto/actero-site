@@ -86,7 +86,7 @@ function buildCartRecoveryHtml({ customerName, lineItems, totalPrice, currency, 
       </div>
 
       <div style="text-align:center;margin:32px 0;">
-        <a href="${checkoutUrl}" style="display:inline-block;padding:14px 32px;background:#0F5F35;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;">
+        <a href="${checkoutUrl}" style="display:inline-block;padding:14px 32px;background:#0E653A;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;">
           Finaliser ma commande
         </a>
       </div>

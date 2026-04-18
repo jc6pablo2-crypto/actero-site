@@ -33,19 +33,19 @@ function renderPage({ redirect_uri, state, code_challenge, code_challenge_method
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafafa; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
     .card { background: white; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid #f0f0f0; max-width: 420px; width: 100%; padding: 40px; }
-    .logo { width: 48px; height: 48px; background: #0F5F35; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .logo { width: 48px; height: 48px; background: #0E653A; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
     .logo svg { width: 24px; height: 24px; fill: white; }
     h1 { font-size: 22px; font-weight: 700; text-align: center; color: #1a1a1a; margin-bottom: 8px; }
     .subtitle { text-align: center; color: #71717a; font-size: 14px; margin-bottom: 28px; }
     .permissions { background: #fafafa; border: 1px solid #f0f0f0; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
     .permissions h3 { font-size: 12px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
     .perm { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #1a1a1a; padding: 4px 0; }
-    .perm .dot { width: 6px; height: 6px; border-radius: 50%; background: #0F5F35; flex-shrink: 0; }
+    .perm .dot { width: 6px; height: 6px; border-radius: 50%; background: #0E653A; flex-shrink: 0; }
     .field { margin-bottom: 16px; }
     .field label { display: block; font-size: 12px; font-weight: 600; color: #71717a; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
     .field input { width: 100%; padding: 10px 14px; border: 1px solid #f0f0f0; border-radius: 10px; font-size: 14px; background: #fafafa; outline: none; transition: border-color 0.2s; }
-    .field input:focus { border-color: #0F5F35; background: white; }
-    .btn { width: 100%; padding: 12px; background: #0F5F35; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .field input:focus { border-color: #0E653A; background: white; }
+    .btn { width: 100%; padding: 12px; background: #0E653A; color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
     .btn:hover { background: #003725; }
     .error { color: #ef4444; font-size: 13px; margin-bottom: 12px; text-align: center; }
     .footer { text-align: center; font-size: 11px; color: #9ca3af; margin-top: 16px; }

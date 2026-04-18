@@ -138,13 +138,13 @@ export default async function handler(req, res) {
         ? `
           <div style="margin:20px 0;padding:16px 18px;background:#f9f7f1;border:1px solid #e5e5e5;border-radius:12px;">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-              <span style="display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;background:#0F5F35;border-radius:50%;color:#fff;font-size:14px;">🎙</span>
+              <span style="display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;background:#0E653A;border-radius:50%;color:#fff;font-size:14px;">🎙</span>
               <strong style="color:#262626;font-size:14px;">Message vocal de ${brandName}</strong>
             </div>
             <p style="margin:0 0 10px 0;color:#666;font-size:13px;line-height:1.5;">
               Nous avons aussi enregistré une réponse audio pour vous.
             </p>
-            <a href="${audio_url}" style="display:inline-block;padding:8px 14px;background:#0F5F35;color:#fff;text-decoration:none;border-radius:8px;font-size:13px;font-weight:600;">
+            <a href="${audio_url}" style="display:inline-block;padding:8px 14px;background:#0E653A;color:#fff;text-decoration:none;border-radius:8px;font-size:13px;font-weight:600;">
               ▶ Écouter la réponse
             </a>
             <audio controls style="display:block;width:100%;margin-top:10px;" src="${audio_url}"></audio>

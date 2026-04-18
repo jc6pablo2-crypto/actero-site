@@ -235,7 +235,7 @@ function buildEscalationEmailHtml({ customerEmail, customerName, escalationReaso
         <tr><td style="padding: 8px 0; color: #666;">Source</td><td style="padding: 8px 0; color: #262626;">${source}</td></tr>
       </table>
       <p style="margin-top: 20px;">
-        <a href="https://actero.fr/client/escalations" style="display: inline-block; padding: 10px 20px; background: #0F5F35; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+        <a href="https://actero.fr/client/escalations" style="display: inline-block; padding: 10px 20px; background: #0E653A; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
           Voir dans le dashboard
         </a>
       </p>

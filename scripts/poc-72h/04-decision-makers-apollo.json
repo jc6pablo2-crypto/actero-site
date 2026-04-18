@@ -1,0 +1,596 @@
+[
+  {
+    "apollo_id": "66fa7f02676dfc0001f7ed14",
+    "first_name": "Mehdi",
+    "last_name_obf": "Be***i",
+    "title": "Chief Operations Officer",
+    "has_email": true,
+    "company": "JOONE Paris",
+    "domain": "joone.fr"
+  },
+  {
+    "apollo_id": "66f8cdaba817d60001a03503",
+    "first_name": "Mina",
+    "last_name_obf": "Ve***a",
+    "title": "Chief Operating Officer",
+    "has_email": true,
+    "company": "UNISTELLAR",
+    "domain": "unistellar.com"
+  },
+  {
+    "apollo_id": "66f5896a6ee25b0001d54135",
+    "first_name": "Emmanuel",
+    "last_name_obf": "Pi***t",
+    "title": "Chief Operating Officer",
+    "has_email": true,
+    "company": "Laboratoire Dermatologique ACM",
+    "domain": "labo-acm.com"
+  },
+  {
+    "apollo_id": "672cbb15b692dd000161d1fa",
+    "first_name": "Clement",
+    "last_name_obf": "Po***r",
+    "title": "COO",
+    "has_email": true,
+    "company": "Loom",
+    "domain": "loom.fr"
+  },
+  {
+    "apollo_id": "612df82ef8d3d5000117992e",
+    "first_name": "Marion",
+    "last_name_obf": "Br***l",
+    "title": "Chief Operating Officer",
+    "has_email": true,
+    "company": "Horse Pilot",
+    "domain": "horsepilot.com"
+  },
+  {
+    "apollo_id": "60e6d8037c68e600016ed900",
+    "first_name": "Paul-Etienne",
+    "last_name_obf": "Ja***b",
+    "title": "Co-Founder & CEO",
+    "has_email": true,
+    "company": "Epycure Laboratoire",
+    "domain": "epycure.com"
+  },
+  {
+    "apollo_id": "66f293c9b4367d0001c31a69",
+    "first_name": "Dieynaba",
+    "last_name_obf": "Nd***e",
+    "title": "CEO & Founder",
+    "has_email": true,
+    "company": "WAAM",
+    "domain": "waamcosmetics.com"
+  },
+  {
+    "apollo_id": "66ede3b31e3a560001681fea",
+    "first_name": "Maxime",
+    "last_name_obf": "Ri***d",
+    "title": "Co Founder & CEO",
+    "has_email": true,
+    "company": "NUOO",
+    "domain": "nuoobox.com"
+  },
+  {
+    "apollo_id": "66f16691e73fd200016e0ed2",
+    "first_name": "Carole",
+    "last_name_obf": "Ju***n",
+    "title": "CEO & Founder",
+    "has_email": true,
+    "company": "JOONE Paris",
+    "domain": "joone.fr"
+  },
+  {
+    "apollo_id": "66eebb2b408fa100018afdaa",
+    "first_name": "Julie",
+    "last_name_obf": "Ri***d",
+    "title": "Co-founder & CEO",
+    "has_email": true,
+    "company": "NUOO",
+    "domain": "nuoobox.com"
+  },
+  {
+    "apollo_id": "605a77be675c5d00017a59a5",
+    "first_name": "David",
+    "last_name_obf": "Gu***n",
+    "title": "Founder & CEO",
+    "has_email": true,
+    "company": "Mium Lab",
+    "domain": "miumlab.com"
+  },
+  {
+    "apollo_id": "60d3460849309f000167dda4",
+    "first_name": "Karim",
+    "last_name_obf": "Ha***n",
+    "title": "Co-founder & Deputy CEO",
+    "has_email": true,
+    "company": "YUMGO",
+    "domain": "yumgo.fr"
+  },
+  {
+    "apollo_id": "5f4d38f04c9be60001c9bcc6",
+    "first_name": "Blandine",
+    "last_name_obf": "Pa***t",
+    "title": "Responsable Service Client, Responsable Adv",
+    "has_email": true,
+    "company": "ZAG SKIS",
+    "domain": "zagskis.com"
+  },
+  {
+    "apollo_id": "66f3982e45063200014bd4f5",
+    "first_name": "Emilie",
+    "last_name_obf": "So***i",
+    "title": "CFO / COO",
+    "has_email": true,
+    "company": "La bouche rouge, Paris",
+    "domain": "laboucherougeparis.com"
+  },
+  {
+    "apollo_id": "609bad0c8ddda50001e8f05c",
+    "first_name": "Enaut",
+    "last_name_obf": "Ha***r",
+    "title": "CEO",
+    "has_email": true,
+    "company": "Alki",
+    "domain": "alki.fr"
+  },
+  {
+    "apollo_id": "68ad758089c538000138b2b4",
+    "first_name": "Laure",
+    "last_name_obf": "Ba***n",
+    "title": "CEO",
+    "has_email": true,
+    "company": "Zèta",
+    "domain": "zeta-shoes.com"
+  },
+  {
+    "apollo_id": "66f71903c180660001b94083",
+    "first_name": "Louis",
+    "last_name_obf": "Mi***l",
+    "title": "CEO",
+    "has_email": true,
+    "company": "Bonnegueule",
+    "domain": "bonnegueule.fr"
+  },
+  {
+    "apollo_id": "54a279a274686930c25dbd25",
+    "first_name": "Stephane",
+    "last_name_obf": "Ma***n",
+    "title": "CEO",
+    "has_email": true,
+    "company": "Footbar",
+    "domain": "footbar.com"
+  },
+  {
+    "apollo_id": "54a50dc17468692fa2ec7479",
+    "first_name": "Celine",
+    "last_name_obf": "Nh***n",
+    "title": "Customer Service Manager",
+    "has_email": true,
+    "company": "Aventure bio",
+    "domain": "aventure.bio"
+  },
+  {
+    "apollo_id": "65e55ec35ae0b80007aea4bd",
+    "first_name": "Caroline",
+    "last_name_obf": "Mo***z",
+    "title": "Customer Service Manager",
+    "has_email": true,
+    "company": "Myfood",
+    "domain": "myfood.eu"
+  },
+  {
+    "apollo_id": "66fca7dc246beb00013378c1",
+    "first_name": "Alex",
+    "last_name_obf": "Au***x",
+    "title": "CEO",
+    "has_email": true,
+    "company": "Circle Sportswear",
+    "domain": "circlesportswear.com"
+  },
+  {
+    "apollo_id": "66f5112181ab7e0001603eb2",
+    "first_name": "John",
+    "last_name_obf": "Mo***r",
+    "title": "CEO",
+    "has_email": false,
+    "company": "Angell Mobility",
+    "domain": "angellmobility.com"
+  },
+  {
+    "apollo_id": "62399db13842500001f2b13e",
+    "first_name": "Sissy",
+    "last_name_obf": "Mua",
+    "title": "Founder",
+    "has_email": true,
+    "company": "TRAINSWEATEAT",
+    "domain": "trainsweateat.com"
+  },
+  {
+    "apollo_id": "67b876afb107de00017fdce3",
+    "first_name": "Emeric",
+    "last_name_obf": "Ch***r",
+    "title": "Co-Founder",
+    "has_email": true,
+    "company": "Umaï",
+    "domain": "umai-natural.fr"
+  },
+  {
+    "apollo_id": "6177ff829c398d00013eb45d",
+    "first_name": "Camille",
+    "last_name_obf": "Br***t",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "Les Petits Prödiges",
+    "domain": "lespetitsprodiges.com"
+  },
+  {
+    "apollo_id": "60acbd9dbd82840001757b33",
+    "first_name": "Olivier",
+    "last_name_obf": "Ti***y",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "TEMPURA",
+    "domain": "tempuramag.com"
+  },
+  {
+    "apollo_id": "54a282e67468693a7e6b8628",
+    "first_name": "Anne",
+    "last_name_obf": "Vi***t",
+    "title": "Co-Founder",
+    "has_email": true,
+    "company": "YUMGO",
+    "domain": "yumgo.fr"
+  },
+  {
+    "apollo_id": "648dfd4f72da6400011a0b78",
+    "first_name": "Clementine",
+    "last_name_obf": "Gr***t",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "Les Petits Prödiges",
+    "domain": "lespetitsprodiges.com"
+  },
+  {
+    "apollo_id": "54a777847468696de7686137",
+    "first_name": "Basile",
+    "last_name_obf": "Ge***l",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "NOMADS SURFING",
+    "domain": "nomads-surfing.com"
+  },
+  {
+    "apollo_id": "6136d40d60bc1e0001160f70",
+    "first_name": "Thibaut",
+    "last_name_obf": "Lo***t",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "CAPS ME",
+    "domain": "capsme.fr"
+  },
+  {
+    "apollo_id": "614eb0ab98bd990001b2cbe1",
+    "first_name": "Chloe",
+    "last_name_obf": "Pe***t",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "Si Si La Paillette",
+    "domain": "sisilapaillette.fr"
+  },
+  {
+    "apollo_id": "66ee77efef6a8600014766b5",
+    "first_name": "Juliette",
+    "last_name_obf": "La***r",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "Krème",
+    "domain": "kreme-paris.com"
+  },
+  {
+    "apollo_id": "56bc7d40f3e5bb6c8500536c",
+    "first_name": "Loic",
+    "last_name_obf": "Ma***t",
+    "title": "Founder",
+    "has_email": true,
+    "company": "Footbar",
+    "domain": "footbar.com"
+  },
+  {
+    "apollo_id": "57d90230a6da9872427d4407",
+    "first_name": "Romee",
+    "last_name_obf": "Bi***e",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "Maximum®",
+    "domain": "maximum.paris"
+  },
+  {
+    "apollo_id": "60df24ee33a61800014015c4",
+    "first_name": "Jean",
+    "last_name_obf": "Bo***n",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "CAPS ME",
+    "domain": "capsme.fr"
+  },
+  {
+    "apollo_id": "66f7186ac180660001b90c72",
+    "first_name": "Nathalie",
+    "last_name_obf": "Ai***h",
+    "title": "Founder",
+    "has_email": true,
+    "company": "Evoluderm",
+    "domain": "evoluderm.com"
+  },
+  {
+    "apollo_id": "55e2aacff3e5bb233e000379",
+    "first_name": "Aurelien",
+    "last_name_obf": "Gu***n",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "Horse Pilot",
+    "domain": "horsepilot.com"
+  },
+  {
+    "apollo_id": "66f5bb107c3890000179d38a",
+    "first_name": "Abderhaman",
+    "last_name_obf": "Eb***d",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "Naali",
+    "domain": "naali.fr"
+  },
+  {
+    "apollo_id": "66fc95c697fbc30001b9dd60",
+    "first_name": "Simon",
+    "last_name_obf": "De***n",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "Horse Pilot",
+    "domain": "horsepilot.com"
+  },
+  {
+    "apollo_id": "66f12680e1016f00018f4ae0",
+    "first_name": "Marion",
+    "last_name_obf": "Go***r",
+    "title": "Co-founder",
+    "has_email": true,
+    "company": "Endro Cosmetiques",
+    "domain": "endro-cosmetiques.com"
+  },
+  {
+    "apollo_id": "66f63d9e05e2d900019ec7bb",
+    "first_name": "Laurent",
+    "last_name_obf": "Ma***i",
+    "title": "Co-Founder",
+    "has_email": true,
+    "company": "UNISTELLAR",
+    "domain": "unistellar.com"
+  },
+  {
+    "apollo_id": "6602730de982660008553fe2",
+    "first_name": "Tini",
+    "last_name_obf": "Tse",
+    "title": "Co-Founder",
+    "has_email": false,
+    "company": "TRAINSWEATEAT",
+    "domain": "trainsweateat.com"
+  },
+  {
+    "apollo_id": "67939ea22b0ba30001fe4651",
+    "first_name": "Marie",
+    "last_name_obf": "Tu***y",
+    "title": "Founder",
+    "has_email": false,
+    "company": "Atelier Tuffery",
+    "domain": "ateliertuffery.com"
+  },
+  {
+    "apollo_id": "6954ea87761bc20001c8c2dc",
+    "first_name": "Julien",
+    "last_name_obf": "Tu***y",
+    "title": "Chairman and CEO",
+    "has_email": true,
+    "company": "Atelier Tuffery",
+    "domain": "ateliertuffery.com"
+  },
+  {
+    "apollo_id": "57d4d1b2a6da9853a0a51640",
+    "first_name": "Eric",
+    "last_name_obf": "Ba***e",
+    "title": "Chairman and CEO",
+    "has_email": true,
+    "company": "ZAG SKIS",
+    "domain": "zagskis.com"
+  },
+  {
+    "apollo_id": "66fa0269d1c6fd0001894d79",
+    "first_name": "Marion",
+    "last_name_obf": "Pe***t",
+    "title": "Founder",
+    "has_email": false,
+    "company": "Si Si La Paillette",
+    "domain": "sisilapaillette.fr"
+  },
+  {
+    "apollo_id": "66f9a284d1c6fd0001692a57",
+    "first_name": "Nadir",
+    "last_name_obf": "Ta***h",
+    "title": "Co-fondateur - CEO",
+    "has_email": true,
+    "company": "Naali",
+    "domain": "naali.fr"
+  },
+  {
+    "apollo_id": "66f5314ec84512000140fc5e",
+    "first_name": "Martin",
+    "last_name_obf": "Le***r",
+    "title": "Co-Founder / Sales and Marketing Director",
+    "has_email": true,
+    "company": "Circle Sportswear",
+    "domain": "circlesportswear.com"
+  },
+  {
+    "apollo_id": "66f594d29b6ba900015c1921",
+    "first_name": "Sara",
+    "last_name_obf": "Le***k",
+    "title": "Co Founder and R&D Manager",
+    "has_email": true,
+    "company": "Umaï",
+    "domain": "umai-natural.fr"
+  },
+  {
+    "apollo_id": "63692d7277e0550001ea6bfb",
+    "first_name": "Maeva",
+    "last_name_obf": "Ch***y",
+    "title": "Responsable Logistique et Satisfaction Client, ADV & SAV",
+    "has_email": true,
+    "company": "Merci Handy",
+    "domain": "mercihandy.com"
+  },
+  {
+    "apollo_id": "60fb185456b2cc00017cf183",
+    "first_name": "Amaury",
+    "last_name_obf": "De***e",
+    "title": "Advisor to the CEO / Chief of Staff",
+    "has_email": true,
+    "company": "ZAG SKIS",
+    "domain": "zagskis.com"
+  },
+  {
+    "apollo_id": "5f7c1b5d14a2e300011dc6a5",
+    "first_name": "Frederic",
+    "last_name_obf": "Bo***x",
+    "title": "Président Europe CEO",
+    "has_email": true,
+    "company": "Grand Seiko Europe",
+    "domain": "grand-seiko.com"
+  },
+  {
+    "apollo_id": "66f9f3a7d1c6fd0001847492",
+    "first_name": "Laura",
+    "last_name_obf": "Ek***e",
+    "title": "Responsable Service Client",
+    "has_email": true,
+    "company": "Si Si La Paillette",
+    "domain": "sisilapaillette.fr"
+  },
+  {
+    "apollo_id": "66841671320b860001728380",
+    "first_name": "Julia",
+    "last_name_obf": "Fo***r",
+    "title": "Japanese Customer Service Support Manager",
+    "has_email": false,
+    "company": "UNISTELLAR",
+    "domain": "unistellar.com"
+  },
+  {
+    "apollo_id": "67a97303a42f8100018a8aa2",
+    "first_name": "Matthieu",
+    "last_name_obf": "Es***e",
+    "title": "Président - Fondateur",
+    "has_email": true,
+    "company": "Le chocolat des Français",
+    "domain": "lechocolatdesfrancais.fr"
+  },
+  {
+    "apollo_id": "60fd93fb7df9220001581a6e",
+    "first_name": "Olivier",
+    "last_name_obf": "Ge***y",
+    "title": "Founding Director",
+    "has_email": true,
+    "company": "Payote",
+    "domain": "payote.fr"
+  },
+  {
+    "apollo_id": "60e4099d9f2a270001775dc1",
+    "first_name": "Hubert",
+    "last_name_obf": "Mo***e",
+    "title": "Founding Manager",
+    "has_email": true,
+    "company": "La vie est Belt",
+    "domain": "lavieestbelt.fr"
+  },
+  {
+    "apollo_id": "63a47094ca4d56000147ba71",
+    "first_name": "Paul-Henri",
+    "last_name_obf": "Ma***n",
+    "title": "Fondateur & Directeur Artistique",
+    "has_email": true,
+    "company": "Le chocolat des Français",
+    "domain": "lechocolatdesfrancais.fr"
+  },
+  {
+    "apollo_id": "66f416006a6d670001ded95c",
+    "first_name": "Matthieu",
+    "last_name_obf": "Ur***n",
+    "title": "Co-fondateur & Cso/cmo",
+    "has_email": true,
+    "company": "Myfood",
+    "domain": "myfood.eu"
+  },
+  {
+    "apollo_id": "66f682551ca939000191fdd9",
+    "first_name": "Angeline",
+    "last_name_obf": "Ro***x",
+    "title": "Co-fondatrice et Responsable R&D",
+    "has_email": true,
+    "company": "Umaï",
+    "domain": "umai-natural.fr"
+  },
+  {
+    "apollo_id": "57d3bbdba6da9853f5399cdf",
+    "first_name": "Armand",
+    "last_name_obf": "Be***d",
+    "title": "Cofondateur et Président",
+    "has_email": true,
+    "company": "Maximum®",
+    "domain": "maximum.paris"
+  },
+  {
+    "apollo_id": "66f404d24dae2200016706ed",
+    "first_name": "Karim",
+    "last_name_obf": "Bo***a",
+    "title": "Co-fondateur - Responsable E-commerce",
+    "has_email": true,
+    "company": "Naali",
+    "domain": "naali.fr"
+  },
+  {
+    "apollo_id": "6982f9a36553a60001bc5dbe",
+    "first_name": "Amar",
+    "last_name_obf": "Ch***e",
+    "title": "Chief Executive",
+    "has_email": true,
+    "company": "Maison Philippe Conticini Paris",
+    "domain": "philippeconticini.fr"
+  },
+  {
+    "apollo_id": "54a394ab7468692abf6c7e03",
+    "first_name": "Guillemette",
+    "last_name_obf": "Pe***t",
+    "title": "Responsable Expérience Client",
+    "has_email": true,
+    "company": "AIME",
+    "domain": "aime.co"
+  },
+  {
+    "apollo_id": "64189432bf92b000011f37e1",
+    "first_name": "Zoe",
+    "last_name_obf": "Ji***y",
+    "title": "Chargée de Service Client",
+    "has_email": false,
+    "company": "Krème",
+    "domain": "kreme-paris.com"
+  },
+  {
+    "apollo_id": "66fdd0dc67154b00013a5f90",
+    "first_name": "Camille",
+    "last_name_obf": "Le***t",
+    "title": "Chargée D'expérience Client",
+    "has_email": false,
+    "company": "Bonnegueule",
+    "domain": "bonnegueule.fr"
+  }
+]

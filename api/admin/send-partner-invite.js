@@ -37,15 +37,15 @@ function renderEmail({ agencyName, contactName, url }) {
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fafafa; margin: 0; padding: 40px 20px; color: #1a1a1a; }
     .container { max-width: 560px; margin: 0 auto; background: white; border-radius: 16px; padding: 40px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-    .logo { width: 48px; height: 48px; background: #0F5F35; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px; margin-bottom: 24px; }
+    .logo { width: 48px; height: 48px; background: #0E653A; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px; margin-bottom: 24px; }
     h1 { font-size: 22px; font-weight: 700; margin: 0 0 16px; }
     p { font-size: 15px; line-height: 1.6; color: #4a4a4a; margin: 0 0 16px; }
-    .cta { display: inline-block; padding: 12px 24px; background: #0F5F35; color: white !important; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 14px; margin: 20px 0; }
+    .cta { display: inline-block; padding: 12px 24px; background: #0E653A; color: white !important; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 14px; margin: 20px 0; }
     .cta:hover { background: #003725; }
     .footer { margin-top: 32px; padding-top: 20px; border-top: 1px solid #f0f0f0; font-size: 12px; color: #9ca3af; }
     .highlights { background: #fafafa; border-radius: 10px; padding: 16px; margin: 20px 0; }
     .highlight { display: flex; gap: 10px; padding: 6px 0; font-size: 14px; }
-    .dot { width: 6px; height: 6px; border-radius: 50%; background: #0F5F35; margin-top: 7px; flex-shrink: 0; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #0E653A; margin-top: 7px; flex-shrink: 0; }
   </style>
 </head>
 <body>

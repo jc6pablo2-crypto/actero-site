@@ -42,7 +42,7 @@ function renderWelcomeHtml({ brand_name, has_referral }) {
 </head>
 <body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafafa;margin:0;padding:40px 20px;color:#1a1a1a">
   <div style="max-width:560px;margin:0 auto;background:white;border-radius:16px;padding:40px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-    <div style="width:48px;height:48px;background:#0F5F35;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:20px;margin-bottom:24px">A</div>
+    <div style="width:48px;height:48px;background:#0E653A;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:20px;margin-bottom:24px">A</div>
 
     <h1 style="font-size:22px;font-weight:700;margin:0 0 14px;color:#1a1a1a">${greeting}</h1>
 
@@ -56,7 +56,7 @@ function renderWelcomeHtml({ brand_name, has_referral }) {
 
     ${has_referral ? `
     <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:12px;padding:16px;margin:0 0 20px">
-      <p style="margin:0;font-size:13px;color:#0F5F35;font-weight:600">🎁 Votre premier mois est offert grâce à votre parrain.</p>
+      <p style="margin:0;font-size:13px;color:#0E653A;font-weight:600">🎁 Votre premier mois est offert grâce à votre parrain.</p>
       <p style="margin:4px 0 0;font-size:12px;color:#166534">30 jours gratuits sur n'importe quel plan payant.</p>
     </div>
     ` : ''}
@@ -65,7 +65,7 @@ function renderWelcomeHtml({ brand_name, has_referral }) {
 
     <div style="margin:0 0 24px">
       <div style="display:flex;align-items:start;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0f0">
-        <div style="width:24px;height:24px;background:#0F5F35;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px">1</div>
+        <div style="width:24px;height:24px;background:#0E653A;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px">1</div>
         <div>
           <p style="margin:0;font-size:14px;font-weight:600;color:#1a1a1a">Connectez votre boutique</p>
           <p style="margin:2px 0 0;font-size:13px;color:#71717a">Shopify, WooCommerce ou Webflow — 1 clic en OAuth.</p>
@@ -73,7 +73,7 @@ function renderWelcomeHtml({ brand_name, has_referral }) {
       </div>
 
       <div style="display:flex;align-items:start;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0f0">
-        <div style="width:24px;height:24px;background:#0F5F35;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px">2</div>
+        <div style="width:24px;height:24px;background:#0E653A;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px">2</div>
         <div>
           <p style="margin:0;font-size:14px;font-weight:600;color:#1a1a1a">Définissez le ton de votre agent</p>
           <p style="margin:2px 0 0;font-size:13px;color:#71717a">Chaleureux, professionnel, décontracté — l'IA apprend votre style.</p>
@@ -81,7 +81,7 @@ function renderWelcomeHtml({ brand_name, has_referral }) {
       </div>
 
       <div style="display:flex;align-items:start;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0f0">
-        <div style="width:24px;height:24px;background:#0F5F35;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px">3</div>
+        <div style="width:24px;height:24px;background:#0E653A;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px">3</div>
         <div>
           <p style="margin:0;font-size:14px;font-weight:600;color:#1a1a1a">Activez le playbook SAV</p>
           <p style="margin:2px 0 0;font-size:13px;color:#71717a">Votre agent IA traite les tickets dès qu'il est activé.</p>
@@ -89,7 +89,7 @@ function renderWelcomeHtml({ brand_name, has_referral }) {
       </div>
 
       <div style="display:flex;align-items:start;gap:12px;padding:12px 0">
-        <div style="width:24px;height:24px;background:#0F5F35;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px">4</div>
+        <div style="width:24px;height:24px;background:#0E653A;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px">4</div>
         <div>
           <p style="margin:0;font-size:14px;font-weight:600;color:#1a1a1a">Testez dans le simulateur</p>
           <p style="margin:2px 0 0;font-size:13px;color:#71717a">Vérifiez les réponses avant la mise en production.</p>
@@ -97,7 +97,7 @@ function renderWelcomeHtml({ brand_name, has_referral }) {
       </div>
     </div>
 
-    <a href="https://actero.fr/client/overview" style="display:inline-block;padding:12px 24px;background:#0F5F35;color:white;text-decoration:none;border-radius:10px;font-weight:600;font-size:14px;margin:0 0 24px">
+    <a href="https://actero.fr/client/overview" style="display:inline-block;padding:12px 24px;background:#0E653A;color:white;text-decoration:none;border-radius:10px;font-weight:600;font-size:14px;margin:0 0 24px">
       Ouvrir mon dashboard →
     </a>
 

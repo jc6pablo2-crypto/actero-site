@@ -51,8 +51,8 @@ export function SectionCard({
       <div className={cn('flex items-center justify-between border-b border-[#f0f0f0]', pad.header)}>
         <div className="flex items-center gap-3 min-w-0">
           {Icon && (
-            <div className="w-8 h-8 rounded-lg bg-[#0F5F35]/10 flex items-center justify-center flex-shrink-0">
-              <Icon className="w-4 h-4 text-[#0F5F35]" />
+            <div className="w-8 h-8 rounded-lg bg-[#0E653A]/10 flex items-center justify-center flex-shrink-0">
+              <Icon className="w-4 h-4 text-[#0E653A]" />
             </div>
           )}
           <div className="min-w-0">

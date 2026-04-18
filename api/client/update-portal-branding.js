@@ -87,7 +87,7 @@ export default async function handler(req, res) {
 
   if (portal_primary_color !== undefined && portal_primary_color !== '' && portal_primary_color !== null) {
     if (!HEX_RE.test(portal_primary_color)) {
-      return res.status(400).json({ error: 'portal_primary_color doit être une couleur hex valide (ex: #0F5F35).' })
+      return res.status(400).json({ error: 'portal_primary_color doit être une couleur hex valide (ex: #0E653A).' })
     }
   }
 

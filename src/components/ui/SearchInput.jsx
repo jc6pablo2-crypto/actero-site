@@ -12,7 +12,7 @@ const cn = (...classes) => classes.filter(Boolean).join(' ');
  * - tokens.colors.bg.border (#f0f0f0)
  * - tokens.colors.text.primary (#1a1a1a)
  * - tokens.colors.text.muted (#9ca3af) pour placeholder
- * - tokens.colors.brand.primary (#0F5F35) pour focus ring
+ * - tokens.colors.brand.primary (#0E653A) pour focus ring
  *
  * @param {Object} props
  * @param {string} props.value                 Valeur contrôlée. Requis.
@@ -45,7 +45,7 @@ export function SearchInput({
         onChange={onChange}
         placeholder={placeholder}
         autoFocus={autoFocus}
-        className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#fafafa] border border-[#f0f0f0] text-[13px] text-[#1a1a1a] placeholder:text-[#9ca3af] focus:outline-none focus:ring-2 focus:ring-[#0F5F35]/20 focus:border-[#0F5F35]/30 transition-all"
+        className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#fafafa] border border-[#f0f0f0] text-[13px] text-[#1a1a1a] placeholder:text-[#9ca3af] focus:outline-none focus:ring-2 focus:ring-[#0E653A]/20 focus:border-[#0E653A]/30 transition-all"
         {...rest}
       />
       {showClear && (

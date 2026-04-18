@@ -170,7 +170,7 @@ async function sendSimpleEmail(supabase, clientId, { title, message, context }) 
         <div style="font-family:-apple-system,sans-serif;max-width:560px;margin:0 auto;padding:24px">
           <h2 style="font-size:18px;margin:0 0 12px">${title}</h2>
           <p style="color:#4a4a4a;line-height:1.6">${message}</p>
-          ${context?.url ? `<a href="${context.url}" style="display:inline-block;margin-top:16px;padding:10px 18px;background:#0F5F35;color:white;text-decoration:none;border-radius:8px;font-weight:600">Ouvrir dans Actero</a>` : ''}
+          ${context?.url ? `<a href="${context.url}" style="display:inline-block;margin-top:16px;padding:10px 18px;background:#0E653A;color:white;text-decoration:none;border-radius:8px;font-weight:600">Ouvrir dans Actero</a>` : ''}
         </div>
       `,
       replyTo: 'contact@actero.fr',

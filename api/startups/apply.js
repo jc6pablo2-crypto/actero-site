@@ -72,8 +72,8 @@ export default async function handler(req, res) {
           <div style="font-size:22px;font-weight:700;color:#003725;letter-spacing:-0.5px;margin-bottom:24px;">Nouvelle candidature Startups</div>
           <table style="width:100%;border-collapse:collapse;">
             <tr><td style="padding:8px 0;font-weight:600;color:#262626;font-size:14px;">Boutique</td><td style="padding:8px 0;color:#716D5C;font-size:14px;">${escapeHtml(boutique_name)}</td></tr>
-            <tr><td style="padding:8px 0;font-weight:600;color:#262626;font-size:14px;">URL</td><td style="padding:8px 0;color:#716D5C;font-size:14px;"><a href="${escapeHtml(url)}" style="color:#0F5F35;">${escapeHtml(url)}</a></td></tr>
-            <tr><td style="padding:8px 0;font-weight:600;color:#262626;font-size:14px;">Email</td><td style="padding:8px 0;color:#716D5C;font-size:14px;"><a href="mailto:${escapeHtml(email)}" style="color:#0F5F35;">${escapeHtml(email)}</a></td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;color:#262626;font-size:14px;">URL</td><td style="padding:8px 0;color:#716D5C;font-size:14px;"><a href="${escapeHtml(url)}" style="color:#0E653A;">${escapeHtml(url)}</a></td></tr>
+            <tr><td style="padding:8px 0;font-weight:600;color:#262626;font-size:14px;">Email</td><td style="padding:8px 0;color:#716D5C;font-size:14px;"><a href="mailto:${escapeHtml(email)}" style="color:#0E653A;">${escapeHtml(email)}</a></td></tr>
             <tr><td style="padding:8px 0;font-weight:600;color:#262626;font-size:14px;">CA annuel</td><td style="padding:8px 0;color:#716D5C;font-size:14px;">${escapeHtml(revenue)}</td></tr>
             <tr><td style="padding:8px 0;font-weight:600;color:#262626;font-size:14px;">Plateforme</td><td style="padding:8px 0;color:#716D5C;font-size:14px;">${escapeHtml(platform)}</td></tr>
             <tr><td style="padding:8px 0;font-weight:600;color:#262626;font-size:14px;vertical-align:top;">Motivation</td><td style="padding:8px 0;color:#716D5C;font-size:14px;">${escapeHtml(motivation)}</td></tr>
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
           <div style="font-size:22px;font-weight:700;color:#003725;letter-spacing:-0.5px;margin-bottom:16px;">Actero for Startups</div>
           <p style="color:#262626;font-size:15px;line-height:1.6;margin:0 0 16px;">Bonjour,</p>
           <p style="color:#716D5C;font-size:15px;line-height:1.6;margin:0 0 16px;">Nous avons bien reçu votre candidature pour <strong>${escapeHtml(boutique_name)}</strong>. Notre equipe l'examine et vous repondra sous 48 heures.</p>
-          <p style="color:#716D5C;font-size:15px;line-height:1.6;margin:0 0 24px;">En attendant, n'hesitez pas a decouvrir notre plateforme sur <a href="https://actero.fr" style="color:#0F5F35;font-weight:600;">actero.fr</a>.</p>
+          <p style="color:#716D5C;font-size:15px;line-height:1.6;margin:0 0 24px;">En attendant, n'hesitez pas a decouvrir notre plateforme sur <a href="https://actero.fr" style="color:#0E653A;font-weight:600;">actero.fr</a>.</p>
           <p style="color:#262626;font-size:15px;line-height:1.6;margin:0;">L'equipe Actero</p>
         </td></tr>
       </table>

@@ -123,7 +123,7 @@ async function sendAcceptedEmail({ email, boutique_name, promo_code }) {
           <table width="100%" style="background:#F9F7F1;border:1px solid #e5e5e5;border-radius:12px;padding:24px;margin:0 0 24px;">
             <tr><td>
               <div style="font-size:11px;font-weight:700;color:#716D5C;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Votre code promo</div>
-              <div style="font-size:22px;font-weight:800;color:#0F5F35;font-family:'SFMono-Regular',Consolas,Menlo,monospace;letter-spacing:0.5px;margin-bottom:8px;">${escapeHtml(promo_code)}</div>
+              <div style="font-size:22px;font-weight:800;color:#0E653A;font-family:'SFMono-Regular',Consolas,Menlo,monospace;letter-spacing:0.5px;margin-bottom:8px;">${escapeHtml(promo_code)}</div>
               <div style="font-size:13px;color:#716D5C;line-height:1.5;">-50% pendant 6 mois · valable une fois · s'applique automatiquement à la caisse</div>
             </td></tr>
           </table>
@@ -131,7 +131,7 @@ async function sendAcceptedEmail({ email, boutique_name, promo_code }) {
           <!-- CTA -->
           <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
             <tr><td align="center">
-              <a href="${signupUrl}" style="display:inline-block;padding:14px 32px;background:#0F5F35;color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;border-radius:999px;">
+              <a href="${signupUrl}" style="display:inline-block;padding:14px 32px;background:#0E653A;color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;border-radius:999px;">
                 Activer mon compte Actero →
               </a>
             </td></tr>
@@ -149,7 +149,7 @@ async function sendAcceptedEmail({ email, boutique_name, promo_code }) {
             <li>Votre agent SAV IA tourne en autonome 24/7</li>
           </ol>
 
-          <p style="color:#716D5C;font-size:13px;line-height:1.6;margin:24px 0 0;">Une question ? Répondez à ce mail ou contactez-nous sur <a href="mailto:contact@actero.fr" style="color:#0F5F35;">contact@actero.fr</a>.</p>
+          <p style="color:#716D5C;font-size:13px;line-height:1.6;margin:24px 0 0;">Une question ? Répondez à ce mail ou contactez-nous sur <a href="mailto:contact@actero.fr" style="color:#0E653A;">contact@actero.fr</a>.</p>
 
           <p style="color:#262626;font-size:14px;line-height:1.6;margin:24px 0 0;">À bientôt sur Actero,<br />L'équipe.</p>
         </td></tr>
@@ -188,7 +188,7 @@ async function sendRejectedEmail({ email, boutique_name, notes }) {
           <p style="color:#716D5C;font-size:15px;line-height:1.6;margin:0 0 16px;">Merci d'avoir postulé au programme <strong>Actero for Startups</strong> pour <strong>${escapeHtml(boutique_name)}</strong>.</p>
           <p style="color:#716D5C;font-size:15px;line-height:1.6;margin:0 0 16px;">Après étude de votre candidature, nous ne pouvons malheureusement pas vous accorder le bénéfice du programme pour le moment. N'hésitez pas à réessayer plus tard lorsque votre projet aura évolué.</p>
           ${customNote}
-          <p style="color:#716D5C;font-size:15px;line-height:1.6;margin:0 0 16px;">Vous pouvez bien sûr utiliser Actero à tarif standard dès maintenant sur <a href="${SITE_URL}/tarifs" style="color:#0F5F35;font-weight:600;">${SITE_URL}/tarifs</a>.</p>
+          <p style="color:#716D5C;font-size:15px;line-height:1.6;margin:0 0 16px;">Vous pouvez bien sûr utiliser Actero à tarif standard dès maintenant sur <a href="${SITE_URL}/tarifs" style="color:#0E653A;font-weight:600;">${SITE_URL}/tarifs</a>.</p>
           <p style="color:#262626;font-size:14px;line-height:1.6;margin:24px 0 0;">L'équipe Actero.</p>
         </td></tr>
       </table>

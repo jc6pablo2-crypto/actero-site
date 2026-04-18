@@ -106,12 +106,12 @@ function renderEmail({ code }) {
 <head><meta charset="UTF-8"></head>
 <body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fafafa;margin:0;padding:40px 20px;color:#1a1a1a">
   <div style="max-width:480px;margin:0 auto;background:white;border-radius:16px;padding:40px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">
-    <div style="width:48px;height:48px;background:#0F5F35;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:20px;margin-bottom:24px">A</div>
+    <div style="width:48px;height:48px;background:#0E653A;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:20px;margin-bottom:24px">A</div>
     <h1 style="font-size:20px;font-weight:700;margin:0 0 10px">Votre code de vérification</h1>
     <p style="color:#4a4a4a;line-height:1.6;margin:0 0 24px">Entrez ce code dans Actero pour finaliser la création de votre compte.</p>
-    <div style="background:#fafafa;border:2px dashed #0F5F35;border-radius:12px;padding:24px;text-align:center;margin:0 0 24px">
+    <div style="background:#fafafa;border:2px dashed #0E653A;border-radius:12px;padding:24px;text-align:center;margin:0 0 24px">
       <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:#71717a;text-transform:uppercase;letter-spacing:2px">Code</p>
-      <p style="margin:0;font-size:36px;font-weight:800;color:#0F5F35;letter-spacing:8px;font-family:ui-monospace,monospace">${code}</p>
+      <p style="margin:0;font-size:36px;font-weight:800;color:#0E653A;letter-spacing:8px;font-family:ui-monospace,monospace">${code}</p>
     </div>
     <p style="color:#71717a;font-size:12px;line-height:1.6;margin:0">Ce code expire dans <strong>15 minutes</strong>. Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</p>
     <hr style="border:none;border-top:1px solid #f0f0f0;margin:28px 0">

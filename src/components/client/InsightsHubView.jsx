@@ -15,7 +15,7 @@ export const InsightsHubView = ({ onNavigate, canAccessVoice = false }) => {
       title: 'Performance',
       description: 'Résumé hebdomadaire : volume, taux auto, temps moyen',
       icon: BarChart3,
-      color: '#0F5F35',
+      color: '#0E653A',
     },
     {
       id: 'roi',
@@ -65,7 +65,7 @@ export const InsightsHubView = ({ onNavigate, canAccessVoice = false }) => {
               className={`group text-left bg-white rounded-2xl border border-[#f0f0f0] p-5 transition-all ${
                 card.locked
                   ? 'opacity-60 cursor-not-allowed'
-                  : 'hover:border-[#0F5F35]/25 hover:shadow-sm'
+                  : 'hover:border-[#0E653A]/25 hover:shadow-sm'
               }`}
             >
               <div className="flex items-start justify-between mb-3">
