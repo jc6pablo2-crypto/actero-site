@@ -30,15 +30,22 @@ export const Sidebar = ({
     setExpandedSections(prev => ({ ...prev, [label]: !prev[label] }))
   }
 
-  // Close account menu on click outside
+  // Close account menu on click outside or Escape (standard menu dismissal patterns)
   useEffect(() => {
     const handleClick = (e) => {
       if (accountRef.current && !accountRef.current.contains(e.target)) {
         setShowAccountMenu(false)
       }
     }
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') setShowAccountMenu(false)
+    }
     document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
+    document.addEventListener('keydown', handleEscape)
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+      document.removeEventListener('keydown', handleEscape)
+    }
   }, [])
 
   const initials = userName
@@ -153,10 +160,13 @@ export const Sidebar = ({
             const hasActiveChild = (item.children || []).some(c => c.id === activeTab)
             const childCount = (item.children || []).length
             const isPrimary = item.primary === true
+            const submenuId = `sidebar-submenu-${idx}`
             return (
               <div key={idx} data-tour={item.dataTour} className={isPrimary ? 'my-1.5' : ''}>
                 <button
                   onClick={() => toggleSection(item.label)}
+                  aria-expanded={isExpanded}
+                  aria-controls={submenuId}
                   className={
                     isPrimary
                       ? `relative w-full h-10 flex items-center justify-between px-2.5 rounded-xl text-[13px] font-semibold transition-all duration-150 group ${
@@ -192,6 +202,10 @@ export const Sidebar = ({
                   />
                 </button>
                 <div
+                  id={submenuId}
+                  role="region"
+                  aria-label={`${item.label} — sous-menu`}
+                  hidden={!isExpanded}
                   className="overflow-hidden transition-[max-height,opacity] duration-200 ease-out"
                   style={{
                     maxHeight: isExpanded ? `${childCount * 34 + 8}px` : '0px',
@@ -288,13 +302,19 @@ export const Sidebar = ({
       <div className="relative border-t border-[#f0f0f0]" ref={accountRef}>
         {/* Dropdown menu */}
         {showAccountMenu && (
-          <div className="absolute bottom-full left-2 right-2 mb-1 bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-[#f0f0f0] py-1.5 z-50">
+          <div
+            id="account-menu"
+            role="menu"
+            aria-label="Menu du compte"
+            className="absolute bottom-full left-2 right-2 mb-1 bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-[#f0f0f0] py-1.5 z-50"
+          >
             {ACCOUNT_ITEMS.map(item => {
               const Icon = item.icon
               const isActive = activeTab === item.id
               return (
                 <button
                   key={item.id}
+                  role="menuitem"
                   onClick={() => {
                     setActiveTab(item.id)
                     setShowAccountMenu(false)
@@ -312,6 +332,7 @@ export const Sidebar = ({
             <div className="border-t border-[#f0f0f0] mt-1.5 pt-1.5">
               <button
                 onClick={onLogout}
+                role="menuitem"
                 className="w-full flex items-center gap-2.5 px-3 py-2 text-[13px] font-medium text-red-500 hover:bg-red-50 transition-colors"
               >
                 <LogOut className="w-4 h-4" />
@@ -324,6 +345,9 @@ export const Sidebar = ({
         {/* Profile button */}
         <button
           onClick={() => setShowAccountMenu(!showAccountMenu)}
+          aria-haspopup="menu"
+          aria-expanded={showAccountMenu}
+          aria-controls="account-menu"
           className="w-full flex items-center gap-3 px-3 py-3 hover:bg-[#fafafa] transition-colors"
         >
           <div className="w-8 h-8 rounded-lg bg-cta text-white flex items-center justify-center text-[11px] font-bold flex-shrink-0">

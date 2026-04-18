@@ -59,6 +59,8 @@ import { Logo } from '../components/layout/Logo'
 import { Sidebar } from '../components/layout/Sidebar'
 import { CommandPalette } from '../components/CommandPalette'
 import { useCommandPalette } from '../hooks/useCommandPalette'
+import { TabErrorBoundary } from '../components/ErrorBoundary'
+import { SkipToMain } from '../components/ui/SkipToMain'
 import { AdminKanbanBoard } from '../components/admin/AdminKanbanBoard'
 import { AnimatedCounter } from '../components/ui/animated-counter'
 import { IntelligenceView } from '../components/dashboard/IntelligenceView'
@@ -558,6 +560,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   return (
     <div className="min-h-screen bg-[#fafafa] flex flex-col md:flex-row font-sans text-[#1a1a1a]">
+      <SkipToMain />
       {/* Mobile Header */}
       <div className="md:hidden h-16 bg-white border-b border-[#f0f0f0] flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
@@ -666,7 +669,8 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           />
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+        <main id="main-content" className="flex-1 overflow-y-auto p-4 md:p-8">
+          <TabErrorBoundary tabId={activeTab} resetKey={activeTab} tabLabel={activeTab}>
           {activeTab === "ai-terminal" && <AdminAITerminal />}
           {activeTab === "partner-tokens" && <AdminPartnerTokensView />}
           {activeTab === "error-reports" && <AdminErrorReportsView />}
@@ -1106,6 +1110,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               )}
             </div>
           )}
+          </TabErrorBoundary>
         </main>
       </div>
 

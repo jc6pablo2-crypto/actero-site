@@ -90,6 +90,8 @@ import { useCommandPalette } from '../hooks/useCommandPalette'
 import { usePlan } from '../hooks/usePlan'
 import { PlanGate } from '../components/ui/PlanGate'
 import { UpgradeBanner } from '../components/ui/UpgradeBanner'
+import { TabErrorBoundary } from '../components/ErrorBoundary'
+import { SkipToMain } from '../components/ui/SkipToMain'
 
 const FeedbackButtons = ({ eventId, currentFeedback, supabase }) => {
   const [feedback, setFeedback] = useState(currentFeedback || null);
@@ -801,6 +803,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row font-sans bg-[#fafafa] text-[#1a1a1a]">
+      <SkipToMain />
       {/* IndustryPicker disabled — was conflicting with the animated guide tour */}
       {/* Mobile Header */}
       <div className={`md:hidden h-16 flex items-center justify-between px-4 sticky top-0 z-50 ${isLight ? "bg-white border-b border-gray-200" : "bg-white border-b border-gray-100"}`}>
@@ -935,7 +938,8 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           </div>
         )}
 
-        <main className="flex-1 overflow-y-auto p-4 md:px-10 md:py-8 bg-[#fafafa]">
+        <main id="main-content" className="flex-1 overflow-y-auto p-4 md:px-10 md:py-8 bg-[#fafafa]">
+          <TabErrorBoundary tabId={activeTab} resetKey={activeTab} tabLabel={activeTab}>
           {activeTab === "overview" && (
             <div className="max-w-6xl mx-auto">
 
@@ -1521,6 +1525,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "settings" && (
             <SettingsHubView onNavigate={setActiveTab} />
           )}
+          </TabErrorBoundary>
 
         </main>
       </div>
