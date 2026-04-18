@@ -4,8 +4,10 @@ import { Mail, Lock, Store, Gift, ArrowLeft } from "lucide-react";
 import { Logo } from "../components/layout/Logo";
 import { supabase } from "../lib/supabase";
 import { SEO } from "../components/SEO";
+import { useMotion } from "../lib/motion";
 
 export const SignupPage = ({ onNavigate }) => {
+  const m = useMotion();
   const [step, setStep] = useState("form"); // 'form' | 'verify'
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -209,9 +211,7 @@ export const SignupPage = ({ onNavigate }) => {
       />
       <div className="min-h-screen bg-[#F9F7F1] flex items-center justify-center font-sans relative overflow-hidden">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          {...m.fadeUp}
           className="relative z-10 w-full max-w-[420px] mx-4"
         >
           <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-lg">
