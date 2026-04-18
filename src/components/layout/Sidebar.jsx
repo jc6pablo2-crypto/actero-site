@@ -66,16 +66,21 @@ export const Sidebar = ({
         </button>
       </div>
 
-      {/* Search bar (visual only) */}
+      {/* Search bar — Linear/Stripe pattern: click triggers command palette.
+          Shows ⌘K hint on the right. Visual input but behaves as a button.    */}
       <div className="px-3 pt-1 pb-2">
-        <div className="relative">
-          <Search className="w-3.5 h-3.5 text-[#9ca3af] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Rechercher..."
-            className="w-full pl-8 pr-3 py-2 rounded-xl bg-[#fafafa] border border-[#f0f0f0] text-[12px] text-[#1a1a1a] placeholder:text-[#9ca3af] focus:outline-none focus:border-cta/30 focus:bg-white transition-all"
-          />
-        </div>
+        <button
+          type="button"
+          onClick={() => { window.dispatchEvent(new CustomEvent('actero:open-command-palette')) }}
+          aria-label="Rechercher (Cmd+K)"
+          className="w-full relative flex items-center gap-2 pl-3 pr-2 py-2 rounded-xl bg-[#fafafa] border border-[#f0f0f0] text-[12px] text-[#9ca3af] hover:bg-white hover:border-cta/20 hover:text-[#1a1a1a] transition-all group text-left"
+        >
+          <Search className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
+          <span className="flex-1">Rechercher...</span>
+          <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-sans font-medium text-[#9ca3af] bg-white border border-[#e5e5e5] rounded group-hover:border-[#d4d4d4] transition-colors">
+            <span className="text-[11px] leading-none">⌘</span>K
+          </kbd>
+        </button>
       </div>
 
       {/* Navigation */}
@@ -91,9 +96,9 @@ export const Sidebar = ({
             return (
               <div
                 key={idx}
-                className={`px-2 py-2 ${firstInList ? 'mt-1' : 'mt-4 pt-4 border-t border-[#f0f0f0]'}`}
+                className={`px-2 py-2 ${firstInList ? 'mt-1' : 'mt-4 pt-3 border-t border-[#f0f0f0]'}`}
               >
-                <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#9ca3af]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#9ca3af]">
                   {item.label}
                 </p>
               </div>

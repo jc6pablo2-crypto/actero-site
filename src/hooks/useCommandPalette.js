@@ -23,8 +23,14 @@ export function useCommandPalette() {
         setOpen((v) => !v)
       }
     }
+    // Custom event trigger (e.g. from sidebar search button) — Linear pattern.
+    const openHandler = () => setOpen(true)
     window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
+    window.addEventListener('actero:open-command-palette', openHandler)
+    return () => {
+      window.removeEventListener('keydown', handler)
+      window.removeEventListener('actero:open-command-palette', openHandler)
+    }
   }, [])
 
   // Detect plateforme pour afficher Cmd vs Ctrl
