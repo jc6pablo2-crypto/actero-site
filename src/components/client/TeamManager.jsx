@@ -7,6 +7,10 @@ import {
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
+// Re-export the role-permission policy so existing imports from this file
+// (e.g. `import { canAccessTab } from '.../TeamManager'`) keep working —
+// but also surface the canonical location for new callers.
+export { ROLE_PERMISSIONS, canAccessTab } from '../../lib/role-permissions'
 
 const ROLES = [
   { id: 'manager', label: 'Manager', desc: 'Tout voir et modifier', icon: Shield, color: 'text-[#003725] bg-emerald-50' },
@@ -23,21 +27,8 @@ const ROLE_LABELS = {
   finance: { label: 'Finance', icon: Receipt, color: 'text-violet-600 bg-violet-50 border-violet-200' },
 }
 
-// Define which tabs each role can access
-export const ROLE_PERMISSIONS = {
-  owner: '*', // all tabs
-  manager: '*', // all tabs
-  operational: ['overview', 'automation', 'activity', 'escalations', 'response-templates', 'systems', 'integrations', 'channels', 'email-agent', 'sentiment', 'voice-report', 'voice-calls', 'voice-agent', 'insights', 'opportunities', 'agent-control', 'agent-config', 'knowledge', 'guardrails', 'simulator'],
-  support: ['overview', 'escalations', 'response-templates', 'sentiment', 'activity'],
-  finance: ['overview', 'profile', 'supplier-negotiation', 'settings', 'billing'], // profile + settings for billing portal
-}
-
-export const canAccessTab = (role, tabId) => {
-  if (!role) return true // fallback: allow
-  const perms = ROLE_PERMISSIONS[role]
-  if (perms === '*') return true
-  return perms.includes(tabId)
-}
+// ROLE_PERMISSIONS + canAccessTab moved to ../../lib/role-permissions.js
+// (re-exported above for backward compatibility with existing imports).
 
 export const TeamManager = ({ clientId }) => {
   const queryClient = useQueryClient()

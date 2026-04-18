@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -42,47 +42,53 @@ import {
   MonitorSmartphone,
 } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { canAccessTab } from '../lib/role-permissions'
 import { Logo } from '../components/layout/Logo'
 import { Sidebar } from '../components/layout/Sidebar'
 import { ActivityChart } from '../components/dashboard/ActivityChart'
+// Overview path: kept static — these render immediately on mount.
 import { ActivityView, useLiveActivityFeed, formatEvent, formatRelativeTime } from '../components/dashboard/ActivityView'
-import { ClientProfileView } from '../components/client/ClientProfileView'
 import { ClientCopilotBubble } from '../components/client/ClientCopilotBubble'
-import { VoiceAgentSetupView } from '../components/client/VoiceAgentSetupView'
-import { VoiceCallsView } from '../components/client/VoiceCallsView'
-import { ClientReferralView } from '../components/client/ClientReferralView'
-import { PartnerDashboardView } from '../components/client/PartnerDashboardView'
-import { ClientKnowledgeBaseView } from '../components/client/ClientKnowledgeBaseView'
-import { ClientIntegrationsView } from '../components/client/ClientIntegrationsView'
-import { PortalSavView } from '../components/client/PortalSavView'
-import { PortalBrandingView } from '../components/client/PortalBrandingView'
-import { GuardrailsEditor } from '../components/client/GuardrailsEditor'
-import { PromptEditor } from '../components/client/PromptEditor'
-import { ConversationSimulator } from '../components/client/ConversationSimulator'
-import { TeamManager, canAccessTab } from '../components/client/TeamManager'
-import { ClientEscalationsView } from '../components/client/ClientEscalationsView'
-import { ResponseTemplatesView } from '../components/client/ResponseTemplatesView'
-import { ApiDocsView } from '../components/client/ApiDocsView'
-import { NotificationCenterView } from '../components/client/NotificationCenterView'
 import { AgentImprovementWidget } from '../components/client/AgentImprovementWidget'
-import { PlaybooksView } from '../components/client/PlaybooksView'
 import { AutomationHubView } from '../components/client/AutomationHubView'
-import { AgentControlCenterView } from '../components/client/AgentControlCenterView'
-import { ChannelsHubView } from '../components/client/ChannelsHubView'
-import { EmailAgentView } from '../components/client/EmailAgentView'
-// ProactiveEngineView — temporairement retiré de l'UI, réactivable plus tard
-// import { ProactiveEngineView } from '../components/client/ProactiveEngineView'
-import { OpportunitiesView } from '../components/client/OpportunitiesView'
-import { InsightsHubView } from '../components/client/InsightsHubView'
-import { SettingsHubView } from '../components/client/SettingsHubView'
-import { ClientBillingView } from '../components/client/ClientBillingView'
-import { HelpCenterView } from '../components/client/HelpCenterView'
-import { ROISettingsView } from '../components/client/ROISettingsView'
 import { WeeklySummary } from '../components/client/WeeklySummary'
 import { PeakHoursChart } from '../components/client/PeakHoursChart'
 import { SetupChecklist } from '../components/client/SetupChecklist'
 import { AchievementsToast } from '../components/client/AchievementsView'
 import ProductTour from '../components/client/ProductTour'
+
+// Lazy-loaded: only fetched when the corresponding tab is opened.
+// This cuts the initial JS bundle significantly (was ~2.88 MB) because
+// these views pull in heavy deps (framer-motion variants, supabase queries,
+// rich form editors, chart libs, etc.) that aren't needed until the user
+// navigates to the tab.
+const ClientProfileView = lazy(() => import('../components/client/ClientProfileView').then(m => ({ default: m.ClientProfileView })))
+const VoiceAgentSetupView = lazy(() => import('../components/client/VoiceAgentSetupView').then(m => ({ default: m.VoiceAgentSetupView })))
+const VoiceCallsView = lazy(() => import('../components/client/VoiceCallsView').then(m => ({ default: m.VoiceCallsView })))
+const ClientReferralView = lazy(() => import('../components/client/ClientReferralView').then(m => ({ default: m.ClientReferralView })))
+const PartnerDashboardView = lazy(() => import('../components/client/PartnerDashboardView').then(m => ({ default: m.PartnerDashboardView })))
+const ClientKnowledgeBaseView = lazy(() => import('../components/client/ClientKnowledgeBaseView').then(m => ({ default: m.ClientKnowledgeBaseView })))
+const ClientIntegrationsView = lazy(() => import('../components/client/ClientIntegrationsView').then(m => ({ default: m.ClientIntegrationsView })))
+const PortalSavView = lazy(() => import('../components/client/PortalSavView').then(m => ({ default: m.PortalSavView })))
+const PortalBrandingView = lazy(() => import('../components/client/PortalBrandingView').then(m => ({ default: m.PortalBrandingView })))
+const GuardrailsEditor = lazy(() => import('../components/client/GuardrailsEditor').then(m => ({ default: m.GuardrailsEditor })))
+const PromptEditor = lazy(() => import('../components/client/PromptEditor').then(m => ({ default: m.PromptEditor })))
+const ConversationSimulator = lazy(() => import('../components/client/ConversationSimulator').then(m => ({ default: m.ConversationSimulator })))
+const TeamManager = lazy(() => import('../components/client/TeamManager').then(m => ({ default: m.TeamManager })))
+const ClientEscalationsView = lazy(() => import('../components/client/ClientEscalationsView').then(m => ({ default: m.ClientEscalationsView })))
+const ResponseTemplatesView = lazy(() => import('../components/client/ResponseTemplatesView').then(m => ({ default: m.ResponseTemplatesView })))
+const ApiDocsView = lazy(() => import('../components/client/ApiDocsView').then(m => ({ default: m.ApiDocsView })))
+const NotificationCenterView = lazy(() => import('../components/client/NotificationCenterView').then(m => ({ default: m.NotificationCenterView })))
+const PlaybooksView = lazy(() => import('../components/client/PlaybooksView').then(m => ({ default: m.PlaybooksView })))
+const AgentControlCenterView = lazy(() => import('../components/client/AgentControlCenterView').then(m => ({ default: m.AgentControlCenterView })))
+const ChannelsHubView = lazy(() => import('../components/client/ChannelsHubView').then(m => ({ default: m.ChannelsHubView })))
+const EmailAgentView = lazy(() => import('../components/client/EmailAgentView').then(m => ({ default: m.EmailAgentView })))
+const OpportunitiesView = lazy(() => import('../components/client/OpportunitiesView').then(m => ({ default: m.OpportunitiesView })))
+const InsightsHubView = lazy(() => import('../components/client/InsightsHubView').then(m => ({ default: m.InsightsHubView })))
+const SettingsHubView = lazy(() => import('../components/client/SettingsHubView').then(m => ({ default: m.SettingsHubView })))
+const ClientBillingView = lazy(() => import('../components/client/ClientBillingView').then(m => ({ default: m.ClientBillingView })))
+const HelpCenterView = lazy(() => import('../components/client/HelpCenterView').then(m => ({ default: m.HelpCenterView })))
+const ROISettingsView = lazy(() => import('../components/client/ROISettingsView').then(m => ({ default: m.ROISettingsView })))
 // IndustryPicker — disabled (conflit avec ProductTour anime) : import retire
 // import { IndustryPicker } from '../components/client/IndustryPicker'
 import { CommandPalette } from '../components/CommandPalette'
@@ -940,6 +946,12 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
         <main id="main-content" className="flex-1 overflow-y-auto p-4 md:px-10 md:py-8 bg-[#fafafa]">
           <TabErrorBoundary tabId={activeTab} resetKey={activeTab} tabLabel={activeTab}>
+          <Suspense fallback={
+            <div className="flex items-center justify-center py-20" role="status" aria-live="polite">
+              <div className="w-8 h-8 border-2 border-cta/20 border-t-cta rounded-full animate-spin" aria-label="Chargement…" />
+              <span className="sr-only">Chargement…</span>
+            </div>
+          }>
           {activeTab === "overview" && (
             <div className="max-w-6xl mx-auto">
 
@@ -1525,6 +1537,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           {activeTab === "settings" && (
             <SettingsHubView onNavigate={setActiveTab} />
           )}
+          </Suspense>
           </TabErrorBoundary>
 
         </main>

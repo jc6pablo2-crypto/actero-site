@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, lazy, Suspense } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -61,44 +61,48 @@ import { CommandPalette } from '../components/CommandPalette'
 import { useCommandPalette } from '../hooks/useCommandPalette'
 import { TabErrorBoundary } from '../components/ErrorBoundary'
 import { SkipToMain } from '../components/ui/SkipToMain'
+// Static: layout primitives + CallNotesWizard (modal trigger) + overview-relevant views
 import { AdminKanbanBoard } from '../components/admin/AdminKanbanBoard'
 import { AnimatedCounter } from '../components/ui/animated-counter'
 import { IntelligenceView } from '../components/dashboard/IntelligenceView'
-import { AdminFunnelView } from '../components/admin/AdminFunnelView'
-import { AdminMonitoringView } from '../components/admin/AdminMonitoringView'
-import { AdminPipelineView } from '../components/admin/AdminPipelineView'
-import { AdminBillingView } from '../components/admin/AdminBillingView'
-import { AdminClientHealthView } from '../components/admin/AdminClientHealthView'
-import { AdminReferralsView } from '../components/admin/AdminReferralsView'
 import { CallNotesWizard } from '../components/admin/CallNotesWizard'
 import { DeploymentProgress } from '../components/admin/DeploymentProgress'
-import { AdminNegativeRatingsView } from '../components/admin/AdminNegativeRatingsView'
-import { AdminPartnersView } from '../components/admin/AdminPartnersView'
-import { AdminStartupApplicationsView } from '../components/admin/AdminStartupApplicationsView'
-import { AdminShopifyView } from '../components/admin/AdminShopifyView'
-import { AdminEngineTestView } from '../components/admin/AdminEngineTestView'
-import { AdminEngineRunsView } from '../components/admin/AdminEngineRunsView'
-import { AdminManualReviewView } from '../components/admin/AdminManualReviewView'
-import { AdminPlaybooksView } from '../components/admin/AdminPlaybooksView'
-// Wave 2 components
-import { AdminLiveRunsView } from '../components/admin/AdminLiveRunsView'
-import { AdminAgentHeatmapView } from '../components/admin/AdminAgentHeatmapView'
-import { AdminTopErrorsView } from '../components/admin/AdminTopErrorsView'
-import { AdminCostTrackerView } from '../components/admin/AdminCostTrackerView'
-import { AdminConnectorHealthView } from '../components/admin/AdminConnectorHealthView'
-import { AdminClientsListView } from '../components/admin/AdminClientsListView'
-import { AdminMRRView } from '../components/admin/AdminMRRView'
-import { AdminChurnCohortView } from '../components/admin/AdminChurnCohortView'
-import { AdminROILeaderboardView } from '../components/admin/AdminROILeaderboardView'
-import { AdminTokensView } from '../components/admin/AdminTokensView'
-import { AdminHallucinationView } from '../components/admin/AdminHallucinationView'
-import { AdminAlertBuilderView } from '../components/admin/AdminAlertBuilderView'
-import { AdminAddEnterpriseView } from '../components/admin/AdminAddEnterpriseView'
-import { AdminStripeSetupView } from '../components/admin/AdminStripeSetupView'
-import { AdminConversionPipelineView } from '../components/admin/AdminConversionPipelineView'
-import { AdminAITerminal } from '../components/admin/AdminAITerminal'
-import { AdminPartnerTokensView } from '../components/admin/AdminPartnerTokensView'
-import { AdminErrorReportsView } from '../components/admin/AdminErrorReportsView'
+
+// Lazy-loaded admin views — only pulled when admin opens the tab.
+// Rationale: most admin tools carry heavy table/query logic; lazy loading
+// cuts the initial admin entry bundle and keeps the shell snappy.
+const AdminFunnelView = lazy(() => import('../components/admin/AdminFunnelView').then(m => ({ default: m.AdminFunnelView })))
+const AdminMonitoringView = lazy(() => import('../components/admin/AdminMonitoringView').then(m => ({ default: m.AdminMonitoringView })))
+const AdminPipelineView = lazy(() => import('../components/admin/AdminPipelineView').then(m => ({ default: m.AdminPipelineView })))
+const AdminBillingView = lazy(() => import('../components/admin/AdminBillingView').then(m => ({ default: m.AdminBillingView })))
+const AdminClientHealthView = lazy(() => import('../components/admin/AdminClientHealthView').then(m => ({ default: m.AdminClientHealthView })))
+const AdminReferralsView = lazy(() => import('../components/admin/AdminReferralsView').then(m => ({ default: m.AdminReferralsView })))
+const AdminNegativeRatingsView = lazy(() => import('../components/admin/AdminNegativeRatingsView').then(m => ({ default: m.AdminNegativeRatingsView })))
+const AdminPartnersView = lazy(() => import('../components/admin/AdminPartnersView').then(m => ({ default: m.AdminPartnersView })))
+const AdminStartupApplicationsView = lazy(() => import('../components/admin/AdminStartupApplicationsView').then(m => ({ default: m.AdminStartupApplicationsView })))
+const AdminShopifyView = lazy(() => import('../components/admin/AdminShopifyView').then(m => ({ default: m.AdminShopifyView })))
+const AdminEngineTestView = lazy(() => import('../components/admin/AdminEngineTestView').then(m => ({ default: m.AdminEngineTestView })))
+const AdminEngineRunsView = lazy(() => import('../components/admin/AdminEngineRunsView').then(m => ({ default: m.AdminEngineRunsView })))
+const AdminManualReviewView = lazy(() => import('../components/admin/AdminManualReviewView').then(m => ({ default: m.AdminManualReviewView })))
+const AdminPlaybooksView = lazy(() => import('../components/admin/AdminPlaybooksView').then(m => ({ default: m.AdminPlaybooksView })))
+const AdminLiveRunsView = lazy(() => import('../components/admin/AdminLiveRunsView').then(m => ({ default: m.AdminLiveRunsView })))
+const AdminAgentHeatmapView = lazy(() => import('../components/admin/AdminAgentHeatmapView').then(m => ({ default: m.AdminAgentHeatmapView })))
+const AdminTopErrorsView = lazy(() => import('../components/admin/AdminTopErrorsView').then(m => ({ default: m.AdminTopErrorsView })))
+const AdminCostTrackerView = lazy(() => import('../components/admin/AdminCostTrackerView').then(m => ({ default: m.AdminCostTrackerView })))
+const AdminConnectorHealthView = lazy(() => import('../components/admin/AdminConnectorHealthView').then(m => ({ default: m.AdminConnectorHealthView })))
+const AdminClientsListView = lazy(() => import('../components/admin/AdminClientsListView').then(m => ({ default: m.AdminClientsListView })))
+const AdminMRRView = lazy(() => import('../components/admin/AdminMRRView').then(m => ({ default: m.AdminMRRView })))
+const AdminChurnCohortView = lazy(() => import('../components/admin/AdminChurnCohortView').then(m => ({ default: m.AdminChurnCohortView })))
+const AdminROILeaderboardView = lazy(() => import('../components/admin/AdminROILeaderboardView').then(m => ({ default: m.AdminROILeaderboardView })))
+const AdminTokensView = lazy(() => import('../components/admin/AdminTokensView').then(m => ({ default: m.AdminTokensView })))
+const AdminHallucinationView = lazy(() => import('../components/admin/AdminHallucinationView').then(m => ({ default: m.AdminHallucinationView })))
+const AdminAlertBuilderView = lazy(() => import('../components/admin/AdminAlertBuilderView').then(m => ({ default: m.AdminAlertBuilderView })))
+const AdminAddEnterpriseView = lazy(() => import('../components/admin/AdminAddEnterpriseView').then(m => ({ default: m.AdminAddEnterpriseView })))
+const AdminStripeSetupView = lazy(() => import('../components/admin/AdminStripeSetupView').then(m => ({ default: m.AdminStripeSetupView })))
+const AdminConversionPipelineView = lazy(() => import('../components/admin/AdminConversionPipelineView').then(m => ({ default: m.AdminConversionPipelineView })))
+const AdminAITerminal = lazy(() => import('../components/admin/AdminAITerminal').then(m => ({ default: m.AdminAITerminal })))
+const AdminPartnerTokensView = lazy(() => import('../components/admin/AdminPartnerTokensView').then(m => ({ default: m.AdminPartnerTokensView })))
+const AdminErrorReportsView = lazy(() => import('../components/admin/AdminErrorReportsView').then(m => ({ default: m.AdminErrorReportsView })))
 import { KpiCard, KpiRow } from '../components/ui/KpiCard'
 import { SectionCard } from '../components/ui/SectionCard'
 import { StatusPill } from '../components/ui/StatusPill'
@@ -671,6 +675,12 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
         <main id="main-content" className="flex-1 overflow-y-auto p-4 md:p-8">
           <TabErrorBoundary tabId={activeTab} resetKey={activeTab} tabLabel={activeTab}>
+          <Suspense fallback={
+            <div className="flex items-center justify-center py-20" role="status" aria-live="polite">
+              <div className="w-8 h-8 border-2 border-cta/20 border-t-cta rounded-full animate-spin" aria-label="Chargement…" />
+              <span className="sr-only">Chargement…</span>
+            </div>
+          }>
           {activeTab === "ai-terminal" && <AdminAITerminal />}
           {activeTab === "partner-tokens" && <AdminPartnerTokensView />}
           {activeTab === "error-reports" && <AdminErrorReportsView />}
@@ -1110,6 +1120,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               )}
             </div>
           )}
+          </Suspense>
           </TabErrorBoundary>
         </main>
       </div>
