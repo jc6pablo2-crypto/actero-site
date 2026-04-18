@@ -98,6 +98,7 @@ import { PlanGate } from '../components/ui/PlanGate'
 import { UpgradeBanner } from '../components/ui/UpgradeBanner'
 import { TabErrorBoundary } from '../components/ErrorBoundary'
 import { SkipToMain } from '../components/ui/SkipToMain'
+import { trackEvent, identifyUser } from '../lib/analytics'
 
 const FeedbackButtons = ({ eventId, currentFeedback, supabase }) => {
   const [feedback, setFeedback] = useState(currentFeedback || null);
@@ -293,6 +294,52 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
   // Plan gating
   const { planId, planName, config: planConfig, inTrial, trialDaysLeft, ticketsUsed, ticketsLimit, ticketsPercent, isOverLimit, canAccess: can } = usePlan(currentClient?.id)
+
+  // Analytics — identifyUser once per session, as soon as we have the client profile
+  // AND the plan is resolved. Identify is idempotent on Amplitude's side, but we
+  // gate with a ref so Amplitude doesn't get 20+ identify calls per render loop.
+  const identifiedRef = React.useRef(false)
+  useEffect(() => {
+    if (identifiedRef.current) return
+    if (!currentClient?.id || !planId) return
+    identifiedRef.current = true
+    identifyUser(currentClient.id, {
+      client_id: currentClient.id,
+      plan: planId,
+      shopify_domain: currentClient.shopify_shop_domain || '',
+      playbooks_active: 0, // populated by a later identify once playbooks query resolves if needed
+      tickets_this_month: ticketsUsed || 0,
+      signed_up_at: currentClient.created_at || '',
+    })
+  }, [currentClient, planId, ticketsUsed])
+
+  // Analytics — fire "Dashboard Visited" on every tab change (including first mount).
+  // The `activeTab` value is derived from the URL, so refresh + deep-link also fire.
+  useEffect(() => {
+    if (!activeTab) return
+    // Analytics
+    trackEvent('Dashboard Visited', { section: activeTab, plan: planId || 'unknown' })
+  }, [activeTab, planId])
+
+  // Analytics — fire "Trial Limit Hit" when a free-plan user crosses 80% or 100%.
+  // Fired once per threshold-per-session via a ref so we don't spam Amplitude on
+  // every render. `trackedThresholdsRef` stores crossed thresholds like Set { 80, 100 }.
+  const trackedThresholdsRef = React.useRef(new Set())
+  useEffect(() => {
+    if (planId !== 'free' || ticketsLimit === Infinity) return
+    const crossed = ticketsPercent >= 100 ? 100 : ticketsPercent >= 80 ? 80 : null
+    if (crossed && !trackedThresholdsRef.current.has(crossed)) {
+      trackedThresholdsRef.current.add(crossed)
+      // Analytics
+      trackEvent('Trial Limit Hit', { resource: 'tickets', current_usage: ticketsUsed, limit: ticketsLimit, percentage: Math.round((ticketsUsed / ticketsLimit) * 100) })
+    }
+  }, [planId, ticketsPercent, ticketsUsed, ticketsLimit])
+
+  // Analytics — "ROI Viewed" fired once per session when the user lands on a tab
+  // that displays ROI data (overview tab + dailyMetrics resolved). Gated by ref
+  // so tab-switching in and out doesn't re-fire.
+  const roiViewedRef = React.useRef(false)
+  // effect is declared further down (after `periodStats` + `activeTab`) — see block there
 
   // 1b. Fetch product tour completion flag
   const { data: tourCompleted } = useQuery({
@@ -682,6 +729,18 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     }).length
   }, [pendingEscalations]);
 
+  // Analytics — fire "ROI Viewed" when the overview tab is open AND ROI data
+  // has loaded with non-zero value. One-shot per session via ref.
+  useEffect(() => {
+    if (activeTab !== 'overview' || roiViewedRef.current) return
+    const roi = periodStats?.roi || 0
+    const tickets = periodStats?.tickets_executed ?? periodStats?.tasks_executed ?? 0
+    if (roi <= 0 && tickets <= 0) return
+    roiViewedRef.current = true
+    // Analytics
+    trackEvent('ROI Viewed', { roi_euros: roi, tickets_count: tickets, time_saved_hours: periodStats?.time_saved || 0, plan: planId })
+  }, [activeTab, periodStats, planId])
+
   // Sidebar structure — refonte avril 2026 (POV nouveau client).
   // Narrative : Vue d'ensemble → Mon Agent (star) → Mes tickets → Canaux clients → Outils → Performance → Système.
   // Memoized: rebuild only when plan-gating (`can`), role, or urgent count changes — avoids recreating
@@ -799,7 +858,11 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   // Upgrade CTA for sidebar — only shown for Free and Starter plans
   const sidebarUpgradeCta = (planId === 'free' || planId === 'starter') ? (
     <button
-      onClick={() => setActiveTab('billing')}
+      onClick={() => {
+        // Analytics
+        trackEvent('Upgrade Clicked', { from_plan: planId, to_plan: planId === 'free' ? 'starter' : 'pro', trigger: 'sidebar_cta', location: 'sidebar' })
+        setActiveTab('billing')
+      }}
       className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-[12px] font-bold transition-all bg-cta text-white hover:bg-[#003725] shadow-sm"
     >
       <ArrowUpRight className="w-3.5 h-3.5" />
@@ -938,7 +1001,11 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             <span>
               Essai gratuit — <b>{trialDaysLeft} jour{trialDaysLeft > 1 ? 's' : ''} restant{trialDaysLeft > 1 ? 's' : ''}</b>
             </span>
-            <button onClick={() => setActiveTab('billing')} className="bg-white text-cta px-3 py-1 rounded-full text-[11px] font-bold hover:bg-white/90 transition">
+            <button onClick={() => {
+              // Analytics
+              trackEvent('Upgrade Clicked', { from_plan: planId, to_plan: 'any_paid', trigger: 'trial_bar', location: 'top_bar' })
+              setActiveTab('billing')
+            }} className="bg-white text-cta px-3 py-1 rounded-full text-[11px] font-bold hover:bg-white/90 transition">
               Choisir un plan
             </button>
           </div>
@@ -1232,7 +1299,11 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                           Passez au Starter pour 1 000 tickets/mois et débloquer l'éditeur de ton de marque.
                         </p>
                       </div>
-                      <button onClick={() => setActiveTab('billing')} className="px-4 py-2 bg-cta text-white text-[12px] font-semibold rounded-full hover:bg-[#003725] transition flex-shrink-0">
+                      <button onClick={() => {
+                        // Analytics
+                        trackEvent('Upgrade Clicked', { from_plan: planId, to_plan: 'starter', trigger: 'free_plan_usage_warning', location: 'overview' })
+                        setActiveTab('billing')
+                      }} className="px-4 py-2 bg-cta text-white text-[12px] font-semibold rounded-full hover:bg-[#003725] transition flex-shrink-0">
                         Passer au Starter — 99 EUR/mois
                       </button>
                     </div>

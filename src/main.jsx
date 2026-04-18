@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import * as amplitude from '@amplitude/unified'
 import * as Sentry from '@sentry/react'
 import './index.css'
 import App from './App.jsx'
 import { initTheme } from './lib/theme'
+import { initAnalytics } from './lib/analytics'
 
 // Apply stored / system theme before React mounts to avoid flash of wrong theme
 initTheme()
@@ -35,11 +35,9 @@ if (import.meta.env.PROD && import.meta.env.VITE_SENTRY_DSN) {
   window.Sentry = Sentry
 }
 
-// Initialize Amplitude Analytics + Session Replay (client-side only, once per lifecycle)
-amplitude.initAll('19e42a5d2488202ad9d13fa8b5d6545', {
-  analytics: { autocapture: true },
-  sessionReplay: { sampleRate: 1 },
-})
+// Initialize Amplitude Analytics + Session Replay (client-side only, once per lifecycle).
+// Canonical init path lives in src/lib/analytics.ts — this call just wires it up.
+initAnalytics()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

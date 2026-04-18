@@ -5,6 +5,7 @@ import { Logo } from "../components/layout/Logo";
 import { supabase } from "../lib/supabase";
 import { SEO } from "../components/SEO";
 import { useMotion } from "../lib/motion";
+import { trackEvent } from "../lib/analytics";
 
 export const SignupPage = ({ onNavigate }) => {
   const m = useMotion();
@@ -148,6 +149,8 @@ export const SignupPage = ({ onNavigate }) => {
         setLoading(false);
         return;
       }
+      // Analytics
+      trackEvent('Signed Up', { plan: 'free', source: document.referrer || 'direct' });
       // Auto-login after successful verification
       try {
         await supabase.auth.signInWithPassword({ email, password });

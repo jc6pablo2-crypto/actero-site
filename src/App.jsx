@@ -40,6 +40,7 @@ import { CommandPalette } from "./components/ui/command-palette";
 import { ToastProvider } from "./components/ui/Toast";
 import { Toaster } from "./components/ui/Toaster";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { resetUser } from "./lib/analytics";
 
 const queryClient = new QueryClient();
 
@@ -91,6 +92,9 @@ function MainRouter() {
   };
 
   const handleLogout = async () => {
+    // Reset Amplitude identity BEFORE signOut so any final queued events land on the
+    // correct user, and subsequent anonymous browsing starts a fresh device id.
+    resetUser();
     if (supabase) {
       await supabase.auth.signOut();
     }

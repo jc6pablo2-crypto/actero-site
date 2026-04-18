@@ -2,6 +2,11 @@ import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { createClient } from '@supabase/supabase-js';
 import { finalizeInstall as finalizeMarketplaceInstall } from './marketplace/install.js';
+import { trackServerEvent } from './lib/amplitude.js';
+
+// Monthly plan prices for MRR delta computation on upgrade events.
+// Kept in sync with api/billing/upgrade.js + src/lib/plans.js.
+const PLAN_MRR = { free: 0, starter: 99, pro: 399, enterprise: 999 };
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -240,6 +245,16 @@ export default async function handler(req, res) {
         try {
           const clientId = session.metadata.actero_client_id;
           const newPlan = session.metadata.upgrade_to;
+
+          // Read the previous plan so we can compute mrr_delta for the analytics event.
+          // This MUST be done BEFORE the update call.
+          let previousPlan = 'free';
+          try {
+            const { data: prior } = await supabase
+              .from('clients').select('plan').eq('id', clientId).maybeSingle();
+            if (prior?.plan) previousPlan = prior.plan;
+          } catch { /* non-blocking */ }
+
           const updateData = {
             plan: newPlan,
             stripe_customer_id: session.customer,
@@ -258,6 +273,18 @@ export default async function handler(req, res) {
           }
           await supabase.from('clients').update(updateData).eq('id', clientId);
           console.log(`[UPGRADE] Client ${clientId} upgraded to ${newPlan}`);
+
+          // Analytics — fire from Stripe webhook so the event is authoritative
+          // (not dependent on the browser being open when Stripe finalizes).
+          trackServerEvent({
+            eventType: 'Plan Upgraded',
+            userId: clientId,
+            properties: {
+              from_plan: previousPlan,
+              to_plan: newPlan,
+              mrr_delta: (PLAN_MRR[newPlan] ?? 0) - (PLAN_MRR[previousPlan] ?? 0),
+            },
+          }).catch(() => {});
         } catch (upErr) {
           console.error('[UPGRADE] Update failed:', upErr.message);
         }

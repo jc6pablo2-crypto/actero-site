@@ -1,5 +1,6 @@
 import { Lock } from 'lucide-react'
 import { getPlanConfig } from '../../lib/plans'
+import { trackEvent } from '../../lib/analytics'
 
 const FEATURE_LABELS = {
   simulator: 'Simulateur de conversation',
@@ -11,10 +12,12 @@ const FEATURE_LABELS = {
   pdf_report: 'Rapport PDF mensuel',
 }
 
-export const UpgradeBanner = ({ feature, requiredPlan, compact = false, onNavigate, onUpgrade }) => {
+export const UpgradeBanner = ({ feature, requiredPlan, compact = false, onNavigate, onUpgrade, currentPlan }) => {
   const planConfig = getPlanConfig(requiredPlan)
   const featureLabel = FEATURE_LABELS[feature] || feature
   const handleClick = () => {
+    // Analytics
+    trackEvent('Upgrade Clicked', { from_plan: currentPlan || 'unknown', to_plan: requiredPlan, trigger: `feature_gate:${feature}`, location: compact ? 'upgrade_banner_compact' : 'upgrade_banner_full' })
     // Priority: onUpgrade callback (stays in dashboard) > onNavigate > fallback
     if (onUpgrade) onUpgrade()
     else if (onNavigate) onNavigate('/client/billing')

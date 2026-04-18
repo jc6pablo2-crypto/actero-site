@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
+import { trackEvent } from '../../lib/analytics'
 import { VocalAgentWizard } from './VocalAgentWizard'
 import { ComptabiliteWizard } from './ComptabiliteWizard'
 import { WorkflowReadinessCheck } from './WorkflowReadinessCheck'
@@ -316,6 +317,11 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
       await supabase.from('engine_client_playbooks').insert({
         client_id: clientId, playbook_id: pb.id, is_active: true, activated_at: new Date().toISOString(),
       })
+    }
+    // Analytics — fire only on the ON transition (deactivation is out of scope for "Enabled")
+    if (!currentlyActive) {
+      // Analytics
+      trackEvent('Playbook Enabled', { playbook_name: pb.name || pb.display_name, plan: 'unknown' })
     }
     queryClient.invalidateQueries({ queryKey: ['client-playbooks', clientId] })
 

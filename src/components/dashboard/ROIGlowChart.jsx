@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect, useRef } from 'react'
 import {
   AreaChart,
   Area,
@@ -9,10 +9,24 @@ import {
   ResponsiveContainer
 } from 'recharts'
 import { TrendingUp, TrendingDown, DollarSign, ArrowUpRight } from 'lucide-react'
+import { trackEvent } from '../../lib/analytics'
 
-export const ROIGlowChart = ({ theme = "dark", metrics, growthPct, dailyMetrics = [], selectedPeriod = "this_month" }) => {
+export const ROIGlowChart = ({ theme = "dark", metrics, growthPct, dailyMetrics = [], selectedPeriod = "this_month", plan = 'unknown' }) => {
   const isLight = theme === "light";
   const hasData = (metrics && metrics.estimated_roi > 0) || dailyMetrics.length > 0;
+
+  // Analytics — fire "ROI Viewed" once per mount when data is available.
+  // Gated on hasData + mount-once ref so we don't pollute Amplitude with zero-ROI views.
+  const firedRef = useRef(false)
+  useEffect(() => {
+    if (!hasData || firedRef.current) return
+    firedRef.current = true
+    const roiEuros = Number(metrics?.estimated_roi || 0)
+    const ticketsCount = Number(metrics?.tickets_total || 0)
+    const timeSavedHours = Math.round((Number(metrics?.time_saved_minutes || 0) / 60) * 10) / 10
+    // Analytics
+    trackEvent('ROI Viewed', { roi_euros: roiEuros, tickets_count: ticketsCount, time_saved_hours: timeSavedHours, plan })
+  }, [hasData, metrics, plan])
 
   const isPositive = typeof growthPct === 'number' && growthPct > 0;
   const isNegative = typeof growthPct === 'number' && growthPct < 0;

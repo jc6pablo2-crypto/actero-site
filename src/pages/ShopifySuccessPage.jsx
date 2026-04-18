@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CheckCircle, Zap, Loader2, ArrowRight } from "lucide-react";
+import { trackEvent } from "../lib/analytics";
 
 export function ShopifySuccessPage({ onNavigate }) {
   const params = new URLSearchParams(window.location.search);
   const shop = params.get("shop") || "votre boutique";
   const clientId = params.get("client_id");
+
+  // Analytics — fire once per landing on /shopify-success (= post-OAuth callback)
+  useEffect(() => {
+    // Analytics
+    trackEvent('Shopify Connected', { shop_domain: shop, plan: 'unknown' });
+    // Run once per URL param set; depend on shop so navigating away+back doesn't double-fire in SPA edge cases
+  }, [shop]);
 
   const [activating, setActivating] = useState(false);
   const [activated, setActivated] = useState(false);

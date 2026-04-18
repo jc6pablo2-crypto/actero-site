@@ -6,6 +6,7 @@
  * Persiste aussi une "customer memory" pour les interactions réussies (Actero Memory).
  */
 import { storeMemory } from './lib/memory.js'
+import { trackServerEvent } from '../lib/amplitude.js'
 
 /**
  * Map a free-text classification to a valid ticket_type enum value.
@@ -307,6 +308,33 @@ export async function logRun(supabase, {
     if (aeError) console.error('[logger] automation_events insert error:', aeError.message)
   } catch (err) {
     console.error('[logger] automation_events insert exception:', err.message)
+  }
+
+  // 2b. Analytics — fire the canonical client-facing event to Amplitude server-side.
+  // Client-side tracking would lag (feed only updates when dashboard is open) and
+  // would attribute the event to whichever admin happens to open the feed. The
+  // engine is the source of truth for ticket resolution, so track from here.
+  if (eventCategory === 'ticket_resolved' || eventCategory === 'ticket_escalated') {
+    const eventName = eventCategory === 'ticket_resolved' ? 'Ticket Resolved' : 'Ticket Escalated'
+    const properties = eventCategory === 'ticket_resolved'
+      ? {
+          // Analytics
+          playbook: playbookId || null,
+          time_saved_seconds: timeSaved,
+          confidence_score: confidence ?? null,
+          channel: normalized?.channel || null,
+        }
+      : {
+          // Analytics
+          reason: confidence < 0.6 ? 'low_confidence' : (actionPlan?.includes('escalate') ? 'out_of_policy' : 'error'),
+          playbook: playbookId || null,
+        }
+    // fire-and-forget — logger is on the hot path
+    trackServerEvent({
+      eventType: eventName,
+      userId: clientId,
+      properties,
+    }).catch(() => {})
   }
 
   // 3. Write to ai_conversations (feeds "A traiter" tab + activity feed)
