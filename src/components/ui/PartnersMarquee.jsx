@@ -65,7 +65,7 @@ export function PartnersMarquee() {
                   src={partner.src}
                   alt={partner.name}
                   loading="lazy"
-                  className="max-h-12 md:max-h-16 max-w-full w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                  className="h-full w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                 />
               </a>
             ))}
@@ -103,24 +103,30 @@ export function PartnersMarquee() {
           display: flex;
           align-items: center;
           width: fit-content;
+          /* Gap fixe entre items = espacement uniforme peu importe la
+             largeur naturelle de chaque logo. */
+          gap: 5rem; /* 80px mobile */
           animation: partners-scroll 40s linear infinite;
+        }
+        @media (min-width: 768px) {
+          .partners-marquee-track {
+            gap: 7rem; /* 112px desktop — plus d'air */
+          }
         }
         .partners-marquee-wrap:hover .partners-marquee-track {
           animation-play-state: paused;
         }
+        /* Item = largeur naturelle du logo (pas de container fixe).
+           Height uniforme = rythme vertical constant. */
         .partners-marquee-item {
           flex: 0 0 auto;
-          width: 260px;
-          height: 88px;
+          height: 56px;
           display: flex;
           align-items: center;
-          justify-content: center;
-          padding: 0 1.25rem;
         }
         @media (min-width: 768px) {
           .partners-marquee-item {
-            width: 300px;
-            height: 96px;
+            height: 72px;
           }
         }
         @keyframes partners-scroll {
