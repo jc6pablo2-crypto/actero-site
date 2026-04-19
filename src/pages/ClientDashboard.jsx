@@ -54,6 +54,7 @@ import { AutomationHubView } from '../components/client/AutomationHubView'
 import { WeeklySummary } from '../components/client/WeeklySummary'
 import { PeakHoursChart } from '../components/client/PeakHoursChart'
 import { SetupChecklist } from '../components/client/SetupChecklist'
+import { SetupWizard } from '../components/client/SetupWizard'
 import { AchievementsToast } from '../components/client/AchievementsView'
 import ProductTour from '../components/client/ProductTour'
 
@@ -526,6 +527,18 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   const isSetupMode = setupCompletion
     ? completedSetupSteps < 5
     : !!(currentClient?.created_at && (Date.now() - new Date(currentClient.created_at).getTime()) < 3 * 24 * 60 * 60 * 1000);
+
+  // SetupWizard visibility — show the full-screen wizard on 1st mount if :
+  //  (a) essentials not all done (4 keys on setupCompletion: shopify, email, tone, tested)
+  //  (b) user hasn't dismissed the wizard (localStorage key per client)
+  // State is a simple boolean, re-checked when wizard dismisses.
+  const [showSetupWizard, setShowSetupWizard] = useState(() => false) // init false; flipped by effect below
+  useEffect(() => {
+    if (!currentClient?.id || !setupCompletion) return
+    const dismissed = localStorage.getItem(`setup-wizard-dismissed-${currentClient.id}`) === 'true'
+    const essentialsDone = !!(setupCompletion.shopify && setupCompletion.email && setupCompletion.tone && setupCompletion.tested)
+    setShowSetupWizard(!dismissed && !essentialsDone)
+  }, [currentClient?.id, setupCompletion])
 
   // First name for welcome hero (from auth metadata, fallback to brand_name)
   const { data: userFirstName } = useQuery({
@@ -1622,6 +1635,16 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
       {/* Interactive Product Tour (Linear-style spotlight) */}
       <ProductTour isOpen={showTour} onClose={handleCloseTour} />
+
+      {/* 5-minute Setup Wizard — shown on first mount when essentials incomplete.
+          Dismiss reveals the normal dashboard + minimized SetupChecklist. */}
+      {showSetupWizard && currentClient?.id && (
+        <SetupWizard
+          clientId={currentClient.id}
+          onComplete={() => setShowSetupWizard(false)}
+          onDismiss={() => setShowSetupWizard(false)}
+        />
+      )}
 
       {/* Cmd+K command palette */}
       <CommandPalette
