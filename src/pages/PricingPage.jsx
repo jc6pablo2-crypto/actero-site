@@ -56,74 +56,94 @@ const CARD_CLASSES = {
 function buildFeatures(plan) {
   const { limits, features, support } = plan;
 
+  // ── FREE ──────────────────────────────────────────────────────────
   if (plan.id === "free") {
     return [
       "50 tickets / mois",
       "1 workflow actif",
       "Intégration Shopify",
+      `Base de connaissances (${limits.knowledge_entries} entrées)`,
+      "Règles métier & guardrails",
       "Dashboard ROI basique",
-      "Pas de carte bancaire",
+      "Historique 7 jours",
+      "Support documentation",
+      "Sans carte bancaire · À vie",
     ];
   }
 
+  // ── ENTERPRISE ────────────────────────────────────────────────────
   if (plan.id === "enterprise") {
     return [
       "Tickets illimités",
       "Workflows illimités",
-      `Multi-boutiques (${limits.team_members === Infinity ? "illimité" : limits.team_members} stores)`,
-      ...(features.voice_agent ? ["Agent vocal avancé (voix custom)"] : []),
-      ...(features.white_label ? ["White-label disponible"] : []),
+      "Toutes les intégrations",
+      "Base de connaissances illimitée",
+      "Multi-boutiques (plusieurs Shopify)",
+      "White-label complet (suppression branding Actero)",
+      "Agent vocal — minutes illimitées",
+      "Voix custom agent vocal (clonage marque)",
+      "Agents IA spécialisés",
+      "Portail SAV avec custom domain + branding",
+      "Agent Email natif Actero",
+      "Rapport ROI sur mesure",
       "API avancée + intégrations custom",
-      "SLA 99,9% garanti",
-      "Membres illimités",
-      ROI_LABELS[features.roi_dashboard] || "Rapport sur mesure",
-      SUPPORT_LABELS[support] || support,
+      "Membres d'équipe illimités",
+      "SLA 99,9% contractuel",
+      "Account manager dédié",
       "Formation équipe incluse",
+      "Onboarding white-glove",
     ];
   }
 
-  // Starter & Pro — build dynamically
+  // ── STARTER ───────────────────────────────────────────────────────
+  if (plan.id === "starter") {
+    return [
+      `${fmt(limits.tickets_per_month)} tickets / mois`,
+      `${limits.workflows_active} workflows actifs`,
+      `Shopify + ${limits.integrations - 1} intégrations`,
+      `Base de connaissances ${limits.knowledge_entries} entrées`,
+      `${limits.team_members} membres d'équipe`,
+      "Éditeur ton de marque",
+      "Règles métier & guardrails",
+      "Simulateur de conversation",
+      "API REST + Webhooks",
+      "Portail SAV self-service",
+      "Dashboard ROI complet",
+      "Historique 90 jours",
+      "Support email 48h",
+      "Essai 7 jours sans engagement",
+    ];
+  }
+
+  // ── PRO ───────────────────────────────────────────────────────────
+  if (plan.id === "pro") {
+    return [
+      `${fmt(limits.tickets_per_month)} tickets / mois`,
+      "Workflows illimités",
+      "Toutes les intégrations",
+      "Base de connaissances illimitée",
+      `${limits.team_members} membres d'équipe`,
+      `Agent vocal ElevenLabs (${limits.voice_minutes} min/mois)`,
+      "Numéro FR dédié pour l'agent vocal",
+      "Agents IA spécialisés (WISMO, retour, produit, proactif)",
+      "Agent Email natif Actero",
+      "Éditeur ton de marque",
+      "Simulateur de conversation",
+      "API REST + Webhooks",
+      "Portail SAV avec custom domain",
+      "Branding portail personnalisé",
+      "Rapport PDF mensuel auto-envoyé",
+      "Dashboard ROI complet",
+      "Historique illimité",
+      "Support prioritaire 24h",
+      "Essai 7 jours sans engagement",
+    ];
+  }
+
+  // Fallback dynamic (safety)
   const lines = [];
-
   lines.push(`${fmt(limits.tickets_per_month)} tickets / mois`);
-  lines.push(
-    limits.workflows_active === Infinity
-      ? "Workflows illimités"
-      : `${limits.workflows_active} workflows actifs`
-  );
-
-  if (limits.integrations === Infinity) {
-    lines.push("Toutes les intégrations");
-  } else if (limits.integrations > 1) {
-    lines.push(`Shopify + ${limits.integrations - 1} intégrations`);
-  } else {
-    lines.push("Intégration Shopify");
-  }
-
-  if (features.brand_editor) lines.push("Éditeur ton de marque");
-  if (features.guardrails) lines.push("Règles & limites");
-  if (features.specialized_agents) lines.push("Agents IA spécialisés");
-  if (features.voice_agent && limits.voice_minutes > 0) {
-    lines.push(`Agent vocal (${limits.voice_minutes} min incluses)`);
-  }
-  if (features.simulator) lines.push("Simulateur de conversation");
-  if (features.api_webhooks) lines.push("API + webhooks");
-
-  if (features.roi_dashboard) {
-    lines.push(ROI_LABELS[features.roi_dashboard] || "Dashboard ROI");
-  }
-
-  const histLabel = HISTORY_LABELS[limits.history_days];
-  if (histLabel && histLabel !== "\u2014") lines.push(histLabel);
-
-  lines.push(
-    limits.team_members === Infinity
-      ? "Membres illimités"
-      : `${limits.team_members} membres d'équipe`
-  );
-
   lines.push(SUPPORT_LABELS[support] || support);
-
   return lines;
 }
 
