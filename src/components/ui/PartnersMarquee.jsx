@@ -65,7 +65,7 @@ export function PartnersMarquee() {
                   src={partner.src}
                   alt={partner.name}
                   loading="lazy"
-                  className="h-10 md:h-12 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity duration-300"
+                  className="max-h-12 md:max-h-16 max-w-full w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                 />
               </a>
             ))}
@@ -110,12 +110,18 @@ export function PartnersMarquee() {
         }
         .partners-marquee-item {
           flex: 0 0 auto;
-          width: 220px;
-          height: 72px;
+          width: 260px;
+          height: 88px;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 0 1rem;
+          padding: 0 1.25rem;
+        }
+        @media (min-width: 768px) {
+          .partners-marquee-item {
+            width: 300px;
+            height: 96px;
+          }
         }
         @keyframes partners-scroll {
           from { transform: translateX(0); }
