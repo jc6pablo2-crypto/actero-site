@@ -252,10 +252,10 @@ export const LandingPage = ({ onNavigate }) => {
                     Intégrations
                   </p>
                   <h2 className="text-2xl md:text-3xl font-bold text-[#262626] mb-2">
-                    Connecté à vos outils en quelques clics
+                    Connecté à vos outils en 1 clic OAuth
                   </h2>
                   <p className="text-[#716D5C] font-medium text-sm">
-                    {vertical === 'ecommerce' ? '+12 intégrations disponibles' : '+10 intégrations disponibles'}
+                    Shopify · Gorgias · Zendesk · Tidio · Crisp · Stripe · Pennylane · Axonaut · iPaidThat · Slack · Resend — API + webhooks dès le plan Starter
                   </p>
                 </FadeInUp>
                 <IntegrationGrid vertical={vertical} />
@@ -384,6 +384,101 @@ export const LandingPage = ({ onNavigate }) => {
                   </p>
                 </FadeInUp>
                 <ChatMockup vertical={vertical} />
+              </div>
+            </section>
+
+            {/* ============================================ */}
+            {/* SECTION — TOUT CE QUI EST INCLUS             */}
+            {/* Feature grid — exhaustif, aligné avec le     */}
+            {/* dashboard réel (plans.js). Compact, scannable */}
+            {/* ============================================ */}
+            <section className="py-24 md:py-32 bg-[#F9F7F1] px-6 relative z-10">
+              <div className="max-w-6xl mx-auto">
+                <FadeInUp className="text-center mb-16">
+                  <p className="text-xs font-bold text-[#003725] uppercase tracking-[0.2em] mb-4">
+                    Tout inclus
+                  </p>
+                  <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-[#262626] mb-4">
+                    Un produit complet,<br className="hidden md:block" />
+                    pas juste un chatbot.
+                  </h2>
+                  <p className="text-lg text-[#716D5C] font-medium max-w-2xl mx-auto">
+                    Agents IA, agent vocal, éditeur de ton, règles métier, portail SAV pour vos clients, dashboard ROI, rapport PDF mensuel — tout est dans Actero, selon votre plan.
+                  </p>
+                </FadeInUp>
+
+                <FadeInUp>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {[
+                      {
+                        title: "Agent vocal ElevenLabs",
+                        plan: "Pro",
+                        desc: "Numéro FR dédié, voix naturelle, 200 min/mois incluses. Répond aux appels entrants, qualifie, escalade les cas complexes.",
+                      },
+                      {
+                        title: "Simulateur de conversation",
+                        plan: "Starter",
+                        desc: "Testez l'agent sur 5 tickets réels avant de passer en prod. Ajustez le ton, les règles métier, les escalations — en mode safe.",
+                      },
+                      {
+                        title: "Éditeur ton de marque",
+                        plan: "Starter",
+                        desc: "Tu/vous, émojis, longueur des réponses, phrases signature. L'IA analyse aussi vos 50 derniers tickets pour apprendre votre style.",
+                      },
+                      {
+                        title: "Base de connaissances",
+                        plan: "Dès Free",
+                        desc: "FAQ, politiques retour, infos produit — importées une fois, réutilisées par tous les agents sur tous les canaux.",
+                      },
+                      {
+                        title: "Règles métier & limites",
+                        plan: "Dès Free",
+                        desc: "Guardrails : escaladez les commandes >500€, les clients VIP, les mots-clés sensibles. Configurable sans code.",
+                      },
+                      {
+                        title: "Portail SAV pour vos clients",
+                        plan: "Starter",
+                        desc: "Vos clients suivent leurs tickets, demandent un retour, consultent leurs commandes depuis un portail dédié. Custom domain dès Pro.",
+                      },
+                      {
+                        title: "Dashboard ROI temps réel",
+                        plan: "Dès Free",
+                        desc: "Heures économisées, tickets résolus, CA récupéré, taux d'auto-résolution. Export CSV. Rapport PDF mensuel sur Pro.",
+                      },
+                      {
+                        title: "API REST + Webhooks",
+                        plan: "Starter",
+                        desc: "Connectez vos outils custom (ERP, BI, CRM interne). Events webhook sur ticket_resolved, escalated, cart_recovered, voice_call_ended.",
+                      },
+                      {
+                        title: "Multi-boutiques & white-label",
+                        plan: "Enterprise",
+                        desc: "Gérez plusieurs Shopify depuis un seul dashboard. Suppression totale du branding Actero. Voix custom agent vocal.",
+                      },
+                    ].map((feat, i) => (
+                      <FadeInUp key={i}>
+                        <div className="bg-white rounded-2xl border border-gray-200 p-6 h-full hover:border-cta/30 hover:shadow-sm transition-all">
+                          <div className="flex items-center justify-between mb-3">
+                            <h3 className="text-[15px] font-bold text-[#262626] tracking-tight">{feat.title}</h3>
+                            <span className="flex-shrink-0 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-cta/10 text-cta border border-cta/20">
+                              {feat.plan}
+                            </span>
+                          </div>
+                          <p className="text-sm text-[#716D5C] font-medium leading-relaxed">{feat.desc}</p>
+                        </div>
+                      </FadeInUp>
+                    ))}
+                  </div>
+
+                  <div className="mt-10 text-center">
+                    <button
+                      onClick={() => onNavigate('/tarifs')}
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-[#003725] underline underline-offset-4 decoration-[#003725]/40 hover:decoration-[#003725] transition-colors"
+                    >
+                      Voir le comparatif complet des 4 plans <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </FadeInUp>
               </div>
             </section>
 
@@ -982,31 +1077,43 @@ export const LandingPage = ({ onNavigate }) => {
                   {(vertical === 'ecommerce' ? [
                     {
                       q: "Est-ce que je dois savoir coder ?",
-                      a: "Non. Actero est 100% self-service. Connectez vos outils en quelques clics, configurez vos agents IA depuis le dashboard, et tout fonctionne automatiquement."
+                      a: "Non. Actero est 100% self-service. Connectez Shopify en OAuth 1-clic, l'IA lit votre catalogue et vos politiques automatiquement, et l'agent commence à répondre à vos tickets dans l'heure qui suit."
                     },
                     {
                       q: "Combien de temps pour voir les premiers résultats ?",
-                      a: "Le déploiement prend 7 jours ouvrés. Les premiers résultats (tickets automatisés, premières relances) sont visibles dès la première semaine de mise en production."
+                      a: "Installation en 15 minutes. L'agent répond aux premiers tickets SAV dans l'heure qui suit la connexion Shopify. Le dashboard ROI est live immédiatement avec les métriques temps réel (heures économisées, tickets résolus automatiquement, CA récupéré sur paniers abandonnés)."
                     },
                     {
                       q: "Est-ce que mes données sont sécurisées ?",
-                      a: "Oui. Connexion via les protocoles OAuth officiels de Shopify. On ne stocke que le strict nécessaire. Vos données clients ne sont jamais partagées avec des tiers."
+                      a: "Oui. OAuth officiel Shopify, chiffrement AES-256 au repos et TLS 1.3 en transit, hébergement exclusif en UE, conforme RGPD avec DPA signable. Nous sommes opt-out du TDM (Directive EU 2019/790 Art. 4) — vos données ne servent jamais à entraîner nos modèles."
                     },
                     {
                       q: "Quel retour sur investissement attendre ?",
-                      a: "Chaque déploiement est conçu pour être rentabilisé dès le premier mois. Le ROI exact dépend de votre volume de tickets et de votre taux d'abandon panier. Le simulateur ROI sur la page vous donne une estimation précise."
+                      a: "Les clients Actero économisent en moyenne 40h/mois sur leur équipe SAV et récupèrent +15% de paniers abandonnés grâce aux relances IA. Le plan Starter (99€/mois) est rentabilisé dès 5h économisées — largement atteignable sur 800+ tickets/mois."
                     },
                     {
                       q: "Quels outils supportez-vous ?",
-                      a: "Shopify, WooCommerce, Webflow, Gorgias, Zendesk, Stripe, Slack, Resend, Axonaut, Pennylane, iPaidThat, et bien d'autres. Si votre outil n'est pas dans la liste, on trouve un moyen de le connecter."
+                      a: "E-commerce : Shopify (OAuth natif), WooCommerce, Webflow. Helpdesk : Gorgias, Zendesk, Tidio, Crisp. Compta FR : Pennylane, Axonaut, iPaidThat, Stripe. Notifications : Slack, Resend. API REST + webhooks dès le plan Starter pour connecter vos outils custom. Multi-boutiques sur Enterprise."
+                    },
+                    {
+                      q: "Qu'est-ce que l'agent vocal ?",
+                      a: "Disponible dès le plan Pro (200 min incluses/mois), c'est un agent téléphonique ElevenLabs avec numéro FR dédié et voix naturelle. Il répond aux appels entrants, qualifie, escalade les cas complexes et s'intègre au catalogue Shopify comme l'agent email. Enterprise débloque les minutes illimitées + voix custom à votre marque."
                     },
                     {
                       q: "Quelle est la différence avec Make ou Zapier ?",
-                      a: "Make et Zapier sont des outils de workflow génériques : vous construisez et maintenez tout vous-même. Actero est une plateforme spécialisée e-commerce avec des agents IA préconfigurés, un dashboard ROI et une optimisation continue automatique."
+                      a: "Make et Zapier sont des outils de workflow génériques : vous construisez et maintenez tout vous-même. Actero est une plateforme spécialisée e-commerce avec agents IA préconfigurés (SAV, relance paniers, monitoring, vocal), éditeur de ton de marque, règles métier guardrails, dashboard ROI natif et intégration Shopify sans config technique."
+                    },
+                    {
+                      q: "Je peux personnaliser la marque du portail SAV vu par mes clients ?",
+                      a: "Oui à partir du plan Pro : custom domain (support.votre-marque.com), logo, couleurs, suppression du branding Actero. Le plan Enterprise débloque le white-label complet avec multi-boutiques."
+                    },
+                    {
+                      q: "Comment fonctionne le programme Ambassadeurs ?",
+                      a: "Recommandez Actero à votre communauté de marchands Shopify et gagnez 20% de commission récurrente pendant toute la durée d'abonnement du client parrainé. Dashboard de tracking dédié, paiements automatiques mensuels. Détails sur la page /ambassadeurs."
                     },
                     {
                       q: "Combien ça coûte ?",
-                      a: "Actero propose 4 plans : Free (0€), Starter (99€/mois), Pro (399€/mois) et Enterprise (sur devis). Essai gratuit de 7 jours sur Starter et Pro. -20% en facturation annuelle."
+                      a: "Actero propose 4 plans transparents : Free (0€, 50 tickets/mois, sans carte bancaire) · Starter (99€/mois, 1 000 tickets, éditeur ton de marque, simulateur, API + webhooks) · Pro (399€/mois, 5 000 tickets, agents spécialisés, agent vocal, rapport PDF mensuel) · Enterprise (sur devis, illimité + white-label + multi-boutiques). -20% en facturation annuelle. Essai 7 jours sur Starter et Pro."
                     },
                   ] : [
                     {
@@ -1067,18 +1174,18 @@ export const LandingPage = ({ onNavigate }) => {
                   <div className="bg-[#FFF389] rounded-3xl p-10 md:p-16 overflow-hidden">
                     <div className="text-center mb-12">
                       <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-[#003725] mb-4" style={{ fontFamily: 'Georgia, serif' }}>
-                        Opérationnel en 48 heures.
+                        Opérationnel en 15 minutes.
                       </h2>
                       <p className="text-[#003725]/70 font-medium text-lg max-w-xl mx-auto">
-                        Du paiement au dashboard live. Zéro setup de votre côté.
+                        Inscription, connexion Shopify, premiers tickets résolus automatiquement — tout se fait en self-serve depuis votre dashboard.
                       </p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8 md:gap-12 mb-12">
                       {[
-                        { num: "01", title: "Paiement sécurisé", desc: "Stripe Checkout. Paiement par carte ou PayPal en 2 minutes." },
-                        { num: "02", title: "Connexion outils", desc: "Un clic pour connecter Shopify et vos outils. Installation OAuth automatique." },
-                        { num: "03", title: "IA en production", desc: "Vos agents IA sont déployés et configurés. Dashboard live en 24-48h." },
+                        { num: "01", title: "Inscription & plan", desc: "Créez votre compte en 30 sec. Plan Free sans carte, ou essai 7 jours sur Starter/Pro." },
+                        { num: "02", title: "Connexion Shopify", desc: "Un clic OAuth. Actero lit votre catalogue, vos commandes, vos politiques de retour automatiquement." },
+                        { num: "03", title: "IA opérationnelle", desc: "L'agent répond aux premiers tickets SAV dans l'heure qui suit. Dashboard ROI live immédiat." },
                       ].map((step, i) => (
                         <div key={i} className="text-center md:text-left">
                           <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center mx-auto md:mx-0 mb-4">
