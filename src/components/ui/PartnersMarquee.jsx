@@ -14,22 +14,22 @@ import { Shield } from 'lucide-react'
 const partners = [
   {
     name: 'ElevenLabs Grants',
-    src: '/partners/elevenlabs-grants.png',
+    src: '/partners/v2/elevenlabs-grants.png',
     href: 'https://elevenlabs.io/startup-grants',
   },
   {
     name: 'Shopify Partner',
-    src: '/partners/shopify-partner.png',
+    src: '/partners/v2/shopify-partner.png',
     href: 'https://www.shopify.com/partners',
   },
   {
     name: 'Google for Startups',
-    src: '/partners/google-for-startups.png',
+    src: '/partners/v2/google-for-startups.png',
     href: 'https://startup.google.com/',
   },
   {
     name: 'Auth0 for Startups',
-    src: '/partners/auth0-startup.png',
+    src: '/partners/v2/auth0-startup.png',
     href: 'https://auth0.com/startups',
   },
 ]
