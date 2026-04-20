@@ -234,13 +234,13 @@ const AutomationCard = ({
           </div>
         )}
 
-        {/* Channels preview */}
+        {/* Channels — liste avec toggle switches explicites */}
         {hasChannels && status !== 'missing' && (
           <div className="mb-4 pt-4 border-t border-gray-100">
             <p className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider mb-2">
-              {isActive ? 'Canaux actifs' : 'Canaux disponibles'}
+              Canaux {isActive ? '(activez ceux à utiliser)' : '(disponibles)'}
             </p>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="space-y-1.5">
               {automation.channels.map(ch => {
                 const ChIcon = ch.icon || MessageSquare
                 const channelConnected = ch.needsIntegration.length === 0
@@ -248,42 +248,66 @@ const AutomationCard = ({
                 const isSelected = !!selectedChannels[`${automation.key}_${ch.id}`]
                 const canToggle = isActive && channelConnected
 
+                // Channel non-connecté : affiche "Connecter" au lieu du toggle
                 if (!channelConnected) {
                   return (
-                    <button
+                    <div
                       key={ch.id}
-                      onClick={onGoToIntegrations}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#fafafa] border border-dashed border-gray-300 text-[11px] font-medium text-[#71717a] hover:border-amber-300 hover:bg-amber-50 hover:text-amber-800 transition-colors"
-                      title={`Connecter ${ch.label}`}
+                      className="flex items-center justify-between gap-3 px-3 py-2 rounded-lg bg-[#fafafa] border border-dashed border-gray-300"
                     >
-                      <Plug className="w-3 h-3" />
-                      {ch.label}
-                    </button>
+                      <div className="flex items-center gap-2 min-w-0">
+                        <ChIcon className="w-3.5 h-3.5 text-[#9ca3af] flex-shrink-0" />
+                        <span className="text-[12px] font-medium text-[#71717a] truncate">{ch.label}</span>
+                      </div>
+                      <button
+                        onClick={onGoToIntegrations}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-amber-200 text-[10px] font-bold text-amber-700 hover:bg-amber-50 transition-colors flex-shrink-0 uppercase tracking-wider"
+                      >
+                        <Plug className="w-2.5 h-2.5" />
+                        Connecter
+                      </button>
+                    </div>
                   )
                 }
 
+                // Channel connecté : row avec toggle switch inline
                 return (
-                  <button
+                  <div
                     key={ch.id}
-                    onClick={() => {
-                      if (!canToggle) return
-                      const newVal = !isSelected
-                      saveChannels(automation.key, ch.id, newVal)
-                    }}
-                    disabled={!canToggle}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors ${
+                    className={`flex items-center justify-between gap-3 px-3 py-2 rounded-lg border transition-colors ${
                       isSelected
-                        ? 'bg-cta text-white border border-cta'
-                        : canToggle
-                          ? 'bg-white border border-gray-200 text-[#71717a] hover:border-cta hover:text-cta'
-                          : 'bg-[#fafafa] border border-gray-200 text-[#9ca3af] cursor-not-allowed'
+                        ? 'bg-cta/5 border-cta/20'
+                        : 'bg-white border-gray-200'
                     }`}
-                    title={canToggle ? (isSelected ? 'Désactiver ce canal' : 'Activer ce canal') : 'Activez l\'automation pour configurer'}
                   >
-                    <ChIcon className="w-3 h-3" />
-                    {ch.label}
-                    {isSelected && <CheckCircle2 className="w-2.5 h-2.5" />}
-                  </button>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <ChIcon className={`w-3.5 h-3.5 flex-shrink-0 ${isSelected ? 'text-cta' : 'text-[#9ca3af]'}`} />
+                      <span className={`text-[12px] font-medium truncate ${isSelected ? 'text-[#1a1a1a]' : 'text-[#71717a]'}`}>
+                        {ch.label}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={isSelected}
+                      aria-label={`${isSelected ? 'Désactiver' : 'Activer'} le canal ${ch.label}`}
+                      onClick={() => {
+                        if (!canToggle) return
+                        saveChannels(automation.key, ch.id, !isSelected)
+                      }}
+                      disabled={!canToggle}
+                      title={canToggle ? '' : 'Activez l\'automation pour configurer'}
+                      className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 ${
+                        isSelected ? 'bg-cta' : 'bg-[#e5e5e5]'
+                      } ${canToggle ? 'cursor-pointer hover:opacity-90' : 'opacity-50 cursor-not-allowed'}`}
+                    >
+                      <span
+                        className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${
+                          isSelected ? 'translate-x-4' : 'translate-x-0.5'
+                        }`}
+                      />
+                    </button>
+                  </div>
                 )
               })}
             </div>
