@@ -8,8 +8,11 @@ import { Shield } from 'lucide-react'
  * leur appliquer la même hauteur sans recalage custom. Container fixe
  * 200×56px par item pour rythme visuel constant.
  *
- * Anim CSS pure 40s linear infinite, pause au hover, items dupliqués 3×
- * dans le DOM pour loop seamless. Respecte prefers-reduced-motion.
+ * Anim CSS pure 20s linear infinite, items dupliqués 3× dans le DOM pour
+ * loop seamless (la keyframe avance de -100%/3 = exactement une copie
+ * complète des items, donc frame 0 == frame 20s). Respecte
+ * prefers-reduced-motion. Pas de pause au hover — le défilement doit
+ * rester continu, même si le curseur survole la bande (demande user).
  */
 /**
  * Heights custom par logo selon leur aspect ratio — compense la
@@ -124,15 +127,13 @@ export function PartnersMarquee() {
           /* Gap fixe entre items = espacement uniforme peu importe la
              largeur naturelle de chaque logo. */
           gap: 5rem; /* 80px mobile */
-          animation: partners-scroll 40s linear infinite;
+          animation: partners-scroll 20s linear infinite;
+          will-change: transform;
         }
         @media (min-width: 768px) {
           .partners-marquee-track {
             gap: 7rem; /* 112px desktop — plus d'air */
           }
-        }
-        .partners-marquee-wrap:hover .partners-marquee-track {
-          animation-play-state: paused;
         }
         /* Item = largeur naturelle du logo, height du container = plafond
            généreux pour centrer les logos verticalement même quand ils sont
