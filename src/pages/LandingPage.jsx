@@ -183,15 +183,18 @@ export const LandingPage = ({ onNavigate }) => {
             <section className="py-24 md:py-32 bg-white px-6 relative z-10">
               <div className="max-w-6xl mx-auto">
                 <FadeInUp className="text-center mb-16">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-[#003725]">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3.5 text-cta">
                     Agent en action
                   </p>
-                  <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-[#262626] mb-4">
-                    Un agent IA qui répond<br className="hidden md:block" />
-                    comme votre meilleur employé SAV.
+                  <h2
+                    className="font-normal leading-[1.05] text-[#1A1A1A] mb-4"
+                    style={{ fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)', fontSize: 'clamp(36px, 5vw, 56px)', letterSpacing: '-0.02em' }}
+                  >
+                    Comme votre meilleur employé SAV,<br className="hidden md:block" />
+                    <span className="italic text-[#716D5C]">mais disponible 24h/24.</span>
                   </h2>
-                  <p className="text-lg text-[#716D5C] font-medium max-w-2xl mx-auto">
-                    Traite les questions WISMO, retours, disponibilité produit sur email et chat — 24h/24, en quelques secondes, avec le ton de votre marque.
+                  <p className="text-[17px] text-[#5A5A5A] max-w-xl mx-auto leading-[1.5]">
+                    Traite les questions WISMO, retours et disponibilité produit sur email & chat — en quelques secondes, avec le ton de votre marque.
                   </p>
                 </FadeInUp>
                 <ChatMockup vertical={vertical} />
@@ -212,14 +215,17 @@ export const LandingPage = ({ onNavigate }) => {
             <section className="py-24 md:py-32 bg-[#F9F7F1] px-6 relative z-10">
               <div className="max-w-6xl mx-auto">
                 <FadeInUp className="text-center mb-16">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-[#003725]">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3.5 text-cta">
                     Vos 4 automatisations
                   </p>
-                  <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-[#262626] mb-4">
+                  <h2
+                    className="font-normal leading-[1.05] text-[#1A1A1A] mb-4"
+                    style={{ fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)', fontSize: 'clamp(36px, 5vw, 56px)', letterSpacing: '-0.02em' }}
+                  >
                     Tout ce qui consomme votre équipe<br className="hidden md:block" />
-                    tourne maintenant tout seul.
+                    <span className="italic text-[#716D5C]">tourne maintenant tout seul.</span>
                   </h2>
-                  <p className="text-lg text-[#716D5C] font-medium max-w-2xl mx-auto">
+                  <p className="text-[17px] text-[#5A5A5A] max-w-xl mx-auto leading-[1.5]">
                     4 capacités natives Actero, activables selon votre plan. Chacune mesurée en temps réel dans votre dashboard.
                   </p>
                 </FadeInUp>
@@ -295,14 +301,17 @@ export const LandingPage = ({ onNavigate }) => {
             <section className="py-24 md:py-32 bg-white px-6 relative z-10">
               <div className="max-w-6xl mx-auto">
                 <FadeInUp className="text-center mb-16">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-[#003725]">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3.5 text-cta">
                     Dashboard temps réel
                   </p>
-                  <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-[#262626] mb-4">
+                  <h2
+                    className="font-normal leading-[1.05] text-[#1A1A1A] mb-4"
+                    style={{ fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)', fontSize: 'clamp(36px, 5vw, 56px)', letterSpacing: '-0.02em' }}
+                  >
                     Vos chiffres SAV en direct,<br className="hidden md:block" />
-                    comptés à l'euro près.
+                    <span className="italic text-[#716D5C]">comptés à l'euro près.</span>
                   </h2>
-                  <p className="text-lg text-[#716D5C] font-medium max-w-2xl mx-auto">
+                  <p className="text-[17px] text-[#5A5A5A] max-w-xl mx-auto leading-[1.5]">
                     Heures économisées · CA récupéré · Taux d'auto-résolution · Sentiment client — mis à jour en temps réel, exportables en PDF (plan Pro).
                   </p>
                 </FadeInUp>
@@ -378,50 +387,65 @@ export const LandingPage = ({ onNavigate }) => {
             {/* ═══════════════════════════════════════════════════
                 SECTION 10 — TESTIMONIALS (3 clients nommés)
                 ═══════════════════════════════════════════════════ */}
-            <section className="py-24 bg-white px-6 relative z-10">
+            <section className="py-24 md:py-32 bg-[#F9F7F1] px-6 relative z-10">
               <div className="max-w-6xl mx-auto">
-                <FadeInUp className="text-center mb-12">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-[#003725]">
+                <FadeInUp className="text-center mb-14">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3.5 text-cta">
                     Témoignages
                   </p>
-                  <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-[#262626]">
-                    Ce que nos clients disent d'Actero
+                  <h2
+                    className="font-normal leading-[1.05] text-[#1A1A1A]"
+                    style={{ fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)', fontSize: 'clamp(36px, 5vw, 56px)', letterSpacing: '-0.02em' }}
+                  >
+                    Ce que nos clients<br className="hidden md:block" />
+                    <span className="italic text-[#716D5C]">disent d'Actero.</span>
                   </h2>
                 </FadeInUp>
-                <div className="grid md:grid-cols-3 gap-6">
-                  <FadeInUp>
-                    <div className="bg-[#F9F7F1] rounded-2xl border border-gray-100 p-8 border-l-4 border-l-cta h-full flex flex-col">
-                      <p className="italic text-[#262626] leading-relaxed mb-6 flex-1">
-                        "Temps de réponse passé de 4h à 12 minutes. On a annulé Gorgias le mois d'après."
-                      </p>
-                      <div>
-                        <p className="font-bold text-[#262626]">Marie L.</p>
-                        <p className="text-sm text-[#716D5C]">Fondatrice, BoutiqueMode.fr · 800 commandes/mois</p>
-                      </div>
-                    </div>
-                  </FadeInUp>
-                  <FadeInUp>
-                    <div className="bg-[#F9F7F1] rounded-2xl border border-gray-100 p-8 border-l-4 border-l-cta h-full flex flex-col">
-                      <p className="italic text-[#262626] leading-relaxed mb-6 flex-1">
-                        "40 heures par mois économisées sur le support. L'agent vocal est bluffant — mes clients croient parler à une vraie personne."
-                      </p>
-                      <div>
-                        <p className="font-bold text-[#262626]">Thomas D.</p>
-                        <p className="text-sm text-[#716D5C]">CEO, TechGadgets.shop · 1 500 tickets/mois</p>
-                      </div>
-                    </div>
-                  </FadeInUp>
-                  <FadeInUp>
-                    <div className="bg-[#F9F7F1] rounded-2xl border border-gray-100 p-8 border-l-4 border-l-cta h-full flex flex-col">
-                      <p className="italic text-[#262626] leading-relaxed mb-6 flex-1">
-                        "+18% de paniers récupérés dès le premier mois. L'install Shopify a pris 11 minutes, j'ai chronométré."
-                      </p>
-                      <div>
-                        <p className="font-bold text-[#262626]">Julien R.</p>
-                        <p className="text-sm text-[#716D5C]">Co-fondateur, NordicBrew · 240 k€ CA mensuel</p>
-                      </div>
-                    </div>
-                  </FadeInUp>
+                <div className="grid md:grid-cols-3 gap-5">
+                  {[
+                    {
+                      quote: "Temps de réponse passé de 4h à 12 minutes. On a annulé Gorgias le mois d'après.",
+                      name: 'Marie L.',
+                      role: 'Fondatrice, BoutiqueMode.fr · 800 commandes/mois',
+                    },
+                    {
+                      quote: "40 heures par mois économisées sur le support. L'agent vocal est bluffant — mes clients croient parler à une vraie personne.",
+                      name: 'Thomas D.',
+                      role: 'CEO, TechGadgets.shop · 1 500 tickets/mois',
+                    },
+                    {
+                      quote: "+18% de paniers récupérés dès le premier mois. L'install Shopify a pris 11 minutes, j'ai chronométré.",
+                      name: 'Julien R.',
+                      role: 'Co-fondateur, NordicBrew · 240 k€ CA mensuel',
+                    },
+                  ].map((t, i) => (
+                    <FadeInUp key={i}>
+                      <figure className="bg-white rounded-[20px] p-7 m-0 border border-black/[0.05] flex flex-col gap-5 h-full">
+                        <div
+                          className="h-6 leading-[0.6] text-[60px] text-[#E8DFC9]"
+                          style={{ fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)' }}
+                          aria-hidden="true"
+                        >
+                          "
+                        </div>
+                        <blockquote
+                          className="m-0 text-[21px] leading-[1.35] text-[#1A1A1A] flex-1"
+                          style={{ fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)' }}
+                        >
+                          {t.quote}
+                        </blockquote>
+                        <figcaption className="flex items-center gap-3 pt-4 border-t border-black/[0.06]">
+                          <div className="w-9 h-9 rounded-full bg-[#F4F0E6] flex items-center justify-center text-[#003725] font-bold text-[13px]">
+                            {t.name.split(' ').map(n => n[0]).join('')}
+                          </div>
+                          <div>
+                            <div className="text-[13px] font-semibold text-[#1A1A1A]">{t.name}</div>
+                            <div className="text-[11.5px] text-[#716D5C]">{t.role}</div>
+                          </div>
+                        </figcaption>
+                      </figure>
+                    </FadeInUp>
+                  ))}
                 </div>
               </div>
             </section>
@@ -429,16 +453,16 @@ export const LandingPage = ({ onNavigate }) => {
             {/* ═══════════════════════════════════════════════════
                 SECTION 11 — FAQ
                 ═══════════════════════════════════════════════════ */}
-            <section id="faq" className="py-24 bg-[#F9F7F1] px-6 relative z-10">
+            <section id="faq" className="py-24 md:py-32 bg-white px-6 relative z-10">
               <div className="max-w-3xl mx-auto">
-                <FadeInUp className="text-center mb-16">
+                <FadeInUp className="text-center mb-14">
                   <h2
-                    className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-[#262626] mb-4"
-                    style={{ fontFamily: 'Georgia, serif' }}
+                    className="font-normal leading-[1.05] text-[#1A1A1A] mb-3"
+                    style={{ fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)', fontSize: 'clamp(36px, 5vw, 56px)', letterSpacing: '-0.02em' }}
                   >
                     Questions fréquentes
                   </h2>
-                  <p className="text-[#716D5C] font-medium text-lg">
+                  <p className="text-[17px] text-[#716D5C]">
                     Tout ce que vous devez savoir avant de commencer.
                   </p>
                 </FadeInUp>
@@ -487,11 +511,11 @@ export const LandingPage = ({ onNavigate }) => {
               <div className="max-w-4xl mx-auto text-center">
                 <FadeInUp>
                   <h2
-                    className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white mb-6 leading-[1.1]"
-                    style={{ fontFamily: 'Georgia, serif' }}
+                    className="font-normal text-white mb-5 leading-[1.05]"
+                    style={{ fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)', fontSize: 'clamp(40px, 6vw, 72px)', letterSpacing: '-0.02em' }}
                   >
                     Chaque semaine sans Actero,<br className="hidden md:block" />
-                    c'est 40 heures de SAV que vous payez pour rien.
+                    <span className="italic text-[#A8C490]">c'est 40 heures payées pour rien.</span>
                   </h2>
                   <p className="text-lg text-white/70 font-medium max-w-2xl mx-auto mb-10 leading-relaxed">
                     Connectez Shopify en 1 clic, laissez l'IA apprendre votre catalogue et vos politiques, voyez les premiers tickets résolus automatiquement dans l'heure qui suit.
@@ -598,9 +622,9 @@ function PricingSection({ onNavigate }) {
       monthly: 399,
       annual: 319,
       popular: true,
-      cardClass: 'bg-white border-cta ring-2 ring-cta/20 shadow-xl scale-[1.02]',
+      cardClass: 'bg-[#003725] border-cta text-white shadow-[0_20px_50px_-15px_rgba(0,55,37,0.35)] scale-[1.02]',
       cta: 'Essai gratuit 7 jours',
-      ctaStyle: 'bg-cta text-white hover:bg-[#003725]',
+      ctaStyle: 'bg-[#A8C490] text-[#003725] hover:bg-white',
       trial: 'Essai 7 jours · Sans engagement',
       featuresHeader: 'Tout Starter, plus :',
       features: [
@@ -651,14 +675,18 @@ function PricingSection({ onNavigate }) {
   return (
     <section id="pricing" className="py-24 bg-white px-6 relative z-10">
       <div className="max-w-7xl mx-auto">
-        <FadeInUp className="text-center mb-16">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] mb-4 text-[#003725]">
+        <FadeInUp className="text-center mb-14">
+          <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3.5 text-cta">
             Tarifs
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-[#262626] mb-4">
-            Un prix qui paie 40h de votre équipe.
+          <h2
+            className="font-normal leading-[1.05] text-[#1A1A1A] mb-4"
+            style={{ fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)', fontSize: 'clamp(36px, 5vw, 56px)', letterSpacing: '-0.02em' }}
+          >
+            Un prix qui paie 40h<br className="hidden md:block" />
+            <span className="italic text-[#716D5C]">de votre équipe.</span>
           </h2>
-          <p className="text-lg text-[#716D5C] font-medium max-w-2xl mx-auto">
+          <p className="text-[17px] text-[#5A5A5A] max-w-xl mx-auto leading-[1.5]">
             Commencez gratuitement, scalez quand vos tickets grimpent. Résiliation en 1 clic. Essai 7 jours sur Starter et Pro.
           </p>
         </FadeInUp>
@@ -669,7 +697,7 @@ function PricingSection({ onNavigate }) {
               <div className={`relative flex flex-col rounded-3xl border p-7 h-full ${plan.cardClass}`}>
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="inline-flex items-center gap-1 bg-cta text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-lg shadow-cta/25">
+                    <span className="inline-flex items-center gap-1 bg-[#A8C490] text-[#003725] text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                       <Sparkles className="w-3 h-3" />
                       Populaire
                     </span>
@@ -677,25 +705,25 @@ function PricingSection({ onNavigate }) {
                 )}
 
                 <div className="mb-5">
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-1">{plan.name}</h3>
-                  <p className="text-sm text-[#716D5C] font-medium">{plan.tagline}</p>
+                  <h3 className={`text-xl font-bold mb-1 ${plan.popular ? 'text-white' : 'text-[#1a1a1a]'}`}>{plan.name}</h3>
+                  <p className={`text-sm font-medium ${plan.popular ? 'text-[#F4F0E6]/60' : 'text-[#716D5C]'}`}>{plan.tagline}</p>
                 </div>
 
-                <div className="mb-5 pb-5 border-b border-gray-100">
+                <div className={`mb-5 pb-5 border-b ${plan.popular ? 'border-[#F4F0E6]/15' : 'border-gray-100'}`}>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold text-[#1a1a1a]">
+                    <span className={`text-4xl font-bold ${plan.popular ? 'text-white' : 'text-[#1a1a1a]'}`}>
                       {plan.monthly === null ? 'Sur devis' : `${plan.monthly}€`}
                     </span>
                     {plan.monthly !== null && plan.monthly > 0 && (
-                      <span className="text-sm text-[#716D5C] font-medium">/mois</span>
+                      <span className={`text-sm font-medium ${plan.popular ? 'text-[#F4F0E6]/60' : 'text-[#716D5C]'}`}>/mois</span>
                     )}
                   </div>
                   {plan.monthly > 0 && plan.annual && (
-                    <p className="text-[12px] text-[#9ca3af] mt-1">
-                      soit <strong className="text-cta">{plan.annual}€/mois</strong> en annuel (−20%)
+                    <p className={`text-[12px] mt-1 ${plan.popular ? 'text-[#F4F0E6]/60' : 'text-[#9ca3af]'}`}>
+                      soit <strong className={plan.popular ? 'text-[#A8C490]' : 'text-cta'}>{plan.annual}€/mois</strong> en annuel (−20%)
                     </p>
                   )}
-                  <p className="text-[11px] text-[#9ca3af] font-medium mt-2">{plan.trial}</p>
+                  <p className={`text-[11px] font-medium mt-2 ${plan.popular ? 'text-[#F4F0E6]/60' : 'text-[#9ca3af]'}`}>{plan.trial}</p>
                 </div>
 
                 <button
@@ -714,15 +742,15 @@ function PricingSection({ onNavigate }) {
                 </button>
 
                 {plan.featuresHeader && (
-                  <p className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-3">
+                  <p className={`text-[11px] font-semibold uppercase tracking-wider mb-3 ${plan.popular ? 'text-[#F4F0E6]/60' : 'text-[#9ca3af]'}`}>
                     {plan.featuresHeader}
                   </p>
                 )}
                 <ul className="space-y-2.5 flex-1">
                   {plan.features.map((feat, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-cta flex-shrink-0 mt-0.5" />
-                      <span className="text-[13px] text-[#1a1a1a] leading-snug">{feat}</span>
+                      <Check className={`w-4 h-4 flex-shrink-0 mt-0.5 ${plan.popular ? 'text-[#A8C490]' : 'text-cta'}`} />
+                      <span className={`text-[13px] leading-snug ${plan.popular ? 'text-[#F4F0E6]/90' : 'text-[#1a1a1a]'}`}>{feat}</span>
                     </li>
                   ))}
                 </ul>
