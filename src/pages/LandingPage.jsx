@@ -8,7 +8,7 @@ import { FadeInUp } from '../components/ui/scroll-animations'
 import { initAmplitude, trackEvent } from '../lib/analytics'
 import { StickyCTABar } from '../components/ui/StickyCTABar'
 import { ReadingProgress } from '../components/ui/ReadingProgress'
-import { TrustBarA } from '../components/landing/TrustBarA'
+import { PartnersMarquee } from '../components/ui/PartnersMarquee'
 import { ChatDemoA } from '../components/landing/ChatDemoA'
 import { CapabilitiesA } from '../components/landing/CapabilitiesA'
 import { ROISimulatorA } from '../components/landing/ROISimulatorA'
@@ -21,7 +21,8 @@ import { PricingA } from '../components/landing/PricingA'
  * (variation-a/) — 10 sections :
  *   1. Navbar (sticky)
  *   2. Hero (centré, dashboard preview intégré)
- *   3. TrustBar (logo marquee Instrument Serif italic)
+ *   3. PartnersMarquee (4 badges PNG — ElevenLabs Grants, Shopify
+ *      Partner, Google for Startups, Auth0 — demande user)
  *   4. ChatDemo (split 2-col : chat + behind-the-scenes 5 steps)
  *   5. Capabilities (2x2 emoji cards cream + highlight check border-t)
  *   6. ROI Simulator (split sliders + dark result panel)
@@ -138,8 +139,9 @@ export const LandingPage = ({ onNavigate }) => {
           {/* 1. HERO (centered + dashboard preview) */}
           <GlassHero onNavigate={onNavigate} />
 
-          {/* 2. TRUST BAR (logo marquee serif italic) */}
-          <TrustBarA />
+          {/* 2. PARTNERS MARQUEE (4 badges PNG : ElevenLabs Grants,
+              Shopify Partner, Google for Startups, Auth0) */}
+          <PartnersMarquee />
 
           {/* 3. CHAT DEMO (2-col : chat + 5 steps) */}
           <ChatDemoA />
