@@ -539,13 +539,13 @@ export const AutomationHubView = ({ clientId, theme, setActiveTab }) => {
 
   /**
    * saveChannels — écrit un toggle de canal en base + optimistic update
-   * local. Applique aussi les side-effects (widget install/uninstall,
-   * email agent enable).
+   * local. Les side-effects (widget install/uninstall, email agent enable)
+   * s'exécutent en arrière-plan et n'affectent pas le résultat du toggle.
    *
-   * Optimistic : setSelectedChannels immédiat avant le round-trip → le
-   * toggle visuel bouge au clic, même si le refetch prend 200-500ms.
-   * Si le write échoue, on rollback via le refetch (le query invalidate
-   * tire la source of truth et la useEffect Set full map la reflète).
+   * — Optimistic update immédiat (UI bouge au clic, pas d'attente round-trip)
+   * — Side-effects en fire-and-forget (widget install peut 500er sans
+   *   bloquer le toggle)
+   * — Rollback + toast si le write DB principal échoue
    */
   const saveChannels = async (playbookName, channelId, isSelected) => {
     const pb = playbooks.find(p => p.name === playbookName)
@@ -556,66 +556,84 @@ export const AutomationHubView = ({ clientId, theme, setActiveTab }) => {
     const optimisticKey = `${playbookName}_${channelId}`
     setSelectedChannels(prev => ({ ...prev, [optimisticKey]: isSelected }))
 
-    // Recalcule la liste complète des canaux actifs pour ce playbook
-    // à partir du state qu'on vient d'update (pas du state stale)
-    const currentChannels = (cp?.custom_config?.channels || [])
+    // Parse les channels actuels en gérant le format legacy (object {email:true}) ET array
+    const rawChannels = cp?.custom_config?.channels
+    const currentChannels = Array.isArray(rawChannels)
+      ? rawChannels
+      : (rawChannels && typeof rawChannels === 'object')
+        ? Object.entries(rawChannels).filter(([, v]) => v).map(([k]) => k)
+        : []
     const newChannels = isSelected
       ? Array.from(new Set([...currentChannels, channelId]))
       : currentChannels.filter(c => c !== channelId)
 
-    // Side-effects (email agent enable, widget install) — matches PlaybooksView
-    if (channelId === 'email' && isSelected) {
-      try {
-        // Enable the native email agent (cron-based IMAP/Gmail polling).
-        // Remplace l'ancien setup-email-polling n8n.
-        await supabase.from('client_settings')
-          .update({ email_agent_enabled: true, updated_at: new Date().toISOString() })
-          .eq('client_id', clientId)
-      } catch {}
-    }
-    if (channelId === 'widget' && isSelected) {
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        const widgetRes = await fetch('/api/engine/shopify-widget', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
-          body: JSON.stringify({ action: 'install', client_id: clientId }),
-        })
-        if (widgetRes.ok) toast.success('Widget chat installe sur votre boutique Shopify !')
-      } catch {}
-    }
-    if (channelId === 'widget' && !isSelected) {
-      try {
-        const { data: { session } } = await supabase.auth.getSession()
-        await fetch('/api/engine/shopify-widget', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
-          body: JSON.stringify({ action: 'uninstall', client_id: clientId }),
-        })
-      } catch {}
-    }
-
+    // === DB write principal (le toggle lui-même) — DOIT réussir ===
+    // NOTE : ne PAS inclure updated_at — la colonne n'existe pas sur
+    // engine_client_playbooks et causait un 400 Bad Request.
     try {
       if (cp) {
         const { error } = await supabase.from('engine_client_playbooks').update({
           custom_config: { ...(cp.custom_config || {}), channels: newChannels },
-          updated_at: new Date().toISOString(),
         }).eq('id', cp.id)
         if (error) throw error
       } else {
         const { error } = await supabase.from('engine_client_playbooks').insert({
-          client_id: clientId, playbook_id: pb.id, is_active: false, custom_config: { channels: newChannels },
+          client_id: clientId,
+          playbook_id: pb.id,
+          is_active: false,
+          custom_config: { channels: newChannels },
         })
         if (error) throw error
       }
     } catch (err) {
-      // Rollback optimistic update — revient à l'état précédent
+      // Rollback optimistic update
       setSelectedChannels(prev => ({ ...prev, [optimisticKey]: !isSelected }))
       toast.error('Erreur — modification non sauvegardée')
-      console.error('[saveChannels] DB write failed:', err)
+      console.error('[saveChannels] DB write failed:', {
+        message: err?.message,
+        details: err?.details,
+        hint: err?.hint,
+        code: err?.code,
+      })
       return
     }
     queryClient.invalidateQueries({ queryKey: ['client-playbooks', clientId] })
+
+    // === Side-effects en fire-and-forget (peuvent échouer sans impact) ===
+
+    // Email agent : enable le polling IMAP/Gmail côté serveur
+    if (channelId === 'email' && isSelected) {
+      supabase.from('client_settings')
+        .update({ email_agent_enabled: true })
+        .eq('client_id', clientId)
+        .then(({ error }) => {
+          if (error) console.warn('[email agent enable] failed:', error?.message)
+        })
+    }
+
+    // Widget Shopify — uniquement si Shopify est connecté (sinon 500 garanti)
+    const shopifyConnected = connectedProviders.includes('shopify')
+    if (channelId === 'widget' && shopifyConnected) {
+      const action = isSelected ? 'install' : 'uninstall'
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        const widgetRes = await fetch('/api/engine/shopify-widget', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({ action, client_id: clientId }),
+        })
+        if (widgetRes.ok && isSelected) {
+          toast.success('Widget chat installé sur votre boutique Shopify !')
+        } else if (!widgetRes.ok) {
+          console.warn(`[shopify-widget ${action}] non-2xx:`, widgetRes.status)
+        }
+      } catch (err) {
+        console.warn(`[shopify-widget ${action}] network error:`, err?.message)
+      }
+    }
   }
 
   const handleTogglePlaybook = async (automation) => {
