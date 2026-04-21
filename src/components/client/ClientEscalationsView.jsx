@@ -10,6 +10,7 @@ import {
 import { supabase } from '../../lib/supabase'
 import { generateAndUploadAudio } from '../../hooks/useTTS'
 import { ReasoningDrawer } from './ReasoningDrawer'
+import { AiCopilotPanel } from './AiCopilotPanel'
 
 const ESCALATION_REASONS = {
   aggressive: 'Message agressif detecte',
@@ -387,6 +388,14 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
           onClose={() => setReasoningOpen(false)}
           conversationId={conversation.id}
         />
+
+        {/* ── AI Copilot — drafts + suggested actions ── */}
+        <div className="px-6 pb-2">
+          <AiCopilotPanel
+            conversationId={conversation.id}
+            onUseDraft={(body) => setResponse(body)}
+          />
+        </div>
 
         {/* Response area */}
         {!conversation.human_response ? (
