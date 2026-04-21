@@ -121,6 +121,7 @@ export const PromptEditor = ({ clientId, theme }) => {
   const [form, setForm] = useState({
     brand_tone: '',
     brand_language: 'fr',
+    supported_languages: ['fr', 'en'],
     return_policy: '',
     excluded_products: '',
     custom_instructions: '',
@@ -138,6 +139,9 @@ export const PromptEditor = ({ clientId, theme }) => {
       setForm({
         brand_tone: settings.brand_tone || 'professionnel et chaleureux',
         brand_language: settings.brand_language || 'fr',
+        supported_languages: Array.isArray(settings.supported_languages) && settings.supported_languages.length > 0
+          ? settings.supported_languages
+          : ['fr', 'en'],
         return_policy: settings.return_policy || '',
         excluded_products: settings.excluded_products || '',
         custom_instructions: settings.custom_instructions || '',
@@ -173,6 +177,7 @@ export const PromptEditor = ({ clientId, theme }) => {
           tone_detail: form.tone_detail,
           example_responses: form.example_responses,
           brand_language: form.brand_language,
+          supported_languages: form.supported_languages,
           updated_at: new Date().toISOString(),
         }, { onConflict: 'client_id' })
         queryClient.invalidateQueries({ queryKey: ['client-prompt-settings', clientId] })
@@ -182,7 +187,7 @@ export const PromptEditor = ({ clientId, theme }) => {
     }, 900)
     return () => { if (saveTimer.current) clearTimeout(saveTimer.current) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.brand_identity, form.tone_style, form.example_responses, form.tone_formality, form.tone_warmth, form.tone_detail, form.brand_language])
+  }, [form.brand_identity, form.tone_style, form.example_responses, form.tone_formality, form.tone_warmth, form.tone_detail, form.brand_language, form.supported_languages])
 
   // -------- Knowledge Base actions --------
   const handleAddManual = async () => {
@@ -494,6 +499,55 @@ export const PromptEditor = ({ clientId, theme }) => {
                       <option key={l.value} value={l.value}>{l.label}</option>
                     ))}
                   </select>
+
+                  {/* ── Multilingue : whitelist des langues supportées ── */}
+                  {form.brand_language === 'multi' && (
+                    <div className="mt-4 p-4 rounded-xl bg-[#F9F7F1] border border-[#E8DFC9] max-w-md">
+                      <div className="flex items-start gap-2 mb-3">
+                        <Globe className="w-4 h-4 text-cta mt-0.5 flex-shrink-0" strokeWidth={2} />
+                        <div>
+                          <p className="text-[12.5px] font-bold text-[#1A1A1A]">Langues supportées</p>
+                          <p className="text-[11.5px] text-[#716D5C] leading-[1.4] mt-0.5">
+                            L'agent détectera la langue du client et répondra dans celle-ci si elle est cochée. Sinon, il répondra en français et proposera une aide humaine.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {LANGUAGES.filter(l => l.value !== 'multi').map(l => {
+                          const isOn = form.supported_languages.includes(l.value)
+                          const disable = l.value === 'fr' && isOn && form.supported_languages.length === 1
+                          return (
+                            <button
+                              key={l.value}
+                              type="button"
+                              onClick={() => {
+                                if (disable) return
+                                setForm(f => ({
+                                  ...f,
+                                  supported_languages: isOn
+                                    ? f.supported_languages.filter(v => v !== l.value)
+                                    : [...f.supported_languages, l.value],
+                                }))
+                              }}
+                              className={`px-3 py-1.5 rounded-full text-[12px] font-semibold border transition-colors ${
+                                isOn
+                                  ? 'bg-cta text-white border-cta'
+                                  : 'bg-white text-[#5A5A5A] border-[#E8DFC9] hover:border-cta/40'
+                              } ${disable ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
+                              title={disable ? 'Au moins une langue doit rester active' : undefined}
+                            >
+                              {l.label}
+                            </button>
+                          )
+                        })}
+                      </div>
+                      {form.supported_languages.length === 0 && (
+                        <p className="text-[11px] text-red-600 mt-2">
+                          Sélectionnez au moins une langue.
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

@@ -44,13 +44,27 @@ export function buildSystemPrompt(config) {
     prompt += `\n\nSTYLE PARTICULIER:\n${settings.tone_style.trim()}`
   }
 
-  // Language
-  const langMap = { en: 'anglais', es: 'espagnol', de: 'allemand', it: 'italien', pt: 'portugais', nl: 'neerlandais' }
+  // Language — multi mode upgraded with supported-languages whitelist +
+  // fallback instructions + tone preservation across languages.
+  const langMap = { fr: 'francais', en: 'anglais', es: 'espagnol', de: 'allemand', it: 'italien', pt: 'portugais', nl: 'neerlandais' }
   if (settings.brand_language && settings.brand_language !== 'fr' && settings.brand_language !== 'multi') {
     prompt += ` Reponds en ${langMap[settings.brand_language] || settings.brand_language}.`
   }
   if (settings.brand_language === 'multi') {
-    prompt += ' Detecte automatiquement la langue du client et reponds dans la meme langue.'
+    const supported = Array.isArray(settings.supported_languages) && settings.supported_languages.length > 0
+      ? settings.supported_languages
+      : ['fr', 'en']
+    const supportedNames = supported.map(c => langMap[c] || c).join(', ')
+    const fallback = supported.includes('fr') ? 'francais' : (langMap[supported[0]] || 'francais')
+
+    prompt += `\n\nMULTILINGUE (auto-detect):\n`
+    prompt += `- Detecte la langue du dernier message du client (fiable sur >= 3 mots utiles).\n`
+    prompt += `- Langues officiellement supportees par la marque : ${supportedNames}.\n`
+    prompt += `- Si la langue detectee est dans la liste supportee -> reponds dans cette langue.\n`
+    prompt += `- Si la langue detectee n'est pas dans la liste -> reponds en ${fallback}, propose poliment une aide humaine.\n`
+    prompt += `- Conserve exactement le meme registre (formel/casual), la meme chaleur et le meme niveau de detail dans la langue cible qu'en francais (tutoiement -> tu/tú/du/du, vouvoiement -> vous/usted/Sie/voi selon les usages locaux).\n`
+    prompt += `- N'ajoute jamais "(traduit automatiquement)" ou autre mention de traduction.\n`
+    prompt += `- Conserve les references produit, numeros de commande et liens dans leur forme originale.\n`
   }
 
   // Greeting template removed — handled by widget UI, not by AI responses
