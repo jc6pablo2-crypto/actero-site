@@ -169,12 +169,6 @@ export const AlternativeTemplate = ({ onNavigate, data }) => {
                     Essayer Actero gratuitement
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
-                  <button
-                    onClick={() => onNavigate('/tarifs')}
-                    className="inline-flex items-center gap-2 px-6 py-[14px] rounded-full bg-transparent text-[#262626] text-[15px] font-semibold border border-black/10 hover:border-black/20 transition-colors"
-                  >
-                    Voir les tarifs
-                  </button>
                   <TalkToHumanButton source={`alternative_${data.competitorKey}_hero`} variant="light" />
                 </div>
               </FadeInUp>
@@ -390,12 +384,6 @@ export const AlternativeTemplate = ({ onNavigate, data }) => {
                     className="inline-flex items-center gap-2 bg-[#F4F0E6] text-[#003725] px-[26px] py-[14px] rounded-full text-[15px] font-semibold hover:bg-white transition-colors"
                   >
                     Démarrer mon essai gratuit <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    onClick={() => onNavigate('/tarifs')}
-                    className="inline-flex items-center gap-2 bg-transparent text-white border border-[#F4F0E6]/25 px-6 py-[14px] rounded-full text-[15px] font-semibold hover:bg-white/10 transition-colors"
-                  >
-                    Voir les tarifs
                   </button>
                   <TalkToHumanButton source={`alternative_${data.competitorKey}_final_cta`} variant="dark" />
                 </div>

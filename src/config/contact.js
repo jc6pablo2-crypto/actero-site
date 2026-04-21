@@ -10,9 +10,9 @@ export const CONTACT = {
   /** Démo découverte 30 min avec un cofondateur Actero */
   demo: {
     url: 'https://cal.com/actero/demo',
-    label: 'Parler à un humain',
-    labelShort: 'Parler à un humain',
-    labelLong: 'Réserver une démo 30 min',
+    label: 'Contacter le service commercial',
+    labelShort: 'Service commercial',
+    labelLong: 'Contacter le service commercial',
     description: 'Rendez-vous 30 min — démo live sur votre boutique Shopify',
   },
   /** Fallback email — pour les templates qui veulent rester sur mailto */

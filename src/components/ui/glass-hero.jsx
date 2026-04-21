@@ -77,12 +77,6 @@ export const GlassHero = ({ onNavigate }) => {
                 Démarrer mon essai gratuit
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
-              <button
-                onClick={() => onNavigate && onNavigate('/tarifs')}
-                className="inline-flex items-center gap-2 px-6 py-[14px] rounded-full bg-transparent text-[#262626] text-[15px] font-semibold border border-black/10 hover:border-black/20 transition-colors"
-              >
-                Voir les tarifs
-              </button>
               <TalkToHumanButton source="landing_hero" variant="light" />
             </div>
           </FadeInUp>

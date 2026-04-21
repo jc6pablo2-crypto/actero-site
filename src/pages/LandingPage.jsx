@@ -235,12 +235,6 @@ export const LandingPage = ({ onNavigate }) => {
                   >
                     Démarrer mon essai gratuit <ArrowRight className="w-3.5 h-3.5" />
                   </button>
-                  <button
-                    onClick={() => onNavigate('/tarifs')}
-                    className="inline-flex items-center gap-2 bg-transparent text-white border border-[#F4F0E6]/25 px-6 py-[14px] rounded-full text-[15px] font-semibold hover:bg-white/10 transition-colors"
-                  >
-                    Voir les tarifs
-                  </button>
                   <TalkToHumanButton source="landing_final_cta" variant="dark" />
                 </div>
                 <div className="inline-flex flex-wrap items-center justify-center gap-[18px] text-[12.5px] text-[#F4F0E6]/55">

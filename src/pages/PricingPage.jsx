@@ -812,7 +812,6 @@ export const PricingPage = ({ onNavigate }) => {
                   <TalkToHumanButton
                     source="pricing_bottom_cta"
                     variant="dark"
-                    label="Parler à l'équipe"
                   />
                 </div>
               </motion.div>

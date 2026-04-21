@@ -172,7 +172,7 @@ export const PLANS = {
       price_id_monthly: null,
       price_id_annual: null,
     },
-    cta: 'Contacter l\'équipe',
+    cta: 'Contacter le service commercial',
     popular: false,
   },
 }

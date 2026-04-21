@@ -80,12 +80,12 @@ export function StickyCTABar({ onNavigate }) {
         </div>
         <button
           onClick={handleTalkToHumanClick}
-          aria-label="Réserver une démo avec un humain"
+          aria-label="Contacter le service commercial"
           className="hidden sm:inline-flex flex-shrink-0 items-center gap-1.5 h-9 md:h-10 px-3 md:px-3.5 rounded-xl border border-white/15 text-white/80 text-[12px] md:text-[13px] font-semibold hover:text-white hover:bg-white/10 transition-colors"
         >
           <Calendar className="w-3.5 h-3.5" strokeWidth={2.2} />
-          <span className="hidden md:inline">Parler à un humain</span>
-          <span className="md:hidden">Démo</span>
+          <span className="hidden md:inline">Service commercial</span>
+          <span className="md:hidden">Commercial</span>
         </button>
         <button
           onClick={handleCTAClick}
