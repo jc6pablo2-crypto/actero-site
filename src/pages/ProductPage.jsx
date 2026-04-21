@@ -23,6 +23,7 @@ import { PartnersMarquee } from '../components/ui/PartnersMarquee'
 import { CapabilitiesA } from '../components/landing/CapabilitiesA'
 import { trackEvent } from '../lib/analytics'
 import { TalkToHumanButton } from '../components/ui/TalkToHumanButton'
+import { WatchDemoButton } from '../components/ui/WatchDemoButton'
 
 /**
  * ProductPage — page dédiée /produit.
@@ -153,6 +154,7 @@ export const ProductPage = ({ onNavigate }) => {
                   Démarrer gratuitement
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
+                <WatchDemoButton source="product_hero" variant="light" />
                 <TalkToHumanButton source="product_hero" variant="light" />
               </div>
             </FadeInUp>

@@ -2,6 +2,7 @@ import React from 'react'
 import { ArrowRight, Check } from 'lucide-react'
 import { FadeInUp } from './scroll-animations'
 import { TalkToHumanButton } from './TalkToHumanButton'
+import { WatchDemoButton } from './WatchDemoButton'
 
 /**
  * GlassHero — Variation A (Refined Notion) implementation.
@@ -77,6 +78,7 @@ export const GlassHero = ({ onNavigate }) => {
                 Démarrer mon essai gratuit
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
+              <WatchDemoButton source="landing_hero" variant="light" />
               <TalkToHumanButton source="landing_hero" variant="light" />
             </div>
           </FadeInUp>

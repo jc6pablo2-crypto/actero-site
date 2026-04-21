@@ -7,6 +7,7 @@ import { Footer } from '../layout/Footer'
 import { FadeInUp } from '../ui/scroll-animations'
 import { PartnersMarquee } from '../ui/PartnersMarquee'
 import { TalkToHumanButton } from '../ui/TalkToHumanButton'
+import { WatchDemoButton } from '../ui/WatchDemoButton'
 import { trackEvent } from '../../lib/analytics'
 
 /**
@@ -169,6 +170,7 @@ export const AlternativeTemplate = ({ onNavigate, data }) => {
                     Essayer Actero gratuitement
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
+                  <WatchDemoButton source={`alternative_${data.competitorKey}_hero`} variant="light" />
                   <TalkToHumanButton source={`alternative_${data.competitorKey}_hero`} variant="light" />
                 </div>
               </FadeInUp>
