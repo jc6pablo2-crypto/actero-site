@@ -81,14 +81,14 @@ export const GlassHero = ({ onNavigate }) => {
             </div>
           </FadeInUp>
 
-          {/* Trust tags row */}
+          {/* Hero KPIs — 3 chiffres business */}
           <FadeInUp delay={0.18}>
-            <div className="inline-flex flex-wrap items-center justify-center gap-4 text-xs text-[#9ca3af]">
-              <span className="inline-flex items-center gap-1.5">
-                <Check className="w-3 h-3 text-cta" strokeWidth={2.5} />
-                60% de résolutions automatiques
-              </span>
-              <span className="text-[#E8DFC9]">·</span>
+            <HeroKpiRow />
+          </FadeInUp>
+
+          {/* Compliance tags — plus discret, sous les KPIs */}
+          <FadeInUp delay={0.22} className="mt-5">
+            <div className="inline-flex flex-wrap items-center justify-center gap-4 text-[11px] text-[#9ca3af]">
               <span className="inline-flex items-center gap-1.5">
                 <Check className="w-3 h-3 text-cta" strokeWidth={2.5} />
                 RGPD · Hébergé en UE
@@ -97,6 +97,11 @@ export const GlassHero = ({ onNavigate }) => {
               <span className="inline-flex items-center gap-1.5">
                 <Check className="w-3 h-3 text-cta" strokeWidth={2.5} />
                 OAuth Shopify 1-clic
+              </span>
+              <span className="text-[#E8DFC9]">·</span>
+              <span className="inline-flex items-center gap-1.5">
+                <Check className="w-3 h-3 text-cta" strokeWidth={2.5} />
+                Opt-out TDM
               </span>
             </div>
           </FadeInUp>
@@ -256,6 +261,54 @@ function DashboardPreview() {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+/**
+ * HeroKpiRow — 3 KPIs business format Gorgias-style.
+ *
+ * Chiffres sourcés depuis le produit réel (src/components/landing/CapabilitiesA
+ * + ROISimulatorA) :
+ *   — 60% de résolutions automatiques (agent SAV)
+ *   — 15 min pour installer l'agent (OAuth Shopify 1-clic)
+ *   — +15% de paniers récupérés en moyenne (relance IA)
+ *
+ * Design : 3 cards white rounded-[18px] border cream, chiffre Instrument
+ * Serif 44-52px, label uppercase muted. Stack mobile, grid 3 cols dès sm.
+ */
+function HeroKpiRow() {
+  const fontDisplay = { fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)' }
+  const kpis = [
+    { value: '60', unit: '%', label: 'de résolutions automatiques', sub: 'Agent SAV — Email, chat, helpdesk' },
+    { value: '15', unit: 'min', label: 'pour installer l\'agent', sub: 'OAuth Shopify 1-clic · sans code' },
+    { value: '+15', unit: '%', label: 'de paniers récupérés', sub: '3 relances IA personnalisées' },
+  ]
+
+  return (
+    <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto">
+      {kpis.map((k, i) => (
+        <div
+          key={i}
+          className="px-5 py-5 rounded-[18px] bg-white border border-[#E8DFC9] text-left transition-all hover:border-[#D4C59E] hover:-translate-y-px"
+        >
+          <div
+            className="leading-none text-[#1A1A1A] font-normal tabular-nums"
+            style={{ ...fontDisplay, fontSize: 'clamp(38px, 4.6vw, 52px)', letterSpacing: '-0.02em' }}
+          >
+            {k.value}
+            <span className="text-[#716D5C] text-[0.45em] font-medium ml-0.5 align-baseline">
+              {k.unit}
+            </span>
+          </div>
+          <div className="text-[12.5px] font-bold text-[#1A1A1A] mt-2 leading-[1.3]">
+            {k.label}
+          </div>
+          <div className="text-[11px] text-[#716D5C] mt-1 leading-[1.4]">
+            {k.sub}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
