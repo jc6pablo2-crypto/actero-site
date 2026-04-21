@@ -22,7 +22,7 @@ const CONVERSATIONS = {
 
 const STATS = {
   ecommerce: [
-    { label: 'Tickets traités', value: '847', suffix: '/mois', color: 'emerald' },
+    { label: 'Résolutions', value: '847', suffix: '/mois', color: 'emerald' },
     { label: 'Taux de résolution', value: '94', suffix: '%', color: 'emerald' },
     { label: 'Temps de réponse', value: '<2', suffix: 'sec', color: 'cyan' },
   ],

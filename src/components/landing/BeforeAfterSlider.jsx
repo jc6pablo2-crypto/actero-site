@@ -12,7 +12,7 @@ const beforeItems = [
 const afterItems = [
   { icon: Zap, label: "Réponse IA en < 30 secondes", sub: "Contexte commande inclus automatiquement" },
   { icon: Check, label: "12% des paniers récupérés", sub: "Séquences de relance IA personnalisées" },
-  { icon: Check, label: "82% des tickets résolus par l'IA", sub: "Escalade intelligente si nécessaire" },
+  { icon: Check, label: "82% de résolutions auto-pilotées par l'IA", sub: "Escalade intelligente si nécessaire" },
   { icon: Euro, label: "+3 000€/mois en moyenne", sub: "ROI visible dès le premier mois" },
 ]
 

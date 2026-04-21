@@ -10,7 +10,7 @@ import { supabase } from '../../lib/supabase'
 import { useToast } from '../ui/Toast'
 
 const EVENT_CATALOG = [
-  { id: 'ticket.resolved', label: 'Ticket résolu', group: 'Tickets' },
+  { id: 'ticket.resolved', label: 'Résolution livrée', group: 'Résolutions' },
   { id: 'ticket.escalated', label: 'Ticket escaladé', group: 'Tickets' },
   { id: 'ticket.response_failed', label: 'Échec de réponse', group: 'Tickets' },
   { id: 'conversation.created', label: 'Nouvelle conversation', group: 'Conversations' },

@@ -16,7 +16,7 @@ import {
 // ============================================================
 const DEFAULT_OBJECTIVES = {
   ecommerce: [
-    { id: 'tickets', label: 'Tickets résolus', target: 200, unit: '', icon: '🎫' },
+    { id: 'tickets', label: 'Résolutions', target: 200, unit: '', icon: '🎫' },
     { id: 'roi', label: 'ROI généré', target: 5000, unit: '€', icon: '💰' },
     { id: 'time', label: 'Temps économisé', target: 50, unit: 'h', icon: '⏱️' },
   ],

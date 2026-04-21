@@ -49,7 +49,7 @@ const NOTIFICATION_TYPES = [
     items: [
       { key: 'new_integration', label: 'Intégration connectée', desc: 'Quand une nouvelle intégration est activée', channels: ['email', 'slack'], defaultChannels: [] },
       { key: 'agent_improvement', label: 'Suggestion d\'amélioration', desc: 'L\'IA a identifié un pattern à corriger', channels: ['email'], defaultChannels: ['email'] },
-      { key: 'milestone_alert', label: 'Jalon atteint', desc: '100h économisées, 1000 tickets résolus, etc.', channels: ['email', 'push'], defaultChannels: ['email'] },
+      { key: 'milestone_alert', label: 'Jalon atteint', desc: '100h économisées, 1000 résolutions livrées, etc.', channels: ['email', 'push'], defaultChannels: ['email'] },
     ],
   },
 ]

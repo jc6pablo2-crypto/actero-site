@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 const STATS = {
   ecommerce: [
-    { value: '847', label: 'tickets traités cette semaine', suffix: '' },
+    { value: '847', label: 'résolutions livrées cette semaine', suffix: '' },
     { value: '+12 400', label: 'euros récupérés ce mois', suffix: ' €' },
     { value: '312', label: 'paniers relancés aujourd\'hui', suffix: '' },
     { value: '94', label: 'des demandes résolues sans humain', suffix: '%' },

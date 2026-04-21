@@ -41,11 +41,11 @@ const PROSPECT_PROFILES = {
     kpis: [
       { label: 'Temps économisé', value: '62h', variation: '+45%', icon: Clock, color: 'emerald' },
       { label: 'ROI Généré', value: '8 450€', variation: '+71%', icon: DollarSign, color: 'amber' },
-      { label: 'Tickets résolus auto', value: '247', variation: '+120%', icon: Ticket, color: 'violet' },
+      { label: 'Résolutions auto-pilotées', value: '247', variation: '+120%', icon: Ticket, color: 'violet' },
       { label: 'Actions IA', value: '1 280', variation: '+55%', icon: Activity, color: 'blue' },
     ],
     objectives: [
-      { label: 'Tickets résolus', current: 247, target: 300, icon: '🎫' },
+      { label: 'Résolutions', current: 247, target: 300, icon: '🎫' },
       { label: 'ROI généré', current: 8450, target: 10000, unit: '€', icon: '💰' },
       { label: 'Temps économisé', current: 62, target: 80, unit: 'h', icon: '⏱️' },
     ],

@@ -90,7 +90,7 @@ export const GlassHero = ({ onNavigate }) => {
             <div className="inline-flex flex-wrap items-center justify-center gap-4 text-xs text-[#9ca3af]">
               <span className="inline-flex items-center gap-1.5">
                 <Check className="w-3 h-3 text-cta" strokeWidth={2.5} />
-                60% tickets auto-résolus
+                60% de résolutions automatiques
               </span>
               <span className="text-[#E8DFC9]">·</span>
               <span className="inline-flex items-center gap-1.5">
@@ -140,7 +140,7 @@ function DashboardPreview() {
   ]
 
   const kpis = [
-    { label: 'Tickets résolus', value: '1 847', delta: '+12%', hint: 'sans humain' },
+    { label: 'Résolutions', value: '1 847', delta: '+12%', hint: 'sans humain' },
     { label: 'Heures libérées', value: '126h', delta: '+8h', hint: 'équipe SAV' },
     { label: 'CA récupéré', value: '18 420€', delta: '+15%', hint: 'paniers + upsell' },
     { label: 'CSAT moyen', value: '4.7', delta: '+0.3', hint: 'sur 5 étoiles' },
@@ -225,7 +225,7 @@ function DashboardPreview() {
           <div className="p-4 border border-black/[0.06] rounded-[10px]">
             <div className="flex justify-between mb-3.5">
               <div className="text-[13px] font-semibold text-[#1A1A1A]">
-                Tickets traités par jour
+                Résolutions par jour
               </div>
               <div className="flex gap-2.5 text-[11px] text-[#716D5C]">
                 <span className="inline-flex items-center gap-1">

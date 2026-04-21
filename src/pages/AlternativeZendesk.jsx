@@ -57,7 +57,7 @@ export const AlternativeZendesk = ({ onNavigate }) => {
         competitor: 'partial',
       },
       {
-        label: '% tickets résolus automatiquement',
+        label: '% de résolutions automatiques',
         actero: { main: '60 %', sub: 'Sans add-on' },
         competitor: { main: 'Variable', sub: 'AI Agent à 50 $/agent' },
       },

@@ -106,8 +106,8 @@ export const ROISimulatorA = () => {
                 <span className="text-[36px] text-[#A8C490] align-baseline">€</span>
               </div>
               <div className="text-[13px] text-[#F4F0E6]/70 mb-7">
-                pour {Math.round(tickets * handledPct).toLocaleString('fr-FR')} tickets traités
-                sans humain
+                pour {Math.round(tickets * handledPct).toLocaleString('fr-FR')} résolutions
+                livrées sans humain
               </div>
 
               <div className="flex flex-col gap-2.5 pt-5 border-t border-[#F4F0E6]/10">

@@ -21,7 +21,7 @@ import {
 // EVENT CONFIG
 // ============================================================
 const EVENT_CONFIG = {
-  ticket_resolved: { icon: Ticket, label: 'Ticket résolu', color: 'emerald', emoji: '✅' },
+  ticket_resolved: { icon: Ticket, label: 'Résolution', color: 'emerald', emoji: '✅' },
   ticket_escalated: { icon: AlertTriangle, label: 'Ticket escaladé', color: 'amber', emoji: '⚠️' },
   cart_email_sent: { icon: Mail, label: 'Email panier envoyé', color: 'blue', emoji: '📧' },
   cart_recovered: { icon: ShoppingCart, label: 'Panier récupéré', color: 'emerald', emoji: '🛒' },

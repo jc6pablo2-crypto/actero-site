@@ -181,7 +181,7 @@ export const AlternativeTemplate = ({ onNavigate, data }) => {
                 <div className="inline-flex flex-wrap items-center justify-center gap-4 text-xs text-[#9ca3af]">
                   <span className="inline-flex items-center gap-1.5">
                     <Check className="w-3 h-3 text-cta" strokeWidth={2.5} />
-                    60% tickets auto-résolus
+                    60% de résolutions automatiques
                   </span>
                   <span className="text-[#E8DFC9]">·</span>
                   <span className="inline-flex items-center gap-1.5">

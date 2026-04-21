@@ -126,7 +126,7 @@ export const FaqPage = ({ onNavigate }) => {
         },
         {
           q: "Comment est calculé le ROI d'Actero ?",
-          a: "Nous calculons le temps économisé par ticket auto-résolu (basé sur votre temps de traitement moyen déclaré ou détecté dans Shopify), multiplié par le coût horaire que vous avez défini. Ajout : la valeur des paniers abandonnés récupérés par les relances IA et les ventes générées par l'agent support (upsell produit). Tout est visible en temps réel dans le dashboard ROI.",
+          a: "Nous calculons le temps économisé par résolution auto-pilotée (basé sur votre temps de traitement moyen déclaré ou détecté dans Shopify), multiplié par le coût horaire que vous avez défini. Ajout : la valeur des paniers abandonnés récupérés par les relances IA et les ventes générées par l'agent support (upsell produit). Tout est visible en temps réel dans le dashboard ROI.",
         },
         {
           q: "Proposez-vous un discount annuel ?",

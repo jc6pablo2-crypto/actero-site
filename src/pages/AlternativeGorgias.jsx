@@ -52,7 +52,7 @@ export const AlternativeGorgias = ({ onNavigate }) => {
         competitor: { main: '2–5 jours', sub: 'Setup manuel + règles' },
       },
       {
-        label: '% tickets résolus automatiquement',
+        label: '% de résolutions automatiques',
         actero: { main: '60 %', sub: 'Sans add-on' },
         competitor: { main: 'Variable', sub: 'Auto-reply payant' },
       },

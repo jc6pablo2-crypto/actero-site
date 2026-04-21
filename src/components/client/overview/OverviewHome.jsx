@@ -294,7 +294,7 @@ function TodayHero({ clientId, urgentEscalationCount, setActiveTab }) {
             </span>
             <span className="text-[11px] text-[#9ca3af] font-medium">· Mis à jour il y a moins d'1 min</span>
           </div>
-          <p className="text-[13px] text-[#71717a] font-medium mb-1">Tickets traités aujourd'hui</p>
+          <p className="text-[13px] text-[#71717a] font-medium mb-1">Résolutions livrées aujourd'hui</p>
           <div className="flex items-baseline gap-3">
             <p className="text-[56px] md:text-[72px] font-bold text-[#1a1a1a] tracking-tight tabular-nums leading-none">
               {today?.todayTotal ?? '—'}
@@ -509,7 +509,7 @@ function EmptyKPIState({ setActiveTab }) {
         </div>
         <h3 className="text-[18px] font-semibold text-[#1a1a1a] tracking-tight">Votre agent est prêt</h3>
         <p className="text-[13px] text-[#71717a] mt-1.5 max-w-md mx-auto leading-relaxed">
-          Dès qu'un client vous écrira, vous verrez apparaître ici le temps gagné, les tickets résolus automatiquement et les économies réalisées.
+          Dès qu'un client vous écrira, vous verrez apparaître ici le temps gagné, les résolutions livrées automatiquement et les économies réalisées.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-2 mt-5">
           <button onClick={() => setActiveTab('agent-config')} className="px-4 py-2 rounded-full bg-cta text-white text-[12px] font-semibold hover:bg-[#0A4F2C] transition-colors">

@@ -190,7 +190,7 @@ export const ProcessSteps = ({ vertical, onNavigate }) => {
       step: '03',
       icon: <BarChart3 className="w-5 h-5 text-[#003725]" />,
       title: 'Résultats en temps réel',
-      desc: "Suivez vos KPIs depuis votre dashboard : ROI, tickets traités, revenus récupérés. La plateforme optimise en continu.",
+      desc: "Suivez vos KPIs depuis votre dashboard : ROI, résolutions livrées, revenus récupérés. La plateforme optimise en continu.",
       detail: 'En continu',
       mockup: <MockupDashboard isImmo={false} />,
     },

@@ -44,7 +44,7 @@ const TOUR_STEPS = [
     id: 'kpi-row',
     selector: '[data-tour="kpi-row"]',
     title: 'Vos résultats en temps réel',
-    description: 'Vos résultats apparaissent ici en temps réel : tickets traités, temps gagné, économies réalisées.',
+    description: 'Vos résultats apparaissent ici en temps réel : résolutions livrées, temps gagné, économies réalisées.',
     placement: 'bottom',
   },
   {

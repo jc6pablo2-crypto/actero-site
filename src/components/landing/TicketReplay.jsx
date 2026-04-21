@@ -58,7 +58,7 @@ const STEPS = [
     icon: CheckCircle2,
     color: 'text-[#003725]',
     bg: 'bg-[#F9F7F1] border-[#003725]/20',
-    title: 'Ticket résolu',
+    title: 'Résolution livrée',
     subtitle: 'Automatiquement',
     detail: 'Temps total : 1.5 secondes | Temps économisé : 8 minutes | Satisfaction client préservée',
     time: '1.5s',

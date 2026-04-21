@@ -116,7 +116,7 @@ function generateAlerts(periodStats, prevPeriodStats, metrics, events, clientTyp
         id: 'tickets_high',
         type: 'success',
         icon: CheckCircle2,
-        title: `${ticketsResolved} tickets résolus automatiquement`,
+        title: `${ticketsResolved} résolutions livrées automatiquement`,
         message: `Votre SAV IA fonctionne parfaitement — les clients reçoivent des réponses instantanées.`,
         priority: 72,
         time: now,

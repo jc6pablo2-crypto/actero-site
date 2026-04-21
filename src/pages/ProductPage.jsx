@@ -69,7 +69,7 @@ export const ProductPage = ({ onNavigate }) => {
     {
       step: '04',
       title: 'Pilotage temps réel',
-      desc: "Dashboard live : heures économisées, tickets résolus, CA récupéré. Tout est traçable. Les cas complexes remontent dans l'onglet « À traiter ».",
+      desc: "Dashboard live : heures économisées, résolutions auto-pilotées, CA récupéré. Tout est traçable. Les cas complexes remontent dans l'onglet « À traiter ».",
     },
   ]
 

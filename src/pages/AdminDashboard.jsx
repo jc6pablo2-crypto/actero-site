@@ -283,7 +283,7 @@ const PLAN_PRICES = { free: 0, starter: 99, pro: 399, enterprise: 999 };
 // Recent-events feed category styling. Hoisted to avoid re-allocating on every render
 // (6+ events render in overview tab's live feed — recreated 6 times per render prior).
 const EVENT_CATEGORY_LABELS = {
-  ticket_resolved: { label: 'Ticket résolu', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+  ticket_resolved: { label: 'Résolution', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
   ticket_escalated: { label: 'Escaladé', color: 'text-amber-400', bg: 'bg-amber-500/10' },
   cart_email_sent: { label: 'Email panier', color: 'text-blue-400', bg: 'bg-blue-500/10' },
   cart_recovered: { label: 'Panier récupéré', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
@@ -952,7 +952,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                         const total = overviewData?.totalEvents || 1;
                         const pct = ((count / total) * 100).toFixed(0);
                         const labels = {
-                          ticket_resolved: 'Tickets résolus',
+                          ticket_resolved: 'Résolutions',
                           ticket_escalated: 'Escaladés',
                           cart_email_sent: 'Emails panier',
                           cart_recovered: 'Paniers récupérés',

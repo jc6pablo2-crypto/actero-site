@@ -47,6 +47,11 @@ export const AlternativeTidio = ({ onNavigate }) => {
         competitor: false,
       },
       {
+        label: '% de résolutions automatiques',
+        actero: { main: '60 %', sub: 'Sans add-on' },
+        competitor: { main: '~25 %', sub: 'Lyro AI séparé' },
+      },
+      {
         label: 'Coût IA (plan 1 000 conversations)',
         actero: { main: '99 €/mois', sub: 'Starter tout inclus' },
         competitor: { main: '59 + 39 $/mois', sub: 'Growth + Lyro add-on' },

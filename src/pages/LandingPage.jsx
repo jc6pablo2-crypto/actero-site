@@ -225,7 +225,7 @@ export const LandingPage = ({ onNavigate }) => {
                 </h2>
                 <p className="text-[17px] text-[#F4F0E6]/70 max-w-xl mx-auto mb-8 leading-[1.55]">
                   Connectez Shopify en 1 clic, laissez l'IA apprendre votre catalogue, voyez
-                  les premiers tickets résolus dans l'heure.
+                  les premières résolutions livrées dans l'heure.
                 </p>
                 <div className="flex flex-wrap gap-3.5 justify-center mb-6">
                   <button

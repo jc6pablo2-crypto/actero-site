@@ -105,7 +105,7 @@ export const ROISettingsView = ({ clientId, theme }) => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
             <p className="text-[28px] font-bold text-[#1a1a1a] tabular-nums">{ticketsResolved}</p>
-            <p className="text-[11px] text-[#9ca3af]">Tickets résolus</p>
+            <p className="text-[11px] text-[#9ca3af]">Résolutions</p>
           </div>
           <div>
             <p className="text-[28px] font-bold text-[#1a1a1a] tabular-nums">{totalTimeSavedHours.toFixed(1)}h</p>

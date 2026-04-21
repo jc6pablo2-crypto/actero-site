@@ -29,7 +29,7 @@ export const CapabilitiesA = () => {
       title: 'Agent SAV Email & Chat',
       desc:
         "Répond aux WISMO, retours, changements d'adresse, questions produit sur email, chat et helpdesk (Gorgias, Zendesk). Escalade vers humain si confiance < 60% ou ton agressif détecté. Applique votre ton de marque et consulte votre base de connaissances.",
-      highlight: '60% des tickets résolus sans humain',
+      highlight: '60% de résolutions automatiques, sans humain',
     },
     {
       badge: 'Dès Free',
