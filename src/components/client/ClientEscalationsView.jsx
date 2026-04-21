@@ -5,10 +5,11 @@ import {
   AlertTriangle, Clock, User, Mail, ShoppingCart, Send,
   CheckCircle2, X, Loader2, BookOpen, ChevronDown, TrendingDown,
   MessageCircle, FileText, Check, Edit3, Pen, Save, Search, Sparkles,
-  Mic, Volume2
+  Mic, Volume2, BrainCircuit
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { generateAndUploadAudio } from '../../hooks/useTTS'
+import { ReasoningDrawer } from './ReasoningDrawer'
 
 const ESCALATION_REASONS = {
   aggressive: 'Message agressif detecte',
@@ -85,6 +86,7 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
   const [emailSentStatus, setEmailSentStatus] = useState(null)
   const [emailErrorMsg, setEmailErrorMsg] = useState(null)
   const [actionMode, setActionMode] = useState(null) // null | 'ai-send' | 'ai-edit' | 'custom'
+  const [reasoningOpen, setReasoningOpen] = useState(false)
 
   // Templates state
   const [templateSearch, setTemplateSearch] = useState('')
@@ -362,12 +364,29 @@ const EscalationDrawer = ({ conversation, onClose, clientId }) => {
           </div>
 
           <div>
-            <p className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-2">Reponse IA</p>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider">Reponse IA</p>
+              <button
+                type="button"
+                onClick={() => setReasoningOpen(true)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#F9F7F1] border border-[#E8DFC9] text-[11px] font-semibold text-[#1A1A1A] hover:border-cta hover:text-cta transition-colors"
+                aria-label="Voir le raisonnement de l'agent"
+              >
+                <BrainCircuit className="w-3 h-3" strokeWidth={2.2} />
+                Voir le raisonnement
+              </button>
+            </div>
             <div className="bg-amber-500/5 border border-amber-500/10 rounded-xl px-4 py-3 text-sm text-[#9ca3af] italic">
               {conversation.ai_response || 'L\'IA n\'a pas pu repondre a ce message.'}
             </div>
           </div>
         </div>
+
+        <ReasoningDrawer
+          open={reasoningOpen}
+          onClose={() => setReasoningOpen(false)}
+          conversationId={conversation.id}
+        />
 
         {/* Response area */}
         {!conversation.human_response ? (
