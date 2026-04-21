@@ -11,6 +11,10 @@ import {
   Zap,
   Eye,
   Clock,
+  Rocket,
+  Settings2,
+  BarChart3,
+  RefreshCw,
 } from 'lucide-react'
 import { SEO } from '../components/SEO'
 import { Navbar } from '../components/layout/Navbar'
@@ -50,27 +54,35 @@ export const ProductPage = ({ onNavigate }) => {
     { icon: Zap, label: 'Zendesk', desc: 'Se branche à vos tickets Zendesk existants.' },
   ]
 
-  /* Comment ça marche — 4 étapes réelles du setup */
-  const howItWorks = [
+  /* Cycle d'amélioration continue — 4 phases en boucle, pas un setup linéaire */
+  const cycle = [
     {
       step: '01',
-      title: 'Connexion Shopify OAuth',
-      desc: "Authentification en 1 clic. L'agent lit votre catalogue, vos commandes et vos politiques automatiquement — aucune API key à manipuler.",
+      phase: 'Onboard',
+      icon: Rocket,
+      title: 'Connecter Shopify en 15 min',
+      desc: "OAuth 1-clic. L'agent lit votre catalogue, vos commandes et vos politiques automatiquement — aucune API key à manipuler.",
     },
     {
       step: '02',
-      title: 'Configuration du ton',
-      desc: "Vous définissez comment l'agent doit parler (tutoiement/vouvoiement, signature, mots interdits). Base de connaissances indexée en continu.",
+      phase: 'Déployer',
+      icon: Settings2,
+      title: 'Configurer ton & workflows',
+      desc: "Tutoiement/vouvoiement, signature, KB indexée en continu. SAV email/chat et relance paniers activables en 1 clic sur chaque canal.",
     },
     {
       step: '03',
-      title: 'Activation des workflows',
-      desc: 'SAV email/chat et relance panier abandonné activables en 1 clic. Chaque canal (Email, Gorgias, Zendesk) se configure indépendamment.',
+      phase: 'Mesurer',
+      icon: BarChart3,
+      title: 'Piloter en temps réel',
+      desc: "Dashboard live : heures économisées, résolutions, CA récupéré, CSAT par intent. Les cas complexes remontent dans « À traiter ».",
     },
     {
       step: '04',
-      title: 'Pilotage temps réel',
-      desc: "Dashboard live : heures économisées, résolutions auto-pilotées, CA récupéré. Tout est traçable. Les cas complexes remontent dans l'onglet « À traiter ».",
+      phase: 'Optimiser',
+      icon: RefreshCw,
+      title: "Améliorer à chaque cycle",
+      desc: "Chaque escalade enrichit la base. Nouvelles règles, prompts ajustés, seuils d'escalade recalibrés — puis on repart sur un nouveau cycle.",
     },
   ]
 
@@ -189,42 +201,69 @@ export const ProductPage = ({ onNavigate }) => {
           </div>
         </section>
 
-        {/* ═══════════ COMMENT ÇA MARCHE — 4 ÉTAPES ═══════════ */}
+        {/* ═══════════ CYCLE D'AMÉLIORATION CONTINUE ═══════════ */}
         <section id="comment-ca-marche" className="py-24 md:py-32 bg-[#F9F7F1] px-6">
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-6xl mx-auto">
             <FadeInUp className="text-center mb-14">
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3.5 text-cta">
-                Setup
+                Cycle d'amélioration continue
               </p>
               <h2
                 className="font-normal leading-[1.05] text-[#1A1A1A] mb-4"
                 style={{ ...serif, fontSize: 'clamp(36px, 5vw, 56px)', letterSpacing: '-0.02em' }}
               >
-                Installé en 15 minutes,<br className="hidden md:block" />
-                <span className="italic text-[#716D5C]">sans ligne de code.</span>
+                Pas une installation,<br className="hidden md:block" />
+                <span className="italic text-[#716D5C]">un moteur qui tourne.</span>
               </h2>
               <p className="text-[17px] text-[#5A5A5A] max-w-xl mx-auto leading-[1.5]">
-                4 étapes pour passer de zéro à un agent qui répond à vos premiers tickets.
+                4 phases en boucle. Installation en 15 min, puis l'agent s'améliore à chaque
+                cycle — nouveaux tickets, nouveaux retours, nouvelles règles.
               </p>
             </FadeInUp>
 
-            <div className="flex flex-col gap-4">
-              {howItWorks.map((s, i) => (
-                <FadeInUp key={i}>
-                  <div className="flex gap-5 md:gap-6 p-6 md:p-7 bg-white rounded-[18px] border border-black/[0.06]">
-                    <div
-                      className="text-[13px] font-medium text-[#9ca3af] font-mono pt-1 w-8 flex-shrink-0"
-                    >
-                      {s.step}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+              {cycle.map((s, i) => {
+                const Icon = s.icon
+                return (
+                  <FadeInUp key={i} delay={i * 0.05}>
+                    <div className="relative h-full bg-white rounded-[20px] p-6 md:p-7 border border-black/[0.06] hover:border-cta/25 hover:shadow-[0_10px_30px_-15px_rgba(0,55,37,0.1)] transition-all">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-[14px] bg-[#F4F0E6] border border-[#E8DFC9] flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-5 h-5 text-cta" strokeWidth={2} />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className="font-mono text-[11px] font-semibold text-[#9ca3af]">
+                              {s.step}
+                            </span>
+                            <span className="text-[10px] font-bold text-cta bg-[#E8F5EC] px-2 py-0.5 rounded-full uppercase tracking-[0.12em]">
+                              {s.phase}
+                            </span>
+                          </div>
+                          <h3 className="text-[18px] font-bold text-[#1A1A1A] leading-[1.25]">
+                            {s.title}
+                          </h3>
+                        </div>
+                      </div>
+                      <p className="text-[14.5px] text-[#5A5A5A] leading-[1.6]">{s.desc}</p>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-[18px] font-bold text-[#1A1A1A] mb-1">{s.title}</h3>
-                      <p className="text-[14.5px] text-[#716D5C] leading-[1.55]">{s.desc}</p>
-                    </div>
-                  </div>
-                </FadeInUp>
-              ))}
+                  </FadeInUp>
+                )
+              })}
             </div>
+
+            {/* Loop indicator — "04 → 01" */}
+            <FadeInUp delay={0.25} className="mt-10">
+              <div className="flex items-center justify-center gap-3">
+                <div className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white border border-[#E8DFC9]">
+                  <RefreshCw className="w-3.5 h-3.5 text-cta" strokeWidth={2.5} />
+                  <span className="text-[13px] font-semibold text-[#1A1A1A]">
+                    Chaque cycle enrichit le suivant
+                  </span>
+                  <span className="text-[11px] text-[#716D5C] font-mono">04 → 01</span>
+                </div>
+              </div>
+            </FadeInUp>
           </div>
         </section>
 
