@@ -1,9 +1,13 @@
 import { withSentry } from './lib/sentry.js'
 import { createClient } from '@supabase/supabase-js';
+import { checkRateLimit } from './lib/rate-limit.js';
 
 const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+// Cap lambda runtime so a runaway LLM call can't hold the function open.
+export const maxDuration = 60
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY;
 const GEMINI_MODEL = 'gemini-2.0-flash';
@@ -104,10 +108,22 @@ async function handler(req, res) {
   const { data: { user }, error: authError } = await supabase.auth.getUser(token);
   if (authError || !user) return res.status(401).json({ error: 'Non autorise' });
 
+  // Per-user rate-limit on a paid LLM endpoint.
+  const rl = checkRateLimit(`copilot:${user.id}`, 30, 60_000);
+  res.setHeader('X-RateLimit-Limit', '30');
+  res.setHeader('X-RateLimit-Remaining', String(rl.remaining));
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(Math.ceil((rl.resetAt - Date.now()) / 1000)));
+    return res.status(429).json({ error: 'Trop de requetes, reessayez dans une minute.' });
+  }
+
   const { client_id, message, history = [] } = req.body;
 
   if (!client_id || !message) {
     return res.status(400).json({ error: 'Missing client_id or message' });
+  }
+  if (typeof message !== 'string' || message.length > 8_000) {
+    return res.status(400).json({ error: 'message invalide' });
   }
 
   try {

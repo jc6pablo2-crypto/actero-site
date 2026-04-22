@@ -97,6 +97,51 @@ const ROUTES = [
     description: 'Conditions générales d\'utilisation d\'Actero : accès au service, obligations, propriété intellectuelle, responsabilité, résiliation.',
     h1: 'Conditions d\'utilisation',
   },
+  // Comparison / alternatives pages — high-intent SEO that competitors rank
+  // for. Without prerender these served the homepage canonical and were
+  // de-prioritised by Google.
+  {
+    path: '/alternative-gorgias',
+    title: 'Alternative à Gorgias — Actero, agent IA SAV Shopify',
+    description: 'Comparez Actero et Gorgias : prix, fonctionnalités, automatisation IA, intégrations Shopify. Découvrez pourquoi les marchands migrent vers Actero.',
+    h1: 'Alternative à Gorgias',
+  },
+  {
+    path: '/alternative-tidio',
+    title: 'Alternative à Tidio — Actero, agent IA SAV e-commerce',
+    description: 'Tidio vs Actero : agent IA conversationnel, automatisation SAV Shopify, intégration helpdesk. Pourquoi Actero est l\'alternative française à Tidio.',
+    h1: 'Alternative à Tidio',
+  },
+  {
+    path: '/alternative-zendesk',
+    title: 'Alternative à Zendesk — Actero, SAV IA pour Shopify',
+    description: 'Comparatif Zendesk vs Actero : automatisation IA, prix, simplicité, support en français. Pourquoi les marchands Shopify préfèrent Actero à Zendesk.',
+    h1: 'Alternative à Zendesk',
+  },
+  {
+    path: '/partners',
+    title: 'Partenaires Actero — Agences certifiées agent IA Shopify',
+    description: 'Annuaire des partenaires Actero certifiés : agences spécialisées dans la mise en place d\'agents IA pour le SAV e-commerce Shopify.',
+    h1: 'Nos partenaires certifiés',
+  },
+  {
+    path: '/partners/apply',
+    title: 'Devenir partenaire Actero — Programme agences IA',
+    description: 'Rejoignez le programme partenaires Actero : commissions, formation, leads qualifiés, certification officielle. Pour agences et freelances Shopify.',
+    h1: 'Devenir partenaire Actero',
+  },
+  {
+    path: '/startups',
+    title: 'Actero pour les startups — 50% off pendant 12 mois',
+    description: 'Programme Actero for Startups : 50% de réduction pendant 12 mois pour les jeunes pousses e-commerce. Conditions et candidature en ligne.',
+    h1: 'Actero pour les startups',
+  },
+  {
+    path: '/produit',
+    title: 'Produit Actero — Agent IA SAV Shopify autonome',
+    description: 'Découvrez l\'agent IA Actero : classification tickets, réponses automatiques, escalade, intégration Shopify, helpdesk, WhatsApp, vocal.',
+    h1: 'Le produit Actero',
+  },
 ]
 
 const SITE = 'https://actero.fr'

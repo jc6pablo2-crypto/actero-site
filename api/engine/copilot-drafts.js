@@ -23,6 +23,9 @@ import { withSentry } from '../lib/sentry.js'
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@supabase/supabase-js'
 
+// Cap lambda runtime: LLM calls can hang and burn money otherwise.
+export const maxDuration = 60
+
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY,

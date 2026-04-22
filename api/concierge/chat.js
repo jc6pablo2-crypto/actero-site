@@ -3,11 +3,16 @@
 import { withSentry } from '../lib/sentry.js'
 import { createClient } from '@supabase/supabase-js'
 import { isActeroAdmin } from '../lib/admin-auth.js'
+import { checkRateLimit, getClientIp } from '../lib/rate-limit.js'
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 )
+
+// Cap lambda runtime so a runaway Claude call can't hold the function open and
+// burn money. 60s is plenty for a single chat completion.
+export const maxDuration = 60
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY
 
@@ -71,8 +76,22 @@ async function handler(req, res) {
   const { data: { user }, error: authError } = await supabase.auth.getUser(token)
   if (authError || !user) return res.status(401).json({ error: 'Unauthorized' })
 
+  // Per-user rate limit on a paid LLM endpoint — prevents a runaway client
+  // (or a malicious one) from racking up Claude bills via this route.
+  // 20 messages / minute is generous for genuine human chat.
+  const rl = checkRateLimit(`concierge:${user.id}`, 20, 60_000)
+  res.setHeader('X-RateLimit-Limit', '20')
+  res.setHeader('X-RateLimit-Remaining', String(rl.remaining))
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(Math.ceil((rl.resetAt - Date.now()) / 1000)))
+    return res.status(429).json({ error: 'Trop de requetes, reessayez dans une minute.' })
+  }
+
   const { message, history = [], client_id } = req.body || {}
   if (!message) return res.status(400).json({ error: 'message required' })
+  if (typeof message !== 'string' || message.length > 8_000) {
+    return res.status(400).json({ error: 'message invalide' })
+  }
 
   // Verify the caller has access to the requested client (admin or member)
   if (client_id) {

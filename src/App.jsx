@@ -1,44 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
 import { Analytics } from "@vercel/analytics/react";
 import { AlertCircle } from "lucide-react";
 import { supabase, INITIAL_URL } from "./lib/supabase";
+// Eager: high-traffic landing pages where TTFB matters and the user is on the
+// first hop in. Everything else is lazy to slim the initial bundle.
 import { LandingPage } from "./pages/LandingPage";
 import { LoginPage } from "./components/auth/LoginPage";
-import { ResetPasswordPage } from "./components/auth/ResetPasswordPage";
-import { SetPasswordPage } from "./components/auth/SetPasswordPage";
-import { AuthCallbackPage } from "./pages/AuthCallbackPage";
-import { CompanyPage } from "./pages/CompanyPage";
-import { PricingPage } from "./pages/PricingPage";
-import { ProductPage } from "./pages/ProductPage";
-import { FaqPage } from "./pages/FaqPage";
-import { AuditPage } from "./pages/AuditPage";
 import { DashboardGate } from "./components/auth/DashboardGate"
-import { DemoDashboardPage } from "./components/ui/demo-dashboard";
-import { ProspectDemoPage } from "./pages/ProspectDemoPage";
-import { PromptLibraryPage } from "./components/ui/prompt-library-page";
-import { SignupPage } from "./pages/SignupPage";
-import { PlanSelectionPage } from "./pages/PlanSelectionPage";
-import { StartPage } from "./pages/StartPage";
-import { SuccessPage } from "./pages/SuccessPage";
-import { ShopifySuccessPage } from "./pages/ShopifySuccessPage";
-import { CancelPage } from "./pages/CancelPage";
-import { ReferralLanding } from "./pages/ReferralLanding";
-import { PartnerLandingPage } from "./pages/PartnerLandingPage";
-import { PartnersLandingPage } from "./pages/PartnersLandingPage";
-import { PartnerApplyPage } from "./pages/PartnerApplyPage";
-import { PartnersDirectoryPage } from "./pages/PartnersDirectoryPage";
-import { PartnerProfilePage } from "./pages/PartnerProfilePage";
-import { PrivacyPage } from "./pages/PrivacyPage";
-import { SupportGuidePage } from "./pages/SupportGuidePage";
-import { LegalPage } from "./pages/LegalPage";
-import { TermsPage } from "./pages/TermsPage";
-import { ActeroForStartupsPage } from "./pages/ActeroForStartupsPage";
-import { AlternativeGorgias } from "./pages/AlternativeGorgias";
-import { AlternativeTidio } from "./pages/AlternativeTidio";
-import { AlternativeZendesk } from "./pages/AlternativeZendesk";
-import PortalApp from './pages/portal/PortalApp.jsx';
+
+// Lazy: secondary pages — most users never visit them in a single session.
+// Each becomes its own chunk, removing recharts/framer-motion/three from the
+// main bundle when they're only used here.
+const ResetPasswordPage = lazy(() => import("./components/auth/ResetPasswordPage").then(m => ({ default: m.ResetPasswordPage })));
+const SetPasswordPage = lazy(() => import("./components/auth/SetPasswordPage").then(m => ({ default: m.SetPasswordPage })));
+const AuthCallbackPage = lazy(() => import("./pages/AuthCallbackPage").then(m => ({ default: m.AuthCallbackPage })));
+const CompanyPage = lazy(() => import("./pages/CompanyPage").then(m => ({ default: m.CompanyPage })));
+const PricingPage = lazy(() => import("./pages/PricingPage").then(m => ({ default: m.PricingPage })));
+const ProductPage = lazy(() => import("./pages/ProductPage").then(m => ({ default: m.ProductPage })));
+const FaqPage = lazy(() => import("./pages/FaqPage").then(m => ({ default: m.FaqPage })));
+const AuditPage = lazy(() => import("./pages/AuditPage").then(m => ({ default: m.AuditPage })));
+const DemoDashboardPage = lazy(() => import("./components/ui/demo-dashboard").then(m => ({ default: m.DemoDashboardPage })));
+const ProspectDemoPage = lazy(() => import("./pages/ProspectDemoPage").then(m => ({ default: m.ProspectDemoPage })));
+const PromptLibraryPage = lazy(() => import("./components/ui/prompt-library-page").then(m => ({ default: m.PromptLibraryPage })));
+const SignupPage = lazy(() => import("./pages/SignupPage").then(m => ({ default: m.SignupPage })));
+const PlanSelectionPage = lazy(() => import("./pages/PlanSelectionPage").then(m => ({ default: m.PlanSelectionPage })));
+const StartPage = lazy(() => import("./pages/StartPage").then(m => ({ default: m.StartPage })));
+const SuccessPage = lazy(() => import("./pages/SuccessPage").then(m => ({ default: m.SuccessPage })));
+const ShopifySuccessPage = lazy(() => import("./pages/ShopifySuccessPage").then(m => ({ default: m.ShopifySuccessPage })));
+const CancelPage = lazy(() => import("./pages/CancelPage").then(m => ({ default: m.CancelPage })));
+const ReferralLanding = lazy(() => import("./pages/ReferralLanding").then(m => ({ default: m.ReferralLanding })));
+const PartnerLandingPage = lazy(() => import("./pages/PartnerLandingPage").then(m => ({ default: m.PartnerLandingPage })));
+const PartnersLandingPage = lazy(() => import("./pages/PartnersLandingPage").then(m => ({ default: m.PartnersLandingPage })));
+const PartnerApplyPage = lazy(() => import("./pages/PartnerApplyPage").then(m => ({ default: m.PartnerApplyPage })));
+const PartnersDirectoryPage = lazy(() => import("./pages/PartnersDirectoryPage").then(m => ({ default: m.PartnersDirectoryPage })));
+const PartnerProfilePage = lazy(() => import("./pages/PartnerProfilePage").then(m => ({ default: m.PartnerProfilePage })));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage").then(m => ({ default: m.PrivacyPage })));
+const SupportGuidePage = lazy(() => import("./pages/SupportGuidePage").then(m => ({ default: m.SupportGuidePage })));
+const LegalPage = lazy(() => import("./pages/LegalPage").then(m => ({ default: m.LegalPage })));
+const TermsPage = lazy(() => import("./pages/TermsPage").then(m => ({ default: m.TermsPage })));
+const ActeroForStartupsPage = lazy(() => import("./pages/ActeroForStartupsPage").then(m => ({ default: m.ActeroForStartupsPage })));
+const AlternativeGorgias = lazy(() => import("./pages/AlternativeGorgias").then(m => ({ default: m.AlternativeGorgias })));
+const AlternativeTidio = lazy(() => import("./pages/AlternativeTidio").then(m => ({ default: m.AlternativeTidio })));
+const AlternativeZendesk = lazy(() => import("./pages/AlternativeZendesk").then(m => ({ default: m.AlternativeZendesk })));
+const PortalApp = lazy(() => import('./pages/portal/PortalApp.jsx'));
 import { CursorGlow } from "./components/ui/cursor-glow";
 import { CommandPalette } from "./components/ui/command-palette";
 import { ToastProvider } from "./components/ui/Toast";
@@ -46,7 +52,22 @@ import { Toaster } from "./components/ui/Toaster";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { resetUser } from "./lib/analytics";
 
-const queryClient = new QueryClient();
+// React Query defaults tuned for the Actero dashboard:
+//  - staleTime 60s: prevents the queryClient from refetching every query each
+//    time the user switches dashboard tabs / re-focuses the window. Saves
+//    ~10-20 redundant Supabase round-trips per minute.
+//  - retry 1: a single retry on transient failures, no exponential storm.
+//  - refetchOnWindowFocus false: same rationale as staleTime — explicit
+//    refresh actions still work via queryClient.invalidateQueries().
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function isPortalHostname(hostname) {
   if (!hostname) return false;
@@ -224,7 +245,12 @@ function MainRouter() {
     <>
       <CursorGlow />
       <CommandPalette onNavigate={navigate} />
-      {page}
+      {/* Suspense fallback covers the brief moment a lazy chunk is loading.
+          Empty fallback = no flash; the prerendered SEO HTML is already
+          painted for crawlers and the page swap is near-instant on cache. */}
+      <Suspense fallback={null}>
+        {page}
+      </Suspense>
     </>
   );
 }

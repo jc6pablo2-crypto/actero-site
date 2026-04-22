@@ -1,6 +1,9 @@
 import { withSentry } from './lib/sentry.js'
 import { createClient } from '@supabase/supabase-js';
 
+// Cap lambda runtime: LLM calls can hang and burn money otherwise.
+export const maxDuration = 60
+
 const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);

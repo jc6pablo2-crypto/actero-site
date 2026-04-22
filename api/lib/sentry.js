@@ -67,7 +67,15 @@ export function withSentry(handler) {
       }
       if (!res.headersSent) {
         try {
-          res.status(500).json({ error: err?.message || 'Internal Server Error' })
+          // Never echo err.message to the client — it can leak stack frames,
+          // SQL fragments, internal table names, dependency versions. The
+          // full error is already captured in Sentry above; surface the
+          // Sentry event id so a support engineer can find it.
+          const eventId = Sentry.lastEventId?.() || undefined
+          res.status(500).json({
+            error: 'Internal Server Error',
+            ...(eventId ? { request_id: eventId } : {}),
+          })
         } catch {
           // res already closed — nothing to do
         }
