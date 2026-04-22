@@ -1,0 +1,75 @@
+---
+title: "Concepts clés"
+description: "Le vocabulaire Actero en 5 minutes : agent, playbook, escalade, guardrail, run."
+---
+
+## Agent
+
+L'**agent** est le moteur IA personnalisé de votre marque. Il est composé de trois couches :
+
+1. **Identité & ton** — qui vous êtes, comment vous parlez
+2. **Base de connaissances** — ce que vous savez (politique de retour, délais, FAQ produit)
+3. **Guardrails** — ce que l'agent ne doit jamais faire (promettre un remboursement sans validation, parler politique, etc.)
+
+À chaque conversation entrante, l'agent combine ces trois couches avec le contexte Shopify (commande, client, historique) pour répondre.
+
+## Playbook
+
+Un **playbook** est un workflow automatisé déclenché par un événement. Actero en embarque deux par défaut :
+
+| Playbook | Déclencheur | Action |
+|---|---|---|
+| `sav_ecommerce` | Message client entrant | Classification → réponse IA → envoi OU escalade |
+| `abandoned_cart` | Panier abandonné Shopify | 3 emails relance (15 min / 24 h / 72 h) |
+
+Plan Pro+ : playbooks personnalisables (Q2 2026).
+
+## Escalade
+
+Quand l'agent n'est pas sûr (score de confiance < 60 %), détecte un ton agressif, ou tombe sur une question hors de son périmètre, il **escalade** vers votre équipe humaine.
+
+Les escalades arrivent dans l'onglet **À traiter** du dashboard, dans votre helpdesk (Gorgias / Zendesk / Intercom) avec le tag `@actero-escalated`, ou en notification Slack.
+
+Vous pouvez valider, modifier, ou rejeter la réponse proposée. Chaque feedback améliore l'agent pour la prochaine conversation similaire.
+
+## Run
+
+Un **run** est une exécution complète du moteur : réception d'un message → classification → génération → envoi. Chaque run est tracé dans `Historique des runs` avec :
+
+- Le prompt envoyé à Claude (ou Gemini)
+- La réponse brute
+- Les tokens consommés + coût USD
+- Le playbook utilisé
+- Le statut final (`ok`, `escalated`, `error`)
+
+## Guardrail
+
+Une **règle absolue** que l'agent ne violera jamais. Exemples :
+
+- "Ne jamais promettre de remboursement — escalader systématiquement"
+- "Ne jamais partager de code promo non autorisé"
+- "Ne jamais dire 'je suis une IA' — dire 'l'équipe SAV' à la place"
+
+Les guardrails passent avant tout le reste, même la base de connaissances.
+
+## Base de connaissances (KB)
+
+Document structuré qui contient vos réponses types : politique retour, FAQ produit, délais livraison. L'agent la consulte à chaque conversation.
+
+Chaque entrée a un `titre`, un `contenu`, et peut être taggée par catégorie (`livraison`, `retours`, `produit`).
+
+## Portail SAV self-service
+
+Page publique brandée (`yourbrand.portal.actero.fr`) où vos clients peuvent eux-mêmes consulter le statut de leur commande, demander un retour, ou ouvrir un ticket, sans passer par un formulaire de contact.
+
+Disponible dès Starter. Custom domain (`sav.yourbrand.com`) dès Pro.
+
+## ROI
+
+Actero calcule automatiquement :
+
+- **Temps économisé** = tickets résolus auto × 4 min (moyenne industry)
+- **CA récupéré** = paniers abandonnés récupérés × panier moyen
+- **Coût IA** = tokens Claude/Gemini × tarif officiel
+
+Vous voyez ces 3 chiffres en temps réel dans **Vue d'ensemble** et dans le rapport mensuel.

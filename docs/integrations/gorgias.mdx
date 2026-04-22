@@ -1,0 +1,52 @@
+---
+title: "Gorgias"
+description: "Remplacer ou augmenter Gorgias avec Actero. OAuth, HMAC webhooks, mapping tags."
+---
+
+## Pourquoi connecter Gorgias à Actero ?
+
+Si vous utilisez déjà Gorgias, Actero peut :
+
+- **Traiter les tickets entrants** avant qu'ils n'arrivent à votre équipe (60% résolus auto)
+- **Pré-rédiger** une réponse sur les 40% restants — votre agent valide et envoie en 2 secondes
+- **Remplacer vos macros** par des réponses contextuelles (la commande en direct depuis Shopify)
+
+## Installation
+
+<Steps>
+  <Step title="Gorgias → Settings → App Store">
+    Cherchez "Actero" et cliquez **Install**. Vous êtes redirigé vers Actero pour l'OAuth.
+  </Step>
+  <Step title="Autorisez Actero sur votre compte Gorgias">
+    Scopes : `read_tickets`, `write_tickets` (pour répondre), `read_customers`.
+  </Step>
+  <Step title="Choisissez le mode">
+    - **Auto-reply** : Actero répond automatiquement sur les tickets à score de confiance > 75 %
+    - **Draft only** : Actero pré-rédige la réponse, votre équipe valide
+    - **Shadow** : Actero écoute, compare ses réponses aux vôtres, mais n'envoie rien (mode apprentissage)
+  </Step>
+</Steps>
+
+## Webhook
+
+Actero reçoit les événements Gorgias via `POST /api/engine/webhooks/gorgias`.
+
+**Authentification** : header `x-actero-webhook-secret` avec le secret généré à l'installation OAuth. Vérification en temps constant via `crypto.timingSafeEqual`.
+
+Les anciens paramètres `?secret=` en query string **ne sont plus acceptés** (fuite potentielle dans les logs de proxy).
+
+## Tags & mapping
+
+Actero ajoute automatiquement ces tags sur les tickets :
+
+| Tag | Signification |
+|---|---|
+| `actero-auto` | Résolu par l'agent sans intervention humaine |
+| `actero-escalated` | Escaladé vers un humain (confiance < 60% ou guardrail déclenché) |
+| `actero-draft` | Réponse pré-rédigée, en attente de validation |
+
+Vous pouvez filtrer dans Gorgias par ces tags pour voir ce que l'agent a fait.
+
+## Déconnexion
+
+Intégrations → Gorgias → **Déconnecter**. Révoque le token OAuth, supprime les webhooks, stoppe toute interaction avec Gorgias. L'historique des conversations reste dans Actero.

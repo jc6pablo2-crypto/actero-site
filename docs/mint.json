@@ -1,0 +1,154 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Actero",
+  "logo": {
+    "light": "/images/logo-light.svg",
+    "dark": "/images/logo-dark.svg",
+    "href": "https://actero.fr"
+  },
+  "favicon": "/images/favicon.png",
+  "colors": {
+    "primary": "#0E653A",
+    "light": "#14A85C",
+    "dark": "#0A4A29",
+    "anchors": {
+      "from": "#0E653A",
+      "to": "#14A85C"
+    }
+  },
+  "modeToggle": {
+    "default": "light"
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:contact@actero.fr"
+    },
+    {
+      "name": "Status",
+      "url": "https://status.actero.fr"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Démarrer gratuitement",
+    "url": "https://actero.fr/signup"
+  },
+  "tabs": [
+    {
+      "name": "Guide",
+      "url": "essentials"
+    },
+    {
+      "name": "Intégrations",
+      "url": "integrations"
+    },
+    {
+      "name": "Agent IA",
+      "url": "agent"
+    },
+    {
+      "name": "API",
+      "url": "api-reference"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Démarrer",
+      "pages": [
+        "introduction",
+        "essentials/quickstart",
+        "essentials/concepts"
+      ]
+    },
+    {
+      "group": "Essentiels",
+      "pages": [
+        "essentials/dashboard-tour",
+        "essentials/ton-marque",
+        "essentials/base-connaissance",
+        "essentials/guardrails",
+        "essentials/simulator",
+        "essentials/escalades",
+        "essentials/equipe",
+        "essentials/facturation",
+        "essentials/export-rgpd"
+      ]
+    },
+    {
+      "group": "Intégrations e-commerce",
+      "pages": [
+        "integrations/shopify",
+        "integrations/woocommerce",
+        "integrations/webflow"
+      ]
+    },
+    {
+      "group": "Intégrations helpdesk",
+      "pages": [
+        "integrations/gorgias",
+        "integrations/zendesk",
+        "integrations/intercom",
+        "integrations/gmail",
+        "integrations/smtp-imap"
+      ]
+    },
+    {
+      "group": "Canaux conversationnels",
+      "pages": [
+        "integrations/whatsapp",
+        "integrations/slack"
+      ]
+    },
+    {
+      "group": "Productivité",
+      "pages": [
+        "integrations/notion",
+        "integrations/resend"
+      ]
+    },
+    {
+      "group": "Agent IA",
+      "pages": [
+        "agent/overview",
+        "agent/prompt-builder",
+        "agent/playbooks",
+        "agent/templates-variables",
+        "agent/agent-vocal",
+        "agent/proactive-watchdog",
+        "agent/manual-review"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/introduction",
+        "api-reference/authentication",
+        "api-reference/webhooks",
+        "api-reference/rate-limits"
+      ]
+    },
+    {
+      "group": "Endpoints",
+      "pages": [
+        "api-reference/endpoints/engine-gateway",
+        "api-reference/endpoints/billing-usage",
+        "api-reference/endpoints/export-data"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "website": "https://actero.fr",
+    "linkedin": "https://linkedin.com/company/actero"
+  },
+  "seo": {
+    "indexHiddenPages": false
+  },
+  "search": {
+    "prompt": "Que cherchez-vous ?"
+  },
+  "feedback": {
+    "suggestEdit": true,
+    "raiseIssue": false,
+    "thumbsRating": true
+  }
+}

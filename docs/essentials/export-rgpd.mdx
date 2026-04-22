@@ -1,0 +1,56 @@
+---
+title: "Export RGPD"
+description: "Téléchargez toutes vos données Actero en JSON ou CSV. Vos données vous appartiennent."
+---
+
+## Où trouver l'export
+
+Depuis le dashboard : **Paramètres → Export de mes données (RGPD)**.
+
+Deux formats disponibles :
+
+- **JSON** (recommandé) : structure complète, une section par table
+- **CSV** (Excel-friendly) : concaténation de toutes les tables avec BOM UTF-8
+
+## Ce qui est exporté
+
+| Table | Contenu |
+|---|---|
+| `client` | Vos informations marque, plan, dates |
+| `settings` | Configuration agent, ton, préférences |
+| `integrations` | Intégrations connectées (sans les secrets OAuth — ceux-ci restent chiffrés) |
+| `ai_conversations` | Toutes les conversations avec vos clients |
+| `automation_events` | Événements tracés (tickets résolus, escalades, paniers relancés) |
+| `engine_runs` | Exécutions du moteur IA (prompts, réponses, coûts) |
+| `metrics_daily` | Agrégats quotidiens (temps économisé, ROI) |
+| `escalation_tickets` | Escalades humaines |
+| `sentiment_logs` | Sentiment client tracé |
+| `churn_predictions` | Prédictions de churn hebdomadaires |
+| `response_templates` | Vos templates de réponses personnalisés |
+| `knowledge_entries` | Votre base de connaissance |
+
+## Ce qui n'est PAS exporté (à raison)
+
+- **Secrets OAuth** (tokens Shopify, Gorgias, etc.) — ils restent en DB chiffrés AES-256-GCM
+- **Données d'autres tenants** — évidemment
+- **Logs système internes** (runs d'infra, monitoring)
+
+## Endpoint API (équivalent programmatique)
+
+Si vous préférez automatiser :
+
+```bash
+curl https://actero.fr/api/client/export-data?format=json \
+  -H "Authorization: Bearer <votre_jwt>" \
+  -o export.json
+```
+
+Formats supportés : `json` (défaut), `csv`.
+
+## Délai
+
+Export généré en temps réel, téléchargement immédiat. Pour les gros volumes (>100k conversations), l'export peut prendre jusqu'à 30 secondes.
+
+## Suppression de compte (RGPD article 17)
+
+Pour supprimer définitivement toutes vos données Actero, écrivez à [contact@actero.fr](mailto:contact@actero.fr) avec l'email du compte. Suppression sous 30 jours, confirmation écrite.

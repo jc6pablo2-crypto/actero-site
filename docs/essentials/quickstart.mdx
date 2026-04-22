@@ -1,0 +1,94 @@
+---
+title: "Quickstart"
+description: "Installer Actero et mettre votre premier agent en production en 15 minutes."
+---
+
+Ce guide vous amène d'une inscription vide à un agent SAV qui répond à vos vrais clients, en 15 minutes. Aucun code, OAuth Shopify en 1 clic.
+
+## 1. Créez votre compte
+
+Rendez-vous sur [actero.fr/signup](https://actero.fr/signup) et créez votre compte avec l'email professionnel du compte Shopify. Vous recevez un lien magique par email (pas de mot de passe à retenir au premier login).
+
+<Tip>
+Les essais Starter et Pro sont de 7 jours sans carte bancaire. Le plan Free reste gratuit à vie (50 tickets/mois).
+</Tip>
+
+## 2. Connectez votre boutique Shopify
+
+Depuis le dashboard, cliquez **Intégrations → Shopify → Connecter**.
+
+<Steps>
+  <Step title="Autorisez Actero">
+    Shopify vous redirige pour valider les scopes (lire commandes, clients, produits). Ces scopes sont en **lecture seule** — Actero ne peut ni modifier une commande, ni rembourser, ni facturer à votre place.
+  </Step>
+  <Step title="Retour automatique au dashboard">
+    Vous revenez sur Actero avec un badge **Connecté**. Les 30 dernières commandes sont indexées en ~20 secondes.
+  </Step>
+  <Step title="Vérification">
+    Dans l'onglet **Tester**, tapez `où est ma commande #1001 ?`. L'agent doit retrouver la commande en base Shopify et répondre avec le statut de tracking.
+  </Step>
+</Steps>
+
+## 3. Configurez le ton de votre marque
+
+Allez dans **Automatisation → Configurer l'agent**. Deux champs à remplir :
+
+- **Identité** : nom de la marque, secteur, mission (1 paragraphe)
+- **Ton** : formel / amical / décontracté. Soyez précis. Exemple : _"On tutoie nos clientes, on utilise des emojis avec parcimonie, on ne s'excuse jamais à outrance"_
+
+L'agent copie ce ton dans chaque réponse. Vous pouvez ajuster à tout moment.
+
+## 4. Construisez votre base de connaissances
+
+Dans **Base de connaissances**, ajoutez les réponses aux questions que vos clients posent le plus :
+
+- Politique de retour (délais, conditions, frais)
+- Délais de livraison par pays
+- Frais de port
+- Composition produit / matière / entretien
+- Garanties
+
+<Warning>
+Plus votre base est riche, plus l'agent est autonome. Une base de 5 entrées résout déjà 30-40% des tickets. Une base de 30+ entrées atteint 60%+.
+</Warning>
+
+## 5. Testez en profondeur
+
+Dans **Tester mon agent** (plan Starter+), jouez les scénarios clés :
+
+- _"Je veux retourner ma commande"_
+- _"Ma commande arrive quand ?"_
+- _"Changement d'adresse pour la #1002"_
+- _"Le produit est abîmé"_
+
+Si la réponse ne vous convient pas, modifiez le ton ou enrichissez la base de connaissances.
+
+## 6. Connectez votre helpdesk ou boîte mail
+
+Deux options :
+
+<Tabs>
+  <Tab title="Helpdesk existant (Gorgias / Zendesk / Intercom)">
+    Allez dans **Intégrations**, cliquez sur votre helpdesk. L'OAuth s'occupe de tout. Chaque nouveau ticket passe par Actero avant d'arriver à votre équipe.
+  </Tab>
+  <Tab title="Boîte mail directe (Gmail / SMTP)">
+    Configurez l'Agent Email (plan Pro+) en renseignant votre IMAP + SMTP. Actero poll votre inbox toutes les 2 minutes et répond aux messages qui passent ses critères.
+  </Tab>
+</Tabs>
+
+## 7. Activez les automatisations
+
+Dans **Automatisation**, cochez :
+
+- **SAV e-commerce** : répond aux questions clients (email, chat, helpdesk)
+- **Panier abandonné** : relance 15 min / 24 h / 72 h après abandon
+
+Chaque automatisation a un toggle. Vous pouvez mettre en pause à tout moment.
+
+## C'est parti
+
+Votre agent est maintenant live. Il traite les premières conversations, vous recevez un résumé quotidien sur Slack ou par email, et vous voyez les métriques dans **Vue d'ensemble**.
+
+<Card title="Les 7 premiers jours" icon="chart-line">
+  Attendez 48 h avant d'évaluer. Le système apprend vos habitudes de réponse via les escalades que vous validez manuellement.
+</Card>

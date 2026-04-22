@@ -1,0 +1,104 @@
+---
+title: "API Actero"
+description: "API REST authentifiée par Bearer token. Rate-limit par user, idempotence sur les webhooks, réponses JSON."
+---
+
+## Base URL
+
+```
+https://actero.fr/api
+```
+
+Toutes les routes sont HTTPS uniquement. HTTP est redirigé en 308.
+
+## Authentification
+
+L'API accepte deux formes d'authentification :
+
+### Bearer JWT (session utilisateur)
+
+Utilisé par le dashboard React. Vous récupérez le token via `supabase.auth.getSession()` côté client et l'envoyez en header :
+
+```http
+Authorization: Bearer <supabase_jwt>
+```
+
+Le JWT expire en ~1h. Le client rafraîchit automatiquement.
+
+### API Key (programmatique)
+
+Pour les intégrations serveur à serveur, générez une API key dans **Paramètres → API & Webhooks**. Envoyez-la en header :
+
+```http
+Authorization: Bearer ak_live_xxxxxxxxxxxxx
+```
+
+<Warning>
+Les API keys sont scoped par client. Ne la commitez jamais dans un repo public. Révoquez immédiatement une key compromise depuis le dashboard.
+</Warning>
+
+## Rate limiting
+
+Toutes les routes sont rate-limitées. Limites par défaut :
+
+| Type de route | Limite | Fenêtre |
+|---|---|---|
+| Auth (signup, login) | 5 req | 60 s / IP |
+| LLM (chat, copilot) | 20-30 req | 60 s / user |
+| Lectures (usage, metrics) | 60 req | 60 s / user |
+| Webhooks entrants | Signature check uniquement | — |
+
+Dépassement → `429 Too Many Requests` avec header `Retry-After: <seconds>`.
+
+## Format des réponses
+
+Toutes les réponses sont JSON avec UTF-8 :
+
+```http
+Content-Type: application/json; charset=utf-8
+```
+
+### Succès
+
+```json
+{
+  "success": true,
+  "data": { ... }
+}
+```
+
+### Erreur
+
+```json
+{
+  "error": "Internal Server Error",
+  "request_id": "abcdef1234567890"
+}
+```
+
+Le `request_id` est un Sentry event ID que vous pouvez partager au support Actero pour tracer le problème.
+
+## Idempotence sur les webhooks
+
+Les webhooks entrants (Stripe, Shopify, Gorgias, etc.) sont dédupliqués par `(provider, event_id)` pendant 30 jours. Si votre upstream réessaie un même event, Actero retourne 200 sans ré-exécuter le handler.
+
+## Versioning
+
+L'API n'est pas encore versionnée publiquement. Changements breaking annoncés 30 jours à l'avance par email + banner dans le dashboard.
+
+## Ressources
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="key" href="/api-reference/authentication">
+    Détails des deux schémas d'auth
+  </Card>
+  <Card title="Webhooks sortants" icon="webhook" href="/api-reference/webhooks">
+    S'abonner aux événements Actero
+  </Card>
+  <Card title="Rate limits" icon="gauge" href="/api-reference/rate-limits">
+    Comportement et retry strategy
+  </Card>
+  <Card title="Export GDPR" icon="download" href="/api-reference/endpoints/export-data">
+    Récupérer toutes vos données
+  </Card>
+</CardGroup>
