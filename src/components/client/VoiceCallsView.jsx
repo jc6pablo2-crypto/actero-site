@@ -6,6 +6,7 @@ import {
   PlayCircle, PauseCircle, Smile, Frown, Meh, Volume2,
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
+import { EmptyState } from '../ui/EmptyState'
 
 const formatDuration = (seconds) => {
   if (!seconds || seconds < 0) return '0s'
@@ -150,13 +151,12 @@ export const VoiceCallsView = ({ clientId }) => {
         </div>
 
         {calls.length === 0 ? (
-          <div className="px-5 py-16 text-center">
-            <div className="w-12 h-12 rounded-full bg-[#fafafa] flex items-center justify-center mx-auto mb-3">
-              <Phone className="w-5 h-5 text-[#9ca3af]" />
-            </div>
-            <p className="text-[13px] text-[#1a1a1a] font-medium">Aucun appel pour le moment</p>
-            <p className="text-[11px] text-[#9ca3af] mt-1">Les appels de vos clients apparaitront ici des que votre agent sera actif.</p>
-          </div>
+          <EmptyState
+            icon={Phone}
+            tone="neutral"
+            title="Aucun appel pour le moment"
+            description="Les appels de tes clients apparaîtront ici dès que ton agent vocal sera actif."
+          />
         ) : (
           <div className="divide-y divide-[#f5f5f5]">
             {calls.map(call => {

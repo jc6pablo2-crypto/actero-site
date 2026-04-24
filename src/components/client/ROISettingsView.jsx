@@ -124,7 +124,7 @@ export const ROISettingsView = ({ clientId, theme }) => {
             {roi === null ? (
               <>
                 <p className="text-[28px] font-bold tabular-nums text-[#c4c4c4]">—</p>
-                <p className="text-[11px] text-[#9ca3af]">Configurez votre prix Actero</p>
+                <p className="text-[11px] text-[#9ca3af]">Configure ton prix Actero</p>
               </>
             ) : (
               <>
@@ -143,7 +143,7 @@ export const ROISettingsView = ({ clientId, theme }) => {
 
         <div>
           <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider inline-flex items-center gap-1.5">Cout horaire de votre equipe support <HelpTooltip text="Coût horaire chargé d'un agent support (salaire brut + charges). Sert à valoriser le temps économisé par l'agent IA." /></label>
-          <p className="text-[11px] text-[#c4c4c4] mb-1.5">Combien coute 1 heure de travail d'un agent support dans votre entreprise ?</p>
+          <p className="text-[11px] text-[#c4c4c4] mb-1.5">Combien coûte 1 heure de travail d'un agent support dans ton entreprise ?</p>
           <div className="flex items-center gap-2">
             <input
               type="number"
@@ -172,8 +172,8 @@ export const ROISettingsView = ({ clientId, theme }) => {
         </div>
 
         <div>
-          <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider inline-flex items-center gap-1.5">Votre abonnement Actero <HelpTooltip text="Le montant mensuel HT de votre abonnement Actero. Déduit du temps valorisé pour obtenir le ROI net." /></label>
-          <p className="text-[11px] text-[#c4c4c4] mb-1.5">Le montant mensuel de votre abonnement Actero.</p>
+          <label className="text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider inline-flex items-center gap-1.5">Ton abonnement Actero <HelpTooltip text="Le montant mensuel HT de ton abonnement Actero. Déduit du temps valorisé pour obtenir le ROI net." /></label>
+          <p className="text-[11px] text-[#c4c4c4] mb-1.5">Le montant mensuel de ton abonnement Actero.</p>
           <div className="flex items-center gap-2">
             <input
               type="number"

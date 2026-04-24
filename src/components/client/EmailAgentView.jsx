@@ -109,31 +109,21 @@ export const EmailAgentView = ({ clientId }) => {
   if (!isConnected) {
     return (
       <div className="max-w-3xl mx-auto px-5 md:px-8 pt-6 pb-16 animate-fade-in-up">
-        <div className="bg-white rounded-2xl border border-[#f0f0f0] p-8 text-center">
-          <div className="w-14 h-14 rounded-xl bg-amber-50 flex items-center justify-center mx-auto mb-4">
-            <Mail className="w-7 h-7 text-amber-600" />
-          </div>
-          <h2 className="text-[18px] font-bold text-[#1a1a1a] mb-2">
-            Connectez votre boîte mail
-          </h2>
-          <p className="text-[13px] text-[#71717a] max-w-md mx-auto mb-6 leading-relaxed">
-            Actero lit automatiquement vos emails entrants et répond aux questions clients courantes (livraison, retours, etc.) 24/7, avec votre ton de marque.
-          </p>
-          <div className="inline-flex flex-col gap-2 items-center">
-            <a
-              href="/client/integrations"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[12px] font-semibold bg-cta text-white hover:bg-[#003725] transition-colors"
-            >
-              Connecter Gmail (recommandé)
-              <ChevronRight className="w-3.5 h-3.5" />
-            </a>
-            <a
-              href="/client/integrations"
-              className="text-[11px] text-[#71717a] hover:text-[#1a1a1a] underline"
-            >
-              Ou configurer SMTP/IMAP manuel
-            </a>
-          </div>
+        <div className="bg-white rounded-2xl border border-[#f0f0f0]">
+          <EmptyState
+            icon={Mail}
+            tone="cta"
+            title="Connecte ta boîte mail"
+            description="Ton agent lit automatiquement tes emails entrants et répond aux questions clients courantes (livraison, retours, produits) 24h/24, avec ton ton de marque."
+            action={{
+              label: 'Connecter Gmail (recommandé)',
+              onClick: () => { window.location.href = '/client/integrations' },
+            }}
+            secondaryAction={{
+              label: 'Configurer SMTP/IMAP',
+              onClick: () => { window.location.href = '/client/integrations' },
+            }}
+          />
         </div>
       </div>
     )
@@ -283,7 +273,7 @@ function StatusHero({ clientId, settings, activity, integration, onToggle, toggl
                     <div className="text-[#9ca3af] italic">Aucun email dans INBOX</div>
                   )}
                   <div className="text-[10px] text-[#9ca3af] mt-2 pt-2 border-t border-[#f0f0f0]">
-                    💡 Actero ne lit que les emails <strong>non-lus</strong> (point vert). Si vous ouvrez votre webmail, les emails passent en "lu" et sont ignorés. Envoyez un nouveau test sans ouvrir votre webmail.
+                    💡 Actero ne lit que les emails <strong>non-lus</strong> (point vert). Si tu ouvres ton webmail, les emails passent en "lu" et sont ignorés. Envoie un nouveau test sans ouvrir ton webmail.
                   </div>
                   {pollNow.data.diagnostics.folders?.length > 0 && (
                     <details className="mt-2 pt-2 border-t border-[#f0f0f0]">

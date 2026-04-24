@@ -152,7 +152,7 @@ export const GuardrailsEditor = ({ clientId, theme }) => {
       ) : guardrails.length === 0 ? (
         <div className="text-center py-12 text-[#9ca3af]">
           <ShieldAlert className="w-10 h-10 mx-auto mb-3 opacity-30" />
-          <p className="text-sm">Aucune règle définie. Ajoutez votre première règle ci-dessus.</p>
+          <p className="text-sm">Aucune règle définie. Ajoute ta première règle ci-dessus.</p>
         </div>
       ) : (
         <div className="space-y-2">

@@ -6,6 +6,7 @@ import {
   Sparkles, TrendingDown, Activity, Euro,
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
+import { EmptyState } from '../ui/EmptyState'
 
 /**
  * Insights Hub — refondu avril 2026.
@@ -146,7 +147,7 @@ export const InsightsHubView = ({ clientId, onNavigate, canAccessVoice = false }
     {
       id: 'peak-hours',
       title: 'Heures de pic',
-      description: 'Quand vos clients sollicitent le plus',
+      description: 'Quand tes clients sollicitent le plus',
       icon: Clock,
       color: '#d97706',
       metric: peakLabel || '—',
@@ -184,8 +185,8 @@ export const InsightsHubView = ({ clientId, onNavigate, canAccessVoice = false }
                 {periodLabel}
               </span>
             </div>
-            <p className="text-[12px] text-[#71717a]">
-              Les métriques pour comprendre la performance de votre agent.
+            <p className="text-[13px] text-[#71717a]">
+              Les métriques pour comprendre la performance de ton agent.
             </p>
           </div>
           <div className="flex items-center gap-4 md:gap-6 flex-wrap">
@@ -231,6 +232,22 @@ export const InsightsHubView = ({ clientId, onNavigate, canAccessVoice = false }
           </button>
         ))}
       </div>
+
+      {/* ═══════ EMPTY STATE — pas encore de données ═══════ */}
+      {total === 0 && insights !== null && (
+        <div className="rounded-2xl border border-[#E5E2D7] bg-white mb-4">
+          <EmptyState
+            icon={BarChart3}
+            tone="neutral"
+            title="Pas encore de données"
+            description="Dès que ton agent traitera ses premières demandes, tu verras ici les performances, le ROI estimé et les heures de pic."
+            action={{
+              label: 'Configurer mon agent',
+              onClick: () => onNavigate?.('agent-config'),
+            }}
+          />
+        </div>
+      )}
 
       {/* ═══════ CARDS GRID ═══════ */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

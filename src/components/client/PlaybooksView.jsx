@@ -20,7 +20,7 @@ const CATEGORIES = [
   {
     id: 'support',
     label: 'Support & SAV',
-    desc: 'Repondez aux demandes de vos clients automatiquement, 24h/24.',
+    desc: 'Réponds aux demandes de tes clients automatiquement, 24h/24.',
     playbooks: ['sav_ecommerce'],
   },
   {
@@ -46,7 +46,7 @@ const CATEGORIES = [
 const PLAYBOOK_META = {
   sav_ecommerce: {
     icon: Headphones, color: 'from-emerald-500 to-emerald-600',
-    simpleDesc: 'Repond automatiquement aux questions de vos clients (commandes, retours, produits).',
+    simpleDesc: 'Répond automatiquement aux questions de tes clients (commandes, retours, produits).',
     helpId: 'sav-ecommerce',
     requires: [],
     channels: [
@@ -79,7 +79,7 @@ const PLAYBOOK_META = {
   },
   agent_vocal: {
     icon: Phone, color: 'from-violet-500 to-violet-600',
-    simpleDesc: 'Un agent vocal IA qui repond aux questions de vos clients par la voix, 24h/24.',
+    simpleDesc: 'Un agent vocal IA qui répond aux questions de tes clients par la voix, 24h/24.',
     helpId: 'agent-vocal',
     requires: [],
     hasConfig: true,
@@ -520,10 +520,10 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme }) => {
                         <div className="flex items-start gap-2.5">
                           <Mail className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                           <div className="flex-1">
-                            <p className="text-[12px] font-semibold text-blue-900">Recommandation : connectez votre email professionnel</p>
+                            <p className="text-[12px] font-semibold text-blue-900">Recommandation : connecte ton email professionnel</p>
                             <p className="text-[11px] text-blue-700 mt-0.5 leading-relaxed">
                               Quand un client est agressif ou a besoin d&apos;un suivi, l&apos;IA lui demande son email dans le widget.
-                              En connectant votre adresse email (SMTP/IMAP), vos réponses dans &quot;À traiter&quot; seront envoyées automatiquement <strong>depuis votre propre adresse</strong> (ex: contact@votreboutique.com).
+                              En connectant ton adresse email (SMTP/IMAP), tes réponses dans &quot;À traiter&quot; seront envoyées automatiquement <strong>depuis ta propre adresse</strong> (ex: contact@taboutique.com).
                             </p>
                             <button
                               onClick={(e) => { e.stopPropagation(); setActiveTab('integrations') }}

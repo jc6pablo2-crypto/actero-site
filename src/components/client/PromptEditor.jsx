@@ -471,14 +471,14 @@ export const PromptEditor = ({ clientId, theme }) => {
                   </div>
                   <div>
                     <h3 className="text-[16px] font-semibold text-[#1a1a1a]">Identite de marque</h3>
-                    <p className="text-[12px] text-[#9ca3af]">L'ADN de votre entreprise — l'agent va s'en inspirer pour parler comme vous</p>
+                    <p className="text-[12px] text-[#9ca3af]">L'ADN de ton entreprise — l'agent va s'en inspirer pour parler comme toi</p>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider mb-2 inline-flex items-center gap-1.5">
-                    Decrivez votre marque
-                    <HelpTooltip text="Nom, secteur, valeurs, clientèle cible. Plus c'est précis, plus l'agent répondra de manière cohérente avec votre image." />
+                    Décris ta marque
+                    <HelpTooltip text="Nom, secteur, valeurs, clientèle cible. Plus c'est précis, plus l'agent répondra de manière cohérente avec ton image." />
                   </label>
                   <textarea
                     value={form.brand_identity}
@@ -565,8 +565,8 @@ export const PromptEditor = ({ clientId, theme }) => {
                     <MessageCircle className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="text-[16px] font-semibold text-[#1a1a1a]">Ton de votre agent</h3>
-                    <p className="text-[12px] text-[#9ca3af]">Ajustez les curseurs — la previsualisation se met a jour en direct</p>
+                    <h3 className="text-[16px] font-semibold text-[#1a1a1a]">Ton de ton agent</h3>
+                    <p className="text-[12px] text-[#9ca3af]">Ajuste les curseurs — la prévisualisation se met à jour en direct</p>
                   </div>
                 </div>
 
@@ -702,7 +702,7 @@ export const PromptEditor = ({ clientId, theme }) => {
                 ) : (
                   <div className="text-center py-12 border border-dashed border-[#ebebeb] rounded-2xl">
                     <ShieldAlert className="w-8 h-8 text-[#d4d4d4] mx-auto mb-2" />
-                    <p className="text-[12px] text-[#9ca3af]">Aucune règle définie. Ajoutez votre première règle ci-dessus.</p>
+                    <p className="text-[12px] text-[#9ca3af]">Aucune règle définie. Ajoute ta première règle ci-dessus.</p>
                   </div>
                 )}
               </div>

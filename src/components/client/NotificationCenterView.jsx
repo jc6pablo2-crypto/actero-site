@@ -13,7 +13,7 @@ const HOURS = Array.from({ length: 17 }, (_, i) => i + 6)
 
 const CHANNELS = [
   { id: 'email', label: 'Email', icon: Mail, desc: 'Recevez les notifications par email' },
-  { id: 'slack', label: 'Slack', icon: MessageSquare, desc: 'Alertes dans votre canal Slack' },
+  { id: 'slack', label: 'Slack', icon: MessageSquare, desc: 'Alertes dans ton canal Slack' },
   { id: 'vocal', label: 'Rapport vocal', icon: Volume2, desc: 'Resume audio hebdomadaire' },
   { id: 'push', label: 'Push navigateur', icon: Smartphone, desc: 'Notifications en temps reel' },
 ]
@@ -24,7 +24,7 @@ const NOTIFICATION_TYPES = [
     icon: AlertTriangle,
     color: 'text-red-500',
     items: [
-      { key: 'escalation_alert', label: 'Ticket escaladé', desc: 'Quand un ticket nécessite votre intervention', channels: ['email', 'slack', 'push'], defaultChannels: ['email'] },
+      { key: 'escalation_alert', label: 'Ticket escaladé', desc: 'Quand un ticket nécessite ton intervention', channels: ['email', 'slack', 'push'], defaultChannels: ['email'] },
       { key: 'urgent_ticket_alert', label: 'Ticket urgent / agressif', desc: 'Message détecté comme agressif ou urgent', channels: ['email', 'slack', 'push'], defaultChannels: ['email'] },
       { key: 'anomaly_alert', label: 'Anomalie détectée', desc: 'Pic de tickets ou baisse de performance soudaine', channels: ['email', 'slack', 'push'], defaultChannels: ['email'] },
       { key: 'security_alert', label: 'Tentative d\'injection', desc: 'Un message suspect a été bloqué par la sécurité IA', channels: ['email', 'slack'], defaultChannels: [] },
@@ -39,7 +39,7 @@ const NOTIFICATION_TYPES = [
       { key: 'daily_summary', label: 'Résumé quotidien', desc: 'Email chaque matin avec les performances de la veille', channels: ['email'], defaultChannels: ['email'] },
       { key: 'weekly_summary', label: 'Résumé hebdomadaire', desc: 'Rapport chaque lundi avec tendances et insights', channels: ['email', 'vocal'], defaultChannels: [] },
       { key: 'monthly_report', label: 'Rapport mensuel PDF', desc: 'Rapport détaillé en fin de mois avec ROI et KPIs', channels: ['email'], defaultChannels: ['email'] },
-      { key: 'voice_report', label: 'Rapport vocal', desc: 'Résumé audio de 90 secondes de vos métriques', channels: ['vocal'], defaultChannels: [] },
+      { key: 'voice_report', label: 'Rapport vocal', desc: 'Résumé audio de 90 secondes de tes métriques', channels: ['vocal'], defaultChannels: [] },
     ],
   },
   {
