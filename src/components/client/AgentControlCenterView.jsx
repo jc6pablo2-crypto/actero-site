@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Bot, Settings, BookOpen, Shield, FlaskConical, ChevronRight, Activity, Clock, CheckCircle2, Eye } from 'lucide-react'
+import { Bot, Settings, BookOpen, Shield, FlaskConical, ChevronRight, Activity, Clock, CheckCircle2, Eye, Zap, Loader2, AlertCircle } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { LivePulseDot } from '../ui/LivePulseDot'
 
@@ -32,6 +32,53 @@ export const AgentControlCenterView = ({ clientId, onNavigate }) => {
 
   const [visionBusy, setVisionBusy] = useState(false)
   const visionEnabled = Boolean(settings?.vision_enabled)
+
+  /* ───── E2B sandbox test panel (dry-run agentic action) ─────
+   * Spawns a real E2B sandbox from the dashboard with mock customer/order
+   * data, validates the orchestrator pipeline + guardrails behavior end-to-end
+   * without touching Shopify. Backend: /api/dev/test-e2b-sandbox.js (auth-gated).
+   * State is local to this panel — does NOT touch any other component state. */
+  const [e2bTestState, setE2bTestState] = useState('idle') // idle | running | success | error
+  const [e2bTestResult, setE2bTestResult] = useState(null)
+  const [e2bAmount, setE2bAmount] = useState(42.5)
+  const [e2bMaxAuto, setE2bMaxAuto] = useState(100)
+
+  async function runE2BTest() {
+    if (e2bTestState === 'running') return
+    setE2bTestState('running')
+    setE2bTestResult(null)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.access_token) {
+        setE2bTestState('error')
+        setE2bTestResult({ error: 'Session expirée — reconnectez-vous.' })
+        return
+      }
+      const resp = await fetch('/api/dev/test-e2b-sandbox', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          client_id: clientId,
+          amount: Number(e2bAmount) || 42.5,
+          max_auto_refund_eur: Number(e2bMaxAuto) || 100,
+        }),
+      })
+      const data = await resp.json()
+      if (!resp.ok || !data.ok) {
+        setE2bTestState('error')
+        setE2bTestResult(data)
+        return
+      }
+      setE2bTestState('success')
+      setE2bTestResult(data)
+    } catch (err) {
+      setE2bTestState('error')
+      setE2bTestResult({ error: err.message })
+    }
+  }
 
   async function toggleVision() {
     if (!clientId || visionBusy) return
@@ -318,6 +365,139 @@ export const AgentControlCenterView = ({ clientId, onNavigate }) => {
             />
           </span>
         </button>
+
+        {/* ═══════ E2B SANDBOX TEST PANEL ═══════ */}
+        <div className="mt-3 bg-white rounded-2xl border border-[#E5E2D7] p-5">
+          <div className="flex items-start gap-3 mb-4">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-cta/10 text-cta flex-shrink-0">
+              <Zap className="w-4 h-4" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="text-[14px] font-semibold text-[#1a1a1a] mb-1">
+                Tester une action agentic en sandbox isolé
+              </h3>
+              <p className="text-[12px] text-[#71717a] leading-relaxed">
+                Spawn un sandbox E2B sécurisé et exécute la décision « refund auto » avec vos guardrails sur des données simulées. Aucun appel Shopify réel — sert à valider le pipeline et vos seuils en 5 secondes.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold text-[#71717a] uppercase tracking-wider">
+                Montant demandé (€)
+              </span>
+              <input
+                type="number"
+                min="0"
+                step="0.5"
+                value={e2bAmount}
+                onChange={(e) => setE2bAmount(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg bg-[#f9f7f1] border border-[#E5E2D7] text-[13px] tabular-nums focus:outline-none focus:border-cta focus:bg-white transition-colors"
+                disabled={e2bTestState === 'running'}
+              />
+            </label>
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold text-[#71717a] uppercase tracking-wider">
+                Plafond auto-refund (€)
+              </span>
+              <input
+                type="number"
+                min="0"
+                step="10"
+                value={e2bMaxAuto}
+                onChange={(e) => setE2bMaxAuto(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg bg-[#f9f7f1] border border-[#E5E2D7] text-[13px] tabular-nums focus:outline-none focus:border-cta focus:bg-white transition-colors"
+                disabled={e2bTestState === 'running'}
+              />
+            </label>
+          </div>
+
+          <button
+            type="button"
+            onClick={runE2BTest}
+            disabled={e2bTestState === 'running' || !clientId}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-cta hover:bg-[#0A4F2C] text-white text-[13px] font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {e2bTestState === 'running' ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                Sandbox en cours…
+              </>
+            ) : (
+              <>
+                <Zap className="w-3.5 h-3.5" />
+                Lancer un test sandbox
+              </>
+            )}
+          </button>
+
+          <AnimatePresence mode="wait">
+            {e2bTestState === 'success' && e2bTestResult && (
+              <motion.div
+                key="success"
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="mt-4 p-4 rounded-xl bg-emerald-50/60 border border-emerald-100"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <span className="text-[13px] font-semibold text-emerald-800">
+                    Décision agent : <span className="font-bold uppercase">{e2bTestResult.decision?.decision || '—'}</span>
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3 text-[11px]">
+                  <div>
+                    <div className="text-[#71717a] uppercase tracking-wider font-semibold">Sandbox</div>
+                    <div className="font-mono text-[#1a1a1a] truncate" title={e2bTestResult.sandbox_id}>
+                      {(e2bTestResult.sandbox_id || '—').slice(0, 12)}…
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[#71717a] uppercase tracking-wider font-semibold">Durée</div>
+                    <div className="tabular-nums text-[#1a1a1a]">
+                      {e2bTestResult.duration_ms ? `${(e2bTestResult.duration_ms / 1000).toFixed(1)}s` : '—'}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-[#71717a] uppercase tracking-wider font-semibold">Isolation</div>
+                    <div className="text-emerald-700 font-semibold">✓ Scellée</div>
+                  </div>
+                </div>
+                <details className="text-[11px]">
+                  <summary className="cursor-pointer text-[#71717a] hover:text-[#1a1a1a] transition-colors select-none">
+                    Voir le payload + décision JSON brute
+                  </summary>
+                  <pre className="mt-2 p-3 rounded-lg bg-white border border-emerald-100 overflow-x-auto font-mono text-[10.5px] leading-relaxed text-[#1a1a1a]">
+{JSON.stringify({ decision: e2bTestResult.decision, context: e2bTestResult.context }, null, 2)}
+                  </pre>
+                </details>
+              </motion.div>
+            )}
+            {e2bTestState === 'error' && e2bTestResult && (
+              <motion.div
+                key="error"
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="mt-4 p-4 rounded-xl bg-red-50/60 border border-red-100"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <AlertCircle className="w-4 h-4 text-red-600" />
+                  <span className="text-[13px] font-semibold text-red-800">
+                    Échec du sandbox
+                  </span>
+                </div>
+                <div className="text-[12px] text-red-700 leading-relaxed">
+                  {e2bTestResult.error || 'Erreur inconnue. Réessayez ou consultez les logs E2B.'}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </section>
     </div>
   )
