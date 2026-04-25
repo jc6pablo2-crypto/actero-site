@@ -15,7 +15,7 @@ export const AlternativeZendesk = ({ onNavigate }) => {
     competitorKey: 'zendesk',
     competitorName: 'Zendesk',
     comparisonDate: 'avril 2026',
-    sources: 'zendesk.com/pricing, documentation Zendesk AI Agents',
+    sources: 'Tarifs publics avril 2026 — facturation par agent + add-on IA payant + frais d\'implementation enterprise',
 
     seo: {
       title: 'Alternative à Zendesk pour Shopify — Actero | IA SAV E-commerce FR',
@@ -27,7 +27,7 @@ export const AlternativeZendesk = ({ onNavigate }) => {
 
     hero: {
       subtitle:
-        "Zendesk est un tank enterprise facturé par agent : 55 à 155 $/agent/mois, setup en semaines, AI en option à 50 $/agent. Pour un e-commerçant Shopify, Actero résout 60 % des tickets dès 99 €/mois flat, installé en 15 minutes.",
+        "Zendesk est un tank enterprise inadapté aux PME e-commerce : 55 à 155 $/agent/mois, AI en add-on payant à 50 $/agent supplémentaire, setup en semaines voire en mois avec un consultant facturé. Pour un marchand Shopify, c'est 5 à 10 fois trop cher pour un produit qui n'est pas pensé e-commerce. Actero résout 60 % des tickets dès 99 €/mois flat, installé en 15 minutes.",
     },
 
     comparison: [
@@ -163,10 +163,12 @@ export const AlternativeZendesk = ({ onNavigate }) => {
     ],
 
     crosslinks: [
+      { href: '/zendesk-vs-actero', label: 'Zendesk vs Actero — comparatif détaillé' },
       { href: '/alternative-gorgias', label: 'Alternative à Gorgias' },
       { href: '/alternative-tidio', label: 'Alternative à Tidio' },
+      { href: '/alternative-intercom', label: 'Alternative à Intercom' },
+      { href: '/alternative-reamaze', label: 'Alternative à Re:amaze' },
       { href: '/tarifs', label: 'Voir tous les tarifs' },
-      { href: '/produit', label: 'Comment fonctionne Actero' },
     ],
   }
 

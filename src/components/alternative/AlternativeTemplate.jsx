@@ -24,7 +24,7 @@ import { trackEvent } from '../../lib/analytics'
  *   - JSON-LD : FAQPage + SoftwareApplication (Actero) — Google Rich Results friendly
  *   - Structured H1/H2/H3 hierarchy for featured snippets
  */
-export const AlternativeTemplate = ({ onNavigate, data }) => {
+export const AlternativeTemplate = ({ onNavigate, data, children }) => {
   const [openFaq, setOpenFaq] = useState(null)
 
   useEffect(() => {
@@ -264,6 +264,13 @@ export const AlternativeTemplate = ({ onNavigate, data }) => {
               </FadeInUp>
             </div>
           </section>
+
+          {/* ═══════════ OPTIONAL EMBEDDED SLOT (e.g. cost calculator) ═══════════ */}
+          {children && (
+            <section className="py-20 md:py-28 bg-white px-6">
+              <div className="max-w-[920px] mx-auto">{children}</div>
+            </section>
+          )}
 
           {/* ═══════════ POURQUOI SWITCHER ═══════════ */}
           <section className="py-24 md:py-32 bg-white px-6">

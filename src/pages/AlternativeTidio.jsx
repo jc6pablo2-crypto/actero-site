@@ -15,7 +15,7 @@ export const AlternativeTidio = ({ onNavigate }) => {
     competitorKey: 'tidio',
     competitorName: 'Tidio',
     comparisonDate: 'avril 2026',
-    sources: 'tidio.com/pricing, documentation Lyro AI officielle',
+    sources: 'Tarifs publics avril 2026 — Lyro AI plafonné à 50 conversations sur le plan d\'entrée, crédits IA limités',
 
     seo: {
       title: 'Alternative à Tidio pour Shopify — Actero | IA SAV E-commerce FR',
@@ -27,7 +27,7 @@ export const AlternativeTidio = ({ onNavigate }) => {
 
     hero: {
       subtitle:
-        "Tidio fait un chatbot sympa, mais reste un outil générique greffé à votre boutique. Actero est pensé Shopify d'abord : l'agent lit votre catalogue, traite les commandes, relance les paniers et mesure le ROI — pas juste un widget de chat.",
+        "Tidio est un chatbot générique greffé à votre boutique avec un Lyro plafonné à 50 conversations IA en plan d'entrée et des crédits qui s'épuisent vite. Pas d'actions Shopify natives, pas d'agent vocal, pas de dashboard ROI partageable. Actero est pensé Shopify d'abord : l'agent lit votre catalogue, traite les commandes, relance les paniers et mesure le ROI.",
     },
 
     comparison: [
@@ -168,10 +168,12 @@ export const AlternativeTidio = ({ onNavigate }) => {
     ],
 
     crosslinks: [
+      { href: '/tidio-vs-actero', label: 'Tidio vs Actero — comparatif détaillé' },
       { href: '/alternative-gorgias', label: 'Alternative à Gorgias' },
       { href: '/alternative-zendesk', label: 'Alternative à Zendesk' },
+      { href: '/alternative-intercom', label: 'Alternative à Intercom' },
+      { href: '/alternative-crisp', label: 'Alternative à Crisp' },
       { href: '/tarifs', label: 'Voir tous les tarifs' },
-      { href: '/produit', label: 'Comment fonctionne Actero' },
     ],
   }
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Clock, Zap, Shield, Euro, Languages, TrendingUp } from 'lucide-react'
 import { AlternativeTemplate } from '../components/alternative/AlternativeTemplate'
+import { GorgiasCostCalculator } from '../components/landing/GorgiasCostCalculator'
 
 /**
  * /alternative-gorgias
@@ -15,7 +16,7 @@ export const AlternativeGorgias = ({ onNavigate }) => {
     competitorKey: 'gorgias',
     competitorName: 'Gorgias',
     comparisonDate: 'avril 2026',
-    sources: 'gorgias.com/pricing, documentation officielle Gorgias',
+    sources: 'Tarifs publics avril 2026 — Helpdesk + AI Agent à 0,90-1,00 $ par résolution + voice/SMS en add-on payant',
 
     seo: {
       title: 'Alternative à Gorgias pour Shopify — Actero | IA SAV E-commerce FR',
@@ -27,7 +28,7 @@ export const AlternativeGorgias = ({ onNavigate }) => {
 
     hero: {
       subtitle:
-        "Gorgias fait bien son job de helpdesk — mais la facture grimpe vite, l'automation est payante en add-on et l'interface reste anglo-centrée. Actero automatise 60 % des tickets par défaut, en français, hébergé en UE, à partir de 99 €/mois.",
+        "Gorgias facture chaque résolution IA, empile les add-ons (voice, SMS, automation) et impose 2 à 5 jours de configuration manuelle avec un consultant. L'interface reste anglo-centrée, le support anglophone, l'hébergement US. Actero automatise 60 % des tickets dès le premier jour, en français, hébergé UE, à partir de 99 €/mois forfait tout inclus.",
     },
 
     comparison: [
@@ -163,12 +164,19 @@ export const AlternativeGorgias = ({ onNavigate }) => {
     ],
 
     crosslinks: [
+      { href: '/gorgias-vs-actero', label: 'Gorgias vs Actero — comparatif détaillé' },
+      { href: '/calculateur-gorgias', label: 'Calculateur de coût Gorgias' },
       { href: '/alternative-zendesk', label: 'Alternative à Zendesk' },
       { href: '/alternative-tidio', label: 'Alternative à Tidio' },
+      { href: '/alternative-intercom', label: 'Alternative à Intercom' },
+      { href: '/alternative-siena', label: 'Alternative à Siena AI' },
       { href: '/tarifs', label: 'Voir tous les tarifs' },
-      { href: '/produit', label: 'Comment fonctionne Actero' },
     ],
   }
 
-  return <AlternativeTemplate onNavigate={onNavigate} data={data} />
+  return (
+    <AlternativeTemplate onNavigate={onNavigate} data={data}>
+      <GorgiasCostCalculator onNavigate={onNavigate} source="alternative_gorgias" />
+    </AlternativeTemplate>
+  )
 }
