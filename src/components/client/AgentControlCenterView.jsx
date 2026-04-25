@@ -89,11 +89,17 @@ export const AgentControlCenterView = ({ clientId, onNavigate }) => {
       ...(prev || {}),
       vision_enabled: next,
     }))
+    // Use upsert: clients onboarded before client_settings was populated
+    // don't have a row yet — .update() would silently no-op. upsert ensures
+    // the row is created on first toggle.
     const { error } = await supabase
       .from('client_settings')
-      .update({ vision_enabled: next })
-      .eq('client_id', clientId)
+      .upsert(
+        { client_id: clientId, vision_enabled: next },
+        { onConflict: 'client_id' },
+      )
     if (error) {
+      console.error('[AgentControlCenter] toggleVision failed:', error)
       // Rollback on error
       queryClient.setQueryData(['client-settings', clientId], (prev) => ({
         ...(prev || {}),
@@ -103,6 +109,35 @@ export const AgentControlCenterView = ({ clientId, onNavigate }) => {
       queryClient.invalidateQueries({ queryKey: ['client-settings', clientId] })
     }
     setVisionBusy(false)
+  }
+
+  // Master agent kill-switch — toggles agent_enabled. Same upsert pattern.
+  const [agentBusy, setAgentBusy] = useState(false)
+  async function toggleAgent() {
+    if (!clientId || agentBusy) return
+    setAgentBusy(true)
+    const current = settings?.agent_enabled !== false
+    const next = !current
+    queryClient.setQueryData(['client-settings', clientId], (prev) => ({
+      ...(prev || {}),
+      agent_enabled: next,
+    }))
+    const { error } = await supabase
+      .from('client_settings')
+      .upsert(
+        { client_id: clientId, agent_enabled: next },
+        { onConflict: 'client_id' },
+      )
+    if (error) {
+      console.error('[AgentControlCenter] toggleAgent failed:', error)
+      queryClient.setQueryData(['client-settings', clientId], (prev) => ({
+        ...(prev || {}),
+        agent_enabled: current,
+      }))
+    } else {
+      queryClient.invalidateQueries({ queryKey: ['client-settings', clientId] })
+    }
+    setAgentBusy(false)
   }
 
   const { data: kbCount } = useQuery({
@@ -255,12 +290,21 @@ export const AgentControlCenterView = ({ clientId, onNavigate }) => {
             <div>
               <div className="flex items-center gap-2 mb-0.5">
                 <h1 className="text-lg font-bold text-[#1a1a1a]">Agent IA</h1>
-                <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
-                  agentEnabled ? 'bg-emerald-50 text-emerald-700' : 'bg-zinc-100 text-zinc-600'
-                }`}>
+                <button
+                  type="button"
+                  onClick={toggleAgent}
+                  disabled={!clientId || agentBusy}
+                  aria-label={`${agentEnabled ? 'Mettre en pause' : 'Activer'} l'agent`}
+                  title={`Cliquer pour ${agentEnabled ? 'mettre en pause' : 'activer'}`}
+                  className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer ${
+                    agentEnabled
+                      ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                      : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+                  }`}
+                >
                   {agentEnabled ? <LivePulseDot color="emerald" /> : <span className="w-1.5 h-1.5 rounded-full bg-zinc-400" />}
                   {agentEnabled ? 'Actif' : 'En pause'}
-                </span>
+                </button>
               </div>
               <p className="text-[12px] text-[#71717a]">
                 {agentEnabled
