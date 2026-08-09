@@ -366,7 +366,7 @@ const faqs = [
   },
   {
     q: "Que se passe-t-il si je dépasse mon quota de tickets ?",
-    a: `Au-delà de votre quota mensuel, chaque ticket supplémentaire est facturé à l'usage : ${PLANS.starter.overage_per_ticket.toFixed(2).replace(".", ",")}\u20AC/ticket sur le plan Starter, ${PLANS.pro.overage_per_ticket.toFixed(2).replace(".", ",")}\u20AC/ticket sur le plan Pro. Vous recevez une alerte à 80% et 100% de votre quota pour anticiper. Aucune coupure de service.`,
+    a: "Votre quota est un plafond : aucun dépassement n'est facturé à votre insu. Vous recevez une alerte à 80% et 100% de votre quota. Une fois le quota atteint, l'agent se met en pause — vous pouvez le réactiver immédiatement en achetant des crédits (packs ponctuels, sans engagement) ou en passant au plan supérieur.",
   },
   {
     q: "L'essai gratuit est-il sans engagement ?",

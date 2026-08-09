@@ -28,7 +28,7 @@ export const PLAN_LIMITS = {
     history_days: 90,
     voice_minutes: 0,
     vision_analyses_per_month: 200,
-    overage: 0.15,
+    overage: null, // hard cap — credits ou upgrade
   },
   pro: {
     tickets: 5000,
@@ -37,9 +37,9 @@ export const PLAN_LIMITS = {
     knowledge_entries: Infinity,
     team_members: 5,
     history_days: Infinity,
-    voice_minutes: 200,
+    voice_minutes: 0, // Agent vocal pas encore live
     vision_analyses_per_month: 2000,
-    overage: 0.10,
+    overage: null, // hard cap — credits ou upgrade
   },
   enterprise: {
     tickets: Infinity,
@@ -48,7 +48,7 @@ export const PLAN_LIMITS = {
     knowledge_entries: Infinity,
     team_members: Infinity,
     history_days: Infinity,
-    voice_minutes: Infinity,
+    voice_minutes: 0, // Agent vocal pas encore live
     vision_analyses_per_month: Infinity,
     overage: null,
   },
@@ -85,7 +85,7 @@ export const PLAN_FEATURES = {
     brand_editor: true,
     guardrails: true,
     simulator: true,
-    voice_agent: true,
+    voice_agent: false, // pas encore live
     specialized_agents: true,
     api_webhooks: true,
     pdf_report: true,
@@ -98,7 +98,7 @@ export const PLAN_FEATURES = {
     brand_editor: true,
     guardrails: true,
     simulator: true,
-    voice_agent: true,
+    voice_agent: false, // pas encore live
     specialized_agents: true,
     api_webhooks: true,
     pdf_report: true,

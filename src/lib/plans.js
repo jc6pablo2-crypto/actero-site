@@ -81,7 +81,7 @@ export const PLANS = {
     },
     support: 'email_48h',
     onboarding: 'guided',
-    overage_per_ticket: 0.15,
+    overage_per_ticket: null, // hard cap — crédits ou upgrade, jamais de dépassement facturé
     cta: 'Essai gratuit 7 jours',
     popular: false,
   },
@@ -98,7 +98,7 @@ export const PLANS = {
       knowledge_entries: Infinity,
       team_members: 5,
       history_days: Infinity,
-      voice_minutes: 200,
+      voice_minutes: 0, // Agent vocal pas encore live — ne rien promettre
       vision_analyses_per_month: 2000,
     },
     features: {
@@ -118,7 +118,7 @@ export const PLANS = {
     },
     support: 'priority_24h',
     onboarding: 'guided',
-    overage_per_ticket: 0.10,
+    overage_per_ticket: null, // hard cap — crédits ou upgrade, jamais de dépassement facturé
     cta: 'Essai gratuit 7 jours',
     popular: true,
   },
@@ -135,7 +135,7 @@ export const PLANS = {
       knowledge_entries: Infinity,
       team_members: Infinity,
       history_days: Infinity,
-      voice_minutes: Infinity,
+      voice_minutes: 0, // Agent vocal pas encore live
       vision_analyses_per_month: Infinity,
     },
     features: {

@@ -139,7 +139,7 @@ export const AlternativeZendesk = ({ onNavigate }) => {
       },
       {
         q: 'Quel est le vrai coût comparé pour une marque de 5 agents et 3 000 tickets/mois ?',
-        a: "Zendesk Suite Growth à 89 $/agent × 5 = 445 $/mois + AI Agent add-on ~250 $ = ~700 $/mois, hors setup. Actero Pro à 399 €/mois inclut 5 membres, 5 000 tickets, agent vocal 200 min, tous les agents spécialisés et l'agent Email natif. Écart ~40 % en coût direct, sans compter le temps d'implémentation et l'absence de consulting.",
+        a: "Zendesk Suite Growth à 89 $/agent × 5 = 445 $/mois + AI Agent add-on ~250 $ = ~700 $/mois, hors setup. Actero Pro à 399 €/mois inclut 5 membres, 5 000 tickets, tous les agents spécialisés et l'agent Email natif. Écart ~40 % en coût direct, sans compter le temps d'implémentation et l'absence de consulting.",
       },
     ],
 

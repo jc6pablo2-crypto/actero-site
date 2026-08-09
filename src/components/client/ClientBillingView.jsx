@@ -60,7 +60,7 @@ const PLAN_FEATURES_SHORT = {
   pro: [
     '5 000 tickets / mois',
     'Workflows illimités',
-    'Agent vocal (200 min)',
+    'Agent email',
     'Agents IA spécialisés',
     'Support prioritaire 24h',
   ],
@@ -254,8 +254,9 @@ export const ClientBillingView = ({ theme: _theme }) => {
   const planConfig = plan.config || getPlanConfig('free')
   const currentPrice = planConfig.price?.[billingPeriod]
   const hasVoice = plan.voiceMinutesLimit > 0
-  const overageTickets = plan.usage?.overage_tickets || 0
-  const overageCost = overageTickets * (planConfig.overage_per_ticket || 0)
+  // Hard cap — no overage billing. Once the monthly quota is reached the agent
+  // stops answering until the merchant buys credits or upgrades.
+  const quotaReached = !!plan.isOverLimit
 
   const ticketsPct = plan.ticketsLimit === Infinity || plan.ticketsLimit === -1
     ? 0
@@ -312,15 +313,13 @@ export const ClientBillingView = ({ theme: _theme }) => {
               </span>
               <span className="text-[10px] text-[#9ca3af]">tickets</span>
             </div>
-            {overageTickets > 0 && (
+            {quotaReached && (
               <>
                 <div className="w-px h-10 bg-gray-200" />
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider">Dépass.</span>
-                  <span className="text-lg font-bold text-red-500 tabular-nums leading-tight">
-                    {overageCost.toFixed(0)}€
-                  </span>
-                  <span className="text-[10px] text-[#9ca3af]">+{overageTickets} tickets</span>
+                  <span className="text-[10px] font-bold text-[#9ca3af] uppercase tracking-wider">Quota</span>
+                  <span className="text-lg font-bold text-amber-600 leading-tight">Atteint</span>
+                  <span className="text-[10px] text-[#9ca3af]">agent en pause</span>
                 </div>
               </>
             )}
@@ -413,11 +412,12 @@ export const ClientBillingView = ({ theme: _theme }) => {
             />
           )}
 
-          {overageTickets > 0 && (
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-red-50 border border-red-200">
-              <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0" />
-              <p className="text-[12px] text-red-700">
-                Tickets en depassement : <span className="font-bold">{overageTickets}</span> x {planConfig.overage_per_ticket?.toFixed(2) || '0,10'}{'\u202F'}\u20AC = <span className="font-bold">{overageCost.toFixed(2)}{'\u202F'}\u20AC</span>
+          {quotaReached && (
+            <div className="flex items-center gap-2 p-3 rounded-xl bg-amber-50 border border-amber-200">
+              <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />
+              <p className="text-[12px] text-amber-800">
+                Quota mensuel atteint \u2014 l&apos;agent ne r\u00E9pond plus. Achetez des cr\u00E9dits ci-dessous
+                ou passez au plan sup\u00E9rieur pour le r\u00E9activer.
               </p>
             </div>
           )}
