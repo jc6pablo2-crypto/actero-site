@@ -28,12 +28,12 @@ Un dépassement renvoie `429 Too Many Requests` :
 
 Indépendamment du rate limit court-terme, chaque plan a un quota mensuel de tickets traités :
 
-| Plan       | Tickets / mois | Voice / mois | Au-delà du quota                       |
-| ---------- | -------------- | ------------ | -------------------------------------- |
-| Free       | 50             | 0            | Hard cap — crédits ou upgrade requis   |
-| Starter    | 1 000          | 0            | Hard cap — crédits ou upgrade requis   |
-| Pro        | 5 000          | 200 min      | Hard cap — crédits ou upgrade requis   |
-| Enterprise | Illimité       | Illimité     | —                                      |
+| Plan       | Tickets / mois | Au-delà du quota                       |
+| ---------- | -------------- | -------------------------------------- |
+| Free       | 50             | Hard cap — crédits ou upgrade requis   |
+| Starter    | 1 000          | Hard cap — crédits ou upgrade requis   |
+| Pro        | 5 000          | Hard cap — crédits ou upgrade requis   |
+| Enterprise | Illimité       | —                                      |
 
 Tous les plans sont en **hard cap** : au-delà du quota, la requête est refusée avec `429` (le widget de chat renvoie un message neutre au client final). Les crédits ponctuels sont la seule façon de continuer à servir sans upgrader — chaque ticket au-delà du quota décrémente 1 crédit.
 

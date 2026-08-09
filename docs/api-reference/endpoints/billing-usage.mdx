@@ -1,9 +1,9 @@
 ---
 title: "GET /billing/usage"
-description: "Récupère la consommation tickets et minutes vocales du mois en cours, le plan actif, le quota, le solde de crédits et la prochaine échéance."
+description: "Récupère la consommation de tickets du mois en cours, le plan actif, le solde de crédits, l'état du quota et la prochaine échéance Stripe."
 ---
 
-L'endpoint `billing/usage` te retourne la consommation du mois calendaire courant pour un tenant donné. C'est ce que le dashboard utilise pour afficher la jauge "X / Y tickets utilisés" et suivre le solde de crédits disponibles.
+L'endpoint `billing/usage` te retourne la consommation du mois calendaire courant pour un tenant donné. C'est ce que le dashboard utilise pour afficher la jauge "X / Y tickets utilisés", suivre le solde de crédits et détecter la pause hard cap.
 
 ```http
 GET https://actero.fr/api/billing/usage?client_id=<id>
@@ -40,10 +40,12 @@ Sinon → `403 Acces refuse.`
   "period": "2026-04",
   "tickets_used": 1247,
   "tickets_limit": 5000,
-  "voice_minutes_used": 38,
-  "voice_minutes_limit": 200,
+  "voice_minutes_used": 0,
+  "voice_minutes_limit": 0,
   "overage_tickets": 0,
   "overage_cost": 0,
+  "quota_reached": false,
+  "credits_balance": 500,
   "trial_ends_at": null,
   "next_billing_date": "2026-05-01"
 }
@@ -57,13 +59,17 @@ Sinon → `403 Acces refuse.`
 
 <ResponseField name="tickets_limit" type="integer">Quota du plan. Vaut **`-1`** si illimité (Enterprise).</ResponseField>
 
-<ResponseField name="voice_minutes_used" type="number">Minutes consommées par l'agent vocal (ElevenLabs). 0 sur les plans Free / Starter qui n'incluent pas la voix.</ResponseField>
+<ResponseField name="voice_minutes_used" type="number">Minutes consommées par l'agent vocal. Toujours `0` — l'agent vocal n'est pas encore disponible.</ResponseField>
 
-<ResponseField name="voice_minutes_limit" type="number">Quota minutes vocales du plan. **`-1`** si illimité.</ResponseField>
+<ResponseField name="voice_minutes_limit" type="number">Quota minutes vocales du plan. Toujours `0` tant que l'agent vocal n'est pas lancé.</ResponseField>
 
-<ResponseField name="overage_tickets" type="integer">Nombre de tickets servis au-delà du quota via des crédits ponctuels ce mois. Aucun overage n'est facturé (hard cap sur tous les plans) — ce compteur reflète uniquement la consommation de crédits.</ResponseField>
+<ResponseField name="overage_tickets" type="integer">Déprécié — toujours `0`. Aucun plan ne facture de dépassement (plafond strict). Conservé pour compatibilité avec les intégrations existantes.</ResponseField>
 
-<ResponseField name="overage_cost" type="number">Toujours `0`. Conservé pour compatibilité — plus aucun plan ne facture d'overage. Utilise le solde de crédits (`credits_balance` renvoyé par le widget/gateway 429) pour anticiper les rechargements.</ResponseField>
+<ResponseField name="overage_cost" type="number">Déprécié — toujours `0`. Conservé pour compatibilité.</ResponseField>
+
+<ResponseField name="quota_reached" type="boolean">`true` quand le quota mensuel est atteint. L'agent est en pause jusqu'à l'achat d'un pack de crédits ou un upgrade de plan.</ResponseField>
+
+<ResponseField name="credits_balance" type="integer">Solde de crédits ponctuels disponibles pour ce tenant. Consommés automatiquement (1 crédit = 1 ticket) une fois le quota mensuel atteint.</ResponseField>
 
 <ResponseField name="trial_ends_at" type="string|null">ISO timestamp de fin de période d'essai. `null` si le tenant n'est pas en trial.</ResponseField>
 
@@ -141,8 +147,8 @@ const usage = await res.json()
 const pct = (usage.tickets_used / usage.tickets_limit) * 100
 console.log(`${usage.tickets_used}/${usage.tickets_limit} tickets (${pct.toFixed(1)}%)`)
 
-if (usage.tickets_limit !== -1 && usage.tickets_used >= usage.tickets_limit * 0.9) {
-  console.warn(`Quota bientôt saturé — pense à acheter un pack de crédits avant le hard cap.`)
+if (usage.quota_reached) {
+  console.warn(`Quota atteint — agent en pause. Crédits restants : ${usage.credits_balance}`)
 }
 ```
 
