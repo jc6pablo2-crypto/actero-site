@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import React, { useEffect, useRef, useState } from 'react'
+import { ArrowRight, ArrowUpRight, Loader2 } from 'lucide-react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { FadeInUp } from './scroll-animations'
 import { Logo } from '../layout/Logo'
@@ -116,8 +116,10 @@ export const GlassHero = ({ onNavigate }) => {
 
 /**
  * HeroPrompt — the "chat AI" box under the subtitle. A real input styled like a
- * product surface; submitting (Enter or the send button) opens the live
- * simulator with the question pre-filled. Funnels to a hands-on trial, no card.
+ * product surface; submitting (Enter or the send button) calls the public demo
+ * endpoint (`/api/public/hero-demo`) and renders the agent's answer inline, so
+ * a visitor experiences the agent BEFORE signing up. The reply is followed by
+ * the signup CTA — the demo IS the conversion path.
  */
 const EXAMPLES = [
   'Où est ma commande #1082 ?',
@@ -125,15 +127,56 @@ const EXAMPLES = [
   'Quel est le délai de livraison vers Lyon ?',
 ]
 
+const GENERIC_ERROR =
+  "Impossible de joindre l'agent pour le moment. Réessayez dans un instant."
+
 function HeroPrompt({ onNavigate }) {
   const [value, setValue] = useState('')
+  const [turns, setTurns] = useState([]) // { role: 'user' | 'agent', text }
+  const [loading, setLoading] = useState(false)
   const prefersReducedMotion = useReducedMotion()
+  const inputRef = useRef(null)
+  const transcriptRef = useRef(null)
 
-  const submit = () => {
+  // Keep the newest bubble in view inside the capped transcript area.
+  useEffect(() => {
+    const el = transcriptRef.current
+    if (el) el.scrollTop = el.scrollHeight
+  }, [turns, loading])
+
+  const submit = async () => {
     const q = value.trim()
     trackEvent('Hero_Prompt_Submitted', { has_text: !!q })
-    onNavigate && onNavigate('/signup')
+    if (!q || loading) return
+
+    setValue('')
+    setTurns((prev) => [...prev, { role: 'user', text: q }])
+    setLoading(true)
+
+    try {
+      const res = await fetch('/api/public/hero-demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: q }),
+      })
+      const data = await res.json().catch(() => null)
+      // The endpoint answers 200 with a graceful fallback, and still ships a
+      // French `response` on 429 / too-long — so trust `response` when present.
+      const reply = typeof data?.response === 'string' ? data.response.trim() : ''
+      setTurns((prev) => [...prev, { role: 'agent', text: reply || GENERIC_ERROR }])
+    } catch {
+      setTurns((prev) => [...prev, { role: 'agent', text: GENERIC_ERROR }])
+    } finally {
+      setLoading(false)
+    }
   }
+
+  const prefill = (example) => {
+    setValue(example)
+    inputRef.current?.focus()
+  }
+
+  const hasReply = turns.some((t) => t.role === 'agent')
 
   return (
     <div className="mx-auto w-full max-w-2xl">
@@ -143,11 +186,48 @@ function HeroPrompt({ onNavigate }) {
         whileHover={prefersReducedMotion ? {} : { y: -2 }}
         transition={{ type: 'spring', stiffness: 400, damping: 24 }}
       >
+        {/* Conversation — compact, scrolls internally so the hero never grows. */}
+        {turns.length > 0 && (
+          <div
+            ref={transcriptRef}
+            role="log"
+            aria-live="polite"
+            aria-label="Conversation avec l'agent SAV de démonstration"
+            className="mb-3 max-h-[220px] overflow-y-auto space-y-2 pr-1"
+            style={heroFont}
+          >
+            {turns.map((t, i) => (
+              <div key={i} className={t.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
+                <div
+                  className={
+                    t.role === 'user'
+                      ? 'max-w-[85%] rounded-2xl rounded-br-md bg-[#F4F4F2] px-3 py-2 text-[14px] text-[#1A1A1A]'
+                      : 'max-w-[90%] rounded-2xl rounded-bl-md bg-[#E8F5EC] px-3 py-2 text-[14px] leading-relaxed text-[#14361F] whitespace-pre-line'
+                  }
+                >
+                  {t.text}
+                </div>
+              </div>
+            ))}
+
+            {loading && (
+              <div className="flex justify-start">
+                <div className="rounded-2xl rounded-bl-md bg-[#E8F5EC] px-3 py-2 text-[14px] text-[#14361F] inline-flex items-center gap-1.5">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden />
+                  <span className="sr-only">L&apos;agent rédige sa réponse…</span>
+                  <span aria-hidden>L&apos;agent rédige…</span>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         <input
+          ref={inputRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') submit() }}
-          placeholder={`Essayez : « ${EXAMPLES[0]} »`}
+          placeholder={turns.length ? 'Posez une autre question…' : `Essayez : « ${EXAMPLES[0]} »`}
           aria-label="Posez une question à l'agent SAV Actero"
           style={heroFont}
           className="w-full bg-transparent text-[16px] md:text-[17px] text-[#1A1A1A] placeholder:text-[#9ca3af] outline-none py-1.5"
@@ -161,18 +241,58 @@ function HeroPrompt({ onNavigate }) {
 
           <motion.button
             onClick={submit}
-            aria-label="Tester l'agent"
-            className="w-9 h-9 rounded-full bg-cta text-white flex items-center justify-center hover:bg-[#0a4f2c] transition-colors"
-            whileHover={prefersReducedMotion ? {} : { scale: 1.06 }}
-            whileTap={prefersReducedMotion ? {} : { scale: 0.94 }}
+            disabled={loading}
+            aria-label="Envoyer la question à l'agent"
+            aria-busy={loading}
+            className="w-9 h-9 rounded-full bg-cta text-white flex items-center justify-center hover:bg-[#0a4f2c] transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+            whileHover={prefersReducedMotion || loading ? {} : { scale: 1.06 }}
+            whileTap={prefersReducedMotion || loading ? {} : { scale: 0.94 }}
           >
-            <ArrowUpRight className="w-4 h-4" />
+            {loading ? (
+              <Loader2 className="w-4 h-4 animate-spin" aria-hidden />
+            ) : (
+              <ArrowUpRight className="w-4 h-4" aria-hidden />
+            )}
           </motion.button>
         </div>
       </motion.div>
 
+      {/* Conversion CTA — appears as soon as the visitor has seen a real answer. */}
+      {hasReply && (
+        <div className="mt-3">
+          <button
+            onClick={() => {
+              trackEvent('Hero_Demo_CTA_Clicked', { turns: turns.length })
+              onNavigate && onNavigate('/signup')
+            }}
+            className="inline-flex items-center gap-2 rounded-full bg-cta px-5 py-2.5 text-[14px] font-semibold text-white hover:bg-[#0a4f2c] transition-colors"
+            style={heroFont}
+          >
+            Créer mon agent gratuitement
+            <ArrowRight className="w-4 h-4" aria-hidden />
+          </button>
+        </div>
+      )}
+
+      {/* Example questions — one tap to prefill the input. */}
+      <div className="mt-3 flex flex-wrap justify-center gap-2">
+        {EXAMPLES.map((example) => (
+          <button
+            key={example}
+            onClick={() => prefill(example)}
+            aria-label={`Pré-remplir : ${example}`}
+            style={heroFont}
+            className="rounded-full bg-white/70 border border-black/[0.08] px-3 py-1.5 text-[12.5px] text-[#5A5A5A] hover:border-cta/40 hover:text-[#1A1A1A] transition-colors"
+          >
+            {example}
+          </button>
+        ))}
+      </div>
+
       <p className="mt-3 text-[12.5px] text-[#716D5C]">
-        Testez l&apos;agent en direct · sans carte bancaire
+        {hasReply
+          ? 'Démo publique · données de boutique fictives'
+          : 'Testez l’agent en direct · sans carte bancaire'}
       </p>
     </div>
   )
