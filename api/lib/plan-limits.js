@@ -5,8 +5,6 @@
  * pricing / limits / features must land in BOTH files.
  */
 
-export const VISION_OVERAGE_EUR = 0.05
-
 export const PLAN_LIMITS = {
   free: {
     tickets: 50,
@@ -17,7 +15,6 @@ export const PLAN_LIMITS = {
     history_days: 7,
     voice_minutes: 0,
     vision_analyses_per_month: 10,
-    overage: null,
   },
   starter: {
     tickets: 1000,
@@ -28,7 +25,6 @@ export const PLAN_LIMITS = {
     history_days: 90,
     voice_minutes: 0,
     vision_analyses_per_month: 200,
-    overage: null, // hard cap — credits ou upgrade
   },
   pro: {
     tickets: 5000,
@@ -39,7 +35,6 @@ export const PLAN_LIMITS = {
     history_days: Infinity,
     voice_minutes: 0, // Agent vocal pas encore live
     vision_analyses_per_month: 2000,
-    overage: null, // hard cap — credits ou upgrade
   },
   enterprise: {
     tickets: Infinity,
@@ -50,7 +45,6 @@ export const PLAN_LIMITS = {
     history_days: Infinity,
     voice_minutes: 0, // Agent vocal pas encore live
     vision_analyses_per_month: Infinity,
-    overage: null,
   },
 }
 

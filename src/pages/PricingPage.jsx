@@ -175,11 +175,6 @@ function buildFeatures(plan) {
   return lines;
 }
 
-function buildOverage(plan) {
-  if (plan.overage_per_ticket == null) return null;
-  return `${plan.overage_per_ticket.toFixed(2).replace(".", ",")}\u20AC / ticket`;
-}
-
 /* Build the plans array from PLANS + PLAN_ORDER */
 const plans = PLAN_ORDER.map((id) => {
   const p = PLANS[id];
@@ -195,7 +190,6 @@ const plans = PLAN_ORDER.map((id) => {
     highlighted: p.popular,
     cardClass: CARD_CLASSES[p.id],
     features: buildFeatures(p),
-    overage: buildOverage(p),
   };
 });
 
@@ -693,12 +687,6 @@ export const PricingPage = ({ onNavigate }) => {
                     ))}
                   </div>
 
-                  {/* Overage */}
-                  {plan.overage && (
-                    <p className={`mt-6 text-xs pt-4 border-t ${plan.highlighted ? 'text-[#F4F0E6]/60 border-[#F4F0E6]/15' : 'text-[#716D5C] border-gray-100'}`}>
-                      Overage : {plan.overage}
-                    </p>
-                  )}
                 </motion.div>
               );
               })}

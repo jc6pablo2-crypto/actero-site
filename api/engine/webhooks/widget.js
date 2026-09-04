@@ -20,6 +20,7 @@ import { checkRateLimit, getClientIp } from '../../lib/rate-limit.js'
 import { lookupOrder } from '../lib/shopify-client.js'
 import { notifyClient } from '../../lib/notify.js'
 import { checkTicketQuota } from '../../lib/plan-limits.js'
+import { maybeAlertQuota } from '../../lib/quota-alerts.js'
 
 // Order/tracking classifications that warrant a rich order-status card.
 const ORDER_CARD_CLASSES = ['suivi_commande', 'livraison', 'tracking', 'order_tracking']
@@ -255,6 +256,9 @@ async function handler(req, res) {
   const inTrial = !!(client.trial_ends_at && new Date(client.trial_ends_at) > new Date())
   const quota = await checkTicketQuota(supabase, { clientId: client.id, plan: client.plan, inTrial })
   if (!quota.allowed) {
+    // The agent just refused a real customer — make sure the merchant knows
+    // (covers accounts that were already over the cap before alerts shipped).
+    await maybeAlertQuota(supabase, { clientId: client.id, plan: client.plan, inTrial })
     return res.status(429).json({
       limit_reached: true,
       response: "Le chat n'est pas disponible pour le moment. Merci de réessayer plus tard.",

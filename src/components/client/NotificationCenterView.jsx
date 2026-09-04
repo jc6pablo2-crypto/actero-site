@@ -49,6 +49,8 @@ const NOTIFICATION_TYPES = [
       { key: 'new_integration', label: 'Intégration connectée', desc: 'Quand une nouvelle intégration est activée', channels: ['email', 'slack'], defaultChannels: [] },
       { key: 'agent_improvement', label: 'Suggestion d\'amélioration', desc: 'L\'IA a identifié un pattern à corriger', channels: ['email'], defaultChannels: ['email'] },
       { key: 'milestone_alert', label: 'Jalon atteint', desc: '100h économisées, 1000 résolutions livrées, etc.', channels: ['email', 'push'], defaultChannels: ['email'] },
+      { key: 'usage.threshold_reached', label: '80 % du quota atteint', desc: 'Alerte avant que ton agent se mette en pause', channels: ['email', 'slack'], defaultChannels: ['email'] },
+      { key: 'usage.quota_reached', label: 'Quota atteint — agent en pause', desc: 'Ton agent ne répond plus : crédits ou upgrade requis', channels: ['email', 'slack'], defaultChannels: ['email'] },
     ],
   },
 ]

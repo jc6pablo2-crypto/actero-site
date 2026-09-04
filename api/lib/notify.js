@@ -30,7 +30,12 @@ export async function notifyClient(supabase, { clientId, eventKey, title, messag
     .maybeSingle()
 
   // Check quiet hours (skip non-critical notifications during that window)
-  const isCritical = ['escalation_alert', 'urgent_ticket_alert', 'security_alert'].includes(eventKey)
+  // Quota alerts are business-critical (the agent stops answering customers), so
+  // they bypass quiet hours like escalations do.
+  const isCritical = [
+    'escalation_alert', 'urgent_ticket_alert', 'security_alert',
+    'usage.threshold_reached', 'usage.quota_reached',
+  ].includes(eventKey)
   if (!isCritical && prefs?.quiet_hours_enabled) {
     const hour = new Date().getHours()
     const start = prefs.quiet_hours_start ?? 22
@@ -146,6 +151,10 @@ async function sendSimpleSlackMessage(supabase, clientId, { title, message, cont
 /**
  * Simple client email via Resend.
  */
+export async function sendClientEmail(supabase, clientId, payload) {
+  return sendSimpleEmail(supabase, clientId, payload)
+}
+
 async function sendSimpleEmail(supabase, clientId, { title, message, context }) {
   if (!process.env.RESEND_API_KEY) return { success: false, error: 'RESEND non configuré' }
 

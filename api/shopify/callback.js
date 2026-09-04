@@ -137,6 +137,72 @@ async function handler(req, res) {
     }
   }
 
+  // Method 3: App-Store-first install — the merchant discovered Actero on the
+  // Shopify App Store and has no Actero account yet, so neither cookie above
+  // resolved. Previously the connection was stored with client_id = null: the
+  // shop was orphaned, unreachable and unbillable (Managed Pricing needs a
+  // linked client). We now create the client here and mint a short-lived signed
+  // claim token so the merchant can attach the shop to their account after
+  // signing up. See api/shopify/claim.js.
+  let claimToken = null;
+  if (!onboardedClientId) {
+    // Best-effort: use the real shop name / owner email for the new client.
+    let shopName = shop.replace(/\.myshopify\.com$/, '');
+    let shopEmail = null;
+    try {
+      const shopResp = await fetch(`https://${shop}/admin/api/2025-01/graphql.json`, {
+        method: 'POST',
+        headers: {
+          'X-Shopify-Access-Token': access_token,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ query: '{ shop { name email } }' }),
+      });
+      const shopJson = await shopResp.json().catch(() => ({}));
+      shopName = shopJson?.data?.shop?.name || shopName;
+      shopEmail = shopJson?.data?.shop?.email || null;
+    } catch (err) {
+      console.warn('[shopify-callback] shop lookup failed:', err.message);
+    }
+
+    try {
+      const createResp = await fetch(`${supabaseUrl}/rest/v1/clients`, {
+        method: 'POST',
+        headers: {
+          apikey: supabaseServiceKey,
+          Authorization: `Bearer ${supabaseServiceKey}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
+        },
+        body: JSON.stringify({
+          brand_name: shopName,
+          contact_email: shopEmail,
+          plan: 'free',
+          client_type: 'ecommerce',
+        }),
+      });
+      const created = await createResp.json().catch(() => null);
+      const newClientId = Array.isArray(created) ? created[0]?.id : created?.id;
+      if (newClientId) {
+        onboardedClientId = newClientId;
+        // 30-day window to claim, authenticated via AES-GCM (server key only).
+        claimToken = encryptToken(
+          JSON.stringify({
+            cid: newClientId,
+            shop,
+            exp: Date.now() + 30 * 24 * 60 * 60 * 1000,
+          }),
+        );
+        console.log(`[shopify-callback] created client ${newClientId} for App Store install ${shop}`);
+      } else {
+        console.error('[shopify-callback] client auto-create failed:', JSON.stringify(created));
+      }
+    } catch (err) {
+      console.error('[shopify-callback] client auto-create error:', err.message);
+    }
+  }
+
   // 6. Save to Supabase (with client_id if found) — encrypt access_token at rest.
   const connectionData = {
     shop_domain: shop,
@@ -344,6 +410,9 @@ async function handler(req, res) {
   if (onboardedClientId) params.set('client_id', onboardedClientId);
   if (onboardingJobId) params.set('onboarding_job', onboardingJobId);
   if (onboardingSpawnFailed) params.set('onboarding_failed', '1');
+  // Present only for App-Store-first installs: lets the merchant attach this
+  // freshly created client to the account they are about to create.
+  if (claimToken) params.set('claim', claimToken);
   const redirectUrl = `/shopify-success?${params.toString()}`;
 
   res.redirect(302, redirectUrl);

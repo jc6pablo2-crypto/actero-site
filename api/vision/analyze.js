@@ -90,7 +90,8 @@ async function handler(req, res) {
   const already = await currentMonthUsage(client_id)
   const remaining = (limits.vision_analyses_per_month ?? 0) - already
 
-  if (remaining <= 0 && limits.overage === null) {
+  // Hard cap on every plan — no overage is billed anywhere in Actero.
+  if (remaining <= 0) {
     return res.status(429).json({ error: 'vision_quota_exceeded', quota: limits.vision_analyses_per_month, used: already })
   }
 

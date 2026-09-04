@@ -139,6 +139,10 @@ async function _runBrainInner(supabase, { event, playbook, clientId, normalized,
     try {
       const period = new Date().toISOString().slice(0, 7) // 'YYYY-MM'
       await supabase.rpc('increment_ticket_usage', { p_client_id: clientId, p_period: period })
+      // Warn the merchant at 80% / 100% of their monthly quota. Idempotent and
+      // fail-soft; placed here so every channel (widget, gateway, email…) is covered.
+      const { maybeAlertQuota } = await import('../lib/quota-alerts.js')
+      await maybeAlertQuota(supabase, { clientId })
     } catch (err) {
       // Don't block the Brain if the counter fails (table/function may not exist yet)
       console.warn('[brain] increment_ticket_usage failed:', err.message)

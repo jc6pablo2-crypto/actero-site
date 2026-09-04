@@ -17,6 +17,7 @@ import { runExecutor } from './executor.js'
 import { logRun } from './logger.js'
 import { checkRateLimit } from './lib/rate-limiter.js'
 import { checkTicketQuota } from '../lib/plan-limits.js'
+import { maybeAlertQuota } from '../lib/quota-alerts.js'
 
 const ENGINE_SECRET = process.env.ENGINE_WEBHOOK_SECRET
 const INTERNAL_SECRET = process.env.INTERNAL_API_SECRET
@@ -69,6 +70,8 @@ async function handler(req, res) {
   const quota = await checkTicketQuota(supabase, { clientId: client_id, plan, inTrial })
   const useCreditPack = quota.useCredits
   if (!quota.allowed) {
+    // Tell the merchant their agent is paused (idempotent, fail-soft).
+    await maybeAlertQuota(supabase, { clientId: client_id, plan, inTrial })
     return res.status(429).json({
       error: 'Quota de tickets épuisé. Achetez des crédits ou passez à un plan supérieur.',
       tickets_used: quota.ticketsUsed,
