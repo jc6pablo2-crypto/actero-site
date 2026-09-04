@@ -823,7 +823,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               <KpiRow>
                 <KpiCard
                   label="MRR"
-                  value={`${mrr.toLocaleString('fr-FR')} EUR`}
+                  value={`${mrr.toLocaleString('fr-FR')} €`}
                   sublabel="Revenus mensuels recurrents"
                   icon={DollarSign}
                   color="brand"
