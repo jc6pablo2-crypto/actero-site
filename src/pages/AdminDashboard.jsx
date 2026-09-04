@@ -98,6 +98,7 @@ const AdminCostTrackerView = lazy(() => import('../components/admin/AdminCostTra
 const AdminConnectorHealthView = lazy(() => import('../components/admin/AdminConnectorHealthView').then(m => ({ default: m.AdminConnectorHealthView })))
 const AdminClientsListView = lazy(() => import('../components/admin/AdminClientsListView').then(m => ({ default: m.AdminClientsListView })))
 const AdminMRRView = lazy(() => import('../components/admin/AdminMRRView').then(m => ({ default: m.AdminMRRView })))
+const AdminCsatPanel = lazy(() => import('../components/admin/AdminCsatPanel').then(m => ({ default: m.AdminCsatPanel })))
 const AdminChurnCohortView = lazy(() => import('../components/admin/AdminChurnCohortView').then(m => ({ default: m.AdminChurnCohortView })))
 const AdminROILeaderboardView = lazy(() => import('../components/admin/AdminROILeaderboardView').then(m => ({ default: m.AdminROILeaderboardView })))
 const AdminTokensView = lazy(() => import('../components/admin/AdminTokensView').then(m => ({ default: m.AdminTokensView })))
@@ -218,6 +219,42 @@ const QuickAddClientModal = ({ onClose, onSubmit }) => {
 // Stays in sync with billing/stripe setup; free = 0 intentionally (not counted in MRR).
 const PLAN_PRICES = { free: 0, starter: 99, pro: 399, enterprise: 999 };
 
+// Tabs reachable by deep link / drill-down but absent from the sidebar. Every
+// other page title is derived from `sidebarItems` below, so a nav label and its
+// page title can no longer drift apart (this used to be a duplicated 35-entry map).
+const EXTRA_TAB_LABELS = {
+  'client-detail': 'Fiche client',
+  'add-enterprise': 'Ajout client Enterprise',
+  'engine-reviews': 'Review manuelle',
+  'engine-playbooks': 'Playbooks',
+  requests: 'Demandes IA',
+  leads: 'Leads capturés',
+  intelligence: 'Intelligence clients',
+};
+
+function resolveTabTitle(items, tabId) {
+  for (const item of items) {
+    if (item.id === tabId) return item.label;
+    if (item.children) {
+      const hit = item.children.find((c) => c.id === tabId);
+      if (hit) return hit.label;
+    }
+  }
+  return EXTRA_TAB_LABELS[tabId] || String(tabId).replace(/-/g, ' ');
+}
+
+// The group a tab belongs to (section header, or the expandable it lives in),
+// rendered as an eyebrow above the title so you always know where you are.
+function resolveTabSection(items, tabId) {
+  let section = null;
+  for (const item of items) {
+    if (item.type === 'section') { section = item.label; continue; }
+    if (item.id === tabId) return section;
+    if (item.children?.some((c) => c.id === tabId)) return item.label;
+  }
+  return null;
+}
+
 // Recent-events feed category styling. Hoisted to avoid re-allocating on every render
 // (6+ events render in overview tab's live feed — recreated 6 times per render prior).
 const EVENT_CATEGORY_LABELS = {
@@ -298,7 +335,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
   };
 
   // Command-K hotkey centralise dans useCommandPalette
-  const { open: cmdkOpen, close: closeCmdk, isMac } = useCommandPalette();
+  const { open: cmdkOpen, close: closeCmdk, toggle: toggleCmdk, isMac } = useCommandPalette();
 
   // Fetching Data with React Query
   // staleTime: 60s across admin overview queries — admin tab-switches within 1 minute
@@ -654,59 +691,39 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
       />
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        <header className="hidden md:flex h-16 bg-white border-b border-[#f0f0f0] items-center px-8 justify-between">
-          <h1 className="text-[18px] font-semibold tracking-tight text-[#1a1a1a]">
-            {{
-              briefing: 'Briefing matin',
-              overview: 'Stats détaillées',
-              clients: 'Tous les clients',
-              'add-enterprise': 'Ajout client Enterprise',
-              'client-detail': 'Fiche client',
-              health: 'Santé clients',
-              funnel: 'Nouveau client',
-              'live-runs': 'Live runs',
-              'agent-heatmap': 'Heatmap agents',
-              'top-errors': 'Top erreurs',
-              'connector-health': 'Santé connecteurs',
-              'engine-runs': 'Historique runs',
-              hallucination: 'Hallucinations IA',
-              'manual-review': 'Review manuelle',
-              playbooks: 'Playbooks',
-              ratings: 'Notations IA',
-              engine: 'Webhook test',
-              'ai-terminal': 'AI Terminal',
-              'error-reports': 'Erreurs clients',
-              mrr: 'MRR et revenus',
-              'churn-cohort': 'Cohortes de rétention',
-              'roi-leaderboard': 'Classement ROI',
-              'cost-tracker': 'Coûts Claude',
-              tokens: 'Consommation tokens',
-              pipeline: 'Pipeline commercial',
-              'conversion-pipeline': 'Conversion free → paid',
-              billing: 'Facturation',
-              'stripe-setup': 'Config Stripe',
-              'alert-builder': 'Alertes Slack',
-              'action-logs': 'Journal audit',
-              monitoring: 'Monitoring',
-              shopify: 'App Shopify',
-              referrals: 'Parrainages',
-              partners: 'Partenaires',
-              'partner-tokens': 'Liens partenaires',
-              'startup-applications': 'Candidatures Startup',
-              requests: 'Demandes IA',
-              leads: 'Leads captures',
-              intelligence: 'Intelligence clients',
-            }[activeTab] || activeTab.replace('-', ' ')}
-          </h1>
-          {/* Quick-add menu — remplaces l'ancien onglet "Ajout Enterprise"
-             dans la sidebar. Une seule entrée pour les actions de création
-             les plus fréquentes (client standard ou enterprise, test engine).
-             Le Cmd+K reste l'autre point d'entrée global. */}
-          <div className="flex items-center gap-2">
+        <header className="hidden md:flex h-16 shrink-0 bg-white/95 backdrop-blur-sm border-b border-black/[0.06] items-center px-8 justify-between">
+          <div className="min-w-0">
+            {resolveTabSection(sidebarItems, activeTab) && (
+              <div className="text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#9ca3af] leading-none mb-1.5">
+                {resolveTabSection(sidebarItems, activeTab)}
+              </div>
+            )}
+            <h1 className="text-[19px] font-semibold tracking-[-0.015em] text-[#1a1a1a] leading-none truncate">
+              {resolveTabTitle(sidebarItems, activeTab)}
+            </h1>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            {/* The command palette existed but had no visible entry point. */}
+            <button
+              type="button"
+              onClick={toggleCmdk}
+              className="inline-flex items-center gap-2 h-9 pl-3 pr-2 rounded-full bg-[#F9F7F1] border border-[#EFE7D6] text-[13px] text-[#716D5C] hover:text-[#1a1a1a] hover:border-[#8B7A50]/40 transition-colors"
+              title="Recherche globale"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span className="hidden lg:inline">Rechercher</span>
+              <kbd className="ml-1 px-1.5 py-0.5 rounded-md bg-white border border-[#EFE7D6] text-[10.5px] font-medium text-[#9ca3af]">
+                {isMac ? '⌘' : 'Ctrl'}K
+              </kbd>
+            </button>
+
+            <div className="w-px h-6 bg-black/[0.07]" />
+
             <button
               type="button"
               onClick={handleAddClient}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium bg-cta text-white hover:bg-[#003725] transition-colors"
+              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-semibold bg-cta text-white hover:bg-[#0a4f2c] transition-colors"
               title="Ajouter un client (Cmd+N)"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -715,7 +732,7 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             <button
               type="button"
               onClick={() => setActiveTab('add-enterprise')}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium bg-white border border-[#f0f0f0] text-[#1a1a1a] hover:bg-zinc-50 transition-colors"
+              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-[13px] font-semibold bg-white border border-[#E7E1D2] text-[#1a1a1a] hover:border-[#1a1a1a]/25 transition-colors"
               title="Ajouter un client Enterprise"
             >
               <Building2 className="w-3.5 h-3.5" />
@@ -863,6 +880,10 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                   })}
                 </div>
               </SectionCard>
+
+              {/* Satisfaction client — donnée collectée par la bulle SAV, jusqu'ici
+                  jamais affichée nulle part. */}
+              <AdminCsatPanel />
 
               {/* Row 2: Activity chart + Recent events */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
