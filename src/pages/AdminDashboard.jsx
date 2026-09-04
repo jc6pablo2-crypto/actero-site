@@ -99,6 +99,7 @@ const AdminConnectorHealthView = lazy(() => import('../components/admin/AdminCon
 const AdminClientsListView = lazy(() => import('../components/admin/AdminClientsListView').then(m => ({ default: m.AdminClientsListView })))
 const AdminMRRView = lazy(() => import('../components/admin/AdminMRRView').then(m => ({ default: m.AdminMRRView })))
 const AdminCsatPanel = lazy(() => import('../components/admin/AdminCsatPanel').then(m => ({ default: m.AdminCsatPanel })))
+const AdminQuotaWatchPanel = lazy(() => import('../components/admin/AdminQuotaWatchPanel').then(m => ({ default: m.AdminQuotaWatchPanel })))
 const AdminChurnCohortView = lazy(() => import('../components/admin/AdminChurnCohortView').then(m => ({ default: m.AdminChurnCohortView })))
 const AdminROILeaderboardView = lazy(() => import('../components/admin/AdminROILeaderboardView').then(m => ({ default: m.AdminROILeaderboardView })))
 const AdminTokensView = lazy(() => import('../components/admin/AdminTokensView').then(m => ({ default: m.AdminTokensView })))
@@ -883,7 +884,10 @@ export const AdminDashboard = ({ onNavigate, onLogout, currentRoute }) => {
 
               {/* Satisfaction client — donnée collectée par la bulle SAV, jusqu'ici
                   jamais affichée nulle part. */}
-              <AdminCsatPanel />
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <AdminQuotaWatchPanel />
+                <AdminCsatPanel />
+              </div>
 
               {/* Row 2: Activity chart + Recent events */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
