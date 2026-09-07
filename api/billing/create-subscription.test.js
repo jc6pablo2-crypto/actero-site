@@ -12,6 +12,7 @@ const h = vi.hoisted(() => ({
   user: { id: 'u1', email: 'u@ex.com' },
   clientRow: null,
   existingSub: null,
+  customerCards: [],
   stripe: null,
 }));
 
@@ -69,6 +70,8 @@ function baseStripe() {
       }),
     },
     promotionCodes: { list: vi.fn(async () => ({ data: [] })) },
+    paymentMethods: { list: vi.fn(async () => ({ data: h.customerCards })) },
+    setupIntents: { create: vi.fn(async () => ({ client_secret: 'seti_new' })) },
   };
 }
 
@@ -76,6 +79,7 @@ beforeEach(() => {
   process.env.STRIPE_SECRET_KEY = 'sk_test_x';
   h.clientRow = { id: 'c1', plan: 'free', stripe_customer_id: 'cus_1', stripe_subscription_id: null, contact_email: 'u@ex.com', brand_name: 'Shop', trial_ends_at: null, referral_first_month_free: false, referred_by_client_id: null };
   h.existingSub = null;
+  h.customerCards = [];
   h.stripe = baseStripe();
 });
 
@@ -124,13 +128,55 @@ describe('create-subscription', () => {
     expect(res.body.client_secret).toBe('pi_secret');
   });
 
-  it('existing active subscription → instant swap, no client_secret', async () => {
+  it('existing active subscription with a card → instant swap, no client_secret', async () => {
     h.clientRow.stripe_subscription_id = 'sub_old';
-    h.existingSub = { status: 'active', items: { data: [{ id: 'si_1' }] } };
+    h.existingSub = { status: 'active', default_payment_method: 'pm_1', items: { data: [{ id: 'si_1' }] } };
     const res = makeRes();
     await handler(post({ ...body, target_plan: 'pro' }), res);
     expect(res.statusCode).toBe(200);
     expect(res.body.instant).toBe(true);
     expect(h.stripe.subscriptions.update).toHaveBeenCalled();
+    // the resolved card is pinned so the next renewal has something to charge
+    expect(h.stripe.subscriptions.update.mock.calls[0][1].default_payment_method).toBe('pm_1');
+  });
+
+  // Regression: an abandoned checkout persists stripe_subscription_id before the
+  // card is confirmed, leaving a trialing/incomplete subscription. Swapping on
+  // that handed out a paid plan with no card — visible on the annual toggle,
+  // where the current plan no longer matches so the button stays clickable.
+  it('trialing subscription with no card anywhere → asks for the card, does NOT swap', async () => {
+    h.clientRow.stripe_subscription_id = 'sub_old';
+    h.existingSub = { id: 'sub_old', status: 'trialing', items: { data: [{ id: 'si_1' }] } };
+    h.customerCards = [];
+    const res = makeRes();
+    await handler(post({ ...body, target_plan: 'pro', billing_period: 'annual' }), res);
+    expect(res.statusCode).toBe(200);
+    expect(res.body.requires_card_first).toBe(true);
+    expect(res.body.mode).toBe('setup');
+    expect(res.body.client_secret).toBe('seti_new');
+    expect(res.body.instant).toBeUndefined();
+    expect(h.stripe.subscriptions.update).not.toHaveBeenCalled();
+  });
+
+  it('trialing subscription reuses its pending setup-intent rather than making a new one', async () => {
+    h.clientRow.stripe_subscription_id = 'sub_old';
+    h.existingSub = {
+      id: 'sub_old', status: 'trialing', items: { data: [{ id: 'si_1' }] },
+      pending_setup_intent: { client_secret: 'seti_pending' },
+    };
+    const res = makeRes();
+    await handler(post({ ...body, target_plan: 'pro', billing_period: 'annual' }), res);
+    expect(res.body.client_secret).toBe('seti_pending');
+    expect(h.stripe.setupIntents.create).not.toHaveBeenCalled();
+  });
+
+  it('card attached to the customer only → swap proceeds and pins it', async () => {
+    h.clientRow.stripe_subscription_id = 'sub_old';
+    h.existingSub = { id: 'sub_old', status: 'trialing', items: { data: [{ id: 'si_1' }] } };
+    h.customerCards = [{ id: 'pm_from_customer' }];
+    const res = makeRes();
+    await handler(post({ ...body, target_plan: 'pro', billing_period: 'annual' }), res);
+    expect(res.body.instant).toBe(true);
+    expect(h.stripe.subscriptions.update.mock.calls[0][1].default_payment_method).toBe('pm_from_customer');
   });
 });
