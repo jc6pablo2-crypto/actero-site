@@ -30,10 +30,14 @@ const supabase = createClient(
 
 // Mirror the engine's provider + model resolution so we test what production
 // actually uses (see llm-client.js / claude-client.js / openai-client.js).
-const LLM_PROVIDER = (process.env.LLM_PROVIDER || 'anthropic').toLowerCase()
+const LLM_PROVIDER = (process.env.LLM_PROVIDER || 'openrouter').toLowerCase()
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-5'
 const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-5.4-mini'
-const ACTIVE_MODEL = LLM_PROVIDER === 'openai' ? OPENAI_MODEL : CLAUDE_MODEL
+// OpenRouter ids are namespaced (`vendor/model`) — mirror openai-client.js.
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'anthropic/claude-sonnet-5'
+const ACTIVE_MODEL = LLM_PROVIDER === 'openai' ? OPENAI_MODEL
+  : LLM_PROVIDER === 'openrouter' ? OPENROUTER_MODEL
+  : CLAUDE_MODEL
 
 async function checkClaude() {
   const key = process.env.ANTHROPIC_API_KEY
@@ -97,7 +101,44 @@ async function checkOpenAI() {
   }
 }
 
-const checkLLM = () => (LLM_PROVIDER === 'openai' ? checkOpenAI() : checkClaude())
+// OpenRouter: same probe as OpenAI — list the served models and confirm the
+// configured namespaced id is there. Catches key-invalid / model-retired /
+// wrong-namespace, which is the whole point of this job, and the endpoint is
+// free so the 5-minute cadence costs nothing.
+async function checkOpenRouter() {
+  const key = process.env.OPENROUTER_API_KEY
+  if (!key) return { ok: false, detail: 'OPENROUTER_API_KEY unset' }
+
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 8000)
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/models', {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${key}` },
+      signal: controller.signal,
+    })
+    if (!res.ok) {
+      const body = await res.text().catch(() => '')
+      return { ok: false, detail: `OpenRouter API ${res.status}: ${body.slice(0, 200)}` }
+    }
+    const data = await res.json().catch(() => null)
+    const ids = (data?.data || []).map((m) => m.id)
+    if (!ids.includes(OPENROUTER_MODEL)) {
+      return { ok: false, detail: `OpenRouter model "${OPENROUTER_MODEL}" not served` }
+    }
+    return { ok: true }
+  } catch (err) {
+    return { ok: false, detail: `OpenRouter fetch failed (model ${OPENROUTER_MODEL}): ${err.message}` }
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
+const checkLLM = () => (
+  LLM_PROVIDER === 'openai' ? checkOpenAI()
+    : LLM_PROVIDER === 'openrouter' ? checkOpenRouter()
+      : checkClaude()
+)
 
 async function checkDb() {
   const { error } = await supabase.from('clients').select('id', { count: 'exact', head: true }).limit(1)

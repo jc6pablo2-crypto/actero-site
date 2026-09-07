@@ -23,9 +23,10 @@ const { callLLM } = await import('./llm-client.js')
 beforeEach(() => { calls.claude = []; calls.openai = []; calls.openrouter = []; behavior.openaiThrows = false })
 
 describe('callLLM override', () => {
-  it('defaults to anthropic (env LLM_PROVIDER unset in tests)', async () => {
+  it('defaults to openrouter (env LLM_PROVIDER unset in tests)', async () => {
     const r = await callLLM({ systemPrompt: 's', messages: [] })
-    expect(r.provider).toBe('claude')
+    expect(r.provider).toBe('openrouter')
+    expect(calls.claude).toHaveLength(0)
     expect(calls.openai).toHaveLength(0)
   })
 
