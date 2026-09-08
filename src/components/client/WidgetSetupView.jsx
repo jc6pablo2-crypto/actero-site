@@ -142,6 +142,18 @@ export const WidgetSetupView = ({ clientId }) => {
     }
   }
 
+  // `loading` démarre à true et seul l'effet ci-dessus le libère — or l'effet
+  // sort immédiatement quand clientId est absent. Sans cette garde explicite,
+  // l'écran restait sur « Chargement… » indéfiniment (le dashboard rendait ses
+  // onglets avant d'avoir résolu le client).
+  if (!clientId) {
+    return (
+      <div className="flex items-center justify-center py-20 text-[#71717a]">
+        Votre espace est en cours de préparation. Rechargez la page dans un instant.
+      </div>
+    )
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20 text-[#71717a]">

@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FEATURES } from '../config/features.js'
 import { consumeShopifyClaim } from '../lib/shopify-claim.js'
+import { resolveOrCreateClientId } from '../lib/resolve-client'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -246,7 +247,22 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
         .eq("owner_user_id", session.user.id)
         .maybeSingle();
       if (error) throw error;
-      return data ? { ...data, _userRole: 'owner' } : null;
+      if (data) return { ...data, _userRole: 'owner' };
+
+      // Aucun client : première connexion d'un compte qui n'est pas passé par
+      // api/auth/verify-code — typiquement une inscription Google, où le
+      // trigger handle_new_user ne crée qu'une ligne `profiles`. Sans cette
+      // création, currentClient reste null, les 32 vues du dashboard reçoivent
+      // un clientId undefined, et celles qui attendent leurs données restent
+      // bloquées sur leur écran de chargement.
+      const createdId = await resolveOrCreateClientId(supabase, session);
+      const { data: created, error: createdErr } = await supabase
+        .from("clients")
+        .select("id, brand_name, owner_user_id, created_at, client_type")
+        .eq("id", createdId)
+        .maybeSingle();
+      if (createdErr) throw createdErr;
+      return created ? { ...created, _userRole: 'owner' } : null;
     },
     enabled: !!supabase,
   });
@@ -1111,6 +1127,17 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
               <span className="sr-only">Chargement…</span>
             </div>
           }>
+          {clientLoading ? (
+            /* Aucun onglet n'est rendu avant que le client soit résolu. Sinon
+               les vues reçoivent un clientId undefined, et celles qui
+               initialisent leur état de chargement à true sans le remettre à
+               false dans leur garde restent bloquées pour toujours — c'était le
+               « Chargement… » infini de Ma bulle SAV. */
+            <div className="flex items-center justify-center py-20 text-[#71717a]" role="status" aria-live="polite">
+              <div className="w-8 h-8 border-2 border-cta/20 border-t-cta rounded-full animate-spin mr-3" aria-hidden="true" />
+              Préparation de votre espace…
+            </div>
+          ) : (
           <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -1459,6 +1486,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           )}
           </motion.div>
           </AnimatePresence>
+          )}
           </Suspense>
           </TabErrorBoundary>
 
