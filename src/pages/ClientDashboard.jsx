@@ -61,6 +61,7 @@ import { MockConversation } from '../components/dashboard/MockConversation'
 import confetti from 'canvas-confetti'
 import { SetupWizard } from '../components/client/SetupWizard'
 import { OverviewHome } from '../components/client/overview/OverviewHome'
+import { AujourdhuiHome } from '../components/client/overview/AujourdhuiHome'
 import { AchievementsToast } from '../components/client/AchievementsView'
 import ProductTour from '../components/client/ProductTour'
 
@@ -1202,6 +1203,14 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                     <MockConversation />
                   </div>
                 </>
+              ) : FEATURES.aujourdhuiHome ? (
+                // Direction « La nuit imprimée » — voir AujourdhuiHome.jsx.
+                // FEATURES.aujourdhuiHome = false restaure l'écran ci-dessous.
+                <AujourdhuiHome
+                  clientId={currentClient?.id}
+                  planName={planName}
+                  setActiveTab={setActiveTab}
+                />
               ) : (
                 // ═══════════════════════ OPERATION MODE ═══════════════════════
                 // Refonte avril 2026 : 10 blocs empilés → 3 zones hiérarchisées

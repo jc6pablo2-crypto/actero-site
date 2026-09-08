@@ -21,6 +21,13 @@ export const FEATURES = {
   portalSav: false,       // "Portail SAV" tab
   analyticsHub: false,    // "Insights" + "Heures de pic" group
 
+  // ── Refonte visuelle ──
+  // Remplace l'accueil narratif (OverviewHome) par l'écran « Aujourd'hui »,
+  // direction « La nuit imprimée ». Styles cantonnés dans un CSS Module : la
+  // bascule ne touche ni les tokens globaux ni les autres vues, et un false
+  // ici restaure l'ancien écran sans rien d'autre à défaire.
+  aujourdhuiHome: true,
+
   // ── Public marketing surfaces for not-yet-live programs ──
   marketplace: false,     // /marketplace
   academy: false,         // /academy
