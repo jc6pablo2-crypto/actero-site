@@ -28,11 +28,15 @@
 
   color-scheme: light;
 
-  /* ── Surfaces ── */
-  --papier:#E5E9E0;
-  --feuille:#FBFCF9;
+  /* ── Surfaces ──
+     Le papier est celui des autres onglets (#F7F5F0, cf. <main> du dashboard) :
+     aucune couture entre la vue et la coquille. La feuille est blanche comme
+     les cartes du produit, ce qui lui suffit pour ressortir du crème. Seule
+     la feuille grave reste un accent sombre assumé. */
+  --papier:#F7F5F0;
+  --feuille:#FFFFFF;
   --grave:#0B3D25;
-  --lavis:#DCE1D6;
+  --lavis:#EFEBE1;
 
   /* ── Encres ── */
   --encre:#14231C;
@@ -49,14 +53,16 @@
   --laiton-clair:#C4AC6E;
   --grenat:#6E2B27;        /* la seule alerte : un client qui rompt */
 
-  /* ── Filets ── */
-  --filet:#D2D8CB;         /* décoratif */
-  --filet-axe:#788775;     /* porteur de sens ou d'affordance (3,09:1) */
+  /* ── Filets ──
+     Neutres CHAUDS : sur le crème, les anciens gris-vert tiraient au froid. */
+  --filet:#E4DFD4;         /* décoratif */
+  --filet-axe:#8A8071;     /* porteur de sens ou d'affordance (~3:1) */
 
   --focus:#0E653A;
 
-  --ombre:0 1px 0 rgba(20,35,28,.04), 0 18px 34px -22px rgba(20,35,28,.20);
-  --ombre-levee:0 1px 0 rgba(20,35,28,.04), 0 12px 24px -18px rgba(20,35,28,.24);
+  /* ombres chaudes, accordées au crème */
+  --ombre:0 1px 0 rgba(70,58,40,.04), 0 18px 34px -22px rgba(70,58,40,.18);
+  --ombre-levee:0 1px 0 rgba(70,58,40,.04), 0 12px 24px -18px rgba(70,58,40,.22);
 
   --font-serif:"Spectral", Georgia, "Times New Roman", serif;
   --font-sans:"Archivo", system-ui, "Segoe UI", Helvetica, sans-serif;
@@ -519,7 +525,7 @@
 
 /* le versant du bas est mesurablement moins éclairé */
 .souspli{
-  background:rgba(20,35,28,.028);
+  background:var(--lavis);
   margin:0 -48px 0 -40px;
   padding:40px 48px 88px 40px;
 }
