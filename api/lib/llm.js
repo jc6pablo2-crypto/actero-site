@@ -11,7 +11,7 @@
  *   { type: 'text', text }         → text
  *   { type: 'image', url }         → image (translated to each provider's shape)
  */
-const PROVIDER = (process.env.LLM_PROVIDER || 'anthropic').toLowerCase()
+const PROVIDER = (process.env.LLM_PROVIDER || 'openrouter').toLowerCase()
 const CLAUDE_MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-5'
 const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-5.4-mini'
 const OPENAI_REASONING_EFFORT = process.env.OPENAI_REASONING_EFFORT || 'none'
@@ -20,10 +20,11 @@ const OPENAI_REASONING_EFFORT = process.env.OPENAI_REASONING_EFFORT || 'none'
 const CLAUDE_FAST_MODEL = process.env.CLAUDE_FAST_MODEL || 'claude-haiku-4-5'
 const OPENAI_FAST_MODEL = process.env.OPENAI_FAST_MODEL || 'gpt-5.4-nano'
 
-// OpenRouter — OpenAI-compatible gateway (separate credit pool). Model ids are
-// namespaced (`vendor/model`); defaults mirror our OpenAI tier so flipping
-// LLM_PROVIDER=openrouter keeps the same quality. Override via env.
-const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || `openai/${OPENAI_MODEL}`
+// OpenRouter — OpenAI-compatible gateway and our default provider. Model ids
+// are namespaced (`vendor/model`). Main tier is Sonnet 5: $2/$10 per 1M on
+// OpenRouter, i.e. cheaper than Sonnet 4.5 for the same tier. The fast tier
+// stays on the cheap OpenAI classifier — it only answers binary flags.
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'anthropic/claude-sonnet-5'
 const OPENROUTER_FAST_MODEL = process.env.OPENROUTER_FAST_MODEL || `openai/${OPENAI_FAST_MODEL}`
 
 const OPENAI_CFG = {

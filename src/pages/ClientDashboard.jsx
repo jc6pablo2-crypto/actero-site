@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FEATURES } from '../config/features.js'
+import { consumeShopifyClaim } from '../lib/shopify-claim.js'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -61,6 +62,7 @@ import { MockConversation } from '../components/dashboard/MockConversation'
 import confetti from 'canvas-confetti'
 import { SetupWizard } from '../components/client/SetupWizard'
 import { OverviewHome } from '../components/client/overview/OverviewHome'
+import { AujourdhuiHome } from '../components/client/overview/AujourdhuiHome'
 import { AchievementsToast } from '../components/client/AchievementsView'
 import ProductTour from '../components/client/ProductTour'
 
@@ -508,9 +510,25 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     : 0;
   // Setup mode while fewer than 5 steps complete.
   // During first load (setupCompletion undefined) we assume setup mode for brand-new clients (<3 days old).
+  // L'écran Aujourd'hui peint sa propre feuille : il lui faut toute la zone,
+  // sans le padding de <main> ni le max-w-6xl qui en faisaient une île.
   const isSetupMode = setupCompletion
     ? completedSetupSteps < 5
     : !!(currentClient?.created_at && (clientNow - new Date(currentClient.created_at).getTime()) < 3 * 24 * 60 * 60 * 1000);
+
+  const pleinePage = FEATURES.aujourdhuiHome && activeTab === 'overview' && !isSetupMode;
+
+  // Un marchand venu de l'App Store crée son compte, puis atterrit ici : c'est
+  // le moment où le jeton mémorisé rattache enfin sa boutique. Idempotent côté
+  // serveur, donc sans risque à chaque montage.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { status } = await consumeShopifyClaim(supabase);
+      if (!cancelled && status === 'done') window.location.reload();
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   // SetupWizard visibility flipper — `showSetupWizard` itself is declared
   // earlier (near the tour effect that reads it). This effect re-checks
@@ -1082,7 +1100,10 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           </div>
         )}
 
-        <main id="main-content" className="flex-1 overflow-y-auto p-4 md:px-10 md:py-8 bg-[#F7F5F0]">
+        <main
+          id="main-content"
+          className={`flex-1 overflow-y-auto bg-[#F7F5F0] ${pleinePage ? '' : 'p-4 md:px-10 md:py-8'}`}
+        >
           <TabErrorBoundary tabId={activeTab} resetKey={activeTab} tabLabel={activeTab}>
           <Suspense fallback={
             <div className="flex items-center justify-center py-20" role="status" aria-live="polite">
@@ -1099,7 +1120,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             transition={{ duration: 0.25, ease: 'easeOut' }}
           >
           {activeTab === "overview" && (
-            <div className="max-w-6xl mx-auto">
+            <div className={pleinePage ? '' : 'max-w-6xl mx-auto'}>
 
               {isSetupMode ? (
                 // ═══════════════════════ SETUP MODE ═══════════════════════
@@ -1202,6 +1223,14 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
                     <MockConversation />
                   </div>
                 </>
+              ) : FEATURES.aujourdhuiHome ? (
+                // Direction « La nuit imprimée » — voir AujourdhuiHome.jsx.
+                // FEATURES.aujourdhuiHome = false restaure l'écran ci-dessous.
+                <AujourdhuiHome
+                  clientId={currentClient?.id}
+                  planName={planName}
+                  setActiveTab={setActiveTab}
+                />
               ) : (
                 // ═══════════════════════ OPERATION MODE ═══════════════════════
                 // Refonte avril 2026 : 10 blocs empilés → 3 zones hiérarchisées

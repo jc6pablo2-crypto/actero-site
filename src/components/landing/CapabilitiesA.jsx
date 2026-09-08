@@ -22,7 +22,7 @@ import { FadeInUp } from '../ui/scroll-animations'
  *   + icon scale+rotate on hover + metric scale on hover
  */
 export const CapabilitiesA = () => {
-  const serif = { fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)' }
+  const serif = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
   const prefersReducedMotion = useReducedMotion()
 
   const caps = [

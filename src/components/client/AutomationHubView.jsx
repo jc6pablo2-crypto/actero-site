@@ -84,7 +84,7 @@ const AutomationHubHeader = ({ activeCount, totalAvailable, weekTickets, monthHo
             Mon{' '}
             <span
               className="italic font-normal"
-              style={{ fontFamily: "'Instrument Serif', Georgia, serif" }}
+              style={{ fontFamily: "'Spectral', Georgia, serif" }}
             >
               agent
             </span>

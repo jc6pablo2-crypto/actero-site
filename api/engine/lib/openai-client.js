@@ -15,8 +15,8 @@
  * OpenRouter (https://openrouter.ai) exposes the exact same Chat Completions
  * API, so `callOpenRouter` reuses this client verbatim — only the endpoint,
  * API key, attribution headers and the (namespaced) model id differ. This lets
- * us spend the OpenRouter credit pool by flipping LLM_PROVIDER=openrouter, with
- * no other code change.
+ * OpenRouter is the default provider (LLM_PROVIDER), so the engine spends the
+ * OpenRouter credit pool unless told otherwise.
  *
  * Wrapped in a Braintrust span — fail-soft, never blocks.
  */
@@ -32,10 +32,10 @@ const TIMEOUT_MS = 8000
 
 // ── OpenRouter — OpenAI-compatible gateway (separate credit pool) ──
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY
-// OpenRouter model ids are namespaced (`vendor/model`). Default mirrors our
-// OpenAI model so switching credit pools keeps the same quality tier; override
-// with OPENROUTER_MODEL (e.g. `anthropic/claude-sonnet-4.5`).
-const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || `openai/${MODEL}`
+// OpenRouter model ids are namespaced (`vendor/model`). Sonnet 5 is the engine
+// default — $2/$10 per 1M on OpenRouter, cheaper than Sonnet 4.5 at equal tier.
+// Override with OPENROUTER_MODEL.
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'anthropic/claude-sonnet-5'
 // Optional attribution (OpenRouter rankings) — harmless if unset.
 const OPENROUTER_SITE_URL = process.env.OPENROUTER_SITE_URL || 'https://actero.fr'
 const OPENROUTER_APP_NAME = process.env.OPENROUTER_APP_NAME || 'Actero'

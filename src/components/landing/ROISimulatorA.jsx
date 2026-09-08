@@ -8,7 +8,7 @@ import { FadeInUp } from '../ui/scroll-animations'
  * — Gauche : 2 sliders (tickets / mois + coût horaire SAV) avec gros
  *   chiffres tabular-nums 44px, accent cta
  * — Droite : panel dark #003725 avec résumé — gros chiffre économies
- *   mensuelles en Instrument Serif 72px + détail lignes + ROI multiplier
+ *   mensuelles en Spectral 72px + détail lignes + ROI multiplier
  *   panneau green A8C490
  */
 export const ROISimulatorA = () => {
@@ -24,7 +24,7 @@ export const ROISimulatorA = () => {
   const plan = 399
   const multiplier = Math.max(1, Math.round(total / plan))
 
-  const serif = { fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)' }
+  const serif = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
   const labelCls =
     'text-[12px] font-semibold text-[#716D5C] uppercase tracking-[0.1em]'
   const valueCls =

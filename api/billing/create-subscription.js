@@ -35,6 +35,30 @@ const PRICES = {
 
 const PLAN_ORDER = ['free', 'starter', 'pro', 'enterprise'];
 
+/**
+ * The card Stripe would actually charge for this subscription, or null.
+ * Checks the subscription default, then the customer's invoice default, then
+ * any card attached to the customer. Returns the id so the caller can pin it as
+ * the subscription default in the same update it already makes.
+ */
+async function resolveCustomerCard(stripe, subscription, customerId) {
+  const subDefault = subscription?.default_payment_method;
+  if (subDefault) return typeof subDefault === 'string' ? subDefault : subDefault.id;
+
+  try {
+    const customer = await stripe.customers.retrieve(customerId);
+    const invoiceDefault = customer?.invoice_settings?.default_payment_method;
+    if (invoiceDefault) return typeof invoiceDefault === 'string' ? invoiceDefault : invoiceDefault.id;
+  } catch { /* fall through */ }
+
+  try {
+    const list = await stripe.paymentMethods.list({ customer: customerId, type: 'card', limit: 1 });
+    return list?.data?.[0]?.id || null;
+  } catch {
+    return null;
+  }
+}
+
 async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -131,18 +155,48 @@ async function handler(req, res) {
       name: client.brand_name,
     });
 
-    // --- Existing active subscription → instant price swap (no card needed) ---
+    // --- Existing subscription → price swap, but only with a card on file ---
+    // stripe_subscription_id is persisted as soon as the subscription is
+    // created, i.e. BEFORE the card is confirmed (see below). An abandoned
+    // checkout therefore leaves a trialing/incomplete subscription behind, and
+    // 'swappable' happily accepts those statuses — so a second plan click used
+    // to swap the price and activate a paid plan for someone who never entered
+    // a card. Resolve a payment method first; when there is none, collect one
+    // instead of swapping.
     const existingSubId = client.stripe_subscription_id;
     if (existingSubId) {
       try {
-        const subscription = await stripe.subscriptions.retrieve(existingSubId);
+        const subscription = await stripe.subscriptions.retrieve(existingSubId, {
+          expand: ['default_payment_method', 'pending_setup_intent'],
+        });
         const swappable = subscription
           && !['canceled', 'incomplete_expired'].includes(subscription.status);
         const currentItem = subscription?.items?.data?.[0];
         if (swappable && currentItem) {
+          const cardId = await resolveCustomerCard(stripe, subscription, stripeCustomerId);
+
+          if (!cardId) {
+            // Nothing to charge with. Leave Stripe and the DB untouched and ask
+            // the front for a card; it re-calls this endpoint afterwards, which
+            // then lands on the swap below with the card attached.
+            const clientSecret = subscription.pending_setup_intent?.client_secret
+              || (await stripe.setupIntents.create({
+                customer: stripeCustomerId,
+                usage: 'off_session',
+                metadata: { client_id, target_plan, billing_period },
+              })).client_secret;
+            return res.status(200).json({
+              subscription_id: subscription.id,
+              mode: 'setup',
+              client_secret: clientSecret,
+              requires_card_first: true,
+            });
+          }
+
           await stripe.subscriptions.update(existingSubId, {
             items: [{ id: currentItem.id, price: priceId }],
             proration_behavior: 'create_prorations',
+            default_payment_method: cardId,
             metadata: { client_id, actero_client_id: client_id, upgrade_from: currentPlan, upgrade_to: target_plan },
           });
           await supabaseAdmin.from('clients')

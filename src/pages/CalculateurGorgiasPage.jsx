@@ -20,7 +20,7 @@ export const CalculateurGorgiasPage = ({ onNavigate }) => {
     trackEvent('CostCalculator_Page_Viewed', { source: 'standalone' })
   }, [])
 
-  const serif = { fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)' }
+  const serif = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
 
   const schema = [
     {
