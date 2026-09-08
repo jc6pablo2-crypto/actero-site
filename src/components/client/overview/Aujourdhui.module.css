@@ -64,9 +64,10 @@
   --ombre:0 1px 0 rgba(70,58,40,.04), 0 18px 34px -22px rgba(70,58,40,.18);
   --ombre-levee:0 1px 0 rgba(70,58,40,.04), 0 12px 24px -18px rgba(70,58,40,.22);
 
-  --font-serif:"Spectral", Georgia, "Times New Roman", serif;
-  --font-sans:"Archivo", system-ui, "Segoe UI", Helvetica, sans-serif;
-  --font-mono:"Fragment Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  /* La vue n'impose plus ses propres familles : elle prend celles de l'app.
+     --font-sans et --font-mono ne sont pas redéfinis ici, ils cascadent depuis
+     le :root de Tailwind. --font-serif pointe sur le token de titrage. */
+  --font-serif:var(--font-display);
 }
 
 :where(.root) :is(*,*::before,*::after){ box-sizing:border-box; }
@@ -407,7 +408,7 @@
   font-family:var(--font-sans); font-weight:500; font-size:.8125rem;
   line-height:16px; color:#FFFFFF;
   background:var(--vert);
-  padding:12px 18px; border-radius:2px;
+  padding:12px 24px; border-radius:9999px;
   cursor:pointer;
   transition:background-color 120ms ease-out;
 }

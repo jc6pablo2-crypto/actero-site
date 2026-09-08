@@ -37,7 +37,7 @@ import { TalkToHumanButton } from '../components/ui/TalkToHumanButton'
  * — Capabilities : 2 cards sur 4 (Agent vocal + Éditeur ton retirés),
  *   les 2 restantes remplissent l'espace
  *
- * Typo : Instrument Serif pour tous les h1/h2 (font-normal + italic suffix
+ * Typo : Spectral pour tous les h1/h2 (font-normal + italic suffix
  * muted sur la 2e ligne). Inter pour corps. DM Mono pour data accents.
  */
 /* TASK 5: reusable section scroll-reveal wrapper */
@@ -107,7 +107,7 @@ export const LandingPage = ({ onNavigate }) => {
     },
   ]
 
-  const serif = { fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)' }
+  const serif = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
 
   const landingSchema = [
     {

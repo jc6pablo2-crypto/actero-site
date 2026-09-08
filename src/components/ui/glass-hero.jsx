@@ -10,11 +10,12 @@ import { trackEvent } from '../../lib/analytics'
  * colours + French: announcement pill → bold headline with a serif-italic gold
  * accent → subtitle → an interactive AI prompt box → dashboard preview.
  */
-// Hero UI font — Geist (clean geometric grotesque, Exa/Vercel-style).
-const heroFont = { fontFamily: '"Geist", var(--font-sans, "DM Sans"), system-ui, sans-serif' }
+// Hero UI font — la sans de l'app, pour que le hero ne soit pas la seule
+// surface à parler une autre langue typographique.
+const heroFont = { fontFamily: 'var(--font-sans, "DM Sans"), system-ui, sans-serif' }
 
 export const GlassHero = ({ onNavigate }) => {
-  const fontDisplay = { fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)' }
+  const fontDisplay = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
 
   return (
     <section className="relative bg-white pt-36 md:pt-44 pb-16 px-6 overflow-hidden">

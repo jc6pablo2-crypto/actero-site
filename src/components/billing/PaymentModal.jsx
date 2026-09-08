@@ -3,7 +3,7 @@ import { Elements, PaymentElement, LinkAuthenticationElement, useStripe, useElem
 import { Check, Loader2, Lock, ShieldCheck, X } from 'lucide-react'
 import { getStripe } from '../../lib/stripe-client'
 
-const SERIF = { fontFamily: 'Instrument Serif, Georgia, serif' }
+const SERIF = { fontFamily: 'Spectral, Georgia, serif' }
 
 const APPEARANCE = {
   theme: 'stripe',

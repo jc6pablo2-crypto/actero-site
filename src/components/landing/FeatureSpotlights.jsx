@@ -14,7 +14,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { FadeInUp } from '../ui/scroll-animations'
 import { Logo } from '../layout/Logo'
 
-const serif = { fontFamily: 'var(--font-display, "Instrument Serif", Georgia, serif)' }
+const serif = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
 
 /**
  * Spotlight — layout partagé pour une section "feature" en split :
