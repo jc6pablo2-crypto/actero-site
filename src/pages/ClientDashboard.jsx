@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FEATURES } from '../config/features.js'
+import { consumeShopifyClaim } from '../lib/shopify-claim.js'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -516,6 +517,18 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     : !!(currentClient?.created_at && (clientNow - new Date(currentClient.created_at).getTime()) < 3 * 24 * 60 * 60 * 1000);
 
   const pleinePage = FEATURES.aujourdhuiHome && activeTab === 'overview' && !isSetupMode;
+
+  // Un marchand venu de l'App Store crée son compte, puis atterrit ici : c'est
+  // le moment où le jeton mémorisé rattache enfin sa boutique. Idempotent côté
+  // serveur, donc sans risque à chaque montage.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { status } = await consumeShopifyClaim(supabase);
+      if (!cancelled && status === 'done') window.location.reload();
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   // SetupWizard visibility flipper — `showSetupWizard` itself is declared
   // earlier (near the tour effect that reads it). This effect re-checks
