@@ -63,16 +63,16 @@
   --font-mono:"Fragment Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
-.root *, .root *::before, .root *::after{ box-sizing:border-box; }
+:where(.root) :is(*,*::before,*::after){ box-sizing:border-box; }
 
 
 
-.root p, .root h1, .root h2, .root h3, .root figure, .root blockquote, .root ul, .root ol{ margin:0; padding:0; }
-.root ul{ list-style:none; }
-.root button{ font:inherit; color:inherit; background:none; border:0; }
-.root a{ color:inherit; }
+:where(.root) :is(p,h1,h2,h3,figure,blockquote,ul,ol){ margin:0; padding:0; }
+:where(.root) ul{ list-style:none; }
+:where(.root) button{ font:inherit; color:inherit; background:none; border:0; }
+:where(.root) a{ color:inherit; }
 
-.root :focus-visible{
+:where(.root) :focus-visible{
   outline:2px solid var(--focus);
   outline-offset:3px;
 }
@@ -580,7 +580,7 @@
 /* ═══════════════════ RÉDUCTION DE MOUVEMENT ═══════════════════ */
 
 @media (prefers-reduced-motion: reduce){
-  .root *, .root *::before, .root *::after{ transition:none !important; animation:none !important; }
+  :where(.root) :is(*,*::before,*::after){ transition:none !important; animation:none !important; }
 }
 
 /* ═══════════════════ RUPTURES — un seul composant ═══════════════════ */

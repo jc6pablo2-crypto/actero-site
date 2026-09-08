@@ -188,6 +188,9 @@ export function AujourdhuiHome({ clientId, planName, setActiveTab }) {
   const grave = (e) => e?.priority === 1 || e?.classification === 'reclamation'
 
   const enMots = ['Aucun', 'Un', 'Deux', 'Trois', 'Quatre', 'Cinq', 'Six'][nEsc] || String(nEsc)
+  // Nuit sans trafic ET sans décision : le peigne n'a rien à peigner, et un
+  // axe de 312 px sans un seul trait se lit comme un écran cassé.
+  const vide = regles.length === 0 && nEsc === 0
 
   return (
     <div className={styles.root}>
@@ -227,6 +230,7 @@ export function AujourdhuiHome({ clientId, planName, setActiveTab }) {
         <div className={styles.clot} role="presentation" />
 
         {/* ── Le peigne de nuit ── */}
+        {regles.length > 0 && (
         <section className={`${styles.bloc} ${styles['bloc--axe']} ${styles.peigne}`} aria-labelledby="peigne-t">
           <h2 id="peigne-t" className={styles['sr-only']}>Charge de la nuit, heure par heure</h2>
 
@@ -266,6 +270,43 @@ export function AujourdhuiHome({ clientId, planName, setActiveTab }) {
             <tfoot><tr><th scope="row">Total</th><td>{regles.length}</td></tr></tfoot>
           </table>
         </section>
+        )}
+
+        {vide && (
+          <>
+            <div className={styles.bloc}>
+              <p className={styles.legende}>
+                Rien n’est passé par l’agent depuis vingt heures. Si votre bulle est en ligne et
+                que vous attendiez du trafic, c’est le premier signe à regarder.
+              </p>
+            </div>
+
+            <article className={`${styles.bloc} ${styles['bloc--axe']} ${styles.esc} ${styles.note}`}>
+              <div className={styles.gout}>
+                <span className={styles.epingle} aria-hidden="true" />
+              </div>
+              <div className={styles.feuille}>
+                <p className={styles.chapeau}><span>Vérifier que l’agent répond</span></p>
+                <p className={styles['note-t']}>
+                  Un essai suffit à distinguer les deux cas : un agent qui n’a rien reçu, et un
+                  agent qui ne répond plus.
+                </p>
+                <div className={styles.motif}>
+                  <Amark />
+                  <p>une nuit vide n’est une bonne nouvelle que si la bulle est bien en ligne</p>
+                </div>
+                <div className={styles.actes}>
+                  <button type="button" className={styles['acte-1']} onClick={() => setActiveTab?.('simulator')}>
+                    Tester mon agent
+                  </button>
+                  <button type="button" className={styles['acte-2']} onClick={() => setActiveTab?.('widget')}>
+                    Voir ma bulle SAV
+                  </button>
+                </div>
+              </div>
+            </article>
+          </>
+        )}
 
         {nEsc > 0 && (
           <>
@@ -344,20 +385,25 @@ export function AujourdhuiHome({ clientId, planName, setActiveTab }) {
           </>
         )}
 
+        {!vide && (
         <div className={`${styles.bloc} ${styles['bloc--axe']} ${styles.terminus}`}>
           <div className={styles.gout}><span className={styles.repere} aria-hidden="true" /></div>
           <p className={styles.maintenant}>Maintenant · {hhmm(now.toISOString())}</p>
         </div>
+        )}
 
-        {/* ── Le pli ── */}
+        {/* ── Le pli — seulement s'il y a quelque chose dessous ── */}
+        {(registre.length > 0 || appris) && (
         <div className={styles['pli-wrap']}>
           <svg className={styles.pli} viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true">
             <path className={styles.crete} d="M0 3 Q500 1 1000 3" strokeWidth="1" fill="none" vectorEffect="non-scaling-stroke" />
             <path className={styles.creux} d="M0 4 Q500 2 1000 4" strokeWidth="1" fill="none" vectorEffect="non-scaling-stroke" />
           </svg>
         </div>
+        )}
 
-        {/* ── Sous le pli ── */}
+        {/* ── Sous le pli — la bande n'est peinte que s'il y a quelque chose ── */}
+        {(registre.length > 0 || appris) && (
         <section className={styles.souspli}>
           {registre.length > 0 && (
             <>
@@ -411,6 +457,7 @@ export function AujourdhuiHome({ clientId, planName, setActiveTab }) {
             </article>
           )}
         </section>
+        )}
 
         {planName && <p className={styles['sr-only']}>Plan {planName}</p>}
       </main>

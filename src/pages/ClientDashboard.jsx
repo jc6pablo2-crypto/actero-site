@@ -509,9 +509,13 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
     : 0;
   // Setup mode while fewer than 5 steps complete.
   // During first load (setupCompletion undefined) we assume setup mode for brand-new clients (<3 days old).
+  // L'écran Aujourd'hui peint sa propre feuille : il lui faut toute la zone,
+  // sans le padding de <main> ni le max-w-6xl qui en faisaient une île.
   const isSetupMode = setupCompletion
     ? completedSetupSteps < 5
     : !!(currentClient?.created_at && (clientNow - new Date(currentClient.created_at).getTime()) < 3 * 24 * 60 * 60 * 1000);
+
+  const pleinePage = FEATURES.aujourdhuiHome && activeTab === 'overview' && !isSetupMode;
 
   // SetupWizard visibility flipper — `showSetupWizard` itself is declared
   // earlier (near the tour effect that reads it). This effect re-checks
@@ -1083,7 +1087,10 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
           </div>
         )}
 
-        <main id="main-content" className="flex-1 overflow-y-auto p-4 md:px-10 md:py-8 bg-[#F7F5F0]">
+        <main
+          id="main-content"
+          className={`flex-1 overflow-y-auto bg-[#F7F5F0] ${pleinePage ? '' : 'p-4 md:px-10 md:py-8'}`}
+        >
           <TabErrorBoundary tabId={activeTab} resetKey={activeTab} tabLabel={activeTab}>
           <Suspense fallback={
             <div className="flex items-center justify-center py-20" role="status" aria-live="polite">
@@ -1100,7 +1107,7 @@ export const ClientDashboard = ({ onNavigate, onLogout, currentRoute }) => {
             transition={{ duration: 0.25, ease: 'easeOut' }}
           >
           {activeTab === "overview" && (
-            <div className="max-w-6xl mx-auto">
+            <div className={pleinePage ? '' : 'max-w-6xl mx-auto'}>
 
               {isSetupMode ? (
                 // ═══════════════════════ SETUP MODE ═══════════════════════
