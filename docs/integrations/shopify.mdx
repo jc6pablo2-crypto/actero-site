@@ -23,7 +23,12 @@ Actero est listée sur le Shopify App Store. L'installation est gratuite et pass
     Shopify affiche deux blocs distincts : les permissions **requises** (sans elles, l'agent ne peut pas fonctionner) et les permissions **optionnelles** (tu peux les décliner — l'agent dégradera gracieusement les fonctionnalités concernées). Voir [Scopes demandés](#scopes-demand%C3%A9s).
   </Step>
   <Step title="Approuve l'installation">
-    Tu reviens automatiquement sur `actero.fr`. Aucune carte bancaire requise côté Shopify — Actero est facturée séparément depuis ton compte Actero.
+    Tu reviens automatiquement sur `actero.fr`, sur une page qui confirme que ta boutique est connectée. Aucune carte bancaire requise côté Shopify — Actero est facturée séparément depuis ton compte Actero.
+  </Step>
+  <Step title="Crée ton compte Actero (première installation seulement)">
+    Si tu découvres Actero par l'App Store, tu n'as pas encore de compte : la page de confirmation te propose d'en créer un. **Ta boutique se rattache automatiquement au compte dès l'inscription** — tu n'as aucun identifiant de boutique à recopier, aucun jeton à coller.
+
+    Si tu avais déjà un compte Actero, cette étape est sautée : la boutique est rattachée immédiatement et tu arrives directement sur ton dashboard.
   </Step>
   <Step title="Active le widget de chat">
     Le widget est livré comme une **extension de thème** (theme app extension) — Actero ne modifie jamais ton `theme.liquid`. Active-le en un clic depuis **Boutique en ligne → Thèmes → Personnaliser → Widgets d'application (App embeds) → Actero**. Les 30 dernières commandes sont indexées en moins de 20 secondes.
@@ -39,6 +44,7 @@ Si tu n'as pas encore configuré ton agent, regarde le [quickstart](/essentials/
 Une fois installée, Actero apparaît dans **Apps** dans ton Shopify Admin. Cliquer dessus t'envoie automatiquement vers le bon endroit :
 
 - **Boutique déjà connectée** → redirection directe vers ton dashboard Actero
+- **Boutique connectée mais pas encore rattachée à un compte** → page de confirmation avec la création de compte
 - **Première fois** → relance du flow OAuth pour finaliser l'install
 
 Tu n'as donc jamais à coller manuellement une URL : Shopify Admin reste ton point d'entrée.
@@ -165,6 +171,9 @@ Les conversations passées restent dans ton historique pour des raisons RGPD (ex
 <AccordionGroup>
   <Accordion title="Actero est-elle listée sur le Shopify App Store ?">
     Oui. L'installation passe par le flow OAuth officiel Shopify, ce qui te garantit que les scopes sont visibles, révocables à tout moment et auditables depuis Shopify Admin → **Apps → Actero → Voir les détails de l'app**.
+  </Accordion>
+  <Accordion title="J'ai installé l'app mais je n'ai pas créé mon compte tout de suite. C'est perdu ?">
+    Non. Le rattachement de ta boutique reste valable **30 jours** après l'installation. Reviens sur la page de confirmation depuis **Shopify Admin → Apps → Actero**, crée ton compte, et la boutique se rattache. Passé ce délai, il suffit de relancer l'installation depuis Shopify Admin.
   </Accordion>
   <Accordion title="Combien de temps pour indexer toute ma boutique ?">
     Les 30 dernières commandes sont indexées en ~20 secondes (immédiat). L'indexation complète (catalogue, clients, historique 12 mois) prend de 2 à 30 minutes selon la taille de ta boutique. Tu reçois une notification dans le dashboard quand c'est fini.
