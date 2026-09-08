@@ -2,7 +2,8 @@
  * Actero Engine — LLM Client (provider dispatcher)
  *
  * Single entry point for the engine's LLM calls. Picks the provider from
- * LLM_PROVIDER ('anthropic' | 'openai', default 'anthropic') and falls back to
+ * LLM_PROVIDER ('openrouter' | 'anthropic' | 'openai', default 'openrouter')
+ * and falls back to
  * the other provider if the primary fails — so a provider outage (or a retired
  * model id) degrades instead of taking the agent down.
  *
@@ -12,7 +13,7 @@
 import { callClaude } from './claude-client.js'
 import { callOpenAI, callOpenRouter } from './openai-client.js'
 
-const PROVIDER = (process.env.LLM_PROVIDER || 'anthropic').toLowerCase()
+const PROVIDER = (process.env.LLM_PROVIDER || 'openrouter').toLowerCase()
 
 // provider id → client. All three share the same signature/return shape.
 const CLIENTS = {

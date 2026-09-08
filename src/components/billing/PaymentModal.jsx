@@ -28,7 +28,7 @@ function priceLabel(plan, billingPeriod) {
 /**
  * Inner form — must live inside <Elements> so the Stripe hooks resolve.
  */
-function CheckoutForm({ mode, plan, billingPeriod, onSuccess, onClose }) {
+function CheckoutForm({ mode, plan, billingPeriod, requiresCardFirst, onApplyPlan, onSuccess, onClose }) {
   const stripe = useStripe()
   const elements = useElements()
   const [submitting, setSubmitting] = useState(false)
@@ -56,6 +56,18 @@ function CheckoutForm({ mode, plan, billingPeriod, onSuccess, onClose }) {
       setSubmitting(false)
       return
     }
+
+    // The server refused to swap the plan because no card was on file. Now that
+    // one is attached, ask it again — this is what actually applies the plan.
+    if (requiresCardFirst) {
+      const applied = await onApplyPlan?.()
+      if (!applied) {
+        setError("Carte enregistrée, mais le changement de plan a échoué. Réessayez ou contactez le support.")
+        setSubmitting(false)
+        return
+      }
+    }
+
     // No redirect required (3DS not triggered) → success handled on-site.
     onSuccess?.()
   }
@@ -103,23 +115,39 @@ export function PaymentModal({ open, onClose, plan, billingPeriod = 'monthly', h
   const [initError, setInitError] = useState(null)
   const [clientSecret, setClientSecret] = useState(null)
   const [mode, setMode] = useState('payment')
+  const [requiresCardFirst, setRequiresCardFirst] = useState(false)
+
+  const createSubscription = useMemo(() => () => fetch('/api/billing/create-subscription', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ client_id: clientId, target_plan: plan?.id, billing_period: billingPeriod, promo_code: promoCode || undefined }),
+  }), [token, clientId, plan?.id, billingPeriod, promoCode])
+
+  // Re-run after the card is attached, for the requires_card_first case. The
+  // server then finds the payment method and performs the swap it refused to do.
+  const applyPlan = async () => {
+    try {
+      const res = await createSubscription()
+      const data = await res.json().catch(() => ({}))
+      return res.ok && (data.instant === true || !!data.client_secret)
+    } catch {
+      return false
+    }
+  }
 
   useEffect(() => {
     if (!open) return
     let cancelled = false
 
     ;(async () => {
-      setLoading(true); setInitError(null); setClientSecret(null)
+      setLoading(true); setInitError(null); setClientSecret(null); setRequiresCardFirst(false)
       try {
-        const res = await fetch('/api/billing/create-subscription', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify({ client_id: clientId, target_plan: plan?.id, billing_period: billingPeriod, promo_code: promoCode || undefined }),
-        })
+        const res = await createSubscription()
         const data = await res.json().catch(() => ({}))
         if (cancelled) return
 
         if (data.instant) { onSuccess?.(); return }
+        setRequiresCardFirst(!!data.requires_card_first)
         if (!res.ok || !data.client_secret) {
           setInitError(data.message || data.error || 'Paiement indisponible pour le moment. Réessayez.')
           setLoading(false)
@@ -134,7 +162,7 @@ export function PaymentModal({ open, onClose, plan, billingPeriod = 'monthly', h
     })()
 
     return () => { cancelled = true }
-  }, [open, clientId, token, plan?.id, billingPeriod, promoCode, onSuccess])
+  }, [open, createSubscription, onSuccess])
 
   const stripePromise = useMemo(() => getStripe(), [])
   const price = priceLabel(plan, billingPeriod)
@@ -193,7 +221,15 @@ export function PaymentModal({ open, onClose, plan, billingPeriod = 'monthly', h
 
           {!loading && clientSecret && stripePromise && (
             <Elements stripe={stripePromise} options={{ clientSecret, appearance: APPEARANCE }}>
-              <CheckoutForm mode={mode} plan={plan} billingPeriod={billingPeriod} onSuccess={onSuccess} onClose={onClose} />
+              <CheckoutForm
+                mode={mode}
+                plan={plan}
+                billingPeriod={billingPeriod}
+                requiresCardFirst={requiresCardFirst}
+                onApplyPlan={applyPlan}
+                onSuccess={onSuccess}
+                onClose={onClose}
+              />
             </Elements>
           )}
         </div>
