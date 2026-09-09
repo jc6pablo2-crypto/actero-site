@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../../lib/supabase'
 import styles from './Aujourdhui.module.css'
@@ -11,8 +11,8 @@ import styles from './Aujourdhui.module.css'
  * sinon on afficherait deux navigations.
  *
  * Règle typographique portée par la direction : les humains ont la serif
- * (Spectral), la machine a la mono (Fragment Mono). On peut lire l'écran sans
- * lire un mot et savoir qui parle.
+ * (--font-display), la machine a la mono (--font-mono). On peut lire l'écran
+ * sans lire un mot et savoir qui parle.
  *
  * Ce qui n'est PAS rendu, faute de données : les instruments par escalade
  * (3e message / 128 € contre plafond 80 € / 8e jour de transport). Le moteur
@@ -83,20 +83,10 @@ const Amark = () => (
 )
 
 export function AujourdhuiHome({ clientId, planName, setActiveTab }) {
-  // Spectral / Archivo / Fragment Mono ne sont chargées que sur cet écran :
-  // les autres pages n'ont pas à payer trois familles de plus.
-  useEffect(() => {
-    const id = 'aujourdhui-fonts'
-    if (document.getElementById(id)) return
-    const link = document.createElement('link')
-    link.id = id
-    link.rel = 'stylesheet'
-    link.href =
-      'https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;1,400' +
-      '&family=Archivo:wdth,wght@62..125,400;62..125,500;62..125,600' +
-      '&family=Fragment+Mono:ital@0;1&display=swap'
-    document.head.appendChild(link)
-  }, [])
+  // Pas de chargement de polices ici : depuis l'unification, Spectral, DM Sans
+  // et DM Mono sont importées globalement dans src/index.css. Cet écran prend
+  // les tokens de l'app (voir Aujourdhui.module.css) et n'a plus de familles
+  // à lui.
 
   const now = useMemo(() => new Date(), [])
   const { start, end } = useMemo(() => nightWindow(now), [now])

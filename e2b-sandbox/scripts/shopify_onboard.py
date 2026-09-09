@@ -10,8 +10,12 @@ Steps:
   4. Build initial knowledge base entries from product descriptions + policies
   5. Mark client.onboarding_status = 'ready' (best-effort — no schema change)
 
-This script is intentionally conservative on the first run: we sync 90 days
-by default (override via JOB_PAYLOAD.sync_range = '180d' | '365d' | 'all').
+This script is intentionally conservative on the first run: we sync 60 days
+by default. 60 and not 90 because Shopify refuses orders older than 60 days
+unless the app holds the read_all_orders scope, which Actero deliberately does
+not request (App Store requirement 3.2.1 — request it only if genuinely
+needed). Overriding JOB_PAYLOAD.sync_range beyond 60d therefore requires that
+scope first, otherwise the orders query comes back empty or refused.
 
 IMPORTANT — GraphQL only. New public Shopify apps are forbidden from the REST
 Admin API (App Store requirement 2.2.4). Calling `/admin/api/<ver>/*.json`
@@ -249,7 +253,7 @@ def main() -> None:
         fail("Missing SHOPIFY_SHOP_DOMAIN / SHOPIFY_ACCESS_TOKEN / CLIENT_ID env")
 
     payload = load_payload()
-    days = days_from_range(payload.get("sync_range", "90d"))
+    days = days_from_range(payload.get("sync_range", "60d"))
 
     job_progress(5, "Sandbox started — connecting to Shopify…")
 
