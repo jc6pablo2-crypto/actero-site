@@ -5,6 +5,7 @@
  * Chaque step est une action atomique. Si un step échoue, le run est en erreur.
  */
 
+import { raiseEscalation } from './lib/raise-escalation.js'
 import { lookupOrder } from './lib/shopify-client.js'
 import { fetchOverdueInvoices, fetchTreasuryBalance } from './connectors/accounting.js'
 import { decryptToken } from '../lib/crypto.js'
@@ -128,55 +129,11 @@ export async function runExecutor(supabase, { event: _event, playbook: _playbook
           break
 
         case 'escalate':
-          // Create escalation entry with full context
-          try {
-            await supabase.from('escalation_tickets').insert({
-              client_id: clientId,
-              classification,
-              customer_email: normalized.customer_email || null,
-              customer_name: normalized.customer_name || null,
-              message_preview: normalized.message ? normalized.message.substring(0, 500) : null,
-              status: 'pending',
-              priority: 'high',
-            })
-          } catch (escErr) {
-            console.error('[executor] escalation_tickets insert error:', escErr.message)
-          }
-          // Notify client via enabled channels (email, slack, etc.)
-          try {
-            const { notifyClient } = await import('../lib/notify.js')
-            await notifyClient(supabase, {
-              clientId,
-              eventKey: 'escalation_alert',
-              title: `Ticket escaladé — ${classification}`,
-              message: `De : ${normalized.customer_name || normalized.customer_email}\n\n${normalized.message?.substring(0, 300) || ''}`,
-              context: {
-                url: 'https://actero.fr/client/escalations',
-                customer_email: normalized.customer_email,
-                classification,
-              },
-            })
-          } catch (notifyErr) {
-            console.error('[executor] notify escalation error:', notifyErr.message)
-          }
+          // Ticket + alerte marchand + webhook. Mutualisé avec gateway.js, qui
+          // doit déclencher les mêmes effets quand il met un message en revue
+          // sans exécuter le plan d'action (voir lib/raise-escalation.js).
+          await raiseEscalation(supabase, { clientId, classification, normalized })
 
-          // Outbound webhook (Pro+)
-          try {
-            const { dispatchWebhook } = await import('../lib/webhooks.js')
-            await dispatchWebhook(supabase, {
-              clientId,
-              eventType: 'ticket.escalated',
-              data: {
-                classification,
-                customer_email: normalized.customer_email,
-                customer_name: normalized.customer_name,
-                subject: normalized.subject,
-                message_preview: normalized.message?.substring(0, 500),
-              },
-            })
-          } catch (hookErr) {
-            console.error('[executor] webhook escalation error:', hookErr.message)
-          }
           stepResult.result = { escalated: true }
           break
 

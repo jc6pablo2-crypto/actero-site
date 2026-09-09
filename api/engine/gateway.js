@@ -8,6 +8,7 @@
  */
 export const maxDuration = 60
 
+import { raiseEscalation, reviewMeriteAlerte } from './lib/raise-escalation.js'
 import { withSentry } from '../lib/sentry.js'
 import { createClient } from '@supabase/supabase-js'
 import { normalizeEvent } from './lib/normalizer.js'
@@ -215,6 +216,23 @@ async function handler(req, res) {
 
       // Update event status
       await supabase.from('engine_events').update({ status: 'needs_review', processed_at: new Date().toISOString() }).eq('id', event.id)
+
+      // Une mise en revue n'exécute PAS le plan d'action — donc l'étape
+      // `escalate` ne tournait jamais dans cette branche. Un client agressif,
+      // une réponse tronquée ou une référence inventée finissaient dans
+      // `engine_reviews_v2`, table que rien ne surveille et qui ne notifie
+      // personne : plus le message était grave, moins le marchand en était
+      // averti. On déclenche donc ici les mêmes effets que l'exécuteur, mais
+      // seulement pour les vrais signaux — un classifieur qui hésite reste un
+      // cas de relecture, pas une alarme (voir lib/raise-escalation.js).
+      if (reviewMeriteAlerte({ reviewReason: brainResult.reviewReason, actionPlan: brainResult.actionPlan })) {
+        await raiseEscalation(supabase, {
+          clientId: client_id,
+          classification: brainResult.classification,
+          normalized,
+          reason: brainResult.reviewReason,
+        })
+      }
 
     } else {
       // Execute action plan

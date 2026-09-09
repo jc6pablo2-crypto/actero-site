@@ -29,7 +29,7 @@ export const generalAgent = {
     const respResult = await callClaude({
       systemPrompt,
       messages: claudeMessages,
-      maxTokens: 400,
+      maxTokens: 700,
     })
 
     const aiResponse = cleanMarkdown(respResult.response || respResult.rawText)
