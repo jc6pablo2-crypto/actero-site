@@ -13,6 +13,7 @@
  * with the auto-crawl flow. This endpoint's request/response contract and
  * the rows it inserts are unchanged.
  */
+import { requireClientAccess } from '../lib/tenant-guard.js'
 import { withSentry } from '../lib/sentry.js'
 import { createClient } from '@supabase/supabase-js'
 import { tavilyExtract, extractKbEntriesWithClaude } from '../lib/kb-extract.js'
@@ -35,6 +36,12 @@ async function handler(req, res) {
   const { url, client_id } = req.body
   if (!url) return res.status(400).json({ error: 'url requis' })
   if (!client_id) return res.status(400).json({ error: 'client_id requis' })
+
+  // Authentifier l'appelant ne dit pas sur QUI il agit : le client_id vient du
+  // corps de la requête, et cette route utilise la clé service_role, donc RLS
+  // ne filtre rien (ACT-24).
+  if (!(await requireClientAccess(supabase, { user, clientId: client_id, res }))) return
+
 
   try {
     // 1. Extract clean, LLM-ready content via Tavily Extract (shared lib).

@@ -72,7 +72,7 @@ const DB_AUTOMATIONS = {
  * Remplace le hero gradient (40% de la fold) par un bandeau blanc
  * cohérent avec Overview refondu : titre + résumé status + 3 KPIs inline.
  */
-const AutomationHubHeader = ({ activeCount, totalAvailable, weekTickets, monthHours, monthROI }) => (
+const AutomationHubHeader = ({ activeCount, totalAvailable, weekTickets, monthHours, monthROI, baseRoi }) => (
   <div className="bg-white border border-[#E5E2D7] rounded-2xl p-5 md:p-6 mb-5">
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div>
@@ -114,7 +114,15 @@ const AutomationHubHeader = ({ activeCount, totalAvailable, weekTickets, monthHo
         <div className="flex flex-col">
           <span className="text-[10px] font-bold text-[#71717a] uppercase tracking-wider">ROI mois</span>
           <span className="text-lg font-bold text-cta tabular-nums leading-tight">{monthROI.toLocaleString('fr-FR')}€</span>
-          <span className="text-[10px] text-[#71717a]">valeur générée</span>
+          {/* « valeur générée » était faux et indéfendable : ce n'est pas du
+              chiffre d'affaires, c'est du temps estimé valorisé au coût horaire
+              que le marchand a lui-même renseigné. On affiche donc la base de
+              calcul sous le nombre — c'est la réponse à « vos chiffres sont
+              gonflés », et elle tient parce qu'elle renvoie à SES réglages
+              (ACT-12). */}
+          <span className="text-[10px] text-[#71717a]" title="Temps estimé économisé, valorisé à votre coût horaire. Modifiable dans l'onglet ROI.">
+            temps valorisé · {baseRoi}
+          </span>
         </div>
       </div>
     </div>
@@ -407,7 +415,7 @@ export const AutomationHubView = ({ clientId, theme: _theme, setActiveTab }) => 
     queryFn: async () => {
       const { data } = await supabase
         .from('client_settings')
-        .select('email_agent_enabled, hourly_cost')
+        .select('email_agent_enabled, hourly_cost, avg_ticket_time_min')
         .eq('client_id', clientId)
         .maybeSingle()
       return data
@@ -546,6 +554,10 @@ export const AutomationHubView = ({ clientId, theme: _theme, setActiveTab }) => 
   const monthHours = heroStats?.monthHours || 0
   const hourlyCost = parseFloat(clientSettings?.hourly_cost) || 25
   const monthROI = Math.round(monthHours * hourlyCost)
+  // La base est affichée telle quelle : un chiffre en euros sans son hypothèse
+  // est une affirmation, pas une mesure.
+  const minutesParTicket = parseInt(clientSettings?.avg_ticket_time_min, 10) || 5
+  const baseRoi = `${minutesParTicket} min × ${hourlyCost} €/h`
 
   /* ---- Actions ---- */
 
@@ -764,6 +776,7 @@ export const AutomationHubView = ({ clientId, theme: _theme, setActiveTab }) => 
         weekTickets={weekTickets}
         monthHours={monthHours}
         monthROI={monthROI}
+        baseRoi={baseRoi}
       />
 
       {/* ═══════ AUTOMATIONS GRID ═══════ */}
