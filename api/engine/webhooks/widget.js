@@ -194,6 +194,35 @@ async function handler(req, res) {
     })
   }
 
+  // Coupe-circuit, appliqué CÔTÉ SERVEUR.
+  //
+  // `client_settings.agent_enabled` existait déjà et n'était lu que par
+  // widget-config.js, c'est-à-dire par le navigateur : le widget se cachait,
+  // mais cet endpoint continuait de répondre. Un marchand qui coupait son agent
+  // parce qu'il disait n'importe quoi voyait le bouton disparaître pendant que
+  // l'IA répondait toujours aux pages déjà ouvertes, au cache, et à tout appel
+  // direct.
+  //
+  // Un coupe-circuit qui ne coupe rien est pire qu'aucun coupe-circuit : on
+  // croit le problème arrêté. Le pendant email (`email_agent_enabled`) est,
+  // lui, bien vérifié côté serveur dans api/lib/email.js.
+  //
+  // On ne bloque que si le drapeau vaut explicitement false — une valeur
+  // absente reste un agent actif, comme partout ailleurs dans le code.
+  const { data: reglages } = await supabase
+    .from('client_settings')
+    .select('agent_enabled')
+    .eq('client_id', clientId)
+    .maybeSingle()
+
+  if (reglages?.agent_enabled === false) {
+    console.warn(`[widget] agent désactivé par le marchand — client ${clientId}`)
+    return res.status(200).json({
+      agent_disabled: true,
+      response: 'Notre assistant est momentanément indisponible. Un membre de notre équipe vous répondra dans les meilleurs délais.',
+    })
+  }
+
   const { message, email, name, session_id, history, images: widgetImages, handoff, feedback, rating, comment } = req.body || {}
 
   // ── CSAT feedback (no LLM, no message needed) ──
