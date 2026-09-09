@@ -110,7 +110,9 @@ REGLES ANTI-HALLUCINATION (CRITIQUES):
       aiResponse,
       shouldEscalate: respResult.should_escalate === true,
       escalationReason: respResult.escalation_reason || null,
-      sentimentScore: respResult.sentiment_score || 5,
+      // `??` et non `||` : `0 || 5` transformait le sentiment le plus
+      // négatif en neutre, donc en non-escalade.
+      sentimentScore: respResult.sentiment_score ?? 5,
       toolsUsed,
       usage: respResult.usage || null,
       modelId: respResult.modelId || null,

@@ -8,6 +8,7 @@
  */
 import { callLLM as callClaude } from '../lib/llm-client.js'
 import { decryptToken } from '../../lib/crypto.js'
+import { findUngroundedReferences } from '../lib/escalation-signals.js'
 import { buildSystemPrompt } from '../lib/prompt-builder.js'
 import { lookupOrder } from '../lib/shopify-client.js'
 import {
@@ -153,11 +154,38 @@ REGLES ANTI-HALLUCINATION (CRITIQUES):
 
     const aiResponse = cleanMarkdown(respResult.response || respResult.rawText)
 
+    // 4. Vérifier que la réponse ne cite rien qui n'existe pas.
+    //
+    // Le prompt interdit déjà d'inventer un numéro de commande ou de suivi
+    // (REGLES ANTI-HALLUCINATION ci-dessus), mais rien ne vérifiait que le
+    // modèle avait obéi. Un numéro de suivi inventé est pire qu'une absence de
+    // réponse : le client attend un colis qui n'arrivera pas, et la confiance
+    // ne revient pas. On compare donc la réponse aux seules sources
+    // légitimes — les données Shopify, le suivi AfterShip, et le message du
+    // client lui-même — et on escalade dès qu'une référence sort de nulle part.
+    const ancrage = [
+      ...(orderContext || []).map((o) => o.contextText || ''),
+      JSON.stringify(trackingContext || []),
+      normalized?.message || '',
+      ...(conversationHistory || []).map((m) => m?.content || ''),
+    ].join('\n')
+
+    const inventees = findUngroundedReferences(aiResponse, ancrage)
+    if (inventees.length > 0) {
+      console.warn('[order-agent] références non ancrées:', inventees.join(', '))
+    }
+
     return {
       aiResponse,
-      shouldEscalate: respResult.should_escalate === true,
-      escalationReason: respResult.escalation_reason || null,
-      sentimentScore: respResult.sentiment_score || 5,
+      shouldEscalate: respResult.should_escalate === true || inventees.length > 0,
+      escalationReason: inventees.length > 0
+        ? `references_inventees:${inventees.join(',')}`
+        : (respResult.escalation_reason || null),
+      // `??` et non `||` : un sentiment de 0 est le plus négatif possible, et
+      // `0 || 5` le transformait silencieusement en neutre — donc en
+      // non-escalade.
+      sentimentScore: respResult.sentiment_score ?? 5,
+      ungroundedReferences: inventees,
       toolsUsed,
       usage: respResult.usage || null,
       modelId: respResult.modelId || null,
