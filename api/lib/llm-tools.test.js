@@ -99,6 +99,23 @@ describe('chatComplete — passe-plat des outils', () => {
   })
 })
 
+describe('paliers de modèle', () => {
+  it('le palier par défaut est Sonnet 5', async () => {
+    const { chatComplete } = await import('./llm.js')
+    await chatComplete({ messages: [{ role: 'user', content: 'x' }] })
+    expect(appels[0].body.model).toBe('anthropic/claude-sonnet-5')
+  })
+
+  it("le palier rapide est Haiku 4.5, pas un modèle d'un autre fournisseur", async () => {
+    // Le tier rapide ne doit jamais servir à ce qu'un client lit : il répond
+    // à des drapeaux binaires. Mais il doit rester chez le même éditeur, sinon
+    // le produit a deux politiques de données et deux factures.
+    const { chatComplete } = await import('./llm.js')
+    await chatComplete({ messages: [{ role: 'user', content: 'x' }], tier: 'fast' })
+    expect(appels[0].body.model).toBe('anthropic/claude-haiku-4-5')
+  })
+})
+
 describe('askCopilot — boucle complète', () => {
   it('exécute l\'outil demandé puis répond en texte', async () => {
     const { askCopilot } = await import('./kpi-tools.js')

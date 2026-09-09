@@ -91,7 +91,7 @@ export const LandingPage = ({ onNavigate }) => {
     },
     {
       q: "L'agent comprend-il les photos envoyées par les clients ?",
-      a: "Oui — grâce à Claude Vision, il analyse les images jointes (article abîmé, mauvais produit reçu, capture d'écran) pour comprendre la demande et répondre juste. Chaque plan inclut un quota d'analyses photo mensuel.",
+      a: "Oui — grâce à Claude Sonnet 5, il analyse les images jointes (article abîmé, mauvais produit reçu, capture d'écran) pour comprendre la demande et répondre juste. Chaque plan inclut un quota d'analyses photo mensuel.",
     },
     {
       q: 'Quelle différence avec Make ou Zapier ?',

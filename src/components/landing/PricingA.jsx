@@ -63,7 +63,7 @@ export const PricingA = ({ onNavigate }) => {
         'Workflows illimités',
         'Agents spécialisés (WISMO, retours, produit)',
         'Relance paniers abandonnés',
-        'Analyse photo — Claude Vision',
+        'Analyse photo — Claude Sonnet 5',
         'Rapport PDF mensuel',
         'Support prioritaire 24h',
       ],
@@ -78,8 +78,7 @@ export const PricingA = ({ onNavigate }) => {
       sub: 'Devis sous 24h',
       features: [
         'Tickets illimités',
-        'Multi-boutiques',
-        'White-label complet',
+        'White-label widget et portail',
         'Account manager dédié',
         'SLA 99,9%',
         'Onboarding white-glove',

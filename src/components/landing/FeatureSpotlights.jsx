@@ -233,7 +233,7 @@ export const SavSpotlight = () => (
     features={[
       'Multi-canal natif : email, live chat, Gorgias & Zendesk',
       'Retours, échanges, suivi de commande, questions produit',
-      'Comprend les photos envoyées par vos clients (Claude Vision)',
+      'Comprend les photos envoyées par vos clients (Claude Sonnet 5)',
       'Écrit avec le ton exact de votre marque',
       "Escalade vers un humain quand c'est vraiment nécessaire",
     ]}

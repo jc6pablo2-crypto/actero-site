@@ -449,7 +449,7 @@ export const AgentControlCenterView = ({ clientId, onNavigate }) => {
             </div>
             <div className="min-w-0">
               <h3 className="text-[14px] font-semibold text-[#1a1a1a] mb-1">
-                Analyse des images envoyees par le client (Claude Vision)
+                Analyse des images envoyees par le client (Claude Sonnet 5)
               </h3>
               <p className="text-[12px] text-[#71717a] leading-relaxed">
                 Quand activé, l'agent analyse automatiquement les photos jointes par le client (produit cassé, étiquette, reçu…) pour contextualiser sa réponse. Consommation selon votre quota mensuel.

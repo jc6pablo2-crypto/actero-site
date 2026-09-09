@@ -110,8 +110,7 @@ function buildFeatures(plan) {
       "Workflows illimités",
       "Toutes les intégrations",
       "Base de connaissances illimitée",
-      "Multi-boutiques (plusieurs Shopify)",
-      "White-label complet (suppression branding Actero)",
+      "White-label du widget et du portail (branding Actero retiré)",
       "Agents IA spécialisés",
       "Agent Email natif Actero",
       "Rapport ROI sur mesure",
@@ -268,7 +267,13 @@ const comparisonCategories = [
         values: compVal(PLAN_ORDER, (p) => p.features.specialized_agents),
       },
       {
-        label: "Analyse photo (Claude Vision)",
+        label: "Modèle IA",
+        // Même modèle sur les quatre plans : c'est l'argument. Un Free à 0 €
+        // tourne sur le même moteur qu'un Enterprise.
+        values: compVal(PLAN_ORDER, () => "Claude Sonnet 5"),
+      },
+      {
+        label: "Analyse photo (Claude Sonnet 5)",
         values: compVal(PLAN_ORDER, (p) =>
           p.limits.vision_analyses_per_month === Infinity
             ? "Illimité"
@@ -301,13 +306,6 @@ const comparisonCategories = [
       {
         label: "White-label",
         values: compVal(PLAN_ORDER, (p) => p.features.white_label),
-      },
-      {
-        label: "Multi-boutiques",
-        values: compVal(PLAN_ORDER, (p) => {
-          if (!p.features.multi_shop) return false;
-          return "10 stores";
-        }),
       },
     ],
   },
@@ -368,7 +366,7 @@ const faqs = [
   },
   {
     q: "L'agent comprend-il les photos envoyées par les clients ?",
-    a: "Oui. Grâce à Claude Vision, l'agent analyse les images jointes (article endommagé, mauvais produit reçu, capture d'écran) pour comprendre la demande et répondre juste. Chaque plan inclut un quota d'analyses photo mensuel.",
+    a: "Oui. Grâce à Claude Sonnet 5, l'agent analyse les images jointes (article endommagé, mauvais produit reçu, capture d'écran) pour comprendre la demande et répondre juste. Chaque plan inclut un quota d'analyses photo mensuel.",
   },
   {
     q: "Quelles intégrations sont disponibles ?",
@@ -538,6 +536,24 @@ export const PricingPage = ({ onNavigate }) => {
                 <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-cta" /> Sans engagement</span>
                 <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-cta" /> Annulable en 1 clic</span>
                 <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-cta" /> Garantie 30 jours satisfait ou remboursé</span>
+              </motion.p>
+
+              {/* ── Le modèle, dit franchement ──
+                  Le même moteur sur les quatre plans, Free compris. À ce
+                  niveau de prix, c'est la question que le visiteur se pose :
+                  sur quel modèle tourne un agent à 99 €. Y répondre avant
+                  qu'il la pose vaut mieux que de la laisser en suspens. */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.18 }}
+                className="mx-auto mb-10 flex w-fit max-w-full items-center gap-2 rounded-full border border-[#E5E1D6] bg-white/60 px-4 py-2 text-[13px] text-[#5A5A5A]"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-cta shrink-0" />
+                <span>
+                  Propulsé par <strong className="font-semibold text-[#1A1A1A]">Claude Sonnet 5</strong> —
+                  le même modèle sur tous les plans, Free compris.
+                </span>
               </motion.p>
 
               {/* ── Toggle Mensuel / Annuel ── */}

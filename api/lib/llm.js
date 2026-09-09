@@ -22,10 +22,15 @@ const OPENAI_FAST_MODEL = process.env.OPENAI_FAST_MODEL || 'gpt-5.4-nano'
 
 // OpenRouter — OpenAI-compatible gateway and our default provider. Model ids
 // are namespaced (`vendor/model`). Main tier is Sonnet 5: $2/$10 per 1M on
-// OpenRouter, i.e. cheaper than Sonnet 4.5 for the same tier. The fast tier
-// stays on the cheap OpenAI classifier — it only answers binary flags.
+// OpenRouter, i.e. cheaper than Sonnet 4.5 for the same tier.
+//
+// Le tier rapide est Haiku 4.5 ($1/$5) et non un classifieur d'un autre
+// fournisseur : un seul éditeur pour tout le produit, donc un seul jeu de
+// garanties sur les données et une facturation lisible. Il ne sert qu'aux
+// réponses courtes et mécaniques (drapeaux binaires, détection d'injection,
+// sentiment) — jamais à ce qu'un client lit.
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'anthropic/claude-sonnet-5'
-const OPENROUTER_FAST_MODEL = process.env.OPENROUTER_FAST_MODEL || `openai/${OPENAI_FAST_MODEL}`
+const OPENROUTER_FAST_MODEL = process.env.OPENROUTER_FAST_MODEL || 'anthropic/claude-haiku-4-5'
 
 const OPENAI_CFG = {
   endpoint: 'https://api.openai.com/v1/chat/completions',

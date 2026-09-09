@@ -69,7 +69,7 @@ export const ProductPage = ({ onNavigate }) => {
       phase: 'Déployer',
       icon: Settings2,
       title: 'Configurer ton & workflows',
-      desc: "Tutoiement/vouvoiement, signature, KB indexée en continu. L'agent comprend même les photos envoyées par vos clients (Claude Vision). SAV email/chat et relance paniers activables en 1 clic.",
+      desc: "Tutoiement/vouvoiement, signature, KB indexée en continu. L'agent comprend même les photos envoyées par vos clients (Claude Sonnet 5). SAV email/chat et relance paniers activables en 1 clic.",
     },
     {
       step: '03',
