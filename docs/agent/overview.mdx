@@ -101,7 +101,7 @@ Tu peux **valider en 1 clic**, **éditer la proposition IA**, ou **rédiger ta p
 
 ## Les modèles utilisés
 
-Par défaut, ton agent utilise **Claude Sonnet** d'Anthropic pour la classification et la génération. Le coût moyen par ticket est de **0,003 € à 0,008 €** selon la taille de ta base de connaissances.
+Par défaut, ton agent utilise **Claude Sonnet 5** d'Anthropic, servi via **OpenRouter**, pour la classification et la génération. Le coût moyen mesuré est d'environ **0,011 $ par ticket**, variable selon la taille de ta base de connaissances. Si OpenRouter est indisponible, l'agent bascule automatiquement sur l'API Anthropic directe : la panne d'un fournisseur ne bloque pas tes réponses.
 
 <Note>
 Tu peux suivre la consommation token par token dans **Activité → Historique des runs**. Chaque ligne affiche le coût exact en USD.
@@ -136,7 +136,7 @@ Tu peux suivre la consommation token par token dans **Activité → Historique d
   <Accordion title="L'agent garde-t-il en mémoire les conversations passées ?">
     Oui, via Actero Memory. Quand un client revient, l'agent récupère ses interactions passées et les injecte dans le contexte. Tu peux désactiver cette mémoire dans **Paramètres**.
   </Accordion>
-  <Accordion title="Que se passe-t-il si Claude est down ?">
-    Le run est marqué `error`, le ticket est automatiquement escaladé vers **À traiter** avec la raison `error`. Aucun client ne reçoit de réponse cassée.
+  <Accordion title="Que se passe-t-il si le fournisseur IA est down ?">
+    L'agent bascule automatiquement sur un fournisseur de secours : si OpenRouter échoue, l'appel repart vers l'API Anthropic directe. Si les deux échouent, le run est marqué `error` et le ticket est automatiquement escaladé vers **À traiter** avec la raison `error`. Aucun client ne reçoit de réponse cassée.
   </Accordion>
 </AccordionGroup>
