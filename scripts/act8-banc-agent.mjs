@@ -83,7 +83,12 @@ async function joue(cas, i) {
       }),
     })
     const d = await res.json().catch(() => ({}))
-    return { ...cas, i, http: res.status, ms: Date.now() - t0, ...d }
+    // `needs_review` n'existe que depuis l'enrichissement du mode test. Tant
+    // que celui-ci n'est pas déployé, on retombe sur `status`, présent de tout
+    // temps — sans ce repli le banc affichait « répondu seul » partout, y
+    // compris sur les cas réellement escaladés.
+    const escalade = d.needs_review ?? (d.status === 'needs_review')
+    return { ...cas, i, http: res.status, ms: Date.now() - t0, ...d, escalade }
   } catch (err) {
     return { ...cas, i, http: 0, ms: Date.now() - t0, error: err.message }
   }
@@ -93,7 +98,7 @@ const resultats = []
 for (const [i, cas] of CAS.entries()) {
   const r = await joue(cas, i + 1)
   resultats.push(r)
-  const verdict = r.error ? 'ERREUR' : r.needs_review ? `escaladé (${r.review_reason})` : 'répondu seul'
+  const verdict = r.error ? 'ERREUR' : r.escalade ? `escaladé${r.review_reason ? ` (${r.review_reason})` : ''}` : 'répondu seul'
   console.log(`\n${'─'.repeat(78)}`)
   console.log(`${String(i + 1).padStart(2)}. [${cas.cat}] ${JSON.stringify(cas.msg).slice(0, 70)}`)
   console.log(`    attendu   : ${cas.attendu}`)
@@ -103,7 +108,7 @@ for (const [i, cas] of CAS.entries()) {
   if (r.error) console.log(`    erreur    : ${r.error}`)
 }
 
-const escalades = resultats.filter((r) => r.needs_review).length
+const escalades = resultats.filter((r) => r.escalade).length
 const erreurs = resultats.filter((r) => r.error || r.http >= 400).length
 const inventions = resultats.filter((r) => String(r.review_reason || '').startsWith('references_inventees')).length
 
