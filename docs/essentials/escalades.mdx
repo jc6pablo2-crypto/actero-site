@@ -28,6 +28,10 @@ Six motifs possibles, identifiés automatiquement :
 
 Le motif s'affiche en badge sur chaque escalade.
 
+<Note>
+Ton client n'attend pas dans le vide. Pour les demandes de remboursement, les réclamations et les signalements de bug, l'agent envoie d'abord un accusé de réception (sans rien promettre), puis crée le ticket d'escalade. Exception : l'agent vocal, où la conversation se poursuit dans l'appel en cours.
+</Note>
+
 ## Anatomie d'un ticket d'escalade
 
 Quand tu cliques sur un ticket, un drawer s'ouvre à droite avec :
@@ -127,6 +131,8 @@ Tu peux recevoir une notification quand une escalade arrive :
 - **Helpdesk** (Gorgias / Zendesk / Intercom) : tag `@actero-escalated`
 
 Configure tout ça dans **Paramètres → Notifications**.
+
+Les alertes temps réel (et le webhook [`ticket.escalated`](/api-reference/webhooks)) partent pour les motifs sérieux : `aggressive`, `out_of_policy`, `error`, référence inventée, réponse tronquée. Une escalade pour `low_confidence` seul arrive dans **À traiter** sans alerte immédiate : c'est une relecture, pas une alarme, et t'alerter à chaque hésitation du classifieur t'apprendrait à ignorer les notifications.
 
 ## SLA et responsabilité
 
