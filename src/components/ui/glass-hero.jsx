@@ -19,28 +19,11 @@ export const GlassHero = ({ onNavigate }) => {
 
   return (
     <section className="relative bg-white pt-36 md:pt-44 pb-16 px-6 overflow-hidden">
-      {/* Vertical wash: white at the top ramping into a saturated Actero green
-          at the bottom (Context.dev-style, bottom → top). */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 30%, #F4F8F1 52%, #E6F0E1 72%, #D3E6D6 100%)',
-        }}
-      />
-      {/* Dither/grain — the "random" texture, strongest over the coloured band. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          opacity: 0.16,
-          mixBlendMode: 'multiply',
-          backgroundSize: '140px 140px',
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-        }}
-      />
+      {/* Fond blanc, sans habillage. Le hero portait un dégradé vertical vers
+          un vert saturé, plus un grain à 16 % en fusion multiply dont la seule
+          raison d'être était de texturer cette bande colorée. Sans le dégradé,
+          le grain ne texture plus rien : il salit du blanc. Les deux partent
+          ensemble. */}
 
       <div className="max-w-6xl mx-auto relative">
         <div className="max-w-4xl mx-auto text-center">
@@ -48,9 +31,9 @@ export const GlassHero = ({ onNavigate }) => {
           <FadeInUp delay={0.02} className="mb-8">
             <button
               onClick={() => onNavigate && onNavigate('/entreprise')}
-              className="inline-flex items-center gap-2 rounded-full bg-[#FFFFFF] border border-[#EFE7D6] py-1.5 pl-1.5 pr-3.5 text-[13px] font-semibold text-[#1A1A1A] hover:border-[#8B7A50]/40 transition-colors"
+              className="inline-flex items-center gap-2 rounded-full bg-[#FFFFFF] border border-[#E6E8EC] py-1.5 pl-1.5 pr-3.5 text-[13px] font-semibold text-[#1A1A1A] hover:border-[#8B7A50]/40 transition-colors"
             >
-              <span className="rounded-full bg-white border border-[#EFE7D6] px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-[0.08em] text-[#8B7A50]">
+              <span className="rounded-full bg-white border border-[#E6E8EC] px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-[0.08em] text-[#8B7A50]">
                 Soutenu par
               </span>
               <img
