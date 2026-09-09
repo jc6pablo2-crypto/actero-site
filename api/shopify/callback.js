@@ -400,7 +400,12 @@ async function handler(req, res) {
         jobType: 'shopify_onboard',
         clientId: onboardedClientId,
         scriptName: 'shopify_onboard.py',
-        payload: { shop_domain: shop, sync_range: '90d' },
+        // 60 jours, pas 90 : sans le scope read_all_orders, Shopify refuse les
+        // commandes plus anciennes. On demandait donc un mois de données qu'on
+        // n'a pas le droit de lire. Demander read_all_orders serait l'autre
+        // option, mais il faut le justifier à la review (exigence 3.2.1) et
+        // l'agent SAV n'a pas besoin de l'historique long.
+        payload: { shop_domain: shop, sync_range: '60d' },
         env: {
           SHOPIFY_ACCESS_TOKEN: access_token,
           SHOPIFY_SHOP_DOMAIN: shop,
