@@ -81,7 +81,7 @@ Pour une intégration tierce, utilise toujours le schéma 3 avec une clé API d�
 
 <ResponseField name="classification" type="string">Catégorie détectée par le Brain : `order_status`, `refund_request`, `product_question`, `shipping_issue`, `complaint`, `other`…</ResponseField>
 
-<ResponseField name="confidence" type="number">Score de confiance du Brain entre 0 et 1. En dessous d'un seuil (configurable par playbook), l'agent passe en `needs_review`.</ResponseField>
+<ResponseField name="confidence" type="number">Score de confiance du Brain entre 0 et 1. En dessous d'un seuil (0,75 par défaut, configurable par playbook), l'agent passe en `needs_review`.</ResponseField>
 
 <ResponseField name="response" type="string">Le texte généré par l'agent. Vide si `status: needs_review` car aucun message client n'a encore été produit.</ResponseField>
 

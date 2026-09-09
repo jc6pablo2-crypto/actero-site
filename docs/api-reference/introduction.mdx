@@ -103,6 +103,8 @@ Les webhooks **entrants** (Stripe, Shopify, Gorgias…) sont dédupliqués par `
 
 Pour les requêtes côté `engine/gateway`, utilise un `event_id` stable dans le payload : nous insérons une ligne `engine_events` par appel, donc deux POST identiques créent deux events. La dé-duplication métier (ex. ticket Shopify déjà traité) est faite par le Brain en amont via `external_ticket_id`.
 
+En aval, les actions irréversibles (réponse au customer, email, escalade) sont réservées par événement avant d'être exécutées : si un même événement est retraité — retry de cron, webhook redélivré, exécutions concurrentes — l'action ne part qu'une seule fois. Seule une tentative en échec (rien n'est parti) est rejouée.
+
 ## Versioning
 
 L'API n'est pas encore versionnée publiquement. Tout changement breaking est annoncé 30 jours à l'avance par email + bannière dashboard. Les ajouts de champs dans les réponses ne sont jamais considérés breaking — code défensivement.
