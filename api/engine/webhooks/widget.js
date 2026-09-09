@@ -116,7 +116,7 @@ async function handler(req, res) {
   // burn the merchant's ticket quota and our LLM spend. The plan quota caps
   // total damage; this blunts rapid bursts. 20 msgs/min per IP+key.
   const ip = getClientIp(req)
-  const rl = checkRateLimit(`widget:${apiKey}:${ip}`, 20, 60_000)
+  const rl = await checkRateLimit(`widget:${apiKey}:${ip}`, 20, 60_000)
   res.setHeader('X-RateLimit-Limit', '20')
   res.setHeader('X-RateLimit-Remaining', String(rl.remaining))
   if (!rl.allowed) {
