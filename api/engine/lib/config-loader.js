@@ -14,7 +14,12 @@ export async function loadClientConfig(supabase, clientId) {
   ] = await Promise.all([
     supabase
       .from('clients')
-      .select('id, brand_name, client_type, contact_email')
+      // `plan` est indispensable : brain.js s'en sert pour décider si le
+      // message va à un agent spécialisé ou à l'agent générique. Sans lui, la
+      // résolution retombait sur 'free' pour TOUS les clients, et les agents
+      // order / return / product / escalation n'ont jamais tourné en
+      // production — y compris chez les clients pro et enterprise (ACT-8).
+      .select('id, brand_name, client_type, contact_email, plan')
       .eq('id', clientId)
       .single(),
 
