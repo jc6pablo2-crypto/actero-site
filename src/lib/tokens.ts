@@ -80,8 +80,8 @@ export const radii = {
 
 /** Font families — match src/index.css @theme (loaded from Google Fonts). */
 export const fonts = {
-  sans: 'DM Sans, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-  display: '"Instrument Serif", Georgia, serif',
+  sans: 'Inter Tight, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  display: '"Inter Tight", ui-sans-serif, system-ui, sans-serif',
   mono: '"DM Mono", ui-monospace, monospace',
 } as const
 

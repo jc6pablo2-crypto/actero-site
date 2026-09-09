@@ -22,7 +22,7 @@ import { AgentImprovementWidget } from '../AgentImprovementWidget.jsx'
  *   4. À faire aujourd'hui — checklist actionnable (escalades, KB, intégration).
  *   5. Widgets row       — VisionUsageWidget + upsell free-only.
  *
- * Tonalité : tutoiement. Typography : Spectral pour les titres.
+ * Tonalité : tutoiement. Typography : Inter Tight pour les titres.
  */
 export function OverviewHome({
   clientId,
@@ -183,7 +183,7 @@ function GreetingBlock({ firstName }) {
         <div className="flex items-center gap-3">
           <h1
             className="text-[34px] md:text-[40px] italic tracking-tight text-[#1a1a1a] leading-none"
-            style={{ fontFamily: "'Spectral', Georgia, serif", fontWeight: 400 }}
+            style={{ fontFamily: "'Inter Tight', ui-sans-serif, system-ui, sans-serif", fontWeight: 400 }}
           >
             {salutation}
           </h1>
@@ -476,7 +476,7 @@ function TimelineSection({ clientId, setActiveTab, hasIntegration }) {
         <h2
           id="timeline-heading"
           className="text-2xl italic tracking-tight text-[#1a1a1a]"
-          style={{ fontFamily: "'Spectral', Georgia, serif", fontWeight: 400 }}
+          style={{ fontFamily: "'Inter Tight', ui-sans-serif, system-ui, sans-serif", fontWeight: 400 }}
         >
           Depuis ta dernière visite
         </h2>
@@ -684,7 +684,7 @@ function TodoSection({
         <h2
           id="todo-heading"
           className="text-2xl italic tracking-tight text-[#1a1a1a]"
-          style={{ fontFamily: "'Spectral', Georgia, serif", fontWeight: 400 }}
+          style={{ fontFamily: "'Inter Tight', ui-sans-serif, system-ui, sans-serif", fontWeight: 400 }}
         >
           À faire aujourd'hui
         </h2>

@@ -24,7 +24,7 @@ import { CONTACT } from '../config/contact'
 /**
  * CompanyPage — « Entreprise » / À propos d'Actero.
  *
- * Design variation A : Spectral + italic suffix muted,
+ * Design variation A : Inter Tight + italic suffix muted,
  * cream alternatif, cards blanc rounded-[20px], CTA final dark.
  *
  * Copy 100% factuel :
@@ -41,7 +41,7 @@ export const CompanyPage = ({ onNavigate }) => {
     trackEvent('Company_Page_Viewed')
   }, [])
 
-  const serif = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
+  const serif = { fontFamily: 'var(--font-display, "Inter Tight", ui-sans-serif, sans-serif)' }
 
   const values = [
     {

@@ -12,10 +12,10 @@ import { trackEvent } from '../../lib/analytics'
  */
 // Hero UI font — la sans de l'app, pour que le hero ne soit pas la seule
 // surface à parler une autre langue typographique.
-const heroFont = { fontFamily: 'var(--font-sans, "DM Sans"), system-ui, sans-serif' }
+const heroFont = { fontFamily: 'var(--font-sans, "Inter Tight"), system-ui, sans-serif' }
 
 export const GlassHero = ({ onNavigate }) => {
-  const fontDisplay = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
+  const fontDisplay = { fontFamily: 'var(--font-display, "Inter Tight", ui-sans-serif, sans-serif)' }
 
   return (
     <section className="relative bg-white pt-36 md:pt-44 pb-16 px-6 overflow-hidden">

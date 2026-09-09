@@ -28,7 +28,7 @@ import { WatchDemoButton } from '../components/ui/WatchDemoButton'
 /**
  * ProductPage — page dédiée /produit.
  *
- * Design : variation A (même style que la landing — Spectral
+ * Design : variation A (même style que la landing — Inter Tight
  * italic suffix sur les h2, cream bg alternatif, cards blanc rounded-[20px]).
  *
  * Copy : 100% aligné sur le produit RÉEL (plans.js + features actuelles).
@@ -45,7 +45,7 @@ export const ProductPage = ({ onNavigate }) => {
     trackEvent('Product_Page_Viewed')
   }, [])
 
-  const serif = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
+  const serif = { fontFamily: 'var(--font-display, "Inter Tight", ui-sans-serif, sans-serif)' }
 
   /* Canaux gérés actuellement */
   const channels = [

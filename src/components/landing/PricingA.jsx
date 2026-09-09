@@ -16,7 +16,7 @@ import { FadeInUp } from '../ui/scroll-animations'
  * F4F0E6/90.
  */
 export const PricingA = ({ onNavigate }) => {
-  const serif = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
+  const serif = { fontFamily: 'var(--font-display, "Inter Tight", ui-sans-serif, sans-serif)' }
 
   const plans = [
     {

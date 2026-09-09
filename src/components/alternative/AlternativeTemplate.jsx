@@ -14,7 +14,7 @@ import { trackEvent } from '../../lib/analytics'
  * AlternativeTemplate — shared layout for /alternative-{gorgias,tidio,zendesk}.
  *
  * Design aligned with Landing/Pricing (variation A Refined Notion) :
- *   - Spectral h1/h2 + italic muted suffix
+ *   - Inter Tight h1/h2 (poids 400) + italic muted suffix
  *   - Cream #F9F7F1 alternating with white
  *   - Cards rounded-[20px] border black/[0.05]
  *   - Pill CTAs — bg-cta primary / dark #003725 final CTA
@@ -32,7 +32,7 @@ export const AlternativeTemplate = ({ onNavigate, data, children }) => {
     trackEvent('Alternative_Page_Viewed', { competitor: data.competitorKey })
   }, [data.competitorKey])
 
-  const serif = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
+  const serif = { fontFamily: 'var(--font-display, "Inter Tight", ui-sans-serif, sans-serif)' }
   const competitor = data.competitorName
 
   // ── JSON-LD : FAQ + SoftwareApplication ────────────────────────

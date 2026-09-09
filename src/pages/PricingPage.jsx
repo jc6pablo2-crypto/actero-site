@@ -513,7 +513,7 @@ export const PricingPage = ({ onNavigate }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="font-normal leading-[1.05] text-[#1A1A1A] mb-6"
-                style={{ fontFamily: 'var(--font-display, "Spectral", Georgia, serif)', fontSize: 'clamp(38px, 5.2vw, 64px)', letterSpacing: '-0.02em' }}
+                style={{ fontFamily: 'var(--font-display, "Inter Tight", ui-sans-serif, sans-serif)', fontSize: 'clamp(38px, 5.2vw, 64px)', letterSpacing: '-0.02em' }}
               >
                 Starter à 99€/mois ≈ 1 200€<br className="hidden md:block" />
                 <span className="italic text-[#716D5C]">d'heures SAV économisées.</span>
@@ -721,7 +721,7 @@ export const PricingPage = ({ onNavigate }) => {
             <div className="mt-24 max-w-3xl mx-auto">
               <h2
                 className="text-center font-normal text-[#1A1A1A] mb-12 leading-[1.05]"
-                style={{ fontFamily: 'var(--font-display, "Spectral", Georgia, serif)', fontSize: 'clamp(32px, 4.5vw, 48px)', letterSpacing: '-0.02em' }}
+                style={{ fontFamily: 'var(--font-display, "Inter Tight", ui-sans-serif, sans-serif)', fontSize: 'clamp(32px, 4.5vw, 48px)', letterSpacing: '-0.02em' }}
               >
                 Questions fréquentes
               </h2>

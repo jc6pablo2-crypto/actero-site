@@ -162,7 +162,7 @@ export const DemoAgentPage = ({ onNavigate }) => {
             <h1
               className="text-[#1A1A1A]"
               style={{
-                fontFamily: 'var(--font-display, "Spectral", Georgia, serif)',
+                fontFamily: 'var(--font-display, "Inter Tight", ui-sans-serif, sans-serif)',
                 fontSize: 'clamp(30px, 4.4vw, 46px)',
                 lineHeight: 1.08,
                 letterSpacing: '-0.02em',

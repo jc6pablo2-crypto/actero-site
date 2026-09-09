@@ -144,7 +144,7 @@ export const PortalSavView = ({ client, clientId, supabase, onUpgrade, onNavigat
         <div>
           <h2
             className="text-2xl italic tracking-tight text-[#1a1a1a]"
-            style={{ fontFamily: "'Spectral', Georgia, serif", fontWeight: 400 }}
+            style={{ fontFamily: "'Inter Tight', ui-sans-serif, system-ui, sans-serif", fontWeight: 400 }}
           >Portail SAV</h2>
           <p className="text-[15px] text-[#5A5A5A] mt-1">
             Donne à tes clients un espace en libre-service pour gérer leurs demandes.
@@ -202,7 +202,7 @@ export const PortalSavView = ({ client, clientId, supabase, onUpgrade, onNavigat
       <div>
         <h2
             className="text-2xl italic tracking-tight text-[#1a1a1a]"
-            style={{ fontFamily: "'Spectral', Georgia, serif", fontWeight: 400 }}
+            style={{ fontFamily: "'Inter Tight', ui-sans-serif, system-ui, sans-serif", fontWeight: 400 }}
           >Portail SAV</h2>
         <p className="text-[13px] text-[#9ca3af] mt-1">
           Gérez et partagez votre portail self-service client.

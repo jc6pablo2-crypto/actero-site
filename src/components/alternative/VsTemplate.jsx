@@ -31,7 +31,7 @@ export const VsTemplate = ({ onNavigate, data, children }) => {
     trackEvent('Vs_Page_Viewed', { competitor: data.competitorKey })
   }, [data.competitorKey])
 
-  const serif = { fontFamily: 'var(--font-display, "Spectral", Georgia, serif)' }
+  const serif = { fontFamily: 'var(--font-display, "Inter Tight", ui-sans-serif, sans-serif)' }
   const competitor = data.competitorName
 
   const schema = [
