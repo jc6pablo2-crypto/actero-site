@@ -110,11 +110,11 @@
         },
         {
             "path": "/api/cron/poll-inbound-emails",
-            "schedule": "*/2 * * * *"
+            "schedule": "*/5 * * * *"
         },
         {
             "path": "/api/cron/proactive-watchdog",
-            "schedule": "*/15 * * * *"
+            "schedule": "*/30 * * * *"
         },
         {
             "path": "/api/cron/purge-vision-images",
@@ -122,7 +122,7 @@
         },
         {
             "path": "/api/cron/slack-canvas-update",
-            "schedule": "*/15 * * * *"
+            "schedule": "0 * * * *"
         },
         {
             "path": "/api/cron/process-e2b-jobs",
