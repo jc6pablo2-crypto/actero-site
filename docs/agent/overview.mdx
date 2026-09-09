@@ -72,7 +72,7 @@ Voici ce qui se passe quand un client envoie "Bonjour, où est ma commande #1042
   </Step>
   <Step title="Garde-fous & décision d'escalade">
     L'agent décide d'escalader si :
-    - `confidence < 0.6`
+    - `confidence < 0.75` (seuil par défaut, ajustable par playbook)
     - `sentiment_score <= 3` (client très négatif/agressif)
     - Une règle absolue (guardrail) s'applique
     - `injection_detected = true` (le client tente de manipuler l'agent)
@@ -91,7 +91,7 @@ Tu retrouves toutes les escalades dans l'onglet **À traiter**. Les raisons poss
 
 | Raison | Déclencheur |
 |---|---|
-| `low_confidence` | L'agent n'est pas sûr de sa réponse (< 60%) |
+| `low_confidence` | L'agent n'est pas sûr de sa réponse (< 75%) |
 | `aggressive` | Le client est mécontent, ton agressif détecté |
 | `out_of_policy` | Demande hors du périmètre que tu as défini |
 | `legal_mention` | Le client mentionne avocat, plainte, RGPD |
