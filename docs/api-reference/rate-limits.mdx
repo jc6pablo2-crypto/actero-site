@@ -51,18 +51,19 @@ Au-delà du quota :
 }
 ```
 
-### Routes auth & lectures
+### Routes auth & dashboard
 
-| Route                      | Limite                | Fenêtre |
-| -------------------------- | --------------------- | ------- |
-| `/api/auth/signup`         | 5 / IP                | 60 s    |
-| `/api/auth/verify-code`    | 5 / IP                | 60 s    |
-| `/api/copilot-chat`        | 30 / user             | 60 s    |
-| `/api/simulator-chat`      | 20 / user             | 60 s    |
-| `/api/billing/usage`       | 60 / user             | 60 s    |
-| `/api/client/export-data`  | 5 / user              | 60 s    |
+| Route                                | Limite            | Fenêtre |
+| ------------------------------------ | ----------------- | ------- |
+| `/api/auth/signup`                   | 5 / IP            | 60 min  |
+| `/api/auth/send-verification-code`   | 5 / IP            | 60 min  |
+| `/api/auth/verify-code`              | 15 / IP           | 60 min  |
+| `/api/copilot-chat`                  | 30 / user         | 60 s    |
+| Widget (`/api/engine/webhooks/widget`) | 20 / clé API + IP | 60 s    |
 
-Le rate limiter par IP / user vit en mémoire process (Vercel Functions). En cas de scale horizontal, la limite effective est multipliée par le nombre d'instances chaudes — c'est volontaire et tolérable pour ces volumes.
+Ces compteurs sont **partagés entre toutes les instances serverless** : la limite annoncée est la limite appliquée, quel que soit le nombre d'instances que la plateforme ouvre. L'incrément est atomique, donc deux requêtes simultanées ne peuvent pas passer toutes les deux sur le même dernier jeton.
+
+Si le compteur partagé est temporairement injoignable, Actero retombe sur un compteur local par instance plutôt que de refuser tout le trafic. L'API reste disponible pendant l'incident. La limite effective peut alors être légèrement plus permissive, jamais plus stricte.
 
 ## Réponse `429`
 
@@ -79,7 +80,7 @@ Retry-After: 60
 ```
 
 <Note>
-Le header `Retry-After` est exposé sur les routes auth/IP-based. Sur l'engine gateway, on ne l'envoie pas systématiquement — calcule ton retry sur la fenêtre de la limite (10 min ou 60 min selon le cas).
+Le header `Retry-After` est exposé sur les routes dashboard et widget (copilot, checkout, widget). Sur l'engine gateway et les routes auth, il n'est pas envoyé systématiquement — calcule ton retry sur la fenêtre de la limite (10 min, 60 min selon le cas).
 </Note>
 
 ## Stratégie de retry recommandée
@@ -159,7 +160,7 @@ Les routes engine n'exposent pas de headers `X-RateLimit-Remaining` ni `X-RateLi
 | Anti-spam customer (10 msg/10 min)      | Pas de override : c'est une protection métier, pas commerciale |
 | Webhooks entrants Stripe/Shopify        | Pas de limite (signature HMAC vérifiée à la place)        |
 
-Pour des volumes Enterprise (>50 000 tickets/mois ou >1 000 messages/heure), on peut basculer sur Upstash Redis pour un rate limit cluster-wide. Demande au support.
+Pour des volumes Enterprise (>50 000 tickets/mois ou >1 000 messages/heure), demande au support un plafond dédié. Le rate limit est déjà appliqué de façon cluster-wide : inutile de dimensionner tes retries en fonction du nombre d'instances.
 
 ## Idempotence et anti-rejeu
 
