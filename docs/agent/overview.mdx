@@ -99,6 +99,33 @@ Tu retrouves toutes les escalades dans l'onglet **À traiter**. Les raisons poss
 
 Tu peux **valider en 1 clic**, **éditer la proposition IA**, ou **rédiger ta propre réponse**. Voir la page [Validation manuelle](/agent/manual-review).
 
+## Mettre ton agent en pause
+
+Si ton agent répond mal (mauvaise config, incident, refonte de ta base de connaissances), tu peux le couper immédiatement. C'est ton coupe-circuit d'urgence.
+
+<Steps>
+  <Step title="Ouvre les paramètres de l'agent">
+    Sidebar : **Mon Agent → Paramètres**.
+  </Step>
+  <Step title="Clique sur le badge de statut">
+    À côté du titre **Agent IA**, le badge affiche **Actif**. Clique dessus : il passe à **En pause**.
+  </Step>
+</Steps>
+
+La pause est appliquée **côté serveur**, immédiatement :
+
+- Le widget de chat disparaît de ta boutique.
+- Les pages déjà ouvertes et le widget en cache sont aussi coupés : le serveur bloque tout nouveau message, y compris les appels directs à l'endpoint du widget.
+- Le blocage a lieu **avant** tout traitement : aucun appel au modèle n'est déclenché pendant la pause.
+
+Un visiteur qui écrit pendant la pause reçoit un message neutre : _« Notre assistant est momentanément indisponible. Un membre de notre équipe vous répondra dans les meilleurs délais. »_ Rien ne lui indique que tu as coupé ton agent.
+
+Pour réactiver, clique à nouveau sur le badge. L'agent reprend instantanément.
+
+<Note>
+La pause coupe le canal **widget**. L'Agent Email a son propre interrupteur, lui aussi appliqué côté serveur, dans **Mon Agent → Agent Email**. Quand il est coupé, les emails de tes clients continuent d'arriver dans ta boîte : ils ne reçoivent simplement plus de réponse automatique. Pour couper l'agent partout, désactive les deux interrupteurs. Pour arrêter une automatisation précise sans tout couper, mets en pause le [playbook](/agent/playbooks) concerné.
+</Note>
+
 ## Les modèles utilisés
 
 Par défaut, ton agent utilise **Claude Sonnet** d'Anthropic pour la classification et la génération. Le coût moyen par ticket est de **0,003 € à 0,008 €** selon la taille de ta base de connaissances.
