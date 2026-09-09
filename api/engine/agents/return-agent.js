@@ -101,7 +101,7 @@ REGLES ANTI-HALLUCINATION (CRITIQUES):
     const respResult = await callClaude({
       systemPrompt: finalSystem,
       messages: claudeMessages,
-      maxTokens: 450,
+      maxTokens: 700,
     })
 
     const aiResponse = cleanMarkdown(respResult.response || respResult.rawText)
