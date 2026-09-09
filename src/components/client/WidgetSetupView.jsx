@@ -100,13 +100,13 @@ export const WidgetSetupView = ({ clientId }) => {
   }, [clientId])
 
   const snippet = `<script src="https://actero.fr/widget.js" data-actero-key="${apiKey}" defer></script>`
-  // No Shopify app required: the merchant pastes the snippet into their theme
-  // code. This link opens the Themes admin — from there: ⋯ → Modifier le code
-  // → layout/theme.liquid → paste before </body>. (We can't deep-link the exact
-  // file without the theme id, but this lands them one step away and always
-  // works, whether or not the Actero app is installed.)
+  // Sur Shopify, la bulle est livrée par l'extension de thème
+  // (extensions/actero-widget) : le marchand l'active dans l'éditeur de thème,
+  // il n'édite JAMAIS layout/theme.liquid. La règle 5.1.1 de l'App Store
+  // impose ce chemin, et l'écran précédent enseignait l'inverse.
+  // `?context=apps` ouvre directement le panneau « Widgets d'application ».
   const themesUrl = shopDomain
-    ? `https://${shopDomain}/admin/themes`
+    ? `https://${shopDomain}/admin/themes/current/editor?context=apps`
     : null
 
   const update = (patch) => { setCfg((c) => ({ ...c, ...patch })); setSaved(false) }
@@ -292,8 +292,8 @@ export const WidgetSetupView = ({ clientId }) => {
                 <Code2 className="w-4.5 h-4.5 text-[#0F5F35]" />
               </div>
               <div>
-                <h2 className="text-base font-bold text-[#1a1a1a]">Votre code à copier</h2>
-                <p className="text-xs text-[#71717a]">Une seule ligne — collez-la, c'est tout.</p>
+                <h2 className="text-base font-bold text-[#1a1a1a]">Mettre la bulle en ligne</h2>
+                <p className="text-xs text-[#71717a]">Sur Shopify, un interrupteur. Ailleurs, une ligne de code.</p>
               </div>
             </div>
 
@@ -318,10 +318,10 @@ export const WidgetSetupView = ({ clientId }) => {
                   <span className="text-sm font-semibold text-[#1a1a1a]">Sur Shopify</span>
                 </div>
                 <ol className="text-[12px] text-[#71717a] leading-relaxed list-decimal pl-4 space-y-0.5 mb-2.5">
-                  <li>Copiez la ligne de code ci-dessus.</li>
-                  <li>Boutique en ligne → Thèmes → <b>⋯</b> → <b>Modifier le code</b>.</li>
-                  <li>Ouvrez <span className="font-mono">layout/theme.liquid</span>.</li>
-                  <li>Collez juste avant <span className="font-mono">{'</body>'}</span> → Enregistrer.</li>
+                  <li>Ouvrez l'éditeur de thème avec le bouton ci-dessous.</li>
+                  <li>Panneau <b>Widgets d'application</b> (App embeds), à gauche.</li>
+                  <li>Activez <b>Actero AI Support Widget</b>.</li>
+                  <li>Enregistrez. La bulle est en ligne.</li>
                 </ol>
                 {themesUrl && (
                   <a
@@ -331,10 +331,10 @@ export const WidgetSetupView = ({ clientId }) => {
                     className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0F5F35] text-white text-[12px] font-semibold hover:bg-[#003725] transition-colors"
                   >
                     <ShoppingBag className="w-3.5 h-3.5" />
-                    Ouvrir mes thèmes Shopify
+                    Activer la bulle sur ma boutique
                   </a>
                 )}
-                <p className="text-[11px] text-[#9ca3af] mt-2">Aucune application à installer.</p>
+                <p className="text-[11px] text-[#9ca3af] mt-2">Aucun code à coller : la bulle est livrée avec l'application.</p>
               </div>
               <div className="rounded-xl border border-gray-100 bg-[#FAF7F2] p-4">
                 <div className="flex items-center gap-2 mb-1.5">
@@ -342,7 +342,7 @@ export const WidgetSetupView = ({ clientId }) => {
                   <span className="text-sm font-semibold text-[#1a1a1a]">Autre site</span>
                 </div>
                 <p className="text-[12px] text-[#71717a] leading-relaxed">
-                  Collez la ligne juste avant la balise <span className="font-mono">{'</body>'}</span> de votre site. Compatible WooCommerce, Webflow, WordPress et tout site web.
+                  Hors Shopify uniquement. Collez la ligne juste avant la balise <span className="font-mono">{'</body>'}</span> de votre site : WooCommerce, Webflow, WordPress ou tout autre site.
                 </p>
               </div>
             </div>

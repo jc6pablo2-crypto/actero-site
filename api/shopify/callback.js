@@ -76,6 +76,9 @@ async function handler(req, res) {
   const authToken = cookies.actero_token ? decodeURIComponent(cookies.actero_token) : null;
 
   let onboardedClientId = null;
+  // Vrai quand le client a été résolu depuis un compte existant (slug ou jeton) :
+  // dans ce cas il ne faut PAS émettre de jeton de rattachement.
+  let resolvedFromAccount = false;
 
   // Method 1: From funnel_clients slug cookie
   if (clientSlug && !onboardedClientId) {
@@ -92,6 +95,7 @@ async function handler(req, res) {
       const lookupData = await lookupRes.json();
       if (lookupData?.[0]?.onboarded_client_id) {
         onboardedClientId = lookupData[0].onboarded_client_id;
+        resolvedFromAccount = true;
       }
     } catch (err) {
       console.error('Failed to look up client by slug:', err);
@@ -120,6 +124,7 @@ async function handler(req, res) {
         const linkData = await linkRes.json();
         if (linkData?.[0]?.client_id) {
           onboardedClientId = linkData[0].client_id;
+          resolvedFromAccount = true;
         } else {
           // Fallback: check clients.owner_user_id
           const ownerRes = await fetch(
@@ -129,6 +134,7 @@ async function handler(req, res) {
           const ownerData = await ownerRes.json();
           if (ownerData?.[0]?.id) {
             onboardedClientId = ownerData[0].id;
+            resolvedFromAccount = true;
           }
         }
       }
@@ -145,6 +151,28 @@ async function handler(req, res) {
   // claim token so the merchant can attach the shop to their account after
   // signing up. See api/shopify/claim.js.
   let claimToken = null;
+
+  // Method 2c: la boutique est peut-être DÉJÀ connectée. Sans ce test, chaque
+  // réinstallation sans compte fabriquait un nouveau client : shop_domain étant
+  // UNIQUE, l'upsert plus bas repointait la connexion vers le nouveau client et
+  // abandonnait l'ancien — sans propriétaire et sans boutique. C'est l'origine
+  // du client orphelin observé le 8 septembre.
+  if (!onboardedClientId) {
+    try {
+      const connRes = await fetch(
+        `${supabaseUrl}/rest/v1/client_shopify_connections?shop_domain=eq.${encodeURIComponent(shop)}&select=client_id&limit=1`,
+        { headers: { apikey: supabaseServiceKey, Authorization: `Bearer ${supabaseServiceKey}` } }
+      );
+      const connData = connRes.ok ? await connRes.json() : [];
+      if (connData?.[0]?.client_id) {
+        onboardedClientId = connData[0].client_id;
+        console.log(`[shopify-callback] réinstallation de ${shop} — client existant ${onboardedClientId} réutilisé`);
+      }
+    } catch (err) {
+      console.error('[shopify-callback] lookup connexion existante échoué:', err.message);
+    }
+  }
+
   if (!onboardedClientId) {
     // Best-effort: use the real shop name / owner email for the new client.
     let shopName = shop.replace(/\.myshopify\.com$/, '');
@@ -163,7 +191,17 @@ async function handler(req, res) {
       shopName = shopJson?.data?.shop?.name || shopName;
       shopEmail = shopJson?.data?.shop?.email || null;
     } catch (err) {
-      console.warn('[shopify-callback] shop lookup failed:', err.message);
+      // Cet échec n'est jamais anodin : si `{ shop { name } }` ne passe pas, le
+      // token vient d'être refusé par Shopify et TOUT l'onboarding échouera
+      // derrière. Le 8 septembre il était avalé en silence, et le client s'est
+      // retrouvé nommé d'après son domaine avec un contact_email nul.
+      console.error('[shopify-callback] shop lookup refusé par Shopify:', err.message);
+      captureError(err, {
+        endpoint: '/api/shopify/callback',
+        step: 'shop_lookup',
+        shop_domain: shop,
+        hint: 'token probablement rejeté — onboarding condamné',
+      });
     }
 
     try {
@@ -200,6 +238,31 @@ async function handler(req, res) {
       }
     } catch (err) {
       console.error('[shopify-callback] client auto-create error:', err.message);
+    }
+  }
+
+  // Un jeton de rattachement est nécessaire dès que le client résolu n'a pas de
+  // propriétaire — qu'on vienne de le créer OU qu'on ait réutilisé un orphelin.
+  // Sans ce second cas, un marchand qui réinstalle une boutique orpheline
+  // n'avait plus aucun moyen de se la rattacher.
+  if (onboardedClientId && !resolvedFromAccount && !claimToken) {
+    try {
+      const ownerRes = await fetch(
+        `${supabaseUrl}/rest/v1/clients?id=eq.${onboardedClientId}&select=owner_user_id&limit=1`,
+        { headers: { apikey: supabaseServiceKey, Authorization: `Bearer ${supabaseServiceKey}` } }
+      );
+      const ownerRows = ownerRes.ok ? await ownerRes.json() : [];
+      if (ownerRows?.[0] && !ownerRows[0].owner_user_id) {
+        claimToken = encryptToken(
+          JSON.stringify({
+            cid: onboardedClientId,
+            shop,
+            exp: Date.now() + 30 * 24 * 60 * 60 * 1000,
+          }),
+        );
+      }
+    } catch (err) {
+      console.error('[shopify-callback] vérification propriétaire échouée:', err.message);
     }
   }
 
@@ -318,6 +381,19 @@ async function handler(req, res) {
   // the dashboard polls /api/jobs/:id for live progress.
   let onboardingJobId = null;
   let onboardingSpawnFailed = false;
+  if (onboardedClientId && !process.env.E2B_API_KEY) {
+    // Sans la clé, le bloc ci-dessous était purement sauté et le drapeau restait
+    // faux : la page de succès en concluait que l'onboarding était terminé, alors
+    // qu'il n'avait jamais commencé.
+    onboardingSpawnFailed = true;
+    console.error('[shopify-callback] E2B_API_KEY absente — onboarding non lancé');
+    captureError(new Error('E2B_API_KEY not configured'), {
+      endpoint: '/api/shopify/callback',
+      step: 'spawn_onboarding',
+      client_id: onboardedClientId,
+      shop_domain: shop,
+    });
+  }
   if (onboardedClientId && process.env.E2B_API_KEY) {
     try {
       const { jobId } = await spawnJob({
