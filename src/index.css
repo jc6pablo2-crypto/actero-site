@@ -24,16 +24,16 @@
   --font-mono: "DM Mono", ui-monospace, monospace;
 
   /* Greens — brand primary */
-  --color-cta: #0E653A;
-  --color-cta-hover: #0A4F2C;
+  --color-cta: #13804A;
+  --color-cta-hover: #0E653A;
   --color-primary: #1F3A12;
   --color-primary-deep: #0B4B2C;
   --color-primary-soft: #A8C490;
   --color-primary-tint: #E8F5EC;
 
   /* Backgrounds */
-  --color-cream: #F4F0E6;
-  --color-app: #FAFAFA;
+  --color-cream: #F4F5F7;
+  --color-app: #FFFFFF;
   --color-surface: #FFFFFF;
 
   /* Gold — editorial accent */
@@ -54,7 +54,7 @@
 
   /* Structural */
   --color-border: rgba(0, 0, 0, 0.06);
-  --color-border-cream: #E8DFC9;
+  --color-border-cream: #E3E6EA;
 
   /* ──────────────────────────────────────────
      Elevation / Surface scale (3-level).

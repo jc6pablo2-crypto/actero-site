@@ -198,7 +198,7 @@ export const LandingPage = ({ onNavigate }) => {
             <div className="max-w-[1200px] mx-auto flex items-center justify-center">
               <button
                 onClick={() => onNavigate && onNavigate('/tarifs')}
-                className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#003725] hover:text-[#0A4F2C] transition-colors group"
+                className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#003725] hover:text-[#0E653A] transition-colors group"
               >
                 Voir tous les plans et limites
                 <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -234,8 +234,8 @@ export const LandingPage = ({ onNavigate }) => {
                         <div
                           className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all text-[18px] font-light leading-none ${
                             isOpen
-                              ? 'bg-[#003725] text-white'
-                              : 'bg-[#F9F7F1] text-[#716D5C]'
+                              ? 'bg-cta text-white'
+                              : 'bg-[#FFFFFF] text-[#716D5C]'
                           }`}
                         >
                           {isOpen ? '−' : '+'}
@@ -264,7 +264,7 @@ export const LandingPage = ({ onNavigate }) => {
           </RevealSection>
 
           {/* 8. FINAL CTA (dark, italic green accent) — TASK 5: section reveal */}
-          <RevealSection className="py-24 md:py-32 bg-[#003725] px-6">
+          <RevealSection className="py-24 md:py-32 bg-cta px-6">
             <div className="max-w-[820px] mx-auto text-center text-white">
               <FadeInUp>
                 <h2
@@ -274,7 +274,7 @@ export const LandingPage = ({ onNavigate }) => {
                   Chaque semaine sans Actero,<br className="hidden md:block" />
                   <span className="italic text-[#A8C490]">c'est 40 heures payées pour rien.</span>
                 </h2>
-                <p className="text-[17px] text-[#F4F0E6]/70 max-w-xl mx-auto mb-8 leading-[1.55]">
+                <p className="text-[17px] text-[#F4F5F7]/70 max-w-xl mx-auto mb-8 leading-[1.55]">
                   Connectez Shopify en 1 clic, laissez l'IA apprendre votre catalogue, voyez
                   les premières résolutions livrées dans l'heure.
                 </p>
@@ -282,7 +282,7 @@ export const LandingPage = ({ onNavigate }) => {
                 <div className="flex flex-wrap gap-3.5 justify-center mb-6">
                   <motion.button
                     onClick={() => onNavigate('/signup')}
-                    className="inline-flex items-center gap-2 bg-[#F4F0E6] text-[#003725] px-[26px] py-[14px] rounded-full text-[15px] font-semibold hover:bg-white transition-colors group"
+                    className="inline-flex items-center gap-2 bg-[#F4F5F7] text-[#003725] px-[26px] py-[14px] rounded-full text-[15px] font-semibold hover:bg-white transition-colors group"
                     whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
                     whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
@@ -292,7 +292,7 @@ export const LandingPage = ({ onNavigate }) => {
                   </motion.button>
                   <TalkToHumanButton source="landing_final_cta" variant="dark" />
                 </div>
-                <div className="inline-flex flex-wrap items-center justify-center gap-[18px] text-[12.5px] text-[#F4F0E6]/55">
+                <div className="inline-flex flex-wrap items-center justify-center gap-[18px] text-[12.5px] text-[#F4F5F7]/55">
                   <span className="inline-flex items-center gap-1.5">
                     <Check className="w-3 h-3 text-[#A8C490]" strokeWidth={2.5} /> Sans engagement
                   </span>

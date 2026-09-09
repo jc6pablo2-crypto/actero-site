@@ -15,7 +15,7 @@ function buildMagicLinkEmailHtml({ url, merchantName, branding }) {
     : `<div style="display:flex;align-items:center;gap:8px;"><svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 2L2 30H10L16 18L22 30H30L16 2Z" fill="#1A1A1A" /></svg><span style="font-size:20px;font-weight:700;color:#1A1A1A;letter-spacing:-0.3px;">Actero</span></div>`;
 
   const buttonColor = isMerchantBranded ? (branding.primaryColor || '#1F3A12') : '#1F3A12';
-  const footerBg = isMerchantBranded ? '#fafafa' : '#F4F0E6';
+  const footerBg = isMerchantBranded ? '#fafafa' : '#F4F5F7';
   const bodyCopy = isMerchantBranded
     ? `Cliquez sur le bouton ci-dessous pour accéder à votre espace SAV ${branding.displayName || merchantName}.`
     : `Cliquez sur le bouton ci-dessous pour accéder à votre espace SAV pour <strong>${merchantName}</strong>.`;

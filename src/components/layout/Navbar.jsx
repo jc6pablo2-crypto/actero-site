@@ -73,7 +73,7 @@ export const Navbar = ({ onNavigate, trackEvent }) => {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-              className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-[#F9F7F1] border border-gray-200 hover:bg-[#F9F7F1] transition-colors"
+              className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full bg-[#FFFFFF] border border-gray-200 hover:bg-[#FFFFFF] transition-colors"
             >
               {isMobileMenuOpen ? (
                 <X className="w-5 h-5 text-[#262626]" />
@@ -148,7 +148,7 @@ export const Navbar = ({ onNavigate, trackEvent }) => {
               <button
                 key={idx}
                 onClick={item.action}
-                className="w-full text-left p-3 rounded-2xl text-sm font-bold text-[#716D5C] hover:text-[#262626] hover:bg-[#F9F7F1] transition-all"
+                className="w-full text-left p-3 rounded-2xl text-sm font-bold text-[#716D5C] hover:text-[#262626] hover:bg-[#FFFFFF] transition-all"
               >
                 {item.label}
               </button>

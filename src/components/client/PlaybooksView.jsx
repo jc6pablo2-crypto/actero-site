@@ -373,7 +373,7 @@ export const PlaybooksView = ({ clientId, setActiveTab, theme: _theme }) => {
       </div>
 
       {playbooks.length === 0 && (
-        <div className="rounded-2xl border border-[#E5E2D7] bg-white">
+        <div className="rounded-2xl border border-[#E6E8EC] bg-white">
           <EmptyState
             icon={Zap}
             tone="cta"

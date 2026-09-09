@@ -17,7 +17,7 @@
   // merchant's config and apply it. If the fetch fails, the defaults stand —
   // the widget can never be broken by a config problem.
   const CFG = {
-    brandColor: '#0F5F35',
+    brandColor: '#13804A',
     accentColor: '#14A85C',
     position: 'bottom-right',
     greeting: 'Bonjour ! Comment puis-je vous aider ?',
@@ -339,7 +339,7 @@
     }
     .actero-attach-btn {
       width: 38px; height: 38px; border-radius: 10px;
-      background: #f5f5f0; border: none; cursor: pointer;
+      background: #F7F8FA; border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: background 0.2s; flex-shrink: 0;
     }

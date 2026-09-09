@@ -190,7 +190,7 @@ export const ROISettingsView = ({ clientId, theme: _theme }) => {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-5 py-2.5 bg-cta text-white text-[13px] font-semibold rounded-lg hover:bg-[#003725] disabled:opacity-50 transition-colors"
+          className="flex items-center gap-2 px-5 py-2.5 bg-cta text-white text-[13px] font-semibold rounded-lg hover:bg-cta disabled:opacity-50 transition-colors"
         >
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
           Sauvegarder

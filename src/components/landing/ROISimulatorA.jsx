@@ -47,7 +47,7 @@ export const ROISimulatorA = () => {
         </FadeInUp>
 
         <FadeInUp>
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 bg-[#F9F7F1] rounded-3xl p-10 border border-[#E8DFC9]">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 bg-[#FFFFFF] rounded-3xl p-10 border border-[#E3E6EA]">
             {/* LEFT — Sliders */}
             <div>
               <div className="mb-7">
@@ -63,7 +63,7 @@ export const ROISimulatorA = () => {
                   value={tickets}
                   onChange={(e) => setTickets(+e.target.value)}
                   className="w-full"
-                  style={{ accentColor: '#0E653A' }}
+                  style={{ accentColor: '#13804A' }}
                 />
                 <div className="flex justify-between text-[11px] text-[#9ca3af] mt-1">
                   <span>100</span>
@@ -84,7 +84,7 @@ export const ROISimulatorA = () => {
                   value={hourly}
                   onChange={(e) => setHourly(+e.target.value)}
                   className="w-full"
-                  style={{ accentColor: '#0E653A' }}
+                  style={{ accentColor: '#13804A' }}
                 />
                 <div className="flex justify-between text-[11px] text-[#9ca3af] mt-1">
                   <span>12€</span>
@@ -94,8 +94,8 @@ export const ROISimulatorA = () => {
             </div>
 
             {/* RIGHT — Dark result panel */}
-            <div className="bg-[#003725] rounded-[18px] p-8 text-white relative overflow-hidden">
-              <div className="text-[12px] text-[#F4F0E6]/60 uppercase tracking-[0.15em] font-semibold mb-1">
+            <div className="bg-cta rounded-[18px] p-8 text-white relative overflow-hidden">
+              <div className="text-[12px] text-[#F4F5F7]/60 uppercase tracking-[0.15em] font-semibold mb-1">
                 Économies estimées · mensuelles
               </div>
               <div
@@ -105,12 +105,12 @@ export const ROISimulatorA = () => {
                 {total.toLocaleString('fr-FR')}
                 <span className="text-[36px] text-[#A8C490] align-baseline">€</span>
               </div>
-              <div className="text-[13px] text-[#F4F0E6]/70 mb-7">
+              <div className="text-[13px] text-[#F4F5F7]/70 mb-7">
                 pour {Math.round(tickets * handledPct).toLocaleString('fr-FR')} résolutions
                 livrées sans humain
               </div>
 
-              <div className="flex flex-col gap-2.5 pt-5 border-t border-[#F4F0E6]/10">
+              <div className="flex flex-col gap-2.5 pt-5 border-t border-[#F4F5F7]/10">
                 {[
                   { label: 'Heures équipe libérées', value: `${hoursSaved}h` },
                   {
@@ -124,7 +124,7 @@ export const ROISimulatorA = () => {
                   { label: 'Coût plan Pro Actero', value: `−${plan}€` },
                 ].map((r, i) => (
                   <div key={i} className="flex justify-between text-[13px]">
-                    <span className="text-[#F4F0E6]/70">{r.label}</span>
+                    <span className="text-[#F4F5F7]/70">{r.label}</span>
                     <span className="tabular-nums font-semibold">{r.value}</span>
                   </div>
                 ))}

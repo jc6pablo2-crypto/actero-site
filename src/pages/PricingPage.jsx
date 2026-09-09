@@ -55,7 +55,7 @@ const CTA_LINKS = {
 const CARD_CLASSES = {
   free: "border-black/[0.08] bg-white text-[#1A1A1A]",
   starter: "border-black/[0.08] bg-white text-[#1A1A1A]",
-  pro: "border-cta bg-[#003725] text-white shadow-[0_20px_50px_-15px_rgba(0,55,37,0.35)] scale-[1.02]",
+  pro: "border-cta bg-cta text-white shadow-[0_20px_50px_-15px_rgba(0,55,37,0.35)] scale-[1.02]",
   enterprise: "border-black/[0.08] bg-white text-[#1A1A1A]",
 };
 
@@ -494,7 +494,7 @@ export const PricingPage = ({ onNavigate }) => {
         }}
       />
 
-      <div className="min-h-screen bg-white text-[#262626] font-sans selection:bg-[#003725]/10">
+      <div className="min-h-screen bg-white text-[#262626] font-sans selection:bg-cta/10">
         <Navbar onNavigate={onNavigate} trackEvent={trackEvent} />
 
         <main className="pt-32 pb-24 px-6">
@@ -547,7 +547,7 @@ export const PricingPage = ({ onNavigate }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.18 }}
-                className="mx-auto mb-10 flex w-fit max-w-full items-center gap-2 rounded-full border border-[#E5E1D6] bg-white/60 px-4 py-2 text-[13px] text-[#5A5A5A]"
+                className="mx-auto mb-10 flex w-fit max-w-full items-center gap-2 rounded-full border border-[#E6E8EC] bg-white/60 px-4 py-2 text-[13px] text-[#5A5A5A]"
               >
                 <Sparkles className="w-3.5 h-3.5 text-cta shrink-0" />
                 <span>
@@ -566,7 +566,7 @@ export const PricingPage = ({ onNavigate }) => {
                 <div
                   role="group"
                   aria-label="Facturation"
-                  className="inline-flex items-center gap-3 bg-[#F9F7F1] border border-gray-200 rounded-full px-2 py-1.5"
+                  className="inline-flex items-center gap-3 bg-[#FFFFFF] border border-gray-200 rounded-full px-2 py-1.5"
                 >
                   <button
                     onClick={() => setIsAnnual(false)}
@@ -643,13 +643,13 @@ export const PricingPage = ({ onNavigate }) => {
                       </div>
                       <h3 className={`text-xl font-bold ${plan.highlighted ? 'text-white' : 'text-[#1A1A1A]'}`}>{plan.name}</h3>
                     </div>
-                    <p className={`text-sm font-medium ${plan.highlighted ? 'text-[#F4F0E6]/60' : 'text-[#716D5C]'}`}>{plan.tagline}</p>
+                    <p className={`text-sm font-medium ${plan.highlighted ? 'text-[#F4F5F7]/60' : 'text-[#716D5C]'}`}>{plan.tagline}</p>
                   </div>
 
                   <div className="mb-6">
                     <div className="flex items-baseline gap-2">
                       {isAnnual && plan.monthlyPrice > 0 && (
-                        <span className={`line-through text-2xl font-bold ${plan.highlighted ? 'text-[#F4F0E6]/35' : 'text-[#9ca3af]'}`}>
+                        <span className={`line-through text-2xl font-bold ${plan.highlighted ? 'text-[#F4F5F7]/35' : 'text-[#9ca3af]'}`}>
                           {plan.monthlyPrice}€
                         </span>
                       )}
@@ -665,12 +665,12 @@ export const PricingPage = ({ onNavigate }) => {
                           {getPrice(plan)}
                         </motion.span>
                       </AnimatePresence>
-                      <span className={`text-sm font-medium ${plan.highlighted ? 'text-[#F4F0E6]/60' : 'text-[#716D5C]'}`}>
+                      <span className={`text-sm font-medium ${plan.highlighted ? 'text-[#F4F5F7]/60' : 'text-[#716D5C]'}`}>
                         {getPeriod(plan)}
                       </span>
                     </div>
                     {getSubPrice(plan) && (
-                      <p className={`text-xs mt-1 ${plan.highlighted ? 'text-[#F4F0E6]/60' : 'text-[#716D5C]'}`}>{getSubPrice(plan)}</p>
+                      <p className={`text-xs mt-1 ${plan.highlighted ? 'text-[#F4F5F7]/60' : 'text-[#716D5C]'}`}>{getSubPrice(plan)}</p>
                     )}
                   </div>
 
@@ -683,7 +683,7 @@ export const PricingPage = ({ onNavigate }) => {
                     className={`w-full py-3.5 rounded-full font-bold text-sm transition-colors flex items-center justify-center gap-2 mb-8 focus-visible:ring-2 focus-visible:ring-[#14A85C] focus-visible:ring-offset-2 group ${
                       plan.highlighted
                         ? "bg-[#A8C490] text-[#003725] hover:bg-white"
-                        : "bg-[#F9F7F1] border border-gray-200 text-[#262626] hover:bg-gray-100"
+                        : "bg-[#FFFFFF] border border-gray-200 text-[#262626] hover:bg-gray-100"
                     }`}
                   >
                     {plan.cta}
@@ -691,14 +691,14 @@ export const PricingPage = ({ onNavigate }) => {
                   </motion.button>
 
                   {/* Divider */}
-                  <div className={`border-t mb-6 ${plan.highlighted ? 'border-[#F4F0E6]/15' : 'border-gray-100'}`} />
+                  <div className={`border-t mb-6 ${plan.highlighted ? 'border-[#F4F5F7]/15' : 'border-gray-100'}`} />
 
                   {/* Features */}
                   <div className="space-y-3 flex-1">
                     {plan.features.map((feature, idx) => (
                       <div key={idx} className="flex items-start gap-2.5">
                         <Check className={`w-4 h-4 shrink-0 mt-0.5 ${plan.highlighted ? 'text-[#A8C490]' : 'text-cta'}`} />
-                        <span className={`text-sm font-medium ${plan.highlighted ? 'text-[#F4F0E6]/90' : 'text-[#716D5C]'}`}>{feature}</span>
+                        <span className={`text-sm font-medium ${plan.highlighted ? 'text-[#F4F5F7]/90' : 'text-[#716D5C]'}`}>{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -729,7 +729,7 @@ export const PricingPage = ({ onNavigate }) => {
                 {faqs.map((faq, i) => (
                   <div
                     key={i}
-                    className="bg-[#F9F7F1] border border-gray-200 rounded-2xl overflow-hidden"
+                    className="bg-[#FFFFFF] border border-gray-200 rounded-2xl overflow-hidden"
                   >
                     <button
                       onClick={() => setOpenFaq(openFaq === i ? null : i)}
@@ -766,7 +766,7 @@ export const PricingPage = ({ onNavigate }) => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="bg-[#003725] rounded-3xl p-12 md:p-16"
+                className="bg-cta rounded-3xl p-12 md:p-16"
               >
                 <h2
                   className="text-3xl md:text-4xl font-bold text-white mb-4"
@@ -787,7 +787,7 @@ export const PricingPage = ({ onNavigate }) => {
                     whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
                     whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-                    className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-white text-[#003725] font-bold text-[15px] hover:bg-[#F9F7F1] transition-colors gap-2 focus-visible:ring-2 focus-visible:ring-[#14A85C] focus-visible:ring-offset-2 group"
+                    className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-white text-[#003725] font-bold text-[15px] hover:bg-[#FFFFFF] transition-colors gap-2 focus-visible:ring-2 focus-visible:ring-[#14A85C] focus-visible:ring-offset-2 group"
                   >
                     Essai gratuit 7 jours
                     <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />

@@ -500,7 +500,7 @@ function CustomDomainSection({ clientRow, clientId, canCustomize, supabase, quer
               <button
                 onClick={() => handleSave()}
                 disabled={saving || domain.trim() === existing}
-                className="px-4 py-2.5 rounded-lg bg-cta text-white text-[12px] font-semibold hover:bg-[#0A4F2C] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="px-4 py-2.5 rounded-lg bg-cta text-white text-[12px] font-semibold hover:bg-[#0E653A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                 Enregistrer
@@ -530,7 +530,7 @@ function CustomDomainSection({ clientRow, clientId, canCustomize, supabase, quer
           )}
 
           {/* DNS instructions */}
-          <div className="mt-2 rounded-xl bg-[#F4F0E6] border border-[#E8DFC9] px-4 py-3.5">
+          <div className="mt-2 rounded-xl bg-[#F4F5F7] border border-[#E3E6EA] px-4 py-3.5">
             <p className="text-[12px] font-semibold text-[#1A1A1A] mb-1.5">Configuration DNS requise</p>
             <p className="text-[11px] text-[#5A5A5A] leading-relaxed mb-2">
               Chez votre registrar (Gandi, OVH, Cloudflare…), créez un enregistrement CNAME :

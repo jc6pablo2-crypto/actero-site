@@ -46,7 +46,7 @@ function Jauge({ valeur }) {
   const teinte = pct >= 75 ? 'bg-emerald-500' : pct >= 50 ? 'bg-amber-500' : 'bg-neutral-400'
   return (
     <span className="inline-flex items-center gap-1.5" title={`Confiance du modèle : ${pct} %`}>
-      <span className="relative block h-1 w-10 overflow-hidden rounded-full bg-[#E5E1D6]">
+      <span className="relative block h-1 w-10 overflow-hidden rounded-full bg-[#E6E8EC]">
         <span className={`absolute inset-y-0 left-0 ${teinte}`} style={{ width: `${pct}%` }} />
       </span>
       <span className="tabular-nums text-[11px] text-[#8A8578]">{pct} %</span>
@@ -57,7 +57,7 @@ function Jauge({ valeur }) {
 function Signaux({ meta }) {
   if (!meta) return null
   return (
-    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-[#EFEBE0] pt-2 text-[11px] text-[#8A8578]">
+    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-[#EDEFF2] pt-2 text-[11px] text-[#8A8578]">
       <Jauge valeur={meta.confiance} />
       <span
         className={
@@ -153,7 +153,7 @@ export const DemoAgentPage = ({ onNavigate }) => {
         path="/demo"
       />
 
-      <main className="min-h-screen bg-[#FAF8F3] px-5 py-12 md:py-16">
+      <main className="min-h-screen bg-[#FFFFFF] px-5 py-12 md:py-16">
         <div className="mx-auto flex max-w-3xl flex-col gap-8">
 
           {/* ── Cadrage : ce qui est faux, ce qui est vrai ── */}
@@ -179,10 +179,10 @@ export const DemoAgentPage = ({ onNavigate }) => {
 
           {/* ── La conversation ── */}
           <section
-            className="flex flex-col overflow-hidden rounded-2xl border border-[#E5E1D6] bg-white shadow-[0_1px_3px_rgba(26,26,26,0.04)]"
+            className="flex flex-col overflow-hidden rounded-2xl border border-[#E6E8EC] bg-white shadow-[0_1px_3px_rgba(26,26,26,0.04)]"
             aria-label="Conversation avec l'agent de démonstration"
           >
-            <div className="flex items-center gap-2.5 border-b border-[#EFEBE0] px-5 py-3.5">
+            <div className="flex items-center gap-2.5 border-b border-[#EDEFF2] px-5 py-3.5">
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-cta/10">
                 <Sparkles className="h-3.5 w-3.5 text-cta" />
               </span>
@@ -211,7 +211,7 @@ export const DemoAgentPage = ({ onNavigate }) => {
                     {m.role === 'agent' && <Signaux meta={m.meta} />}
                   </div>
                   {m.role === 'client' && (
-                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#E5E1D6]">
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#E6E8EC]">
                       <User className="h-3 w-3 text-[#716D5C]" />
                     </span>
                   )}
@@ -237,7 +237,7 @@ export const DemoAgentPage = ({ onNavigate }) => {
                 e.preventDefault()
                 envoyer()
               }}
-              className="flex items-center gap-2 border-t border-[#EFEBE0] px-4 py-3"
+              className="flex items-center gap-2 border-t border-[#EDEFF2] px-4 py-3"
             >
               <input
                 ref={champRef}
@@ -271,7 +271,7 @@ export const DemoAgentPage = ({ onNavigate }) => {
                   key={s.texte}
                   onClick={() => envoyer(s.texte)}
                   disabled={enCours}
-                  className="group flex flex-col items-start gap-1 rounded-xl border border-[#E5E1D6] bg-white px-3.5 py-3 text-left transition-colors hover:border-cta/40 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta/40"
+                  className="group flex flex-col items-start gap-1 rounded-xl border border-[#E6E8EC] bg-white px-3.5 py-3 text-left transition-colors hover:border-cta/40 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta/40"
                 >
                   <span className="text-[13.5px] leading-snug text-[#1A1A1A]">{s.texte}</span>
                   <span className="font-mono text-[10.5px] uppercase tracking-[0.06em] text-[#A8A296]">
@@ -283,7 +283,7 @@ export const DemoAgentPage = ({ onNavigate }) => {
           </section>
 
           {/* ── Lecture des signaux ── */}
-          <section className="flex flex-col gap-3 rounded-2xl border border-[#E5E1D6] bg-white px-5 py-4">
+          <section className="flex flex-col gap-3 rounded-2xl border border-[#E6E8EC] bg-white px-5 py-4">
             <h2 className="flex items-center gap-2 text-[14px] font-semibold text-[#1A1A1A]">
               <ShieldCheck className="h-4 w-4 text-cta" />
               Ce que les chiffres sous chaque réponse veulent dire
@@ -311,7 +311,7 @@ export const DemoAgentPage = ({ onNavigate }) => {
           </section>
 
           {/* ── Suite ── */}
-          <section className="flex flex-col items-start gap-3 border-t border-[#E5E1D6] pt-6">
+          <section className="flex flex-col items-start gap-3 border-t border-[#E6E8EC] pt-6">
             <p className="max-w-xl text-[15px] leading-relaxed text-[#5A5A5A]">
               Branché sur votre Shopify, le même agent lit vos vraies commandes, votre suivi
               transporteur et vos propres règles de retour. La mise en route prend une après-midi.
