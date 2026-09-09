@@ -1,5 +1,6 @@
 import { withSentry } from '../lib/sentry.js'
 import { createClient } from '@supabase/supabase-js';
+import { decryptToken } from '../lib/crypto.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL,
@@ -115,7 +116,9 @@ async function handler(req, res) {
     const brandName = clientRes.data?.brand_name || 'Support';
     const smtpConfig = smtpRes.data?.extra_config || null;
     if (smtpConfig && smtpRes.data?.api_key) {
-      smtpConfig.password = smtpRes.data.api_key;
+      // Stocké chiffré (enc:v1:…) ; decryptToken laisse passer les valeurs
+      // écrites avant le chiffrement, donc les deux formes fonctionnent.
+      smtpConfig.password = decryptToken(smtpRes.data.api_key) || smtpRes.data.api_key;
     }
 
     const isRealEmail = conversation.customer_email && !conversation.customer_email.includes('@anonymous.actero.fr');

@@ -7,6 +7,7 @@
  * tracking codes, carriers, or dates.
  */
 import { callLLM as callClaude } from '../lib/llm-client.js'
+import { decryptToken } from '../../lib/crypto.js'
 import { buildSystemPrompt } from '../lib/prompt-builder.js'
 import { lookupOrder } from '../lib/shopify-client.js'
 import {
@@ -107,6 +108,7 @@ REGLES ANTI-HALLUCINATION (CRITIQUES):
           .maybeSingle()
 
         if (aftership?.api_key) {
+          const aftershipKey = decryptToken(aftership.api_key) || aftership.api_key
           const { getTrackingsByOrderId, getTrackingsByEmail } = await import('../connectors/aftership.js')
 
           // Priority 1: use Shopify order IDs if available
@@ -114,13 +116,13 @@ REGLES ANTI-HALLUCINATION (CRITIQUES):
           const trackings = []
 
           for (const oid of shopifyOrderIds) {
-            const r = await getTrackingsByOrderId(aftership.api_key, String(oid))
+            const r = await getTrackingsByOrderId(aftershipKey, String(oid))
             if (r.trackings?.length) trackings.push(...r.trackings)
           }
 
           // Priority 2: fallback to email if no orderIds (or no trackings found)
           if (trackings.length === 0 && normalized?.customer_email) {
-            const r = await getTrackingsByEmail(aftership.api_key, normalized.customer_email)
+            const r = await getTrackingsByEmail(aftershipKey, normalized.customer_email)
             if (r.trackings?.length) trackings.push(...r.trackings.slice(0, 3))
           }
 

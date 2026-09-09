@@ -571,6 +571,16 @@ export const ClientIntegrationsView = ({ clientId, clientType: _clientType, them
   const [smtpValues, setSmtpValues] = useState({});
   const [smtpSaving, setSmtpSaving] = useState(false);
 
+  /**
+   * Enregistre une boîte SMTP/IMAP.
+   *
+   * Passe obligatoirement par /api/integrations/connect : c'est cette route qui
+   * chiffre le mot de passe (AES-256-GCM) avant l'insertion. L'écriture directe
+   * depuis le navigateur qui existait ici déposait le mot de passe email du
+   * marchand en clair dans `client_integrations.api_key` — alors que la
+   * documentation lui promet l'inverse. Ne pas réintroduire de repli en base :
+   * mieux vaut un échec visible qu'un secret en clair.
+   */
   const handleSmtpSubmit = async () => {
     if (!smtpProvider || !clientId) return;
     // Validate required fields
@@ -583,38 +593,51 @@ export const ClientIntegrationsView = ({ clientId, clientType: _clientType, them
 
     setSmtpSaving(true);
     try {
-      const { error } = await supabase.from('client_integrations').upsert({
-        client_id: clientId,
-        provider: smtpProvider.id,
-        provider_label: 'Email personnalisé (SMTP/IMAP)',
-        auth_type: 'smtp',
-        status: 'active',
-        api_key: String(smtpValues.password),
-        extra_config: {
-          email: String(smtpValues.email),
-          smtp_host: String(smtpValues.smtp_host),
-          smtp_port: parseInt(smtpValues.smtp_port) || 587,
-          imap_host: String(smtpValues.imap_host),
-          imap_port: parseInt(smtpValues.imap_port) || 993,
-          username: String(smtpValues.username),
-          use_ssl: smtpValues.use_ssl !== false,
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/integrations/connect', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`,
         },
-        connected_at: new Date().toISOString(),
-      }, { onConflict: 'client_id,provider' });
-      if (error) {
-        console.error('SMTP save error:', error);
-        toastError('Erreur: ' + error.message);
-      } else {
-        queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
-        setSmtpProvider(null);
-        setSmtpValues({});
-        toastSuccess('Configuration SMTP enregistrée');
+        body: JSON.stringify({
+          provider: smtpProvider.id,
+          provider_label: 'Email personnalisé (SMTP/IMAP)',
+          auth_type: 'smtp',
+          credentials: {
+            api_key: String(smtpValues.password),
+            email: String(smtpValues.email),
+            smtp_host: String(smtpValues.smtp_host),
+            smtp_port: parseInt(smtpValues.smtp_port) || 587,
+            imap_host: String(smtpValues.imap_host),
+            imap_port: parseInt(smtpValues.imap_port) || 993,
+            username: String(smtpValues.username),
+            use_ssl: smtpValues.use_ssl !== false,
+          },
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        // Rien n'a été enregistré : la route teste la connexion avant d'écrire.
+        // On garde le formulaire ouvert avec les valeurs saisies pour que le
+        // marchand corrige le champ fautif au lieu de tout re-saisir.
+        toastError(data.test_failed
+          ? `Connexion refusée — ${data.error}`
+          : `Erreur : ${data.error || res.status}`);
+        return;
       }
+
+      queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
+      setSmtpProvider(null);
+      setSmtpValues({});
+      toastSuccess('Boîte email connectée et vérifiée');
     } catch (err) {
       console.error('SMTP error:', err);
-      toastError('Erreur: ' + err.message);
+      toastError('Erreur : ' + err.message);
+    } finally {
+      setSmtpSaving(false);
     }
-    setSmtpSaving(false);
   };
 
   const handleOAuthConnect = async (provider) => {
@@ -698,44 +721,31 @@ export const ClientIntegrationsView = ({ clientId, clientType: _clientType, them
           credentials: { api_key: apiKeyValue.trim() },
         }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        // If API test failed, save anyway but show warning
-        if (data.test_failed) {
-          toastError('Test de connexion échoué (' + data.error + '). Clé sauvegardée — vérifiez vos identifiants.');
-        } else {
-          throw new Error(data.error || 'Erreur connexion');
-        }
+        // La route teste la clé avant d'écrire : un 400 signifie que RIEN n'a
+        // été enregistré. L'ancien message annonçait « Clé sauvegardée » dans ce
+        // cas, et le marchand repartait convaincu d'être connecté.
+        toastError(data.test_failed
+          ? `Clé refusée par ${apiKeyProvider.name} — ${data.error}. Rien n'a été enregistré.`
+          : `Erreur : ${data.error || res.status}`);
+        return;
       }
+
       queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
       setApiKeyProvider(null);
       setApiKeyValue('');
-      if (res.ok) toastSuccess('Intégration connectée');
-    } catch (_err) {
-      // Fallback: save directly to DB
-      try {
-        const { error } = await supabase.from('client_integrations').upsert({
-          client_id: clientId,
-          provider: apiKeyProvider.id,
-          provider_label: apiKeyProvider.name || apiKeyProvider.id,
-          auth_type: 'api_key',
-          status: 'active',
-          api_key: apiKeyValue.trim(),
-          connected_at: new Date().toISOString(),
-        }, { onConflict: 'client_id,provider' });
-        if (error) {
-          toastError('Erreur: ' + error.message);
-        } else {
-          queryClient.invalidateQueries({ queryKey: ['client-integrations'] });
-          setApiKeyProvider(null);
-          setApiKeyValue('');
-          toastSuccess('Intégration connectée');
-        }
-      } catch (e) {
-        toastError('Erreur: ' + e.message);
-      }
+      toastSuccess('Intégration connectée');
+    } catch (err) {
+      // Pas de repli par écriture directe : il déposait la clé en clair en base
+      // dès le moindre incident réseau, en silence. Un échec visible est
+      // préférable — le marchand réessaie, le secret ne traîne pas.
+      console.error('API key connect error:', err);
+      toastError('Connexion impossible : ' + err.message);
+    } finally {
+      setApiKeySaving(false);
     }
-    setApiKeySaving(false);
   };
 
   const handleOAuthPromptSubmit = async () => {
